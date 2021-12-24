@@ -1,0 +1,71 @@
+{
+  "name": "ansis",
+  "version": "1.0.0",
+  "description": "Color styling of text for ANSI terminals using the SGR codes defined in the ECMA-48 standard.",
+  "keywords": [
+    "ansi",
+    "cli",
+    "string",
+    "color",
+    "colour",
+    "colors",
+    "style",
+    "console",
+    "terminal",
+    "tty",
+    "rgb",
+    "hex",
+    "log",
+    "logging"
+  ],
+  "license": "ISC",
+  "author": "webdiscus (https://github.com/webdiscus)",
+  "maintainers": [
+    "webdiscus (https://github.com/webdiscus)"
+  ],
+  "funding": {
+    "type": "patreon",
+    "url": "https://patreon.com/biodiscus"
+  },
+  "homepage": "https://github.com/webdiscus/ansis",
+  "bugs": {
+    "url": "https://github.com/webdiscus/ansis/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webdiscus/ansis.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "type": "module",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "scripts": {
+    "demo": "node ./examples/index.js",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles",
+    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --collectCoverage"
+  },
+  "files": [
+    "src",
+    "types",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=12.13"
+  },
+  "peerDependencies": {
+    "webpack": ">=5.32.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "@types/jest": "^27.0.3",
+    "jest": "^27.4.5",
+    "prettier": "^2.5.1",
+    "webpack": "^5.65.0"
+  }
+}

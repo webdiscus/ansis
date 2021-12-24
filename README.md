@@ -1,5 +1,5 @@
 [![npm version](https://badge.fury.io/js/ansis.svg)](https://badge.fury.io/js/ansis)
-[![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=Q6YMEN536M)](https://codecov.io/gh/webdiscus/ansis)
+[![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
 [![node](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 
 # [ansis](https://www.npmjs.com/package/ansis) (ANSI styling)

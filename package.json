@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Color styling of text for ANSI terminals using the SGR codes defined in the ECMA-48 standard.",
   "keywords": [
     "ansi",
@@ -44,12 +44,13 @@
   "types": "src/index.d.ts",
   "scripts": {
     "demo": "node ./examples/index.js",
+    "bench": "node ./bench/index.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles",
     "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --collectCoverage"
   },
   "files": [
     "src",
-    "types",
+    "demo",
     "CHANGELOG.md",
     "README.md",
     "LICENSE"
@@ -58,14 +59,12 @@
     "node": ">=12.13"
   },
   "peerDependencies": {
-    "webpack": ">=5.32.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
     "@types/jest": "^27.0.3",
     "jest": "^27.4.5",
-    "prettier": "^2.5.1",
-    "webpack": "^5.65.0"
+    "prettier": "^2.5.1"
   }
 }

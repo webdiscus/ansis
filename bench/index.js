@@ -82,6 +82,15 @@ const colorStyles = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan
 
 let fixture = [];
 
+// reserved
+// bench('Single style')
+//   .add('ansis', () => baseStyles.forEach((style) => ansis[style]('foo')))
+//   .add('colorette', () => colorette.red('colorette'))
+//   .add('picocolors', () => picocolors.red('picocolors'))
+//   .add('chalk', () => chalk.red('chalk'))
+//   .add('ansis', () => ansis.red('foo'))
+//   .run();
+
 // Colorette bench
 // https://github.com/jorgebucaran/colorette/blob/main/bench/index.js
 fixture = createFixture(vendors, coloretteBench);
@@ -174,6 +183,20 @@ bench('Nested styles')
   .add('chalk', () => fixture[7](chalk))
   .add('ansis', () => fixture[8](ansis))
   .run();
+
+// reserved
+// bench('Break style')
+//   .add('colors-js', () => colorsJs.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+//   .add('colorette', () => colorette.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+//   .add('picocolors', () => picocolors.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+//   .add('cli-color', () => cliColor.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+//   .add('color-cli', () => colorCli.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+//   .add('ansi-colors', () => ansiColors.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+//   .add('kleur/colors', () => kleurColors.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+//   .add('kleur', () => ansis.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+//   .add('chalk', () => kleur.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+//  .add('ansis', () => ansis.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+//  .run();
 
 // HEX colors
 // the hex(), rgb(), bgHex(), bgRgb() methods support only chalk and ansis

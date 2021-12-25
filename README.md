@@ -1,12 +1,18 @@
-[![npm version](https://badge.fury.io/js/ansis.svg)](https://badge.fury.io/js/ansis)
+<h1 align="center">
+    <a href="https://www.npmjs.com/package/ansis">
+        <img width="323" src="doc/img/ansis-logo.png" alt="ansis"><br>
+        ANSI Styling
+    </a>
+</h1>
+
+---
+[![npm version](https://badge.fury.io/js/ansis.svg)](https://www.npmjs.com/package/ansis)
 [![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
 [![node](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 
-# [ansis](https://www.npmjs.com/package/ansis) (ANSI styling)
 
 Color styling of text for ANSI terminals using the SGR (Select Graphic Rendition) codes defined in the [ECMA-48](https://www.ecma-international.org/publications-and-standards/standards/ecma-48/) standard.\
 This is improved and faster implementation for `Node.js`.
-
 
 <a id="install" name="install" href="#install"></a>
 ## Install
@@ -15,17 +21,23 @@ This is improved and faster implementation for `Node.js`.
 npm install ansis --save-dev
 ```
 
+## Show ANSI demo
+```
+npm run demo
+```
+
 ## Quick start
 
 ```js
 import ansis from 'ansis';
 
 console.log(ansis.green(`Hello ${ansis.inverse('ANSI')} World!`));
-console.log(ansis.bgYellow(`Warning: `) + ansis.cyan(' /path/to/file.js ') + ansis.red(`not found!`) );
+console.log(ansis.black.bgYellow(`Warning: `) + ansis.cyan(' /path/to/file.js ') + ansis.red(`not found!`) );
 ```
 Output:
 
 ![output](doc/img/quik-start-output.png?raw=true "output")
+
 
 ## Features
   - supports ES modules, 100% vanilla JavaScript, compact code, no dependencies
@@ -33,7 +45,7 @@ Output:
   - supports the standard de facto API of the `chalk`
   - supports 256 color and Truecolor
   - supports styles like: `bold`  `red` `yellowBright` `bgGreen` `bgCyanBright` ect.
-  - supports chained styles e.g.:
+  - supports chained styles, e.g.:
     ```js
     ansis.red.bold.italic.underline('text');
     ```
@@ -46,9 +58,9 @@ Output:
   - supports methods for custom colors `rgb()` `hex()` `bgRgb()` `bgHex()` `ansi256()` `bgAnsi256()`:
     ```js
     ansis.rgb(255, 80, 200)('text');
-    ansis.hex('#FF88AA')('text')
-    ansis.bgHex('#F8A')('text')
-    ansis.ansi256(110)('text')
+    ansis.hex('#FF88AA')('text');
+    ansis.bgHex('#F8A')('text');
+    ansis.ansi256(110)('text');
     ```
   - supports shortcut, e.g.:
     ```js
@@ -58,13 +70,23 @@ Output:
       warning: ansis.bgYellowBright,
       ruby: ansis.hex('#E0115F'),
       bgAmber: ansis.bgHex('#FFBF00'),
-    }
+    };
 
     theme.error('error');
     theme.info('info');
     theme.warning('warning');
     theme.ruby('Ruby color');
     theme.bgAmber('Amber background color');
+    ```
+  - supports the use of `open` and `close` properties for each style, e.g.:
+    ```js
+    const myStyle = ansis.bold.italic.black.bgHex('#ABCDEF');
+    console.log(`Hello ${ansis.green.open}ANSI${ansis.green.close} World!`);
+    console.log(`Hello ${myStyle.open}ANSI${myStyle.close} World!`);
+    ```
+  - supports correct break of style at `end of line`, e.g.:
+    ```js
+    ansis.bgGreen(`\nAnsis\nNew Line\nNext New Line\n`);
     ```
 
 ## Styles
@@ -153,7 +175,6 @@ npm i
 ```
 
 ### Start benchmark
-from directory `./bench/`
 ```
 npm run bench
 ```
@@ -161,11 +182,10 @@ npm run bench
 
 > ### Tested on
 >
-> Date: 24 dec 2021\
 > MacBook Pro 16" M1 Max 64GB\
 > macOS Monterey 12.1\
 > Node.js v16.13.1\
-> PhpStorm IDE Terminal
+> Terminal `iTerm2`
 
 ### Colorette bench
 The benchmark used in [`colorette`](https://github.com/jorgebucaran/colorette/blob/main/bench/index.js).
@@ -173,7 +193,7 @@ The benchmark used in [`colorette`](https://github.com/jorgebucaran/colorette/bl
 c.red(`${c.bold(`${c.cyan(`${c.yellow('yellow')}cyan`)}`)}red`);
 ```
 
-```
+```diff
   colors-js           1,119,016 ops/sec
   colorette           4,537,603 ops/sec
   picocolors          3,818,885 ops/sec
@@ -188,9 +208,9 @@ c.red(`${c.bold(`${c.cyan(`${c.yellow('yellow')}cyan`)}`)}red`);
 
 ### Base styles
 ```js
-c[style]('foo')
+styles.forEach((style) => c[style]('foo'));
 ```
-```
+```diff
   colors-js             462,720 ops/sec
   colorette           1,492,260 ops/sec
   picocolors          5,736,444 ops/sec
@@ -205,9 +225,9 @@ c[style]('foo')
 
 ### Chained styles
 ```js
-c[style].bold.underline.italic('foo')
+colors.forEach((color) => c[color].bold.underline.italic('foo'));
 ```
-```
+```diff
   colors-js             136,976 ops/sec
   colorette             (not supported)
   picocolors            (not supported)
@@ -223,9 +243,9 @@ c[style].bold.underline.italic('foo')
 
 ### Nested calls
 ```js
-c[style](c.bold(c.underline(c.italic('foo'))))
+colors.forEach((color) => c[color](c.bold(c.underline(c.italic('foo')))));
 ```
-```
+```diff
   colors-js             165,526 ops/sec
   colorette             750,531 ops/sec
   picocolors            940,217 ops/sec
@@ -241,9 +261,9 @@ c[style](c.bold(c.underline(c.italic('foo'))))
 
 ### Nested styles
 ```js
-c.red(`a red ${c.white('red')} red ${c.red('red')} red ${c.cyan('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.blue('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')}red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')}red ${c.green('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.magenta('red')} red ${c.red('red')}red ${c.red('red')} red ${c.cyan('red')} red ${c.red('red')} red ${c.red('red')} red ${c.yellow('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} message`);
+c.red(`a red ${c.white('white')} red ${c.red('red')} red ${c.cyan('cyan')} red ${c.black('black')} red ${c.red('red')} red ${c.green('green')} red ${c.red('red')} red ${c.yellow('yellow')} red ${c.blue('blue')} red ${c.red('red')} red ${c.magenta('magenta')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.green('green')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.magenta('magenta')} red ${c.red('red')} red ${c.red('red')} red ${c.cyan('cyan')} red ${c.red('red')} red ${c.red('red')} red ${c.yellow('yellow')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} message`);
 ```
-```
+```diff
   colors-js              91,036 ops/sec
   colorette             247,359 ops/sec
   picocolors            246,168 ops/sec
@@ -260,9 +280,9 @@ c.red(`a red ${c.white('red')} red ${c.red('red')} red ${c.cyan('red')} red ${c.
 ### HEX colors
 Only two libraries support truecolors methods: `ansis` and `chalk`
 ```js
-c.hex('#FBA')('foo')
+c.hex('#FBA')('foo');
 ```
-```
+```diff
   colors-js             (not supported)
   colorette             (not supported)
   picocolors            (not supported)
@@ -290,7 +310,7 @@ Most popular ANSI libraries for `Node.js`:
 - [`color-cli`][color-cli]
 - [`ansi-colors`][ansi-colors]
 - [`kleur`][kleur]
-- [`chalk`][kleur]
+- [`chalk`][chalk]
 
 ## License
 
@@ -299,7 +319,7 @@ Most popular ANSI libraries for `Node.js`:
 [colors.js]: https://github.com/Marak/colors.js
 [colorette]: https://github.com/jorgebucaran/colorette
 [picocolors]: https://github.com/alexeyraspopov/picocolors
-[cli-color]: https://github.com/pugjs/pug
+[cli-color]: https://github.com/medikoo/cli-color
 [color-cli]: https://github.com/jaywcjlove/colors-cli
 [ansi-colors]: https://github.com/doowb/ansi-colors
 [kleur]: https://github.com/lukeed/kleur

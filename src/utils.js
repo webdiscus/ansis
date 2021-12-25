@@ -1,13 +1,19 @@
 import tty from 'tty';
 
 // todo Add supports NO_COLOR
-const isColorSupported =
-  !('NO_COLOR' in process.env || process.argv.includes('--no-color')) &&
-  ('FORCE_COLOR' in process.env ||
-    process.argv.includes('--color') ||
-    process.platform === 'win32' ||
-    (tty.isatty(1) && process.env.TERM !== 'dumb') ||
-    'CI' in process.env);
+export const isSupported = () => {
+  if (!process) return false;
+
+  const env = process.env || {};
+  const argv = process.argv || [];
+  const isDisabled = 'NO_COLOR' in env || argv.includes('--no-color');
+  const isForced = 'FORCE_COLOR' in env || argv.includes('--color');
+
+  const isCompatibleTerminal = (tty.isatty(1) && env.TERM && env.TERM !== 'dumb') || process.platform === 'win32';
+  const isCI = 'CI' in env;
+
+  return !isDisabled && (isForced || isCompatibleTerminal || isCI);
+};
 
 /**
  * Convert hex color string to RGB values.
@@ -40,7 +46,7 @@ export const hexToRgb = function (hex) {
 
 /**
  * Clamp a number within the inclusive range specified by min and max.
- * @note: The ternary operator is a tick quicker as Math.min(Math.max(num, min), max).
+ * @note: The ternary operator is a tick quicker than Math.min(Math.max(num, min), max).
  *
  * @param {number} num
  * @param {number} min
@@ -51,7 +57,7 @@ export const clamp = (num, min, max) => (min > num ? min : num > max ? max : num
 
 /**
  * @param {string} str
- * @param {{close: string, open: string} | {closeRe: RegExp, open: string}} props
+ * @param {{open: string, close: string} | {open: string, closeRe: RegExp}} props
  */
 export const strReplaceAll =
   String.prototype.replaceAll != null
@@ -73,7 +79,7 @@ export const strReplaceAll =
  * @param {number} pos The position of the first linebreak.
  * @returns {string}
  */
-// const breakStyle = (str, open, close, pos) => {
+// export const breakStyle = (str, open, close, pos) => {
 //   let result = '',
 //     lastPos = 0;
 //

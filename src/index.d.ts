@@ -8,12 +8,6 @@ interface StyleProperties {
    The ANSI escape sequences for ending the style.
    */
   readonly close: string;
-
-  /**
-   * The regexp pattern to match the ANSI escape sequences of ending the style.
-   * @private
-   */
-  readonly closeRe: RegExp;
 }
 
 export interface StyleFunction {

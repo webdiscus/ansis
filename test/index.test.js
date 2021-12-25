@@ -155,7 +155,7 @@ describe('style tests', () => {
 
   test(`ansis.bgAnsi256(97)`, (done) => {
     let received = ansis.bgAnsi256(97)('foo');
-    const expected = '\x1b[48;2;97mfoo\x1b[49m';
+    const expected = '\x1b[48;5;97mfoo\x1b[49m';
     expect(esc(received)).toEqual(esc(expected));
     done();
   });

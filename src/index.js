@@ -16,12 +16,10 @@ const bgCloseRegex = /\x1B\[49m/g;
 const ansis = (...str) => str.join(' ');
 
 /**
- * @typedef {Object} AnsisProps
- * @property {string} open
- * @property {string} close
+ * @typedef {StyleProperties} AnsisProps
  * @property {string?} openStack
  * @property {string?} closeStack
- * @property {RegExp?} closeRe
+ * @property {RegExp?} closeRe The regexp pattern to match the ANSI escape sequences of ending the style.
  * @property {null | AnsisProps} parent
  */
 
@@ -65,6 +63,8 @@ const createStyle = (props) => {
   const style = (...strings) => wrap(strings, style.props);
   Object.setPrototypeOf(style, styleProxy);
   style.props = props;
+  style.open = props.openStack;
+  style.close = props.closeStack;
 
   return style;
 };
@@ -108,7 +108,7 @@ styles.visible = {
 styles.ansi256 = {
   get() {
     return (num) => {
-      num = clamp(num, 16, 255);
+      num = clamp(num, 0, 255);
       return createStyle({
         open: `\x1B[38;5;${num}m`,
         close: '\x1B[39m',
@@ -125,10 +125,10 @@ styles.ansi256 = {
 styles.bgAnsi256 = {
   get() {
     return (num) => {
-      num = clamp(num, 16, 255);
+      num = clamp(num, 0, 255);
 
       return createStyle({
-        open: `\x1B[48;2;${num}m`,
+        open: `\x1B[48;5;${num}m`,
         close: '\x1B[49m',
         closeRe: bgCloseRegex,
         parent: this.props,

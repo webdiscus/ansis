@@ -254,3 +254,5 @@ export interface AnsisInstance extends StyleFunction, StyleProperties {
 declare const ansis: AnsisInstance;
 
 export default ansis;
+
+export const Ansis: new (str: string) => AnsisInstance;

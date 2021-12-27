@@ -1,19 +1,19 @@
 import tty from 'tty';
 
 // todo Add supports NO_COLOR
-export const isSupported = () => {
-  if (!process) return false;
-
-  const env = process.env || {};
-  const argv = process.argv || [];
-  const isDisabled = 'NO_COLOR' in env || argv.includes('--no-color');
-  const isForced = 'FORCE_COLOR' in env || argv.includes('--color');
-
-  const isCompatibleTerminal = (tty.isatty(1) && env.TERM && env.TERM !== 'dumb') || process.platform === 'win32';
-  const isCI = 'CI' in env;
-
-  return !isDisabled && (isForced || isCompatibleTerminal || isCI);
-};
+// export const isSupported = () => {
+//   if (!process) return false;
+//
+//   const env = process.env || {};
+//   const argv = process.argv || [];
+//   const isDisabled = 'NO_COLOR' in env || argv.includes('--no-color');
+//   const isForced = 'FORCE_COLOR' in env || argv.includes('--color');
+//
+//   const isCompatibleTerminal = (tty.isatty(1) && env.TERM && env.TERM !== 'dumb') || process.platform === 'win32';
+//   const isCI = 'CI' in env;
+//
+//   return !isDisabled && (isForced || isCompatibleTerminal || isCI);
+// };
 
 /**
  * Convert hex color string to RGB values.
@@ -56,15 +56,30 @@ export const hexToRgb = function (hex) {
 export const clamp = (num, min, max) => (min > num ? min : num > max ? max : num);
 
 /**
+ * Replace all matched strings.
+ * Note: this implementation is over 30% faster than String.replaceAll().
+ *
  * @param {string} str
- * @param {{open: string, close: string} | {open: string, closeRe: RegExp}} props
+ * @param {string} searchValue
+ * @param {string} replaceValue
+ * @returns {string}
  */
-export const strReplaceAll =
-  String.prototype.replaceAll != null
-    ? // node >= 15
-      (str, { close, open }) => str.replaceAll(close, open)
-    : // node < 15
-      (str, { closeRe, open }) => str.replace(closeRe, open);
+export const strReplaceAll = function (str, searchValue, replaceValue) {
+  let pos = str.indexOf(searchValue);
+  if (pos < 0) return str;
+
+  const substringLength = searchValue.length;
+  let lastPos = 0;
+  let result = '';
+
+  while (pos > -1) {
+    result += str.substr(lastPos, pos - lastPos) + replaceValue;
+    lastPos = pos + substringLength;
+    pos = str.indexOf(searchValue, lastPos);
+  }
+
+  return result + str.substr(lastPos);
+};
 
 /**
  * The style must be break at the end of the line and continued on a new line.

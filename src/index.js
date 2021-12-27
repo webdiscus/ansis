@@ -1,70 +1,71 @@
 import { clamp, hexToRgb, strReplaceAll } from './utils.js';
-import ansiCodes from './ansi-codes.js';
-
-const styles = {};
-const ESC = '\x1b';
-const regexLF = /(\r*\n)/g;
-const colorCloseRegex = /\x1B\[39m/g;
-const bgCloseRegex = /\x1B\[49m/g;
+import { ansiCodes } from './ansi-codes.js';
 
 /**
- * The ANSI string (ansis).
- *
- * @param {string | string[]} str
- * @returns {string}
+ * All methods are implemented in prototype of the `styleProxy` object.
+ * @implements {AnsisInstance}
  */
-const ansis = (...str) => str.join(' ');
+export class Ansis {
+  constructor() {
+    const self = (str) => str;
+    Object.setPrototypeOf(self, styleProxy);
+
+    return self;
+  }
+}
+
+const styles = {};
+const regexLF = /(\r*\n)/g;
 
 /**
  * @typedef {StyleProperties} AnsisProps
  * @property {string?} openStack
  * @property {string?} closeStack
- * @property {RegExp?} closeRe The regexp pattern to match the ANSI escape sequences of ending the style.
  * @property {null | AnsisProps} parent
  */
 
 /**
  * Wrap the string with styling and reset codes.
  *
- * @param {string | string[]} strings
+ * @param {string | string[]} str
  * @param {AnsisProps} props
  * @returns {string}
  */
-const wrap = (strings, props) => {
-  let str = strings.length === 1 ? '' + strings[0] : strings.join(' ');
+const wrap = (str, props) => {
   if (!str) return '';
 
   const { openStack, closeStack } = props;
-  if (str.indexOf(ESC) > -1) {
+  if (str.indexOf('\x1b') > -1) {
     while (props !== undefined) {
-      str = strReplaceAll(str, props);
+      str = strReplaceAll(str, props.close, props.open);
       props = props.parent;
     }
   }
+
   if (str.indexOf('\n') > -1) str = str.replace(regexLF, closeStack + '$1' + openStack);
 
   return openStack + str + closeStack;
 };
 
 /**
- * @param {AnsisProps} props
+ * @param {string} open
+ * @param {string} close
+ * @param {AnsisProps} parent
  * @returns {AnsisInstance}
  */
-const createStyle = (props) => {
-  const { open, close, parent } = props;
+const createStyle = (open, close, parent) => {
+  let openStack = open;
+  let closeStack = close;
   if (parent !== undefined) {
-    props.openStack = parent.openStack + open;
-    props.closeStack = close + parent.closeStack;
-  } else {
-    props.openStack = open;
-    props.closeStack = close;
+    openStack = parent.openStack + open;
+    closeStack = close + parent.closeStack;
   }
 
-  const style = (...strings) => wrap(strings, style.props);
+  const style = (str) => wrap(str, style.props);
   Object.setPrototypeOf(style, styleProxy);
-  style.props = props;
-  style.open = props.openStack;
-  style.close = props.closeStack;
+  style.props = { open, close, openStack, closeStack, parent };
+  style.open = openStack;
+  style.close = closeStack;
 
   return style;
 };
@@ -73,15 +74,10 @@ const createStyle = (props) => {
  * Create base styles.
  */
 for (let name in ansiCodes) {
-  const [open, close] = ansiCodes[name];
+  const { open, close } = ansiCodes[name];
   styles[name] = {
     get() {
-      const style = createStyle({
-        open: `\x1B[${open}m`,
-        close: `\x1B[${close}m`,
-        closeRe: new RegExp(`\\x1B\\[${close}m`, 'g'),
-        parent: this.props,
-      });
+      const style = createStyle(open, close, this.props);
       Object.defineProperty(this, name, { value: style });
       return style;
     },
@@ -93,12 +89,7 @@ for (let name in ansiCodes) {
  */
 styles.visible = {
   get() {
-    return createStyle({
-      open: '',
-      close: '',
-      closeRe: null,
-      parent: this.props,
-    });
+    return createStyle('', '', this.props);
   },
 };
 
@@ -109,12 +100,7 @@ styles.ansi256 = {
   get() {
     return (num) => {
       num = clamp(num, 0, 255);
-      return createStyle({
-        open: `\x1B[38;5;${num}m`,
-        close: '\x1B[39m',
-        closeRe: colorCloseRegex,
-        parent: this.props,
-      });
+      return createStyle(`\x1B[38;5;${num}m`, '\x1B[39m', this.props);
     };
   },
 };
@@ -126,13 +112,7 @@ styles.bgAnsi256 = {
   get() {
     return (num) => {
       num = clamp(num, 0, 255);
-
-      return createStyle({
-        open: `\x1B[48;5;${num}m`,
-        close: '\x1B[49m',
-        closeRe: bgCloseRegex,
-        parent: this.props,
-      });
+      return createStyle(`\x1B[48;5;${num}m`, '\x1B[49m', this.props);
     };
   },
 };
@@ -146,13 +126,7 @@ styles.rgb = {
       r = clamp(r, 0, 255);
       g = clamp(g, 0, 255);
       b = clamp(b, 0, 255);
-
-      return createStyle({
-        open: `\x1B[38;2;${r};${g};${b}m`,
-        close: '\x1B[39m',
-        closeRe: colorCloseRegex,
-        parent: this.props,
-      });
+      return createStyle(`\x1B[38;2;${r};${g};${b}m`, '\x1B[39m', this.props);
     };
   },
 };
@@ -164,13 +138,7 @@ styles.hex = {
   get() {
     return (hex) => {
       const [r, g, b] = hexToRgb(hex);
-
-      return createStyle({
-        open: `\x1B[38;2;${r};${g};${b}m`,
-        close: '\x1B[39m',
-        closeRe: colorCloseRegex,
-        parent: this.props,
-      });
+      return createStyle(`\x1B[38;2;${r};${g};${b}m`, '\x1B[39m', this.props);
     };
   },
 };
@@ -184,13 +152,7 @@ styles.bgRgb = {
       r = clamp(r, 0, 255);
       g = clamp(g, 0, 255);
       b = clamp(b, 0, 255);
-
-      return createStyle({
-        open: `\x1B[48;2;${r};${g};${b}m`,
-        close: '\x1B[49m',
-        closeRe: bgCloseRegex,
-        parent: this.props,
-      });
+      return createStyle(`\x1B[48;2;${r};${g};${b}m`, '\x1B[49m', this.props);
     };
   },
 };
@@ -202,18 +164,11 @@ styles.bgHex = {
   get() {
     return (hex) => {
       const [r, g, b] = hexToRgb(hex);
-
-      return createStyle({
-        open: `\x1B[48;2;${r};${g};${b}m`,
-        close: '\x1B[49m',
-        closeRe: bgCloseRegex,
-        parent: this.props,
-      });
+      return createStyle(`\x1B[48;2;${r};${g};${b}m`, '\x1B[49m', this.props);
     };
   },
 };
 
 const styleProxy = Object.defineProperties(() => {}, styles);
-Object.setPrototypeOf(ansis, styleProxy);
 
-export default ansis;
+export default new Ansis();

@@ -67,7 +67,7 @@ Output:
     const theme = {
       error: ansis.red.bold,
       info: ansis.cyan.italic,
-      warning: ansis.bgYellowBright,
+      warning: ansis.black.bgYellowBright,
       ruby: ansis.hex('#E0115F'),
       bgAmber: ansis.bgHex('#FFBF00'),
     };
@@ -194,16 +194,16 @@ c.red(`${c.bold(`${c.cyan(`${c.yellow('yellow')}cyan`)}`)}red`);
 ```
 
 ```diff
-  colors-js           1,119,016 ops/sec
-  colorette           4,537,603 ops/sec
-  picocolors          3,818,885 ops/sec
-  cli-color             470,921 ops/sec
-  color-cli             109,666 ops/sec
-  ansi-colors         1,267,504 ops/sec
-  kleur/colors        2,265,820 ops/sec
-  kleur               2,216,547 ops/sec
-  chalk               2,272,601 ops/sec
-+ ansis               1,910,873 ops/sec
+  colors-js           1,152,114 ops/sec
+  colorette           4,548,418 ops/sec
+  picocolors          3,832,593 ops/sec
+  cli-color             471,929 ops/sec
+  color-cli             110,282 ops/sec
+  ansi-colors         1,272,164 ops/sec
+  kleur/colors        2,278,569 ops/sec
+  kleur               2,223,929 ops/sec
+  chalk               2,255,589 ops/sec
++ ansis               2,674,316 ops/sec
 ```
 
 ### Base styles
@@ -211,16 +211,16 @@ c.red(`${c.bold(`${c.cyan(`${c.yellow('yellow')}cyan`)}`)}red`);
 styles.forEach((style) => c[style]('foo'));
 ```
 ```diff
-  colors-js             462,720 ops/sec
-  colorette           1,492,260 ops/sec
-  picocolors          5,736,444 ops/sec
-  cli-color             222,377 ops/sec
-  color-cli              73,354 ops/sec
-  ansi-colors           719,913 ops/sec
-  kleur/colors        1,446,799 ops/sec
-  kleur               3,822,845 ops/sec
-  chalk               3,151,919 ops/sec
-+ ansis               4,248,414 ops/sec
+  colors-js             475,774 ops/sec
+  colorette           1,174,392 ops/sec
+  picocolors          5,724,714 ops/sec
+  cli-color             220,577 ops/sec
+  color-cli              73,535 ops/sec
+  ansi-colors           727,414 ops/sec
+  kleur/colors        1,275,337 ops/sec
+  kleur               3,843,212 ops/sec
+  chalk               3,144,045 ops/sec
++ ansis               4,360,629 ops/sec
 ```
 
 ### Chained styles
@@ -228,16 +228,16 @@ styles.forEach((style) => c[style]('foo'));
 colors.forEach((color) => c[color].bold.underline.italic('foo'));
 ```
 ```diff
-  colors-js             136,976 ops/sec
+  colors-js                     138,219
   colorette             (not supported)
   picocolors            (not supported)
-  cli-color             142,024 ops/sec
-  color-cli              52,604 ops/sec
-  ansi-colors           159,209 ops/sec
+  cli-color                     144,837
+  color-cli                      52,732
+  ansi-colors                   158,921
   kleur/colors          (not supported)
-  kleur                 511,077 ops/sec
-  chalk               1,613,521 ops/sec
-+ ansis               5,126,060 ops/sec
+  kleur                         514,035
+  chalk                       1,234,573
++ ansis                       5,515,868
 
 ```
 
@@ -246,16 +246,16 @@ colors.forEach((color) => c[color].bold.underline.italic('foo'));
 colors.forEach((color) => c[color](c.bold(c.underline(c.italic('foo')))));
 ```
 ```diff
-  colors-js             165,526 ops/sec
-  colorette             750,531 ops/sec
-  picocolors            940,217 ops/sec
-  cli-color              64,927 ops/sec
-  color-cli              13,764 ops/sec
-  ansi-colors           258,639 ops/sec
-  kleur/colors          566,145 ops/sec
-  kleur                 645,191 ops/sec
-  chalk                 493,049 ops/sec
-+ ansis                 354,148 ops/sec
+  colors-js             165,202 ops/sec
+  colorette             712,604 ops/sec
+  picocolors            939,536 ops/sec
+  cli-color              64,758 ops/sec
+  color-cli              13,833 ops/sec
+  ansi-colors           258,930 ops/sec
+  kleur/colors          563,266 ops/sec
+  kleur                 646,985 ops/sec
+  chalk                 385,590 ops/sec
++ ansis                 554,813 ops/sec
 
 ```
 
@@ -264,16 +264,16 @@ colors.forEach((color) => c[color](c.bold(c.underline(c.italic('foo')))));
 c.red(`a red ${c.white('white')} red ${c.red('red')} red ${c.cyan('cyan')} red ${c.black('black')} red ${c.red('red')} red ${c.green('green')} red ${c.red('red')} red ${c.yellow('yellow')} red ${c.blue('blue')} red ${c.red('red')} red ${c.magenta('magenta')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.green('green')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.magenta('magenta')} red ${c.red('red')} red ${c.red('red')} red ${c.cyan('cyan')} red ${c.red('red')} red ${c.red('red')} red ${c.yellow('yellow')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} message`);
 ```
 ```diff
-  colors-js              91,036 ops/sec
-  colorette             247,359 ops/sec
-  picocolors            246,168 ops/sec
-  cli-color              42,756 ops/sec
-  color-cli              14,343 ops/sec
-  ansi-colors           122,972 ops/sec
-  kleur/colors          241,366 ops/sec
-  kleur                 228,477 ops/sec
-  chalk                 195,446 ops/sec
-+ ansis                 210,382 ops/sec
+  colors-js              89,529 ops/sec
+  colorette             243,237 ops/sec
+  picocolors            242,528 ops/sec
+  cli-color              41,897 ops/sec
+  color-cli              14,245 ops/sec
+  ansi-colors           120,991 ops/sec
+  kleur/colors          233,875 ops/sec
+  kleur                 220,233 ops/sec
+  chalk                 157,450 ops/sec
++ ansis                 205,393 ops/sec
 
 ```
 
@@ -291,8 +291,8 @@ c.hex('#FBA')('foo');
   ansi-colors           (not supported)
   kleur/colors          (not supported)
   kleur                 (not supported)
-  chalk               2,935,616 ops/sec
-+ ansis               4,612,085 ops/sec
+  chalk               2,746,362 ops/sec
++ ansis               4,584,357 ops/sec
 ```
 
 ## Testing

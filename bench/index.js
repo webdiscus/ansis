@@ -29,8 +29,8 @@ import Bench from './lib/bench.js';
 import { createFixture } from './lib/utils.js';
 
 // vendor libraries for benchmark
-import ansis from '../src/index.js';
 import chalk from 'chalk';
+import ansis2, { Ansis } from '../src/index.js';
 import colorsJs from 'colors';
 import * as colorette from 'colorette';
 import ansiColors from 'ansi-colors';
@@ -39,6 +39,9 @@ import colorCli from 'colors-cli/lib/color-safe.js';
 import kleur from 'kleur';
 import * as kleurColors from 'kleur/colors';
 import picocolors from 'picocolors';
+
+// create new instance of Ansis for correct measure in benchmark
+const ansis = new Ansis();
 
 // All vendor libraries to be tested
 const vendors = [
@@ -54,14 +57,15 @@ const vendors = [
   { name: 'ansis', lib: ansis },
 ];
 
+const benchStyle = new Ansis();
 const bench = new Bench({
   minOpsWidth: 12,
-  suiteNameColor: ansis.bgYellow.black,
-  benchNameColor: ansis.magenta,
-  opsColor: ansis.greenBright,
-  rmeColor: ansis.cyan,
-  statUnitColor: ansis.dim,
-  failColor: ansis.red.bold,
+  suiteNameColor: benchStyle.bgYellow.black,
+  benchNameColor: benchStyle.magenta,
+  opsColor: benchStyle.greenBright,
+  rmeColor: benchStyle.cyan,
+  statUnitColor: benchStyle.dim,
+  failColor: benchStyle.red.bold,
 });
 
 // styles present in all libraries
@@ -82,14 +86,22 @@ const colorStyles = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan
 
 let fixture = [];
 
-// reserved
-// bench('Single style')
-//   .add('ansis', () => baseStyles.forEach((style) => ansis[style]('foo')))
-//   .add('colorette', () => colorette.red('colorette'))
-//   .add('picocolors', () => picocolors.red('picocolors'))
-//   .add('chalk', () => chalk.red('chalk'))
-//   .add('ansis', () => ansis.red('foo'))
-//   .run();
+function outputNested(name, lib) {
+  const rgb = lib.hex('#80109f');
+
+  const str = lib.red(
+    `begin ${rgb.bold('RGB')} ${lib.yellow('yellow')} red ${lib.italic.cyan('italic cyan')} red ${lib.red(
+      'red'
+    )} red ${lib.underline.green.italic(
+      `underline italic green ${lib.hex('#e5850a')('underline italic blue')} underline italic green`
+    )} red ${lib.cyan('cyan')} red ${lib.bold.yellow('bold yellow')} red ${lib.green('green')} end`
+  );
+
+  console.log(` ${name}`, str);
+}
+
+outputNested('chalk\t', chalk);
+outputNested('ansis\t', ansis);
 
 // Colorette bench
 // https://github.com/jorgebucaran/colorette/blob/main/bench/index.js
@@ -105,6 +117,8 @@ bench('Colorette bench')
   .add(vendors[7].name, () => fixture[7](vendors[7].lib))
   .add(vendors[8].name, () => fixture[8](vendors[8].lib))
   .add(vendors[9].name, () => fixture[9](vendors[9].lib))
+  //.add('chalk', () => chalk.red(`${chalk.bold(`${chalk.cyan(`${chalk.yellow('yellow')}cyan`)}`)}red`))
+  //.add('ansis', () => ansis.red(`${ansis.bold(`${ansis.cyan(`${ansis.yellow('yellow')}cyan`)}`)}red`))
   .run();
 
 // Base styles
@@ -185,18 +199,18 @@ bench('Nested styles')
   .run();
 
 // reserved
-// bench('Break style')
-//   .add('colors-js', () => colorsJs.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//   .add('colorette', () => colorette.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//   .add('picocolors', () => picocolors.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//   .add('cli-color', () => cliColor.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//   .add('color-cli', () => colorCli.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//   .add('ansi-colors', () => ansiColors.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//   .add('kleur/colors', () => kleurColors.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//   .add('kleur', () => ansis.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//   .add('chalk', () => kleur.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//  .add('ansis', () => ansis.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//  .run();
+bench('Break style')
+  .add('colors-js', () => colorsJs.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+  .add('colorette', () => colorette.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+  .add('picocolors', () => picocolors.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+  .add('cli-color', () => cliColor.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+  .add('color-cli', () => colorCli.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+  .add('ansi-colors', () => ansiColors.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+  .add('kleur/colors', () => kleurColors.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+  .add('kleur', () => ansis.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+  .add('chalk', () => kleur.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+  .add('ansis', () => ansis.green(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+  .run();
 
 // HEX colors
 // the hex(), rgb(), bgHex(), bgRgb() methods support only chalk and ansis

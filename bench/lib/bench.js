@@ -1,5 +1,7 @@
 import Benchmark from 'benchmark';
-import ansis from '../../src/index.js';
+import { Ansis } from '../../src/index.js';
+
+const benchStyle = new Ansis();
 
 /**
  *
@@ -18,12 +20,12 @@ import ansis from '../../src/index.js';
 const defaultOptions = {
   minNameWidth: 15,
   minOpsWidth: 15,
-  suiteNameColor: ansis.yellow.underline,
-  benchNameColor: ansis.visible,
-  opsColor: ansis.cyanBright,
-  rmeColor: ansis.visible,
-  statUnitColor: ansis.visible,
-  failColor: ansis.red.bold,
+  suiteNameColor: benchStyle.yellow.underline,
+  benchNameColor: benchStyle.visible,
+  opsColor: benchStyle.cyanBright,
+  rmeColor: benchStyle.visible,
+  statUnitColor: benchStyle.visible,
+  failColor: benchStyle.red.bold,
 };
 let errors = {};
 

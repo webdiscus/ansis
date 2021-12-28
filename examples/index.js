@@ -2,12 +2,169 @@ import ansis from '../src/index.js';
 import chalk from 'chalk';
 
 const log = console.log;
-const style = 'red';
+const style = 'green';
 const c = ansis;
 
+const colorizeASCII = ({ ascii, data }, paddingLeft = 5) => {
+  // start index in logo is 1, because first char is \n
+  let i = 1,
+    row = 0,
+    out = '',
+    char,
+    code;
+
+  do {
+    for (let charIdx = 0; charIdx < data.length; charIdx++) {
+      let { width, codes } = data[charIdx];
+      // last char width +1 (\n)
+      if (charIdx === data.length - 1) width++;
+      if (charIdx === 0) out += ''.padStart(paddingLeft);
+      for (let charWidthIdx = 0; charWidthIdx < width; charWidthIdx++) {
+        char = ascii[i++];
+        code = Array.isArray(codes) ? codes[row] : codes + row;
+        out += ansis.ansi(code)(char);
+      }
+    }
+    row++;
+  } while (char);
+
+  return out;
+};
+
+// The ASCII logo powered by https://patorjk.com/software/taag/#p=testall&h=1&f=Graceful&t=ANSIS
+const logo = {
+  ascii: `
+ █████╗ ███╗   ██╗███████╗██╗███████╗
+██╔══██╗████╗  ██║██╔════╝██║██╔════╝
+███████║██╔██╗ ██║███████╗██║███████╗
+██╔══██║██║╚██╗██║╚════██║██║╚════██║
+██║  ██║██║ ╚████║███████║██║███████║
+╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝╚══════╝
+`,
+  data: [
+    { width: 8, codes: [76, 77, 78, 79, 80, 81] },
+    { width: 10, codes: 196 },
+    { width: 8, codes: 226 },
+    { width: 3, codes: 214 },
+    { width: 8, codes: [26, 27, 32, 33, 39, 45] },
+  ],
+};
+
+/**
+ * ANSIS Logo.
+ * Showing in readme.
+ */
 log();
-log(ansisLogo());
+log(colorizeASCII(logo, 5));
 log();
+
+/**
+ * Demo of all features.
+ * Showing in readme.
+ */
+log(
+  c.bold(' bold') +
+    c.dim(' dim') +
+    c.italic(' italic ') +
+    c.underline('underline') +
+    ' ' +
+    c.strikethrough('strikethrough') +
+    ' ' +
+    c.inverse('inverse') +
+    ' ' +
+    c.bold.italic.underline.strike(' bold italic underline strike ') +
+    c.red('\n red') +
+    c.green(' green') +
+    c.yellow(' yellow') +
+    c.blue(' blue') +
+    c.magenta(' magenta') +
+    c.cyan(' cyan') +
+    c.white(' white') +
+    c.gray(' gray') +
+    c.bold.yellow(' bold yellow ') +
+    c.dim.cyan('faint cyan ') +
+    c.redBright('redBright\n ') +
+    c.black.bgRed('bgRed') +
+    ' ' +
+    c.black.bgGreen('bgGreen') +
+    ' ' +
+    c.black.bgYellow('bgYellow') +
+    ' ' +
+    c.bgBlue('bgBlue') +
+    ' ' +
+    c.black.bgMagenta('bgMagenta') +
+    ' ' +
+    c.black.bgCyan('bgCyan') +
+    ' ' +
+    c.black.bgWhite('bgWhite') +
+    ' ' +
+    c.white.bgRed.bold.italic.strikethrough(' Coca Cola ') +
+    ' ' +
+    c.black.bgRedBright('bgRedBright\n') +
+    c.greenBright(' greenBright') +
+    c.yellowBright(' yellowBright') +
+    c.blueBright(' blueBright') +
+    c.magentaBright(' magentaBright') +
+    c.cyanBright(' cyanBright') +
+    c.whiteBright(' whiteBright') +
+    c.greenBright(' A') +
+    c.magentaBright('N') +
+    c.yellowBright('S') +
+    c.redBright('I') +
+    c.blueBright('S\n ') +
+    c.black.bgGreenBright('bgGreenBright') +
+    ' ' +
+    c.black.bgYellowBright('bgYellowBright') +
+    ' ' +
+    c.bgBlueBright('bgBlueBright') +
+    ' ' +
+    c.black.bgMagentaBright('bgMagentaBright') +
+    ' ' +
+    c.black.bgCyanBright('bgCyanBright') +
+    ' ' +
+    c.black.bgWhiteBright(' ') +
+    ' ' +
+    c.magentaBright.bgGreenBright('A') +
+    c.blueBright.bgMagentaBright('N') +
+    c.redBright.bgYellowBright('S') +
+    c.yellowBright.bgRedBright('I') +
+    c.redBright.bgBlueBright('S') +
+    '\n ' +
+    //c.black.bgWhiteBright('bgWhiteBright') +
+    c.black.hex('#d93611')('#d93611') +
+    c.black.hex('#d97511')('#d97511') +
+    c.black.hex('#d9d611')('#d9d611') +
+    c.black.hex('#a0d911')('#a0d911') +
+    c.black.hex('#18d911')('#18d911') +
+    //
+    c.black.hex('#11d9c2')('#11d9c2') +
+    c.black.hex('#119dd9')('#119dd9') +
+    c.black.hex('#1157d9')('#1157d9') +
+    c.black.hex('#6614f6')('#6614f6') +
+    c.black.hex('#c511d9')('#c511d9') +
+    c.black.hex('#f10794')('#f10794') +
+    '\n ' +
+    c.black.bgAnsi(197)(' 197 ') +
+    c.black.bgAnsi(203)(' 203 ') +
+    c.black.bgAnsi(209)(' 209 ') +
+    c.black.bgAnsi(215)(' 215 ') +
+    c.black.bgAnsi(221)(' 221 ') +
+    c.black.bgAnsi(227)(' 227 ') +
+    c.black.bgAnsi(191)(' 191 ') +
+    c.black.bgAnsi(156)(' 156  ') +
+    c.black.bgAnsi(120)(' 120  ') +
+    c.black.bgAnsi(123)(' 123 ') +
+    c.black.bgAnsi(117)(' 117 ') +
+    c.black.bgAnsi(75)('  75 ') +
+    c.black.bgAnsi(104)(' 104 ') +
+    c.black.bgAnsi(98)('  98 ') +
+    c.black.bgAnsi(92)('  92 ') +
+    '\n '
+);
+
+/**
+ * Misc demos.
+ */
 
 // Output benchmark samples
 log('Colorette bench: ', c.red(`${c.bold(`${c.cyan(`${c.yellow('yellow')}cyan`)}`)}red`));
@@ -50,65 +207,20 @@ log(
 );
 log();
 
-outputNested('chalk nested', chalk);
-outputNested('ansis nested', ansis);
+// Deep nested chained styles
+log(
+  c.green(
+    `green ${c.cyan(
+      `cyan ${c.red(
+        `red ${c.yellow(
+          `yellow ${c.blue(
+            `blue ${c.magenta(
+              `magenta ${c.underline(`underline ${c.yellowBright.italic(`italic bright yellow`)} underline`)} magenta`
+            )} blue`
+          )} yellow`
+        )} red`
+      )} cyan`
+    )} green`
+  )
+);
 log();
-
-function outputNested(name, lib) {
-  const rgb = lib.rgb(100, 80, 155);
-
-  const str = lib.red(
-    `begin ${rgb.bold('RGB')} ${lib.yellow('yellow')} red ${lib.italic.cyan('italic cyan')} red ${lib.red(
-      'red'
-    )} red ${lib.underline.green.italic(
-      `underline italic green ${lib.rgb(80, 120, 200)('underline italic blue')} underline italic green`
-    )} red ${lib.cyan('cyan')} red ${lib.bold.yellow('bold yellow')} red ${lib.green('green')} end`
-  );
-
-  log(` ${name}:\t`, str);
-}
-
-// created via https://patorjk.com/software/taag/#p=testall&h=1&f=Graceful&t=ANSIS
-function ansisLogo() {
-  const paddingLeft = 5;
-
-  const logo = `
- █████╗ ███╗   ██╗███████╗██╗███████╗
-██╔══██╗████╗  ██║██╔════╝██║██╔════╝
-███████║██╔██╗ ██║███████╗██║███████╗
-██╔══██║██║╚██╗██║╚════██║██║╚════██║
-██║  ██║██║ ╚████║███████║██║███████║
-╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝╚══════╝
-`;
-  const chars = [
-    { width: 8, codes: [76, 77, 78, 79, 80, 81] },
-    { width: 10, codes: 196 },
-    { width: 8, codes: 226 },
-    { width: 3, codes: 214 },
-    { width: 8, codes: [26, 27, 32, 33, 39, 45] },
-  ];
-
-  // start index in logo is 1, because first char is \n
-  let i = 1,
-    row = 0,
-    out = '',
-    char,
-    code;
-
-  while (logo[i]) {
-    for (let charIdx = 0; charIdx < chars.length; charIdx++) {
-      let { width, codes } = chars[charIdx];
-      // last char width +1 (\n)
-      if (charIdx === chars.length - 1) width++;
-      if (charIdx === 0) out += ''.padStart(paddingLeft);
-      for (let charWidthIdx = 0; charWidthIdx < width; charWidthIdx++) {
-        char = logo[i++];
-        code = Array.isArray(codes) ? codes[row] : codes + row;
-        out += ansis.ansi(code)(char);
-      }
-    }
-    row++;
-  }
-
-  return out;
-}

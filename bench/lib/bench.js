@@ -72,10 +72,6 @@ const onError = function (event) {
   errors[name] = error;
 };
 
-const cloneFn = (fn) => {
-  return new Function('return ' + fn.toString())();
-};
-
 class Bench {
   name = 'Bench';
   benchNames = [];

@@ -89,7 +89,7 @@ const colorStyles = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan
 let fixture = [];
 
 //showSupportOfDeepNestedStyling();
-//showSupportOfDeepNestedMultiStyling();
+//showSupportOfDeepNestedChainedStyling();
 //showSupportOfBreakStyleAtNewLine();
 
 // Colorette bench
@@ -291,7 +291,7 @@ function showSupportOfDeepNestedStyling() {
   log('ansis: ', deepNestedFixture(ansis));
 }
 
-function showSupportOfDeepNestedMultiStyling() {
+function showSupportOfDeepNestedChainedStyling() {
   log('chalk: ', complexNestedFixture(chalk));
   log('ansis: ', complexNestedFixture(ansis));
 }

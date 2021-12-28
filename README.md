@@ -13,6 +13,12 @@
 Color styling of text for ANSI terminals using the SGR (Select Graphic Rendition) codes defined in the [ECMA-48](https://www.ecma-international.org/publications-and-standards/standards/ecma-48/) standard.\
 This is improved and faster implementation for `Node.js`.
 
+<div align="center">
+    <a href="https://www.npmjs.com/package/ansis">
+        <img width="830" src="doc/img/ansis-demo.png" alt="ansis">
+    </a>
+</div>
+
 <a id="install" name="install" href="#install"></a>
 ## Install
 
@@ -173,17 +179,17 @@ ansis.bgRgb(224, 17, 95)('Ruby');
 
 ## Compare most popular ANSI libraries
 
-| Library                      | Standard<br>style / color<br>naming | Chain<br>styles | Nested<br>styles | New<br>Line | ANSI 256<br>colors              | Truecolor<br>RGB / HEX | NO_COLOR                                                 |
-|------------------------------|-------------------|-----------------|------------------|-------------|---------------------------------|------------------------|:---------------------------------------------------------|
-| [`colors.js`][colors.js]     | no, e.g.<br>`brightRed` | yes             | yes              | yes         | -                               | -                      | only<br>`FORCE_COLOR`<br>`--no-color`<br>`--color`       |
-| [`colorette`][colorette]     | yes<br>(16 colors) | -               | yes              | -           | -                               | -                      | yes                                                      |
-| [`picocolors`][picocolors]   | yes<br>(8 colors) | -               | yes              | -           | -                               | -                      | yes                                                      |
-| [`cli-color`][cli-color]     | yes<br>(16 colors) | yes             | yes              | -           | `.xterm(num)`                   | -                      | yes                                                      |
-| [`color-cli`][color-cli]     | no, e.g.<br>`red_bbt` | yes             | buggy            | yes         | `.x<num>`                       | -                      | only<br>`--no-color`<br>`--color`                        |
-| [`ansi-colors`][ansi-colors] | yes<br>(16 colors)    | yes             | yes              | yes         | -                               | -                      | only<br>`FORCE_COLOR`                                        |
-| [`kleur`][kleur]             | yes<br>(8 colors) | yes*            | yes              | -           | -                               | -                      | yes                                                      |
-| [`chalk`][chalk]             | yes<br>(16 colors) | yes             | yes              | yes         | `.ansi256(num)`                 | `.hex()` `.rgb()`      | yes                                                      |
-| **+ ansis**                  | yes<br>(16 colors) | yes             | yes              | yes         | `.ansi256(num)`<br>`.ansi(num)` | `.hex()` `.rgb()`      | yes                                                      |
+| Library                      | Standard<br>style / color<br>naming | Chain<br>styles | Nested<br>styles | New<br>Line | ANSI 256<br>colors              | Truecolor<br>RGB / HEX | NO_COLOR                                                    |
+|------------------------------|:-----------------------------------:|:---------------:|:----------------:|:-----------:|---------------------------------|------------------------|:------------------------------------------------------------|
+| [`colors.js`][colors.js]     |       no, e.g.<br>`brightRed`       |       yes       |       yes        |     yes     | -                               | -                      | only<br>`FORCE_COLOR`<br>`--no-color`<br>`--color`          |
+| [`colorette`][colorette]     |         yes<br>(16 colors)          |        -        |       yes        |      -      | -                               | -                      | yes                                                         |
+| [`picocolors`][picocolors]   |          yes<br>(8 colors)          |        -        |       yes        |      -      | -                               | -                      | yes                                                         |
+| [`cli-color`][cli-color]     |         yes<br>(16 colors)          |       yes       |       yes        |      -      | `.xterm(num)`                   | -                      | yes                                                         |
+| [`color-cli`][color-cli]     |        no, e.g.<br>`red_bbt`        |       yes       |   _buggy_        |     yes     | `.x<num>`                       | -                      | only<br>`--no-color`<br>`--color`                           |
+| [`ansi-colors`][ansi-colors] |         yes<br>(16 colors)          |       yes       |       yes        |     yes     | -                               | -                      | only<br>`FORCE_COLOR`                                       |
+| [`kleur`][kleur]             |          yes<br>(8 colors)          |     _yes_*      |       yes        |      -      | -                               | -                      | yes                                                         |
+| [`chalk`][chalk]             |         yes<br>(16 colors)          |       yes       |       yes        |     yes     | `.ansi256(num)`                 | `.hex()` `.rgb()`      | yes                                                         |
+| [`ansis`][ansis-github]      |         yes<br>(16 colors)          |       yes       |       yes        |     yes     | `.ansi256(num)`<br>`.ansi(num)` | `.hex()` `.rgb()`      | yes                                                         |
 
 ### Column description
 - **Standard style and color naming**: `red` `redBright` `bgRed` `bgRedBright` etc., see above the **Foreground / Background colors**.
@@ -385,3 +391,4 @@ Most popular ANSI libraries for `Node.js`:
 [ansi-colors]: https://github.com/doowb/ansi-colors
 [kleur]: https://github.com/lukeed/kleur
 [chalk]: https://github.com/chalk/chalk
+[ansis-github]: https://github.com/webdiscus/ansis

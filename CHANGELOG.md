@@ -1,5 +1,9 @@
 # Change log
 
+## 1.2.1 (2021-12-28)
+- update examples: added demo of all features
+- update readme
+
 ## 1.2.0 (2021-12-27)
 - added supports the environment variables `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
 - added aliases `ansi` for `ansi256` and `bgAnsi` for `bgAnsi256`

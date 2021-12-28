@@ -179,7 +179,7 @@ export interface AnsisInstance extends StyleFunction, StyleProperties {
   /** White foreground. */
   readonly white: AnsisInstance;
 
-  /** Gray foreground. */
+  /** Gray foreground. The alias for blackBright. */
   readonly gray: AnsisInstance;
 
   /** Bright black foreground. */

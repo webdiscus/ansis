@@ -23,7 +23,7 @@ This is improved and faster implementation for `Node.js`.
 ## Install
 
 ```console
-npm install ansis --save-dev
+npm install ansis --save
 ```
 
 ## Show ANSI demo

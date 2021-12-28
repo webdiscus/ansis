@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Color styling of text for ANSI terminals using the SGR codes defined in the ECMA-48 standard.",
   "keywords": [
     "ansi",
@@ -50,7 +50,7 @@
   },
   "files": [
     "src",
-    "demo",
+    "examples",
     "CHANGELOG.md",
     "README.md",
     "LICENSE"

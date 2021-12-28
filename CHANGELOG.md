@@ -1,5 +1,8 @@
 # Change log
 
+## 1.2.2 (2021-12-28)
+- fixed the path of examples in package.json
+
 ## 1.2.1 (2021-12-28)
 - update examples: added demo of all features
 - update readme

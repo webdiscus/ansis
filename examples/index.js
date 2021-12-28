@@ -25,7 +25,8 @@ log();
 // background color
 log(ansis.bold.italic.hex('#800909').bgHex('#ffe49e')('Hello ansis!'));
 log(ansis.bold.italic.bgHex('#800909').hex('#ffe49e')('Hello ansis!'));
-log(ansis.black.bgRgb(200, 80, 300)(`\nAnsis\n${ansis.black.bgBlueBright('NEW LINE')}\nNEXT NEW LINE\n`));
+log(ansis.black.bgGreen(`\n Ansis \n NEW LINE \n NEXT NEW LINE \n`));
+//log(ansis.black.bgRgb(200, 80, 300)(`\nAnsis\n${ansis.black.bgBlueBright('NEW LINE')}\nNEXT NEW LINE\n`));
 
 // example from readme
 log(ansis.green(`Hello ${ansis.inverse('ANSI')} World!`));
@@ -69,7 +70,7 @@ function outputNested(name, lib) {
 
 // created via https://patorjk.com/software/taag/#p=testall&h=1&f=Graceful&t=ANSIS
 function ansisLogo() {
-  const paddingLeft = 6;
+  const paddingLeft = 5;
 
   const logo = `
  █████╗ ███╗   ██╗███████╗██╗███████╗
@@ -103,7 +104,7 @@ function ansisLogo() {
       for (let charWidthIdx = 0; charWidthIdx < width; charWidthIdx++) {
         char = logo[i++];
         code = Array.isArray(codes) ? codes[row] : codes + row;
-        out += ansis.ansi256(code)(char);
+        out += ansis.ansi(code)(char);
       }
     }
     row++;

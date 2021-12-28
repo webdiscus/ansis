@@ -1,15 +1,20 @@
 # Change log
 
+## 1.2.0 (2021-12-27)
+- added supports the environment variables `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
+- added aliases `ansi` for `ansi256` and `bgAnsi` for `bgAnsi256`
+- added to readme the compare of most popular ANSI libraries
+
 ## 1.1.1 (2021-12-27)
-- add the class Ansis to create more independent instances to increase the performance by benchmark
+- added the class Ansis to create more independent instances to increase the performance by benchmark
 - improve performance
 - code refactoring
 - update readme
 
 ## 1.1.0 (2021-12-25)
-- add supports the use of `open` and `close` properties for each style
-- fix codes for methods ansi256() and bgAnsi256()
-- add demo to npm package
+- added supports the use of `open` and `close` properties for each style
+- added demo to npm package
+- fixed codes for methods ansi256() and bgAnsi256()
 - update package.json
 - update readme
 

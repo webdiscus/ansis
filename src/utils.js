@@ -1,20 +1,3 @@
-import tty from 'tty';
-
-// todo Add supports NO_COLOR
-// export const isSupported = () => {
-//   if (!process) return false;
-//
-//   const env = process.env || {};
-//   const argv = process.argv || [];
-//   const isDisabled = 'NO_COLOR' in env || argv.includes('--no-color');
-//   const isForced = 'FORCE_COLOR' in env || argv.includes('--color');
-//
-//   const isCompatibleTerminal = (tty.isatty(1) && env.TERM && env.TERM !== 'dumb') || process.platform === 'win32';
-//   const isCI = 'CI' in env;
-//
-//   return !isDisabled && (isForced || isCompatibleTerminal || isCI);
-// };
-
 /**
  * Convert hex color string to RGB values.
  *

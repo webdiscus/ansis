@@ -36,9 +36,14 @@ export interface AnsisInstance extends StyleFunction, StyleProperties {
    * ```
    *
    * @param {number} code in range [0, 255].
-   * @return {AnsisInstance}
    */
   ansi256: (code: number) => AnsisInstance;
+
+  /**
+   * Alias to ansi256.
+   * @param {number} code in range [0, 255].
+   */
+  ansi: (code: number) => AnsisInstance;
 
   /**
    * Set RGB values for foreground color.
@@ -70,6 +75,12 @@ export interface AnsisInstance extends StyleFunction, StyleProperties {
    * @param {number} code in range [0, 255].
    */
   bgAnsi256: (code: number) => AnsisInstance;
+
+  /**
+   * Alias to bgAnsi256.
+   * @param {number} code in range [0, 255].
+   */
+  bgAnsi: (code: number) => AnsisInstance;
 
   /**
    * Set RGB values for background color.

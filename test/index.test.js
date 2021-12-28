@@ -1,9 +1,27 @@
-import ansis from '../src/index.js';
+import { execSync } from 'child_process';
+import path from 'path';
 
-import { hexToRgb } from '../src/utils.js';
+import ansis from '../src/index.js';
+import { hexToRgb, clamp } from '../src/utils.js';
+import { isSupported } from '../src/ansi-codes.js';
+
+const TEST_PATH = path.resolve('./test/');
 
 /**
- * Escape ESC-symbol.
+ * Return output of javascript file.
+ *
+ * @param {string} file
+ * @param {array} flags
+ * @return {string}
+ */
+const execScriptSync = (file, flags = []) => {
+  const result = execSync('node ' + file + ' ' + flags.join(' '));
+  // replace last newline in result
+  return result.toString().replace(/\n$/, '');
+};
+
+/**
+ * Escape the slash `\` in ESC-symbol.
  * Use it to show by an error the received ESC sequence string in console output.
  *
  * @param {string} str
@@ -31,6 +49,40 @@ describe('default tests', () => {
     let received = ansis('OK');
     const expected = 'OK';
     expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+});
+
+describe('isSupported', () => {
+  test(`true`, (done) => {
+    let received = isSupported({});
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`true`, (done) => {
+    let received = isSupported({
+      platform: 'win32',
+      env: { FORCE_COLOR: true, CI: 'GITLAB_CI', TERM: 'ansi' },
+      argv: ['--color'],
+      stdout: { isTTY: true },
+      stderr: { isTTY: true },
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`false`, (done) => {
+    let received = isSupported({
+      env: { NO_COLOR: true, TERM: 'dumb' },
+      argv: ['--color=false', '--no-color'],
+      stdout: {},
+      stderr: {},
+    });
+    const expected = false;
+    expect(received).toEqual(expected);
     done();
   });
 });
@@ -68,6 +120,47 @@ describe('utils tests', () => {
     let received = hexToRgb('something');
     const expected = [0, 0, 0];
     expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`clamp(3, 0, 2)`, (done) => {
+    let received = clamp(3, 0, 2);
+    const expected = 2;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`clamp(0, 1, 2)`, (done) => {
+    let received = clamp(0, 1, 2);
+    const expected = 1;
+    expect(received).toEqual(expected);
+    done();
+  });
+});
+
+describe('node script flags', () => {
+  test(`flag --color`, (done) => {
+    const filename = path.join(TEST_PATH, './cli/output.js');
+    let received = execScriptSync(filename, ['--color']);
+    const expected =
+      '\x1b[31mred\x1b[39m|\x1b[38;2;80;80;80mrgb\x1b[39m|\x1b[48;2;80;80;80mbgRgb\x1b[49m|\x1b[38;2;255;255;255mhex\x1b[39m|\x1b[48;2;255;255;255mbgHex\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+
+  test(`flag --color=false`, (done) => {
+    const filename = path.join(TEST_PATH, './cli/output.js');
+    let received = execScriptSync(filename, ['--color=false']);
+    const expected = 'red|rgb|bgRgb|hex|bgHex';
+    expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+
+  test(`flag --no-color`, (done) => {
+    const filename = path.join(TEST_PATH, './cli/output.js');
+    let received = execScriptSync(filename, ['--no-color']);
+    const expected = 'red|rgb|bgRgb|hex|bgHex';
+    expect(esc(received)).toEqual(esc(expected));
     done();
   });
 });
@@ -150,8 +243,22 @@ describe('style tests', () => {
     done();
   });
 
+  test(`ansis.ansi(97)`, (done) => {
+    let received = ansis.ansi(97)('foo');
+    const expected = '\x1b[38;5;97mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+
   test(`ansis.bgAnsi256(97)`, (done) => {
     let received = ansis.bgAnsi256(97)('foo');
+    const expected = '\x1b[48;5;97mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+
+  test(`ansis.bgAnsi(97)`, (done) => {
+    let received = ansis.bgAnsi(97)('foo');
     const expected = '\x1b[48;5;97mfoo\x1b[49m';
     expect(esc(received)).toEqual(esc(expected));
     done();

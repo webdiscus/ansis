@@ -1,64 +1,31 @@
-const esc = ([open, close]) => ({ open: `\x1b[${open}m`, close: `\x1b[${close}m` });
+/**
+ * @param {Object?} processTest Used by unit test only.
+ * @returns {boolean}
+ */
+export const isSupported = (processTest) => {
+  const proc = processTest ? processTest : process || {};
+  const env = proc.env || {};
+  const argv = proc.argv || [];
+  const stdout = proc.stdout && proc.stdout.isTTY;
+  //const stderr = proc.stderr && proc.stderr.isTTY;
 
-export const codes = {
-  // commands
-  reset: [0, 0],
-  inverse: [7, 27],
-  hidden: [8, 28],
+  const isDisabled = 'NO_COLOR' in env || argv.includes('--no-color') || argv.includes('--color=false');
+  const isForced = 'FORCE_COLOR' in env || argv.includes('--color');
 
-  // styles
-  bold: [1, 22],
-  dim: [2, 22], // alias for faint
-  faint: [2, 22],
-  italic: [3, 23],
-  underline: [4, 24],
-  doubleUnderline: [21, 24],
-  strikethrough: [9, 29],
-  strike: [9, 29], // alias for strikethrough
-  frame: [51, 54],
-  encircle: [52, 54],
-  overline: [53, 55],
+  const isTerm = env.TERM !== 'dumb' && /^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM);
+  const isCompatibleTerminal = (stdout && isTerm) || proc.platform === 'win32';
+  const isCI = 'CI' in env;
 
-  // foreground colors
-  black: [30, 39],
-  red: [31, 39],
-  green: [32, 39],
-  yellow: [33, 39],
-  blue: [34, 39],
-  magenta: [35, 39],
-  cyan: [36, 39],
-  white: [37, 39],
-  gray: [90, 39], // alias for blackBright
-  blackBright: [90, 39],
-  redBright: [91, 39],
-  greenBright: [92, 39],
-  yellowBright: [93, 39],
-  blueBright: [94, 39],
-  magentaBright: [95, 39],
-  cyanBright: [96, 39],
-  whiteBright: [97, 39],
-
-  // background colors
-  bgBlack: [40, 49],
-  bgRed: [41, 49],
-  bgGreen: [42, 49],
-  bgYellow: [43, 49],
-  bgBlue: [44, 49],
-  bgMagenta: [45, 49],
-  bgCyan: [46, 49],
-  bgWhite: [47, 49],
-  bgBlackBright: [100, 49],
-  bgRedBright: [101, 49],
-  bgGreenBright: [102, 49],
-  bgYellowBright: [103, 49],
-  bgBlueBright: [104, 49],
-  bgMagentaBright: [105, 49],
-  bgCyanBright: [106, 49],
-  bgWhiteBright: [107, 49],
+  return !isDisabled && (isForced || isCompatibleTerminal || isCI);
 };
 
-export const ansiCodes = {
-  // commands
+export const supported = isSupported();
+
+const noColorProps = { open: '', close: '' };
+const esc = supported ? ([open, close]) => ({ open: `\x1b[${open}m`, close: `\x1b[${close}m` }) : () => noColorProps;
+
+export const baseCodes = {
+  // misc
   reset: esc([0, 0]),
   inverse: esc([7, 27]),
   hidden: esc([8, 28]),
@@ -112,4 +79,11 @@ export const ansiCodes = {
   bgMagentaBright: esc([105, 49]),
   bgCyanBright: esc([106, 49]),
   bgWhiteBright: esc([107, 49]),
+};
+
+export const extendedCodes = {
+  ansi256: supported ? (code) => ({ open: `\x1B[38;5;${code}m`, close: '\x1B[39m' }) : () => noColorProps,
+  bgAnsi256: supported ? (code) => ({ open: `\x1B[48;5;${code}m`, close: '\x1B[49m' }) : () => noColorProps,
+  rgb: supported ? (r, g, b) => ({ open: `\x1B[38;2;${r};${g};${b}m`, close: '\x1B[39m' }) : () => noColorProps,
+  bgRgb: supported ? (r, g, b) => ({ open: `\x1B[48;2;${r};${g};${b}m`, close: '\x1B[49m' }) : () => noColorProps,
 };

@@ -1,8 +1,8 @@
 import { clamp, hexToRgb, strReplaceAll } from './utils.js';
-import { ansiCodes } from './ansi-codes.js';
+import { baseCodes, extendedCodes } from './ansi-codes.js';
 
 /**
- * All methods are implemented in prototype of the `styleProxy` object.
+ * Note: all methods are implemented in prototype of the `styleProxy` object.
  * @implements {AnsisInstance}
  */
 export class Ansis {
@@ -73,8 +73,8 @@ const createStyle = (open, close, parent) => {
 /**
  * Create base styles.
  */
-for (let name in ansiCodes) {
-  const { open, close } = ansiCodes[name];
+for (let name in baseCodes) {
+  const { open, close } = baseCodes[name];
   styles[name] = {
     get() {
       const style = createStyle(open, close, this.props);
@@ -98,24 +98,38 @@ styles.visible = {
  */
 styles.ansi256 = {
   get() {
-    return (num) => {
-      num = clamp(num, 0, 255);
-      return createStyle(`\x1B[38;5;${num}m`, '\x1B[39m', this.props);
+    return (code) => {
+      code = clamp(code, 0, 255);
+      const { open, close } = extendedCodes.ansi256(code);
+      return createStyle(open, close, this.props);
     };
   },
 };
+
+/**
+ * Alias to ansi256.
+ * @type {AnsisInstance.ansi256}
+ */
+styles.ansi = styles.ansi256;
 
 /**
  * @type {AnsisInstance.bgAnsi256}
  */
 styles.bgAnsi256 = {
   get() {
-    return (num) => {
-      num = clamp(num, 0, 255);
-      return createStyle(`\x1B[48;5;${num}m`, '\x1B[49m', this.props);
+    return (code) => {
+      code = clamp(code, 0, 255);
+      const { open, close } = extendedCodes.bgAnsi256(code);
+      return createStyle(open, close, this.props);
     };
   },
 };
+
+/**
+ * Alias to bgAnsi256.
+ * @type {AnsisInstance.bgAnsi256}
+ */
+styles.bgAnsi = styles.bgAnsi256;
 
 /**
  * @type {AnsisInstance.rgb}
@@ -126,7 +140,8 @@ styles.rgb = {
       r = clamp(r, 0, 255);
       g = clamp(g, 0, 255);
       b = clamp(b, 0, 255);
-      return createStyle(`\x1B[38;2;${r};${g};${b}m`, '\x1B[39m', this.props);
+      const { open, close } = extendedCodes.rgb(r, g, b);
+      return createStyle(open, close, this.props);
     };
   },
 };
@@ -137,8 +152,8 @@ styles.rgb = {
 styles.hex = {
   get() {
     return (hex) => {
-      const [r, g, b] = hexToRgb(hex);
-      return createStyle(`\x1B[38;2;${r};${g};${b}m`, '\x1B[39m', this.props);
+      const { open, close } = extendedCodes.rgb(...hexToRgb(hex));
+      return createStyle(open, close, this.props);
     };
   },
 };
@@ -152,7 +167,8 @@ styles.bgRgb = {
       r = clamp(r, 0, 255);
       g = clamp(g, 0, 255);
       b = clamp(b, 0, 255);
-      return createStyle(`\x1B[48;2;${r};${g};${b}m`, '\x1B[49m', this.props);
+      const { open, close } = extendedCodes.bgRgb(r, g, b);
+      return createStyle(open, close, this.props);
     };
   },
 };
@@ -163,8 +179,8 @@ styles.bgRgb = {
 styles.bgHex = {
   get() {
     return (hex) => {
-      const [r, g, b] = hexToRgb(hex);
-      return createStyle(`\x1B[48;2;${r};${g};${b}m`, '\x1B[49m', this.props);
+      const { open, close } = extendedCodes.bgRgb(...hexToRgb(hex));
+      return createStyle(open, close, this.props);
     };
   },
 };

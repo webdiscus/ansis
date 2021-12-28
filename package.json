@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Color styling of text for ANSI terminals using the SGR codes defined in the ECMA-48 standard.",
   "keywords": [
     "ansi",
@@ -16,7 +16,8 @@
     "rgb",
     "hex",
     "log",
-    "logging"
+    "logging",
+    "NO_COLOR"
   ],
   "license": "ISC",
   "author": "webdiscus (https://github.com/webdiscus)",

@@ -1,5 +1,8 @@
 # Change log
 
+## 1.3.1 (2021-12-29)
+- fixed usage for CommonJS: `const ansis = require('ansis').default;` --> `const ansis = require('ansis');`
+
 ## 1.3.0 (2021-12-29)
 - added support CommonJS (now supported ESM and CommonJS)
 - added aliases: `.fg()` for `.ansi256()` and `.bg()` for `.bgAnsi256()` methods

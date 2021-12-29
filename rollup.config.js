@@ -3,7 +3,7 @@ export default {
   output: {
     intro: '/* DON`T MODIFY THIS FILE!\nUse `npm run build:cjs` to create this CommonJS bundle. */',
     exports: 'named',
-    file: './src/commonjs/index.cjs',
+    file: './src/commonjs/bundle.cjs',
     format: 'cjs',
   },
 };

@@ -1,0 +1,4 @@
+{
+  "description": "Supports CommonJS in ESM package.",
+  "type": "commonjs"
+}

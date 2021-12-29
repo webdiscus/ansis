@@ -27,7 +27,7 @@ const regexLF = /(\r*\n)/g;
 /**
  * Wrap the string with styling and reset codes.
  *
- * @param {string | string[]} str
+ * @param {string} str
  * @param {AnsisProps} props
  * @returns {string}
  */
@@ -107,10 +107,17 @@ styles.ansi256 = {
 };
 
 /**
- * Alias to ansi256.
+ * Alias for ansi256.
  * @type {AnsisInstance.ansi256}
  */
 styles.ansi = styles.ansi256;
+
+/**
+ * Alias for `ansi256`.
+ * @type {AnsisInstance.ansi256}
+ */
+
+styles.fg = styles.ansi256;
 
 /**
  * @type {AnsisInstance.bgAnsi256}
@@ -126,10 +133,16 @@ styles.bgAnsi256 = {
 };
 
 /**
- * Alias to bgAnsi256.
+ * Alias for bgAnsi256.
  * @type {AnsisInstance.bgAnsi256}
  */
 styles.bgAnsi = styles.bgAnsi256;
+
+/**
+ * Alias for bgAnsi256.
+ * @type {AnsisInstance.bgAnsi256}
+ */
+styles.bg = styles.bgAnsi256;
 
 /**
  * @type {AnsisInstance.rgb}

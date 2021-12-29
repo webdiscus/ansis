@@ -22,19 +22,16 @@ This is improved and faster implementation for `Node.js`.
 <a id="install" name="install" href="#install"></a>
 ## Install
 
-```console
+```bash
 npm install ansis --save
-```
-
-## Show ANSI demo
-```
-npm run demo
 ```
 
 ## Quick start
 
 ```js
-import ansis from 'ansis';
+import ansis from 'ansis'; // ESM
+// OR
+const ansis = require('ansis'); // CommonJS
 
 console.log(ansis.green(`Hello ${ansis.inverse('ANSI')} World!`));
 console.log(ansis.black.bgYellow(`Warning: `) + ansis.cyan(' /path/to/file.js ') + ansis.red(`not found!`) );
@@ -43,9 +40,16 @@ Output:
 
 ![output](doc/img/quik-start-output.png?raw=true "output")
 
+## Show ANSI demo
+```bash
+git clone https://github.com/webdiscus/ansis.git
+cd ./ansis
+npm i
+npm run demo
+```
 
 ## Features
-  - supports ES modules, 100% vanilla JavaScript, compact code, no dependencies
+  - supports `ES Modules` and `CommonJS`, no dependencies
   - powerful and lightweight library is faster than many others such as `chalk` `kleur` `ansi-colors` etc.
   - supports the standard de facto API of the `chalk`
   - supports 256 color and Truecolor
@@ -150,18 +154,33 @@ Output:
 `bgWhiteBright`
 
 ## 256 ANSI colors
+
+The pre-defined set of 256 colors:
+
+| Code range | Description                               |
+|-----------:|-------------------------------------------|
+|      0 - 7 | standard colors                           |
+|     8 - 15 | bright colors                             |
+|   16 - 231 | 6 × 6 × 6 cube (216 colors)               |
+|  232 - 255 | grayscale from black to white in 24 steps |
+|
+
 See [ANSI color codes](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit).
+
+**Foreground method:** `.ansi256(code)` has aliases `.ansi(code)` and `.fg(code)`.\
+**Background method:** `.bgAnsi256(code)` has aliases `.bgAnsi(code)` and `.bg(code)`.
+
 ```js
 // foreground color
 ansis.ansi256(96).bold('bold Bright Cyan');
+ansis.fg(96).bold('bold Bright Cyan'); // `fg` is the short alias for `ansi256`
+
 // background color
 ansis.bgAnsi256(105)('Bright Magenta');
+ansis.bg(105)('Bright Magenta'); // `bg` is the short alias for `bgAnsi256`
 ```
-> Aliases
->
-> `ansis.ansi()` is alias for `ansis.ansi256()`\
-> `ansis.bgAnsi()` is alias for `ansis.bgAnsi256()`
 
+> The `ansi256()` and `bgAnsi256()` methods are implemented for compatibility with the `chalk` API.
 
 ## Truecolor
 
@@ -199,19 +218,20 @@ ansis.bgRgb(224, 17, 95)('Ruby');
   ```js
   c.red(`red ${c.green(`green ${c.underline(`underline`)} green`)} red`)
 - **New Line**: correct break of escape sequences at `end of line`\
-  <img width="128" src="doc/img/break-style-nl.png" alt="new line">
+  ![output](doc/img/break-style-nl.png?raw=true "break styles at EOL")
 - **NO_COLOR**: supports the environment variables [`NO_COLOR`](https://no-color.org) `FORCE_COLOR` and flags `--no-color` `--color`
 
 ## Benchmark
 
-### Initialize
-```
-cd ./bench
+### Setup
+```bash
+git clone https://github.com/webdiscus/ansis.git
+cd ./ansis/bench
 npm i
 ```
 
-### Start benchmark
-```
+### Run benchmark
+```bash
 npm run bench
 ```
 
@@ -366,6 +386,10 @@ c.hex('#FBA')('foo');
 
 `npm run test` will run the unit and integration tests.\
 `npm run test:coverage` will run the tests with coverage.
+
+## Build CommonJS bundle
+
+`npm run build:cjs` will create the `./src/commonjs/index.cjs` file from ESM entrypoint.
 
 ## Also See
 

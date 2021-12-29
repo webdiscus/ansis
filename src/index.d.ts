@@ -14,10 +14,10 @@ export interface StyleFunction {
   /**
    * Return colored string.
    *
-   * @param {string[]} strings String or multiple strings in arguments.
+   * @param {string} string
    *  All strings from the arguments will be concatenated.
    */
-  (...strings: string[]): string;
+  (string: string): string;
 }
 
 /**
@@ -40,10 +40,16 @@ export interface AnsisInstance extends StyleFunction, StyleProperties {
   ansi256: (code: number) => AnsisInstance;
 
   /**
-   * Alias to ansi256.
+   * Alias for ansi256.
    * @param {number} code in range [0, 255].
    */
   ansi: (code: number) => AnsisInstance;
+
+  /**
+   * Alias for ansi256.
+   * @param {number} code in range [0, 255].
+   */
+  fg: (code: number) => AnsisInstance;
 
   /**
    * Set RGB values for foreground color.
@@ -77,10 +83,16 @@ export interface AnsisInstance extends StyleFunction, StyleProperties {
   bgAnsi256: (code: number) => AnsisInstance;
 
   /**
-   * Alias to bgAnsi256.
+   * Alias for bgAnsi256.
    * @param {number} code in range [0, 255].
    */
   bgAnsi: (code: number) => AnsisInstance;
+
+  /**
+   * Alias for bgAnsi256.
+   * @param {number} code in range [0, 255].
+   */
+  bg: (code: number) => AnsisInstance;
 
   /**
    * Set RGB values for background color.

@@ -1,5 +1,11 @@
 # Change log
 
+## 1.3.0 (2021-12-29)
+- added support CommonJS (now supported ESM and CommonJS)
+- added aliases: `.fg()` for `.ansi256()` and `.bg()` for `.bgAnsi256()` methods
+- fixed some inner param types
+- remove examples from NPM package (it can be cloned und run local)
+
 ## 1.2.2 (2021-12-28)
 - fixed the path of examples in package.json
 

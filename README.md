@@ -49,11 +49,12 @@ npm run demo
 ```
 
 ## Features
-  - supports `ES Modules` and `CommonJS`, no dependencies
+  - supports `ES Modules` and `CommonJS`
+  - no dependencies
   - powerful and lightweight library is faster than many others such as `chalk` `kleur` `ansi-colors` etc.
   - supports the standard de facto API of the `chalk`
-  - supports 256 color and Truecolor
   - supports the environment variables [`NO_COLOR`](https://no-color.org) `FORCE_COLOR` and flags `--no-color` `--color`
+  - supports ANSI 256 colors and Truecolor
   - supports styles like: `bold`  `red` `yellowBright` `bgGreen` `bgCyanBright` ect.
   - supports chained styles, e.g.:
     ```js
@@ -153,7 +154,7 @@ npm run demo
 `bgCyanBright`
 `bgWhiteBright`
 
-## 256 ANSI colors
+## ANSI 256 colors
 
 The pre-defined set of 256 colors:
 
@@ -204,7 +205,7 @@ ansis.bgRgb(224, 17, 95)('Ruby');
 | [`colorette`][colorette]     |         yes<br>(16 colors)          |        -        |       yes        |      -      | -                               | -                      | yes                                                         |
 | [`picocolors`][picocolors]   |          yes<br>(8 colors)          |        -        |       yes        |      -      | -                               | -                      | yes                                                         |
 | [`cli-color`][cli-color]     |         yes<br>(16 colors)          |       yes       |       yes        |      -      | `.xterm(num)`                   | -                      | yes                                                         |
-| [`color-cli`][color-cli]     |        no, e.g.<br>`red_bbt`        |       yes       |   _buggy_        |     yes     | `.x<num>`                       | -                      | only<br>`--no-color`<br>`--color`                           |
+| [`color-cli`][color-cli]     |        no, e.g.<br>`red_bbt`        |       yes       |     _buggy_      |     yes     | `.x<num>`                       | -                      | only<br>`--no-color`<br>`--color`                           |
 | [`ansi-colors`][ansi-colors] |         yes<br>(16 colors)          |       yes       |       yes        |     yes     | -                               | -                      | only<br>`FORCE_COLOR`                                       |
 | [`kleur`][kleur]             |          yes<br>(8 colors)          |     _yes_*      |       yes        |      -      | -                               | -                      | yes                                                         |
 | [`chalk`][chalk]             |         yes<br>(16 colors)          |       yes       |       yes        |     yes     | `.ansi256(num)`                 | `.hex()` `.rgb()`      | yes                                                         |
@@ -386,10 +387,6 @@ c.hex('#FBA')('foo');
 
 `npm run test` will run the unit and integration tests.\
 `npm run test:coverage` will run the tests with coverage.
-
-## Build CommonJS bundle
-
-`npm run build:cjs` will create the `./src/commonjs/index.cjs` file from ESM entrypoint.
 
 ## Also See
 

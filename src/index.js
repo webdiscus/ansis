@@ -200,4 +200,7 @@ styles.bgHex = {
 
 const styleProxy = Object.defineProperties(() => {}, styles);
 
-export default new Ansis();
+/** @type {AnsisInstance} */
+const ansis = new Ansis();
+
+export default ansis;

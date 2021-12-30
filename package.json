@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Color styling of text for ANSI terminals using the SGR codes defined in the ECMA-48 standard.",
   "keywords": [
     "ansi",
@@ -40,18 +40,23 @@
     "registry": "https://registry.npmjs.org/"
   },
   "type": "module",
-  "main": "src/commonjs/index.cjs",
-  "module": "./src/index.js",
+  "exports": {
+    "import": "./dist/index.mjs",
+    "require": "./index.cjs"
+  },
   "types": "src/index.d.ts",
   "scripts": {
     "demo": "node ./examples/index.js",
     "bench": "node ./bench/index.js",
-    "build:cjs": "rollup -c",
+    "build": "rollup -c",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles",
-    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --collectCoverage"
+    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --collectCoverage",
+    "prepack": "npm run build"
   },
   "files": [
-    "src",
+    "dist",
+    "src/index.d.ts",
+    "index.cjs",
     "CHANGELOG.md",
     "README.md",
     "LICENSE"

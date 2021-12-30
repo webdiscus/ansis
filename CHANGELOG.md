@@ -1,5 +1,9 @@
 # Change log
 
+## 1.3.2 (2021-12-30)
+- added bundle generation for ESM
+- auto generate bundles for ESM and CommonJS at npm publish
+
 ## 1.3.1 (2021-12-29)
 - fixed usage for CommonJS: `const ansis = require('ansis').default;` --> `const ansis = require('ansis');`
 

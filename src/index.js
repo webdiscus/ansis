@@ -35,14 +35,15 @@ const wrap = (str, props) => {
   if (!str) return '';
 
   const { openStack, closeStack } = props;
-  if (str.indexOf('\x1b') > -1) {
+
+  if (~str.indexOf('\x1b')) {
     while (props !== undefined) {
       str = strReplaceAll(str, props.close, props.open);
       props = props.parent;
     }
   }
 
-  if (str.indexOf('\n') > -1) str = str.replace(regexLF, closeStack + '$1' + openStack);
+  if (~str.indexOf('\n')) str = str.replace(regexLF, closeStack + '$1' + openStack);
 
   return openStack + str + closeStack;
 };
@@ -200,4 +201,7 @@ styles.bgHex = {
 
 const styleProxy = Object.defineProperties(() => {}, styles);
 
-export default new Ansis();
+/** @type {AnsisInstance} */
+const ansis = new Ansis();
+
+export default ansis;

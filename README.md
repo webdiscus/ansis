@@ -49,17 +49,18 @@ npm run demo
 ```
 
 ## Features
-  - supports `ES Modules` and `CommonJS`, no dependencies
-  - powerful and lightweight library is faster than many others such as `chalk` `kleur` `ansi-colors` etc.
+  - supports `ES Modules` and `CommonJS`
+  - no dependencies
+  - powerful and lightweight library is faster than many others such as `chalk` `kleur` `ansi-colors`, [see benchmark](#benchmark)
   - supports the standard de facto API of the `chalk`
-  - supports 256 color and Truecolor
   - supports the environment variables [`NO_COLOR`](https://no-color.org) `FORCE_COLOR` and flags `--no-color` `--color`
-  - supports styles like: `bold`  `red` `yellowBright` `bgGreen` `bgCyanBright` ect.
-  - supports chained styles, e.g.:
+  - supports ANSI 256 colors and Truecolor
+  - supports default style names like: `bold`  `red` `yellowBright` `bgGreen` `bgCyanBright` ect.
+  - supports chained styles:
     ```js
     ansis.red.bold.italic.underline('text');
     ```
-  - supports nested styles like `colorette` `picocolors`, e.g.:
+  - supports nested styles:
     ```js
     const c = ansis;
     c.red(`red ${c.italic.green('italic green')} red`);
@@ -72,32 +73,30 @@ npm run demo
     ansis.bgHex('#F8A')('text');
     ansis.ansi256(110)('text');
     ```
-  - supports shortcut, e.g.:
+  - supports shortcut:
     ```js
     const theme = {
       error: ansis.red.bold,
       info: ansis.cyan.italic,
       warning: ansis.black.bgYellowBright,
       ruby: ansis.hex('#E0115F'),
-      bgAmber: ansis.bgHex('#FFBF00'),
     };
 
     theme.error('error');
     theme.info('info');
     theme.warning('warning');
     theme.ruby('Ruby color');
-    theme.bgAmber('Amber background color');
     ```
-  - supports the use of `open` and `close` properties for each style, e.g.:
+  - supports the use of `open` and `close` properties for each style:
     ```js
     const myStyle = ansis.bold.italic.black.bgHex('#ABCDEF');
-    console.log(`Hello ${ansis.green.open}ANSI${ansis.green.close} World!`);
     console.log(`Hello ${myStyle.open}ANSI${myStyle.close} World!`);
     ```
-  - supports correct break of style at `end of line`, e.g.:
+  - supports correct break of style at `end of line`:
     ```js
     ansis.bgGreen(`\nAnsis\nNew Line\nNext New Line\n`);
     ```
+    ![output](doc/img/break-style-nl.png?raw=true "break styles at EOL")
 
 ## Styles
 
@@ -153,7 +152,7 @@ npm run demo
 `bgCyanBright`
 `bgWhiteBright`
 
-## 256 ANSI colors
+## ANSI 256 colors
 
 The pre-defined set of 256 colors:
 
@@ -163,7 +162,6 @@ The pre-defined set of 256 colors:
 |     8 - 15 | bright colors                             |
 |   16 - 231 | 6 × 6 × 6 cube (216 colors)               |
 |  232 - 255 | grayscale from black to white in 24 steps |
-|
 
 See [ANSI color codes](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit).
 
@@ -204,7 +202,7 @@ ansis.bgRgb(224, 17, 95)('Ruby');
 | [`colorette`][colorette]     |         yes<br>(16 colors)          |        -        |       yes        |      -      | -                               | -                      | yes                                                         |
 | [`picocolors`][picocolors]   |          yes<br>(8 colors)          |        -        |       yes        |      -      | -                               | -                      | yes                                                         |
 | [`cli-color`][cli-color]     |         yes<br>(16 colors)          |       yes       |       yes        |      -      | `.xterm(num)`                   | -                      | yes                                                         |
-| [`color-cli`][color-cli]     |        no, e.g.<br>`red_bbt`        |       yes       |   _buggy_        |     yes     | `.x<num>`                       | -                      | only<br>`--no-color`<br>`--color`                           |
+| [`color-cli`][color-cli]     |        no, e.g.<br>`red_bbt`        |       yes       |     _buggy_      |     yes     | `.x<num>`                       | -                      | only<br>`--no-color`<br>`--color`                           |
 | [`ansi-colors`][ansi-colors] |         yes<br>(16 colors)          |       yes       |       yes        |     yes     | -                               | -                      | only<br>`FORCE_COLOR`                                       |
 | [`kleur`][kleur]             |          yes<br>(8 colors)          |     _yes_*      |       yes        |      -      | -                               | -                      | yes                                                         |
 | [`chalk`][chalk]             |         yes<br>(16 colors)          |       yes       |       yes        |     yes     | `.ansi256(num)`                 | `.hex()` `.rgb()`      | yes                                                         |
@@ -217,10 +215,14 @@ ansis.bgRgb(224, 17, 95)('Ruby');
 - **Nested styles**:
   ```js
   c.red(`red ${c.green(`green ${c.underline(`underline`)} green`)} red`)
-- **New Line**: correct break of escape sequences at `end of line`\
+- **New Line**: correct break of escape sequences at `end of line`:
+  ```js
+  ansis.bgGreen(`\nAnsis\nNew Line\nNext New Line\n`);
+    ```
   ![output](doc/img/break-style-nl.png?raw=true "break styles at EOL")
 - **NO_COLOR**: supports the environment variables [`NO_COLOR`](https://no-color.org) `FORCE_COLOR` and flags `--no-color` `--color`
 
+<a id="benchmark" href="#benchmark"></a>
 ## Benchmark
 
 ### Setup
@@ -386,10 +388,6 @@ c.hex('#FBA')('foo');
 
 `npm run test` will run the unit and integration tests.\
 `npm run test:coverage` will run the tests with coverage.
-
-## Build CommonJS bundle
-
-`npm run build:cjs` will create the `./src/commonjs/index.cjs` file from ESM entrypoint.
 
 ## Also See
 

@@ -55,7 +55,7 @@ export const strReplaceAll = function (str, searchValue, replaceValue) {
   let lastPos = 0;
   let result = '';
 
-  while (pos > -1) {
+  while (~pos) {
     result += str.substr(lastPos, pos - lastPos) + replaceValue;
     lastPos = pos + substringLength;
     pos = str.indexOf(searchValue, lastPos);

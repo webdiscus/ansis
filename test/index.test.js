@@ -284,6 +284,15 @@ describe('functional tests', () => {
     done();
   });
 
+  test(`nested prop.parent`, (done) => {
+    const rgb = ansis.rgb(100, 80, 155);
+    let received = ansis.green.bold.underline(`foo ${ansis.red.italic('bar')} foo`);
+
+    const expected = '\x1b[32m\x1b[1m\x1b[4mfoo \x1b[31m\x1b[3mbar\x1b[23m\x1b[32m foo\x1b[24m\x1b[22m\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+
   test(`nested multi styles`, (done) => {
     const rgb = ansis.rgb(100, 80, 155);
     let received = ansis.red(

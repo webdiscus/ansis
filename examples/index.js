@@ -129,35 +129,37 @@ log(
     c.yellowBright.bgRedBright('I') +
     c.redBright.bgBlueBright('S') +
     '\n ' +
-    //c.black.bgWhiteBright('bgWhiteBright') +
-    c.black.hex('#d93611')('#d93611') +
-    c.black.hex('#d97511')('#d97511') +
-    c.black.hex('#d9d611')('#d9d611') +
-    c.black.hex('#a0d911')('#a0d911') +
-    c.black.hex('#18d911')('#18d911') +
-    //
-    c.black.hex('#11d9c2')('#11d9c2') +
-    c.black.hex('#119dd9')('#119dd9') +
-    c.black.hex('#1157d9')('#1157d9') +
-    c.black.hex('#6614f6')('#6614f6') +
-    c.black.hex('#c511d9')('#c511d9') +
-    c.black.hex('#f10794')('#f10794') +
+    [
+      '#d93611',
+      '#d97511',
+      '#d9d611',
+      '#a0d911',
+      '#18d911',
+      '#11d9c2',
+      '#119dd9',
+      '#1157d9',
+      '#6614f6',
+      '#c511d9',
+      '#f10794',
+    ].reduce((out, hex) => out + c.black.hex(hex)(hex), '') +
     '\n ' +
-    c.black.bgAnsi(197)(' 197 ') +
-    c.black.bgAnsi(203)(' 203 ') +
-    c.black.bgAnsi(209)(' 209 ') +
-    c.black.bgAnsi(215)(' 215 ') +
-    c.black.bgAnsi(221)(' 221 ') +
-    c.black.bgAnsi(227)(' 227 ') +
-    c.black.bgAnsi(191)(' 191 ') +
-    c.black.bgAnsi(156)(' 156  ') +
-    c.black.bgAnsi(120)(' 120  ') +
-    c.black.bgAnsi(123)(' 123 ') +
-    c.black.bgAnsi(117)(' 117 ') +
-    c.black.bgAnsi(75)('  75 ') +
-    c.black.bgAnsi(104)(' 104 ') +
-    c.black.bgAnsi(98)('  98 ') +
-    c.black.bgAnsi(92)('  92 ') +
+    [
+      ' 197 ',
+      ' 203 ',
+      ' 209 ',
+      ' 215 ',
+      ' 221 ',
+      ' 227 ',
+      ' 191 ',
+      ' 156  ',
+      ' 120  ',
+      ' 123 ',
+      ' 117 ',
+      ' 147 ',
+      ' 141 ',
+      '  98 ',
+      '  92 ',
+    ].reduce((out, code) => out + c.black.bgAnsi(parseInt(code, 10))(code), '') +
     '\n '
 );
 
@@ -207,6 +209,9 @@ log(
   `${warn.open}Warning:${warn.close} ${cyan.open}/path/to/file.js${cyan.close} ${err.open}not found!${err.close}`
 );
 log();
+
+// Check replacement in props.parent
+log(ansis.green.bold.underline(`foo ${ansis.red.italic('bar')} foo`));
 
 // Deep nested chained styles
 log(

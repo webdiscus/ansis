@@ -108,19 +108,6 @@ styles.ansi256 = {
 };
 
 /**
- * Alias for ansi256.
- * @type {AnsisInstance.ansi256}
- */
-styles.ansi = styles.ansi256;
-
-/**
- * Alias for `ansi256`.
- * @type {AnsisInstance.ansi256}
- */
-
-styles.fg = styles.ansi256;
-
-/**
  * @type {AnsisInstance.bgAnsi256}
  */
 styles.bgAnsi256 = {
@@ -132,18 +119,6 @@ styles.bgAnsi256 = {
     };
   },
 };
-
-/**
- * Alias for bgAnsi256.
- * @type {AnsisInstance.bgAnsi256}
- */
-styles.bgAnsi = styles.bgAnsi256;
-
-/**
- * Alias for bgAnsi256.
- * @type {AnsisInstance.bgAnsi256}
- */
-styles.bg = styles.bgAnsi256;
 
 /**
  * @type {AnsisInstance.rgb}
@@ -198,6 +173,14 @@ styles.bgHex = {
     };
   },
 };
+
+/**
+ * Aliases.
+ */
+styles.ansi = styles.ansi256;
+styles.fg = styles.ansi256;
+styles.bgAnsi = styles.bgAnsi256;
+styles.bg = styles.bgAnsi256;
 
 const styleProxy = Object.defineProperties(() => {}, styles);
 

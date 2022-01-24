@@ -1,5 +1,10 @@
 # Change log
 
+## 1.3.3 (2022-01-24)
+- added UK spelling alias `grey` for `gray`
+- update dev dependencies
+- update readme
+
 ## 1.3.2 (2021-12-30)
 - added bundle generation for ESM
 - auto generate bundles for ESM and CommonJS at npm publish

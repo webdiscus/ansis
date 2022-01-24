@@ -1,9 +1,9 @@
 /**
- * @param {Object?} processTest Used by unit test only.
+ * @param {Object?} processMock The mock of process object, used by unit test only.
  * @returns {boolean}
  */
-export const isSupported = (processTest) => {
-  const proc = processTest ? processTest : process || {};
+export const isSupported = (processMock) => {
+  const proc = processMock ? processMock : process || {};
   const env = proc.env || {};
   const argv = proc.argv || [];
   const stdout = proc.stdout && proc.stdout.isTTY;
@@ -32,8 +32,8 @@ export const baseCodes = {
 
   // styles
   bold: esc([1, 22]),
-  dim: esc([2, 22]), // alias for faint
-  faint: esc([2, 22]),
+  dim: esc([2, 22]),
+  faint: esc([2, 22]), // alias for dim
   italic: esc([3, 23]),
   underline: esc([4, 24]),
   doubleUnderline: esc([21, 24]),
@@ -52,7 +52,8 @@ export const baseCodes = {
   magenta: esc([35, 39]),
   cyan: esc([36, 39]),
   white: esc([37, 39]),
-  gray: esc([90, 39]), // alias for blackBright
+  gray: esc([90, 39]), // US spelling alias for blackBright
+  grey: esc([90, 39]), // UK spelling alias for blackBright
   blackBright: esc([90, 39]),
   redBright: esc([91, 39]),
   greenBright: esc([92, 39]),

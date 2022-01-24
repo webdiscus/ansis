@@ -70,21 +70,8 @@ const bench = new Bench({
   failColor: benchStyle.red.bold,
 });
 
-// styles present in all libraries
-const baseStyles = [
-  'bold',
-  'italic',
-  'underline',
-  'black',
-  'red',
-  'green',
-  'yellow',
-  'blue',
-  'magenta',
-  'cyan',
-  'white',
-];
-const colorStyles = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
+// colors present in all libraries
+const baseColors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
 
 let fixture = [];
 
@@ -110,72 +97,72 @@ bench('Colorette bench')
   //.add('ansis', () => ansis.red(`${ansis.bold(`${ansis.cyan(`${ansis.yellow('yellow')}cyan`)}`)}red`))
   .run();
 
-// Base styles
-bench('Base styles')
-  .add('colors-js', () => baseStyles.forEach((style) => colorsJs[style]('foo')))
-  .add('colorette', () => baseStyles.forEach((style) => colorette[style]('foo')))
-  .add('picocolors', () => baseStyles.forEach((style) => picocolors[style]('foo')))
-  .add('cli-color', () => baseStyles.forEach((style) => cliColor[style]('foo')))
-  .add('color-cli', () => baseStyles.forEach((style) => colorCli[style]('foo')))
-  .add('ansi-colors', () => baseStyles.forEach((style) => ansiColors[style]('foo')))
-  .add('kleur/colors', () => baseStyles.forEach((style) => kleurColors[style]('foo')))
-  .add('kleur', () => baseStyles.forEach((style) => kleur[style]('foo')))
-  .add('chalk', () => baseStyles.forEach((style) => chalk[style]('foo')))
-  .add('ansis', () => baseStyles.forEach((style) => ansis[style]('foo')))
+// Base colors
+bench('Base colors')
+  .add('colors-js', () => baseColors.forEach((style) => colorsJs[style]('foo')))
+  .add('colorette', () => baseColors.forEach((style) => colorette[style]('foo')))
+  .add('picocolors', () => baseColors.forEach((style) => picocolors[style]('foo')))
+  .add('cli-color', () => baseColors.forEach((style) => cliColor[style]('foo')))
+  .add('color-cli', () => baseColors.forEach((style) => colorCli[style]('foo')))
+  .add('ansi-colors', () => baseColors.forEach((style) => ansiColors[style]('foo')))
+  .add('kleur/colors', () => baseColors.forEach((style) => kleurColors[style]('foo')))
+  .add('kleur', () => baseColors.forEach((style) => kleur[style]('foo')))
+  .add('chalk', () => baseColors.forEach((style) => chalk[style]('foo')))
+  .add('ansis', () => baseColors.forEach((style) => ansis[style]('foo')))
   .run();
 
 // Chained styles
 bench('Chained styles')
-  .add('colors-js', () => colorStyles.forEach((style) => colorsJs[style].bold.underline.italic('foo')))
-  .add('colorette (not supported)', () => colorStyles.forEach((style) => colorette[style].bold.underline.italic('foo')))
+  .add('colors-js', () => baseColors.forEach((style) => colorsJs[style].bold.underline.italic('foo')))
+  .add('colorette (not supported)', () => baseColors.forEach((style) => colorette[style].bold.underline.italic('foo')))
   .add('picocolors (not supported)', () =>
-    colorStyles.forEach((style) => picocolors[style].bold.underline.italic('foo'))
+    baseColors.forEach((style) => picocolors[style].bold.underline.italic('foo'))
   )
-  .add('cli-color', () => colorStyles.forEach((style) => cliColor[style].bold.underline.italic('foo')))
-  .add('color-cli', () => colorStyles.forEach((style) => colorCli[style].bold.underline.italic('foo')))
-  .add('ansi-colors', () => colorStyles.forEach((style) => ansiColors[style].bold.underline.italic('foo')))
+  .add('cli-color', () => baseColors.forEach((style) => cliColor[style].bold.underline.italic('foo')))
+  .add('color-cli', () => baseColors.forEach((style) => colorCli[style].bold.underline.italic('foo')))
+  .add('ansi-colors', () => baseColors.forEach((style) => ansiColors[style].bold.underline.italic('foo')))
   .add('kleur/colors (not supported)', () =>
-    colorStyles.forEach((style) => kleurColors[style].bold.underline.italic('foo'))
+    baseColors.forEach((style) => kleurColors[style].bold.underline.italic('foo'))
   )
-  .add('kleur', () => colorStyles.forEach((style) => kleur[style]().bold().underline().italic('foo'))) // alternate syntax
-  .add('chalk', () => colorStyles.forEach((style) => chalk[style].bold.underline.italic('foo')))
-  .add('ansis', () => colorStyles.forEach((style) => ansis[style].bold.underline.italic('foo')))
+  .add('kleur', () => baseColors.forEach((style) => kleur[style]().bold().underline().italic('foo'))) // alternate syntax
+  .add('chalk', () => baseColors.forEach((style) => chalk[style].bold.underline.italic('foo')))
+  .add('ansis', () => baseColors.forEach((style) => ansis[style].bold.underline.italic('foo')))
   .run();
 
 // Nested calls
 bench('Nested calls')
   .add('colors-js', () =>
-    colorStyles.forEach((style) => colorsJs[style](colorsJs.bold(colorsJs.underline(colorsJs.italic('foo')))))
+    baseColors.forEach((style) => colorsJs[style](colorsJs.bold(colorsJs.underline(colorsJs.italic('foo')))))
   )
   .add('colorette', () =>
-    colorStyles.forEach((style) => colorette[style](colorette.bold(colorette.underline(colorette.italic('foo')))))
+    baseColors.forEach((style) => colorette[style](colorette.bold(colorette.underline(colorette.italic('foo')))))
   )
   .add('picocolors', () =>
-    colorStyles.forEach((style) => picocolors[style](picocolors.bold(picocolors.underline(picocolors.italic('foo')))))
+    baseColors.forEach((style) => picocolors[style](picocolors.bold(picocolors.underline(picocolors.italic('foo')))))
   )
   .add('cli-color', () =>
-    colorStyles.forEach((style) => cliColor[style](cliColor.bold(cliColor.underline(cliColor.italic('foo')))))
+    baseColors.forEach((style) => cliColor[style](cliColor.bold(cliColor.underline(cliColor.italic('foo')))))
   )
   .add('color-cli', () =>
-    colorStyles.forEach((style) => colorCli[style](colorCli.bold(colorCli.underline(colorCli.italic('foo')))))
+    baseColors.forEach((style) => colorCli[style](colorCli.bold(colorCli.underline(colorCli.italic('foo')))))
   )
   .add('ansi-colors', () =>
-    colorStyles.forEach((style) => ansiColors[style](ansiColors.bold(ansiColors.underline(ansiColors.italic('foo')))))
+    baseColors.forEach((style) => ansiColors[style](ansiColors.bold(ansiColors.underline(ansiColors.italic('foo')))))
   )
   .add('kleur/colors', () =>
-    colorStyles.forEach((style) =>
+    baseColors.forEach((style) =>
       kleurColors[style](kleurColors.bold(kleurColors.underline(kleurColors.italic('foo'))))
     )
   )
-  .add('kleur', () => colorStyles.forEach((style) => kleur[style](kleur.bold(kleur.underline(kleur.italic('foo'))))))
-  .add('chalk', () => colorStyles.forEach((style) => chalk[style](chalk.bold(chalk.underline(chalk.italic('foo'))))))
-  .add('ansis', () => colorStyles.forEach((style) => ansis[style](ansis.bold(ansis.underline(ansis.italic('foo'))))))
+  .add('kleur', () => baseColors.forEach((style) => kleur[style](kleur.bold(kleur.underline(kleur.italic('foo'))))))
+  .add('chalk', () => baseColors.forEach((style) => chalk[style](chalk.bold(chalk.underline(chalk.italic('foo'))))))
+  .add('ansis', () => baseColors.forEach((style) => ansis[style](ansis.bold(ansis.underline(ansis.italic('foo'))))))
   .run();
 
 // Nested styles
 fixture = createFixture(vendors, nestedFixture);
 bench('Nested styles')
-  .add('colors-js', () => fixture[9](colorsJs))
+  .add('colors.js', () => fixture[9](colorsJs))
   .add('colorette', () => fixture[0](colorette))
   .add('picocolors', () => fixture[1](picocolors))
   .add('cli-color', () => fixture[2](cliColor))
@@ -190,7 +177,7 @@ bench('Nested styles')
 // Deep nested styles
 fixture = createFixture(vendors, deepNestedFixture);
 bench('Deep nested styles')
-  .add('colors-js', () => fixture[9](colorsJs))
+  .add('colors.js', () => fixture[9](colorsJs))
   .add('colorette', () => fixture[0](colorette))
   .add('picocolors', () => fixture[1](picocolors))
   .add('cli-color', () => fixture[2](cliColor))
@@ -206,7 +193,7 @@ bench('Deep nested styles')
 
 // Break style at new line
 // bench('New Line')
-//   .add('colors-js', () => colorsJs.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+//   .add('colors.js', () => colorsJs.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
 //   .add('ansi-colors', () => ansiColors.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
 //   .add('chalk', () => chalk.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
 //   .add('ansis', () => ansis.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
@@ -279,7 +266,7 @@ function complexNestedFixture(c) {
 }
 
 function showSupportOfDeepNestedStyling() {
-  log('colors-js: ', deepNestedFixture(colorsJs));
+  log('colors.js: ', deepNestedFixture(colorsJs));
   log('colorette: ', deepNestedFixture(colorette));
   log('picocolors: ', deepNestedFixture(picocolors));
   log('cli-color: ', deepNestedFixture(cliColor));
@@ -297,7 +284,7 @@ function showSupportOfDeepNestedChainedStyling() {
 }
 
 function showSupportOfBreakStyleAtNewLine() {
-  log('colors-js: ', colorsJs.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // OK
+  log('colors.js: ', colorsJs.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // OK
   log('colorette: ', colorette.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // (not supported)
   log('picocolors: ', picocolors.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // (not supported)
   log('cli-color: ', cliColor.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // (not supported)

@@ -1,6 +1,8 @@
 import { execSync } from 'child_process';
 import path from 'path';
 
+// test distributed version
+//import ansis, { Ansis } from '../dist/index.js';
 import ansis from '../src/index.js';
 import { hexToRgb, clamp } from '../src/utils.js';
 import { isSupported } from '../src/ansi-codes.js';

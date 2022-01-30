@@ -1,5 +1,8 @@
 # Change log
 
+## 1.3.4 (2022-01-30)
+- optimize distributed code size to smaller than `4 KB`
+
 ## 1.3.3 (2022-01-24)
 - added UK spelling alias `grey` for `gray`
 - update dev dependencies

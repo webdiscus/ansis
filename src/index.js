@@ -5,7 +5,7 @@ import { baseCodes, extendedCodes } from './ansi-codes.js';
  * Note: all methods are implemented in prototype of the `styleProxy` object.
  * @implements {AnsisInstance}
  */
-export class Ansis {
+class Ansis {
   constructor() {
     const self = (str) => str;
     Object.setPrototypeOf(self, styleProxy);
@@ -187,4 +187,4 @@ const styleProxy = Object.defineProperties(() => {}, styles);
 /** @type {AnsisInstance} */
 const ansis = new Ansis();
 
-export default ansis;
+export { Ansis, ansis as default };

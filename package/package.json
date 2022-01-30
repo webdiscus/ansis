@@ -1,0 +1,40 @@
+{
+  "name": "ansis",
+  "version": "1.3.4",
+  "description": "ANSI color styling for text in terminal.",
+  "keywords": [
+    "ansi",
+    "color",
+    "style",
+    "terminal",
+    "console",
+    "cli",
+    "rgb",
+    "hex",
+    "truecolor",
+    "bgRed",
+    "NO_COLOR"
+  ],
+  "license": "ISC",
+  "author": "webdiscus (https://github.com/webdiscus)",
+  "funding": {
+    "type": "patreon",
+    "url": "https://patreon.com/biodiscus"
+  },
+  "homepage": "https://github.com/webdiscus/ansis",
+  "repository": "webdiscus/ansis",
+  "sideEffects": false,
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "engines": {
+    "node": ">=12.13"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "bundle.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {}
+}

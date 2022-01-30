@@ -30,7 +30,6 @@ import { createFixture } from './lib/utils.js';
 
 // vendor libraries for benchmark
 import chalk from 'chalk';
-import { Ansis } from '../src/index.js';
 import colorsJs from 'colors';
 import * as colorette from 'colorette';
 import ansiColors from 'ansi-colors';
@@ -39,6 +38,7 @@ import colorCli from 'colors-cli/lib/color-safe.js';
 import kleur from 'kleur';
 import * as kleurColors from 'kleur/colors';
 import picocolors from 'picocolors';
+import { Ansis } from '../src/index.js';
 
 const log = console.log;
 

@@ -7,14 +7,14 @@
     "bench": "node ./"
   },
   "dependencies": {
-    "ansi-colors": "^4.1.1",
-    "benchmark": "^2.1.4",
-    "chalk": "^5.0.0",
-    "cli-color": "^2.0.1",
-    "colors": "^1.4.0",
-    "colorette": "^2.0.16",
-    "colors-cli": "^1.0.28",
-    "kleur": "^4.1.4",
-    "picocolors": "^1.0.0"
+    "ansi-colors": "4.1.1",
+    "benchmark": "2.1.4",
+    "chalk": "5.0.0",
+    "cli-color": "2.0.1",
+    "colors": "1.4.0",
+    "colorette": "2.0.16",
+    "colors-cli": "1.0.28",
+    "kleur": "4.1.4",
+    "picocolors": "1.0.0"
   }
 }

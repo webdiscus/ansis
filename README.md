@@ -1,6 +1,6 @@
 <h1 align="center">
     <a href="https://www.npmjs.com/package/ansis">
-        <img width="323" src="doc/img/ansis-logo.png" alt="ansis"><br>
+        <img width="323" src="docs/img/ansis-logo.png" alt="ansis"><br>
         ANSI Styling
     </a>
 </h1>
@@ -19,7 +19,7 @@ and [benchmark](https://github.com/webdiscus/ansis#benchmark).
 
 <div align="center">
     <a href="https://www.npmjs.com/package/ansis">
-        <img width="830" src="doc/img/ansis-demo.png" alt="ansis">
+        <img width="830" src="docs/img/ansis-demo.png" alt="ansis">
     </a>
 </div>
 
@@ -41,7 +41,7 @@ console.log(ansis.green(`Hello ${ansis.inverse('ANSI')} World!`));
 console.log(ansis.black.bgYellow(`Warning:`) + ansis.cyan(' /path/to/file.js ') + ansis.red(`not found!`) );
 ```
 Output:\
-![output](doc/img/quik-start-output.png?raw=true "output")
+![output](docs/img/quik-start-output.png?raw=true "output")
 
 ## Features
   - supports both `ESM` and `CommonJS`
@@ -53,8 +53,9 @@ Output:\
   - supports the environment variables [`NO_COLOR`](https://no-color.org) `FORCE_COLOR` and flags `--no-color` `--color`
   - low level access to the `open` and `close` properties for each style
   - correct break of style at `end of line`
-  - faster than many others, [see benchmarks](#benchmark)
-  - no dependencies
+  - **faster** than many other libraries, [see benchmarks](#benchmark)
+  - distributed unpacked size of code **smaller** than `4 KB`
+  - zero dependency
   - `String.prototype` stays virgin
 
 ## Chained syntax
@@ -193,7 +194,7 @@ console.log(`Hello ${myStyle.open}ANSI${myStyle.close} World!`);
 ```js
 ansis.bgGreen(`\nAnsis\nNew Line\nNext New Line\n`);
 ```
-![output](doc/img/break-style-nl.png?raw=true "break styles at EOL")
+![output](docs/img/break-style-nl.png?raw=true "break styles at EOL")
 
 <a id="compare" href="#compare"></a>
 ## Comparison of most popular libraries

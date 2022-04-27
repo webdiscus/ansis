@@ -1,5 +1,12 @@
 # Change log
 
+## 1.3.6 (2022-04-27)
+- build: properly generated distribution package, bump to last stable version 1.3.6
+- chore: update dev packages
+
+## 1.3.5 (2022-04-27)
+- DEPRECATED: this version is broken
+
 ## 1.3.4 (2022-01-30)
 - optimize distributed code size to smaller than `4 KB`
 

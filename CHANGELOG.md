@@ -1,5 +1,8 @@
 # Change log
 
+## 1.4.0 (2022-07-02)
+- feat: add method strip() to remove all ANSI codes from string
+
 ## 1.3.6 (2022-04-27)
 - build: properly generated distribution package, bump to last stable version 1.3.6
 - chore: update dev packages

@@ -1,6 +1,8 @@
 import { clamp, hexToRgb, strReplaceAll } from './utils.js';
 import { baseCodes, extendedCodes } from './ansi-codes.js';
 
+const stripANSIRegexp = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+
 /**
  * Note: all methods are implemented in prototype of the `styleProxy` object.
  * @implements {AnsisInstance}
@@ -8,6 +10,14 @@ import { baseCodes, extendedCodes } from './ansi-codes.js';
 class Ansis {
   constructor() {
     const self = (str) => str;
+
+    /**
+     * Remove ANSI codes.
+     * @param {string} str
+     * @return {string}
+     */
+    self.strip = (str) => str.replace(stripANSIRegexp, '');
+
     Object.setPrototypeOf(self, styleProxy);
 
     return self;

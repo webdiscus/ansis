@@ -90,6 +90,13 @@ describe('isSupported', () => {
 });
 
 describe('utils tests', () => {
+  test(`strip()`, (done) => {
+    const received = ansis.strip('\x1b[36m\x1b[1m\x1b[4m\x1b[3mfoo\x1b[23m\x1b[24m\x1b[22m\x1b[39m');
+    const expected = 'foo';
+    expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+
   test(`hexToRgb('FFAA99')`, (done) => {
     const received = hexToRgb('FFAA99');
     const expected = [255, 170, 153];

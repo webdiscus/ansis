@@ -107,6 +107,13 @@ interface AnsisColor extends Method, Property {
    */
   bgHex: (color: string) => AnsisColor;
 
+  /**
+   * Remove ANSI codes.
+   * @param {string} str
+   * @return {string}
+   */
+  strip: (string: string) => string;
+
   /** Reset the current style. */
   readonly reset: AnsisColor;
 

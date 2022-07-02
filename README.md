@@ -53,6 +53,7 @@ Output:\
   - supports the environment variables [`NO_COLOR`](https://no-color.org) `FORCE_COLOR` and flags `--no-color` `--color`
   - low level access to the `open` and `close` properties for each style
   - correct break of style at `end of line`
+  - strip ANSI codes from string
   - **faster** than many other libraries, [see benchmarks](#benchmark)
   - distributed unpacked size of code **smaller** than `4 KB`
   - zero dependency
@@ -195,6 +196,18 @@ console.log(`Hello ${myStyle.open}ANSI${myStyle.close} World!`);
 ansis.bgGreen(`\nAnsis\nNew Line\nNext New Line\n`);
 ```
 ![output](docs/img/break-style-nl.png?raw=true "break styles at EOL")
+
+## Strip ANSI codes
+The Ansis class contains one method `strip()` to remove all ANSI codes from string.
+
+```js
+import ansis from 'ansis';
+
+const ansiString = ansis.green(`Hello ${ansis.inverse('ANSI')} World!`);
+const string = ansis.strip(ansiString);
+```
+
+The variable `string` will contain the pure string `Hello ANSI World!`.
 
 <a id="compare" href="#compare"></a>
 ## Comparison of most popular libraries

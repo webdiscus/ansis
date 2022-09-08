@@ -1,80 +1,90 @@
-import { clamp, hexToRgb, strReplaceAll } from './utils.js';
-import { baseCodes, extendedCodes } from './ansi-codes.js';
-
-const stripANSIRegexp = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+import { hexToRgb, clamp, strReplaceAll } from './utils.js';
+import { baseStyles, ansi256, bgAnsi256, rgb, bgRgb } from './ansi-codes.js';
 
 /**
- * Note: all methods are implemented in prototype of the `styleProxy` object.
- * @implements {AnsisInstance}
- */
-class Ansis {
-  constructor() {
-    const self = (str) => str;
-
-    /**
-     * Remove ANSI codes.
-     * @param {string} str
-     * @return {string}
-     */
-    self.strip = (str) => str.replace(stripANSIRegexp, '');
-
-    Object.setPrototypeOf(self, styleProxy);
-
-    return self;
-  }
-}
-
-const styles = {};
-const regexLF = /(\r*\n)/g;
-
-/**
- * @typedef {StyleProperties} AnsisProps
+ * @typedef {Object} AnsisProps
+ * @property {string} open
+ * @property {string} close
  * @property {string?} openStack
  * @property {string?} closeStack
  * @property {null | AnsisProps} parent
  */
 
-/**
- * Wrap the string with styling and reset codes.
- *
- * @param {string} str
- * @param {AnsisProps} props
- * @returns {string}
- */
-const wrap = (str, props) => {
-  if (!str) return '';
+const { defineProperty, defineProperties, setPrototypeOf } = Object;
 
-  const { openStack, closeStack } = props;
+const stripANSIRegEx = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
-  if (~str.indexOf('\x1b')) {
-    while (props !== undefined) {
-      str = strReplaceAll(str, props.close, props.open);
-      props = props.parent;
+const regexLF = /(\r*\n)/g;
+
+const Ansis = function () {
+  const self = (str) => str;
+
+  this.self = self;
+
+  /**
+   * Remove ANSI styling codes.
+   * @param {string} str
+   * @return {string}
+   */
+  self.strip = (str) => str.replace(stripANSIRegEx, '');
+
+  /**
+   * @callback getStyleCodes
+   * @param {string} value
+   */
+
+  /**
+   * Extend base colors with custom ones.
+   *
+   * @param {Object.<name:string, value:string|{open:string, close:string}>} colors The object with key as color name
+   *  and value as hex code of custom color or the object with 'open' and 'close' codes.
+   */
+  self.extend = (colors) => {
+    for (let name in colors) {
+      let value = colors[name];
+      // detect whether the value is style property Object {open, close} or a string with hex code of color '#FF0000'
+      let isProperty = value.open != null;
+      let styleCodes = isProperty ? value : rgb(...hexToRgb(value));
+
+      styles[name] = {
+        get () {
+          const style = createStyle(this, styleCodes);
+          defineProperty(this, name, { value: style });
+          return style;
+        },
+      };
     }
-  }
 
-  if (~str.indexOf('\n')) str = str.replace(regexLF, closeStack + '$1' + openStack);
+    stylePrototype = defineProperties(() => {}, styles);
+    setPrototypeOf(self, stylePrototype);
+  };
 
-  return openStack + str + closeStack;
+  // extend styles with base colors & styles
+  self.extend(baseStyles);
+
+  return this.self;
 };
 
 /**
- * @param {string} open
- * @param {string} close
- * @param {AnsisProps} parent
- * @returns {AnsisInstance}
+ * @param {Object} self
+ * @param {AnsisProps} self.props
+ * @param {Object} codes
+ * @param {string} codes.open
+ * @param {string} codes.close
+ * @returns {Ansis}
  */
-const createStyle = (open, close, parent) => {
+const createStyle = ({ props }, { open, close }) => {
+  const style = (strings, ...values) => wrap(strings, values, style.props);
   let openStack = open;
   let closeStack = close;
-  if (parent !== undefined) {
-    openStack = parent.openStack + open;
-    closeStack = close + parent.closeStack;
+
+  if (props !== undefined) {
+    openStack = props.openStack + open;
+    closeStack = close + props.closeStack;
   }
 
-  const style = (str) => wrap(str, style.props);
-  Object.setPrototypeOf(style, styleProxy);
-  style.props = { open, close, openStack, closeStack, parent };
+  setPrototypeOf(style, stylePrototype);
+  style.props = { open, close, openStack, closeStack, parent: props };
   style.open = openStack;
   style.close = closeStack;
 
@@ -82,119 +92,66 @@ const createStyle = (open, close, parent) => {
 };
 
 /**
- * Create base styles.
+ * Wrap the string with styling and reset codes.
+ *
+ * @param {string | Array<String>} strings A string or template literals.
+ * @param {Array<String>} values The values of template literals.
+ * @param {AnsisProps} props
+ * @returns {string}
  */
-for (let name in baseCodes) {
-  const { open, close } = baseCodes[name];
+const wrap = (strings, values, props) => {
+  if (!strings) return '';
+
+  const { openStack, closeStack } = props;
+  let string = strings.raw != null ? String.raw(strings, ...values) : strings;
+
+  if (~string.indexOf('\x1b')) {
+    while (props !== undefined) {
+      string = strReplaceAll(string, props.close, props.open);
+      props = props.parent;
+    }
+  }
+
+  if (~string.indexOf('\n')) {
+    string = string.replace(regexLF, closeStack + '$1' + openStack);
+  }
+
+  return openStack + string + closeStack;
+};
+
+const styleMethods = {
+  ansi: (code) => ansi256(clamp(code, 0, 255)),
+  bgAnsi: (code) => bgAnsi256(clamp(code, 0, 255)),
+  hex: (hex) => rgb(...hexToRgb(hex)),
+  bgHex: (hex) => bgRgb(...hexToRgb(hex)),
+  rgb: (r, g, b) => rgb(
+    clamp(r, 0, 255),
+    clamp(g, 0, 255),
+    clamp(b, 0, 255),
+  ),
+  bgRgb: (r, g, b) => bgRgb(
+    clamp(r, 0, 255),
+    clamp(g, 0, 255),
+    clamp(b, 0, 255),
+  ),
+};
+
+const styles = {};
+let stylePrototype;
+
+// extend styles with methods: rgb(), hex(), etc.
+for (let name in styleMethods) {
   styles[name] = {
-    get() {
-      const style = createStyle(open, close, this.props);
-      Object.defineProperty(this, name, { value: style });
-      return style;
+    get () {
+      return (...args) => createStyle(this, styleMethods[name](...args));
     },
   };
 }
 
-/**
- * @type {AnsisInstance.visible}
- */
-styles.visible = {
-  get() {
-    return createStyle('', '', this.props);
-  },
-};
+// define method aliases for compatibility with chalk
+styles.ansi256 = styles.fg = styles.ansi;
+styles.bgAnsi256 = styles.bg = styles.bgAnsi;
 
-/**
- * @type {AnsisInstance.ansi256}
- */
-styles.ansi256 = {
-  get() {
-    return (code) => {
-      code = clamp(code, 0, 255);
-      const { open, close } = extendedCodes.ansi256(code);
-      return createStyle(open, close, this.props);
-    };
-  },
-};
-
-/**
- * @type {AnsisInstance.bgAnsi256}
- */
-styles.bgAnsi256 = {
-  get() {
-    return (code) => {
-      code = clamp(code, 0, 255);
-      const { open, close } = extendedCodes.bgAnsi256(code);
-      return createStyle(open, close, this.props);
-    };
-  },
-};
-
-/**
- * @type {AnsisInstance.rgb}
- */
-styles.rgb = {
-  get() {
-    return (r, g, b) => {
-      r = clamp(r, 0, 255);
-      g = clamp(g, 0, 255);
-      b = clamp(b, 0, 255);
-      const { open, close } = extendedCodes.rgb(r, g, b);
-      return createStyle(open, close, this.props);
-    };
-  },
-};
-
-/**
- * @type {AnsisInstance.hex}
- */
-styles.hex = {
-  get() {
-    return (hex) => {
-      const { open, close } = extendedCodes.rgb(...hexToRgb(hex));
-      return createStyle(open, close, this.props);
-    };
-  },
-};
-
-/**
- * @type {AnsisInstance.bgRgb}
- */
-styles.bgRgb = {
-  get() {
-    return (r, g, b) => {
-      r = clamp(r, 0, 255);
-      g = clamp(g, 0, 255);
-      b = clamp(b, 0, 255);
-      const { open, close } = extendedCodes.bgRgb(r, g, b);
-      return createStyle(open, close, this.props);
-    };
-  },
-};
-
-/**
- * @type {AnsisInstance.bgHex}
- */
-styles.bgHex = {
-  get() {
-    return (hex) => {
-      const { open, close } = extendedCodes.bgRgb(...hexToRgb(hex));
-      return createStyle(open, close, this.props);
-    };
-  },
-};
-
-/**
- * Aliases.
- */
-styles.ansi = styles.ansi256;
-styles.fg = styles.ansi256;
-styles.bgAnsi = styles.bgAnsi256;
-styles.bg = styles.bgAnsi256;
-
-const styleProxy = Object.defineProperties(() => {}, styles);
-
-/** @type {AnsisInstance} */
 const ansis = new Ansis();
 
 export { Ansis, ansis as default };

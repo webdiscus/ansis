@@ -1,26 +1,13 @@
-interface Property {
-  /**
-   The ANSI escape sequences for starting the style.
-   */
-  readonly open: string;
+type ColorExtend = Record<string, string|{open:string, close:string}>
 
+interface Ansis {
   /**
-   The ANSI escape sequences for ending the style.
-   */
-  readonly close: string;
-}
-
-interface Method {
-  /**
-   * Return colored string.
+   * Return styled string.
    *
-   * @param {string} string
-   *  All strings from the arguments will be concatenated.
+   * @param {string | TemplateStringsArray} string
    */
-  (string: string): string;
-}
+  (string: string | TemplateStringsArray): string;
 
-interface AnsisColor extends Method, Property {
   /**
    * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for foreground color.
    *
@@ -34,35 +21,21 @@ interface AnsisColor extends Method, Property {
    *
    * @param {number} code in range [0, 255].
    */
-  ansi256: (code: number) => AnsisColor;
+  ansi256: (code: number) => this;
 
   /**
    * Alias for ansi256.
+   *
    * @param {number} code in range [0, 255].
    */
-  ansi: (code: number) => AnsisColor;
+  ansi: (code: number) => this;
 
   /**
    * Alias for ansi256.
+   *
    * @param {number} code in range [0, 255].
    */
-  fg: (code: number) => AnsisColor;
-
-  /**
-   * Set RGB values for foreground color.
-   *
-   * @param {number} red The red value, in range [0, 255].
-   * @param {number} green The green value, in range [0, 255].
-   * @param {number} blue The blue value, in range [0, 255].
-   */
-  rgb: (red: number, green: number, blue: number) => AnsisColor;
-
-  /**
-   * Set HEX value for foreground color.
-   *
-   * @param {string} hex
-   */
-  hex: (color: string) => AnsisColor;
+  fg: (code: number) => this;
 
   /**
    * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for background color.
@@ -77,19 +50,37 @@ interface AnsisColor extends Method, Property {
    *
    * @param {number} code in range [0, 255].
    */
-  bgAnsi256: (code: number) => AnsisColor;
+  bgAnsi256: (code: number) => this;
 
   /**
    * Alias for bgAnsi256.
+   *
    * @param {number} code in range [0, 255].
    */
-  bgAnsi: (code: number) => AnsisColor;
+  bgAnsi: (code: number) => this;
 
   /**
    * Alias for bgAnsi256.
+   *
    * @param {number} code in range [0, 255].
    */
-  bg: (code: number) => AnsisColor;
+  bg: (code: number) => this;
+
+  /**
+   * Set RGB values for foreground color.
+   *
+   * @param {number} red The red value, in range [0, 255].
+   * @param {number} green The green value, in range [0, 255].
+   * @param {number} blue The blue value, in range [0, 255].
+   */
+  rgb: (red: number, green: number, blue: number) => this;
+
+  /**
+   * Set HEX value for foreground color.
+   *
+   * @param {string} hex
+   */
+  hex: (color: string) => this;
 
   /**
    * Set RGB values for background color.
@@ -98,106 +89,185 @@ interface AnsisColor extends Method, Property {
    * @param {number} green The green value, in range [0, 255].
    * @param {number} blue The blue value, in range [0, 255].
    */
-  bgRgb: (red: number, green: number, blue: number) => AnsisColor;
+  bgRgb: (red: number, green: number, blue: number) => this;
 
   /**
    * Set HEX value for background color.
    *
    * @param {string} hex
    */
-  bgHex: (color: string) => AnsisColor;
+  bgHex: (color: string) => this;
 
   /**
-   * Remove ANSI codes.
+   * Remove ANSI styling codes.
+   *
    * @param {string} str
    * @return {string}
    */
   strip: (string: string) => string;
 
+  /**
+   * Extend base colors with custom ones.
+   *
+   * @param {Object.<name:string, value:string|{open:string, close:string}>} colors The object with key as color name
+   *  and value as hex code of custom color or the object with 'open' and 'close' codes.
+   */
+  extend: (colors: ColorExtend) => void;
+
+  /** The ANSI escape sequences for starting the current style. */
+  readonly open: string;
+
+  /** The ANSI escape sequences for ending the current style. */
+  readonly close: string;
+
   /** Reset the current style. */
-  readonly reset: AnsisColor;
+  readonly reset: this;
 
   /** Invert background and foreground colors. */
-  readonly inverse: AnsisColor;
+  readonly inverse: this;
 
   /** Print the invisible text. */
-  readonly hidden: AnsisColor;
+  readonly hidden: this;
 
-  /** Print visible text without ANSI styling.*/
-  readonly visible: AnsisColor;
+  /** Print visible text without ANSI styling. */
+  readonly visible: this;
 
   /** <b>Bold</b> style (high intensity). */
-  readonly bold: AnsisColor;
+  readonly bold: this;
 
   /** Faint style (low intensity or dim). The alias for `faint`. */
-  readonly dim: AnsisColor;
+  readonly dim: this;
 
   /** Faint style (low intensity or dim). The name defined by ECMA-48. */
-  readonly faint: AnsisColor;
+  readonly faint: this;
 
-  /** <i>Italic</i> style. *(Not widely supported)* */
-  readonly italic: AnsisColor;
+  /** <i>Italic</i> style. (Not widely supported) */
+  readonly italic: this;
 
-  /** U̲n̲d̲e̲r̲l̲i̲n̲e̲ style. *(Not widely supported)* */
-  readonly underline: AnsisColor;
+  /** U̲n̲d̲e̲r̲l̲i̲n̲e̲ style. (Not widely supported) */
+  readonly underline: this;
 
-  /** D̳o̳u̳b̳l̳e̳ ̳u̳n̳d̳e̳r̳l̳i̳n̳e̳ style. *(Not widely supported)* */
-  readonly doubleUnderline: AnsisColor;
+  /** D̳o̳u̳b̳l̳e̳ ̳u̳n̳d̳e̳r̳l̳i̳n̳e̳ style. (Not widely supported) */
+  readonly doubleUnderline: this;
 
-  /** O̅v̅e̅r̅l̅i̅n̅e̅ style. *(Not widely supported)* */
-  readonly overline: AnsisColor;
+  /** O̅v̅e̅r̅l̅i̅n̅e̅ style. (Not widely supported) */
+  readonly overline: this;
 
-  /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. *(Not widely supported)* */
-  readonly strikethrough: AnsisColor;
+  /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) */
+  readonly strikethrough: this;
 
-  /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. *(Not widely supported)* The alias for `strikethrough`. */
-  readonly strike: AnsisColor;
+  /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) The alias for `strikethrough`. */
+  readonly strike: this;
 
-  /** Frame style. *(Not widely supported)* */
-  readonly frame: AnsisColor;
+  /** Frame style. (Not widely supported) */
+  readonly frame: this;
 
-  /** Encircle style. *(Not widely supported)* */
-  readonly encircle: AnsisColor;
+  /** Encircle style. (Not widely supported) */
+  readonly encircle: this;
 
-  readonly black: AnsisColor;
-  readonly red: AnsisColor;
-  readonly green: AnsisColor;
-  readonly yellow: AnsisColor;
-  readonly blue: AnsisColor;
-  readonly magenta: AnsisColor;
-  readonly cyan: AnsisColor;
-  readonly white: AnsisColor;
-  readonly gray: AnsisColor;
-  readonly grey: AnsisColor;
-  readonly blackBright: AnsisColor;
-  readonly redBright: AnsisColor;
-  readonly greenBright: AnsisColor;
-  readonly yellowBright: AnsisColor;
-  readonly blueBright: AnsisColor;
-  readonly magentaBright: AnsisColor;
-  readonly cyanBright: AnsisColor;
-  readonly whiteBright: AnsisColor;
-  readonly bgBlack: AnsisColor;
-  readonly bgRed: AnsisColor;
-  readonly bgGreen: AnsisColor;
-  readonly bgYellow: AnsisColor;
-  readonly bgBlue: AnsisColor;
-  readonly bgMagenta: AnsisColor;
-  readonly bgCyan: AnsisColor;
-  readonly bgWhite: AnsisColor;
-  readonly bgGray: AnsisColor;
-  readonly bgBlackBright: AnsisColor;
-  readonly bgRedBright: AnsisColor;
-  readonly bgGreenBright: AnsisColor;
-  readonly bgYellowBright: AnsisColor;
-  readonly bgBlueBright: AnsisColor;
-  readonly bgMagentaBright: AnsisColor;
-  readonly bgCyanBright: AnsisColor;
-  readonly bgWhiteBright: AnsisColor;
+  readonly black: this;
+  readonly red: this;
+  readonly green: this;
+  readonly yellow: this;
+  readonly blue: this;
+  readonly magenta: this;
+  readonly cyan: this;
+  readonly white: this;
+  readonly gray: this;
+  readonly grey: this;
+  readonly blackBright: this;
+  readonly redBright: this;
+  readonly greenBright: this;
+  readonly yellowBright: this;
+  readonly blueBright: this;
+  readonly magentaBright: this;
+  readonly cyanBright: this;
+  readonly whiteBright: this;
+  readonly bgBlack: this;
+  readonly bgRed: this;
+  readonly bgGreen: this;
+  readonly bgYellow: this;
+  readonly bgBlue: this;
+  readonly bgMagenta: this;
+  readonly bgCyan: this;
+  readonly bgWhite: this;
+  readonly bgGray: this;
+  readonly bgBlackBright: this;
+  readonly bgRedBright: this;
+  readonly bgGreenBright: this;
+  readonly bgYellowBright: this;
+  readonly bgBlueBright: this;
+  readonly bgMagentaBright: this;
+  readonly bgCyanBright: this;
+  readonly bgWhiteBright: this;
 }
 
-declare const ansis: AnsisColor;
+declare const ansis: Ansis;
+declare const Ansis: new (str: string) => Ansis;
 
-declare const Ansis: new (str: string) => AnsisColor;
+/**
+ * Base ANSI Styles
+ */
+type AnsiStyles = (
+  | 'reset'
+  | 'inverse'
+  | 'hidden'
+  | 'visible'
+  | 'bold'
+  | 'dim'
+  | 'faint'
+  | 'italic'
+  | 'underline'
+  | 'doubleUnderline'
+  | 'overline'
+  | 'strikethrough'
+  | 'strike'
+  | 'frame'
+  | 'encircle'
+  );
 
-export { Ansis, ansis as default };
+/**
+ * Base ANSI Colors
+ */
+type AnsiColors = (
+  | 'black'
+  | 'red'
+  | 'green'
+  | 'yellow'
+  | 'blue'
+  | 'magenta'
+  | 'cyan'
+  | 'white'
+  | 'gray'
+  | 'grey'
+  | 'blackBright'
+  | 'redBright'
+  | 'greenBright'
+  | 'yellowBright'
+  | 'blueBright'
+  | 'magentaBright'
+  | 'cyanBright'
+  | 'whiteBright'
+  | 'bgBlack'
+  | 'bgRed'
+  | 'bgGreen'
+  | 'bgYellow'
+  | 'bgBlue'
+  | 'bgMagenta'
+  | 'bgCyan'
+  | 'bgWhite'
+  | 'bgGray'
+  | 'bgBlackBright'
+  | 'bgRedBright'
+  | 'bgGreenBright'
+  | 'bgYellowBright'
+  | 'bgBlueBright'
+  | 'bgMagentaBright'
+  | 'bgCyanBright'
+  | 'bgWhiteBright'
+  );
+
+type StringUnion<T, B extends string> = T | (B & Record<never, never>);
+type AnsiColorsExtend<T extends string> = StringUnion<AnsiColors, T>;
+
+export { AnsiColors, AnsiColorsExtend, AnsiStyles, Ansis, ansis as default };

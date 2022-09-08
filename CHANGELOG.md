@@ -1,5 +1,26 @@
 # Change log
 
+## 1.5.0 (2022-09-08)
+- feat: added supports the nested template literal syntax:
+  ```js
+  console.log(red`red ${yellow`yellow ${green`green`} yellow`} red`)
+  ```
+- feat: added named export of colors with supports for chained syntax:
+  ```js
+  import { red, green, yellow } from 'ansis/colors';
+  console.log(red.bold.underline`text`);
+  ```
+- feat: added extending of base colors with named custom truecolor
+  ```js
+  import ansis from 'ansis';
+  ansis.extend({ orange: '#FFAB40' });
+  console.log(ansis.orange.bold('text'));
+  ```
+- fix: corrected declarations in `index.d.ts`
+- chore: added `AnsiStyles`, `AnsiColors` and AnsiColorsExtend types in `index.d.ts`
+- refactor: optimize size of distributed bundle from 3.7KB to 3.1KB
+- docs: added usage in CLI
+
 ## 1.4.0 (2022-07-02)
 - feat: add method strip() to remove all ANSI codes from string
 

@@ -2,10 +2,10 @@ import { execSync } from 'child_process';
 import path from 'path';
 
 // test distributed version
-//import ansis, { Ansis } from '../dist/index.js';
-import ansis from '../src/index.js';
+import ansis, { Ansis } from '../src/index.js';
 import { hexToRgb, clamp } from '../src/utils.js';
 import { isSupported } from '../src/ansi-codes.js';
+import { green, red, yellow } from '../src/colors.mjs';
 
 const TEST_PATH = path.resolve('./test/');
 
@@ -32,11 +32,9 @@ const execScriptSync = (file, flags = []) => {
 const esc = (str) => str.replace(/\x1b/g, '\\x1b');
 
 beforeAll(() => {
-  //
 });
 
 beforeEach(() => {
-  //jest.setTimeout(2000);
 });
 
 describe('default tests', () => {
@@ -56,7 +54,14 @@ describe('default tests', () => {
 });
 
 describe('isSupported', () => {
-  test(`true`, (done) => {
+  test(`processMock undefined`, (done) => {
+    const received = isSupported(undefined);
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`processMock {}`, (done) => {
     const received = isSupported({});
     const expected = false;
     expect(received).toEqual(expected);
@@ -386,6 +391,44 @@ describe('alias tests', () => {
   test(`ansi256(96).ansi(96).fg(96)('foo')`, (done) => {
     const received = ansis.ansi256(96).ansi(96).fg(96)('foo');
     const expected = '\x1b[38;5;96m\x1b[38;5;96m\x1b[38;5;96mfoo\x1b[39m\x1b[39m\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+});
+
+describe('template literals tests', () => {
+  test('ansis.red`red color`', (done) => {
+    const received = ansis.red`red color`;
+    const expected = '\x1b[31mred color\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+
+  test('red`red ${yellow`yellow ${green`green`} yellow`} red`', (done) => {
+    const received = red`red ${yellow`yellow ${green`green`} yellow`} red`;
+    const expected = '\x1b[31mred \x1b[33myellow \x1b[32mgreen\x1b[33m yellow\x1b[31m red\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+});
+
+describe('extend base colors tests', () => {
+  test('imported ansis`', (done) => {
+    ansis.extend({ orange: '#FFAB40' });
+
+    const received = ansis.orange.bold('text');
+    const expected = '\x1b[38;2;255;171;64m\x1b[1mtext\x1b[22m\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+
+  test('new ansis`', (done) => {
+    const ansis = new Ansis();
+    ansis.extend({ orange: '#FFAB40' });
+
+    // test the order bold > orange
+    const received = ansis.bold.orange('text');
+    const expected = '\x1b[1m\x1b[38;2;255;171;64mtext\x1b[39m\x1b[22m';
     expect(esc(received)).toEqual(esc(expected));
     done();
   });

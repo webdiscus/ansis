@@ -3,7 +3,7 @@
  *
  * A hexadecimal color code can be 3 or 6 digits with an optional "#" prefix.
  *
- * The 3 digits specifies a RGB doublet data as a fully opaque color.
+ * The 3 digits specifies an RGB doublet data as a fully opaque color.
  * For example, "#123" specifies the color that is represented by "#112233".
  *
  * The 6 digits specifies a fully opaque color.
@@ -12,9 +12,9 @@
  * @param {string} hex A string that contains the hexadecimal RGB color representation.
  * @return {[number, number, number]} The red, green, blue values in range [0, 255] .
  */
-export const hexToRgb = function (hex) {
+export const hexToRgb = (hex) => {
   let [, color] = /([a-f\d]{3,6})/i.exec(hex) || [];
-  const len = color ? color.length : 0;
+  let len = color ? color.length : 0;
 
   if (len === 3) {
     color = color[0] + color[0] + color[1] + color[1] + color[2] + color[2];
@@ -22,9 +22,9 @@ export const hexToRgb = function (hex) {
     return [0, 0, 0];
   }
 
-  const num = parseInt(color, 16);
+  let num = parseInt(color, 16);
 
-  return [(num >> 16) & 0xff, (num >> 8) & 0xff, num & 0xff];
+  return [num >> 16 & 255, num >> 8 & 255, num & 255];
 };
 
 /**
@@ -47,21 +47,21 @@ export const clamp = (num, min, max) => (min > num ? min : num > max ? max : num
  * @param {string} replaceValue
  * @returns {string}
  */
-export const strReplaceAll = function (str, searchValue, replaceValue) {
+export const strReplaceAll = (str, searchValue, replaceValue) => {
   let pos = str.indexOf(searchValue);
   if (pos < 0) return str;
 
-  const substringLength = searchValue.length;
+  let substringLength = searchValue.length;
   let lastPos = 0;
   let result = '';
 
   while (~pos) {
-    result += str.substr(lastPos, pos - lastPos) + replaceValue;
+    result += str.slice(lastPos, pos) + replaceValue;
     lastPos = pos + substringLength;
     pos = str.indexOf(searchValue, lastPos);
   }
 
-  return result + str.substr(lastPos);
+  return result + str.slice(lastPos);
 };
 
 /**
@@ -95,5 +95,5 @@ export const strReplaceAll = function (str, searchValue, replaceValue) {
 //     pos = str.indexOf('\n', lastPos);
 //   }
 //
-//   return result + str.substr(lastPos);
+//   return result + str.slice(lastPos);
 // };

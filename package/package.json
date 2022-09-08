@@ -1,40 +1,100 @@
 {
   "name": "ansis",
-  "version": "1.4.0",
-  "description": "ANSI color styling for text in terminal.",
+  "version": "1.5.0",
+  "description": "Formatting text in terminal with ANSI colors & styles.",
   "keywords": [
+    "256",
+    "256color",
     "ansi",
+    "colour",
     "color",
-    "style",
+    "colors",
+    "styles",
+    "formatting",
     "terminal",
+    "xterm",
     "console",
     "cli",
+    "log",
+    "logging",
+    "strip-color",
+    "strip",
+    "truecolor",
+    "foreground",
+    "background",
     "rgb",
     "hex",
-    "truecolor",
+    "black",
+    "red",
+    "green",
+    "yellow",
+    "blue",
+    "magenta",
+    "cyan",
+    "white",
+    "gray",
+    "grey",
     "bgRed",
+    "inverse",
+    "visible",
+    "inverse",
+    "bold",
+    "italic",
+    "underline",
+    "strikethrough",
+    "ansi-colors",
+    "chalk",
+    "colorette",
+    "colors.js",
+    "kleur",
+    "nanocolors",
+    "picocolors",
+    "FORCE_COLOR",
     "NO_COLOR"
   ],
   "license": "ISC",
   "author": "webdiscus (https://github.com/webdiscus)",
+  "maintainers": [
+    "webdiscus (https://github.com/webdiscus)"
+  ],
   "funding": {
     "type": "patreon",
     "url": "https://patreon.com/biodiscus"
   },
   "homepage": "https://github.com/webdiscus/ansis",
-  "repository": "webdiscus/ansis",
+  "bugs": {
+    "url": "https://github.com/webdiscus/ansis/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webdiscus/ansis.git"
+  },
   "sideEffects": false,
   "main": "./index.js",
   "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js"
+    },
+    "./colors": {
+      "import": "./colors.mjs",
+      "require": "./colors.cjs",
+      "types": "./colors.d.ts"
+    }
+  },
   "engines": {
     "node": ">=12.13"
   },
   "files": [
-    "index.js",
-    "index.d.ts",
     "bundle.js",
-    "README.md",
-    "LICENSE"
+    "index.d.ts",
+    "index.js",
+    "colors.d.ts",
+    "colors.cjs",
+    "colors.mjs",
+    "package.json",
+    "LICENSE",
+    "README.md"
   ],
   "dependencies": {}
 }

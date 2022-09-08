@@ -1,7 +1,14 @@
 root = true
 
 [*]
-max_line_length = 120
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
+
+[{*.cjs,*.js}]
+indent_size = 2
+tab_width = 2
+
+[{*.htm,*.html,*.pug,*.md}]
+indent_size = 2
+tab_width = 2

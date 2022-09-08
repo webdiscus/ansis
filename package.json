@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Formatting text in terminal with ANSI colors & styles.",
   "keywords": [
     "256",
@@ -79,12 +79,14 @@
   "types": "./src/index.d.ts",
   "exports": {
     ".": {
-      "import": "./index.js"
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js"
     },
     "./colors": {
+      "types": "./colors.d.ts",
       "import": "./colors.mjs",
-      "require": "./colors.cjs",
-      "types": "./colors.d.ts"
+      "require": "./colors.cjs"
     }
   },
   "scripts": {
@@ -110,10 +112,9 @@
     "jest": "^28.1.2",
     "prettier": "^2.7.1",
     "rollup": "^2.79.0",
-    "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-cleanup": "^3.2.1",
+    "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-dts": "^4.2.2",
     "rollup-plugin-terser": "^7.0.2"
-  },
-  "dependencies": {}
+  }
 }

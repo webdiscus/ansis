@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Formatting text in terminal with ANSI colors & styles.",
   "keywords": [
     "256",
@@ -74,12 +74,14 @@
   "types": "./index.d.ts",
   "exports": {
     ".": {
-      "import": "./index.js"
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.js"
     },
     "./colors": {
+      "types": "./colors.d.ts",
       "import": "./colors.mjs",
-      "require": "./colors.cjs",
-      "types": "./colors.d.ts"
+      "require": "./colors.cjs"
     }
   },
   "engines": {

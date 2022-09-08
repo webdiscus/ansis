@@ -1,5 +1,12 @@
 # Change log
 
+## 1.5.1 (2022-09-08)
+- fix: added missing export for CJS mode in package.json
+- test: added manual tests for CJS and ESM mode
+
+## 1.5.0 (2022-09-08)
+- DEPRECATE v1.5.0, because missing exports main for CJS mode, fixed in v1.5.1
+
 ## 1.5.0 (2022-09-08)
 - feat: added supports the nested template literal syntax:
   ```js

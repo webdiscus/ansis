@@ -1,8 +1,9 @@
+import ansis from 'ansis';
 import { red, green, blue, yellow, magenta } from 'ansis/colors';
 
 const log = console.log;
 
-log(green.inverse('ESM'));
+log(ansis.green.inverse('ESM'));
 log(red('red'));
 log(green.bold('green'));
 log(blue.underline.italic('blue'));

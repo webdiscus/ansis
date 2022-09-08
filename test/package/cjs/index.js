@@ -1,8 +1,9 @@
+const ansis = require('ansis');
 const { red, green, blue, yellow, magenta } = require('ansis/colors');
 
 const log = console.log;
 
-log(green.inverse('CommonJS'));
+log(ansis.green.inverse('CommonJS'));
 log(red('red'));
 log(green.bold('green'));
 log(blue.underline.italic('blue'));

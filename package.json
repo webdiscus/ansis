@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Formatting text in terminal with ANSI colors & styles.",
   "keywords": [
     "256",
@@ -108,7 +108,6 @@
     "@babel/core": "^7.18.13",
     "@babel/preset-env": "^7.18.10",
     "@types/jest": "^28.1.4",
-    "ansis": "1.4.0",
     "jest": "^28.1.2",
     "prettier": "^2.7.1",
     "rollup": "^2.79.0",

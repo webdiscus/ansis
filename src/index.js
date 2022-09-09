@@ -19,8 +19,6 @@ const regexLF = /(\r*\n)/g;
 const Ansis = function () {
   const self = (str) => str;
 
-  this.self = self;
-
   /**
    * Remove ANSI styling codes.
    * @param {string} str
@@ -43,8 +41,8 @@ const Ansis = function () {
     for (let name in colors) {
       let value = colors[name];
       // detect whether the value is style property Object {open, close} or a string with hex code of color '#FF0000'
-      let isProperty = value.open != null;
-      let styleCodes = isProperty ? value : rgb(...hexToRgb(value));
+      let hasProperty = value.open != null;
+      let styleCodes = hasProperty ? value : rgb(...hexToRgb(value));
 
       styles[name] = {
         get () {
@@ -62,7 +60,7 @@ const Ansis = function () {
   // extend styles with base colors & styles
   self.extend(baseStyles);
 
-  return this.self;
+  return self;
 };
 
 /**

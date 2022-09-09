@@ -68,11 +68,11 @@ describe('isSupported', () => {
     done();
   });
 
-  test(`true`, (done) => {
+  test(`colors in linux terminal`, (done) => {
     const received = isSupported({
-      platform: 'win32',
-      env: { FORCE_COLOR: true, CI: 'GITLAB_CI', TERM: 'ansi' },
-      argv: ['--color'],
+      platform: 'linux',
+      env: { TERM: 'xterm' },
+      argv: [],
       stdout: { isTTY: true },
       stderr: { isTTY: true },
     });
@@ -81,17 +81,173 @@ describe('isSupported', () => {
     done();
   });
 
-  test(`false`, (done) => {
+  test(`colors on windows platform`, (done) => {
     const received = isSupported({
-      env: { NO_COLOR: true, TERM: 'dumb' },
-      argv: ['--color=false', '--no-color'],
-      stdout: {},
-      stderr: {},
+      platform: 'win32',
+      env: {},
+      argv: [],
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`colors in any CI`, (done) => {
+    const received = isSupported({
+      platform: 'linux',
+      env: { CI: 'GITLAB_CI' },
+      argv: [],
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`no colors, unsupported terminal`, (done) => {
+    const received = isSupported({
+      env: { TERM: 'dumb' },
+      argv: [],
+      stdout: { isTTY: true },
+      stderr: { isTTY: true },
     });
     const expected = false;
     expect(received).toEqual(expected);
     done();
   });
+
+  test(`no colors, simulate output in file > log.txt`, (done) => {
+    const received = isSupported({
+      env: { TERM: 'xterm' },
+      argv: [],
+    });
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`enable colors via --color`, (done) => {
+    const received = isSupported({
+      platform: 'linux',
+      env: {},
+      argv: ['--color'],
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`enable colors via -color`, (done) => {
+    const received = isSupported({
+      platform: 'linux',
+      env: {},
+      argv: ['-color'],
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+
+  test(`enable colors via --color=true`, (done) => {
+    const received = isSupported({
+      platform: 'linux',
+      env: { TERM: 'dumb' },
+      argv: ['--color=true'],
+      stdout: { isTTY: true },
+      stderr: { isTTY: true },
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`enable colors via -color=true`, (done) => {
+    const received = isSupported({
+      platform: 'linux',
+      env: { TERM: 'dumb' },
+      argv: ['-color=true'],
+      stdout: { isTTY: true },
+      stderr: { isTTY: true },
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`disable colors via --color=false`, (done) => {
+    const received = isSupported({
+      platform: 'linux',
+      env: { TERM: 'xterm' },
+      argv: ['--color=false'],
+      stdout: { isTTY: true },
+      stderr: { isTTY: true },
+    });
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`disable colors via NO_COLOR=1`, (done) => {
+    const received = isSupported({
+      platform: 'linux',
+      env: { NO_COLOR: '1', TERM: 'xterm' },
+      argv: [],
+      stdout: { isTTY: true },
+      stderr: { isTTY: true },
+    });
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`disable colors via FORCE_COLOR=0`, (done) => {
+    const received = isSupported({
+      platform: 'linux',
+      env: { FORCE_COLOR: '0', TERM: 'xterm' },
+      argv: [],
+      stdout: { isTTY: true },
+      stderr: { isTTY: true },
+    });
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`disable colors via FORCE_COLOR=false`, (done) => {
+    const received = isSupported({
+      platform: 'linux',
+      env: { FORCE_COLOR: 'false', TERM: 'xterm' },
+      argv: [],
+      stdout: { isTTY: true },
+      stderr: { isTTY: true },
+    });
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`enable colors via FORCE_COLOR=1`, (done) => {
+    const received = isSupported({
+      platform: 'linux',
+      env: { FORCE_COLOR: '1' },
+      argv: [],
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`enable colors via FORCE_COLOR=true`, (done) => {
+    const received = isSupported({
+      platform: 'linux',
+      env: { FORCE_COLOR: 'true' },
+      argv: [],
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
 });
 
 describe('utils tests', () => {

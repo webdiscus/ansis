@@ -1,5 +1,10 @@
 # Change log
 
+## 1.5.2 (2022-09-10)
+- fix: regard the value of the environment variable FORCE_COLOR=0 to force disable colors
+- test: added tests for FORCE_COLOR
+- docs: update readme
+
 ## 1.5.1 (2022-09-08)
 - fix: added missing export for CJS mode in package.json
 - test: added manual tests for CJS and ESM mode

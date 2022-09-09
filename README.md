@@ -32,7 +32,7 @@ and [benchmark](https://github.com/webdiscus/ansis#benchmark).
 
 - supports both **ESM** and **CommonJS**
 - up to **x3.5 faster** than **chalk**, [see benchmarks](#benchmark)
-- unpacked dist code is **3 KB** only
+- dist code is **3 KB** only
 - **standard API** compatible with many popular ANSI color libraries like **chalk**
 - **named import** of styles & colors `import { red, blue, bold } from 'ansis/colors'`
 - supports **chained** `red.bold('text')` syntax
@@ -57,12 +57,12 @@ npm install ansis
 ## Usage
 
 ```js
-import { black, red, cyan, inverse } from 'ansis/colors'; // named import
+import { black, red, cyan, inverse, reset } from 'ansis/colors'; // named import
 import ansis from 'ansis'; // ESM
 const ansis = require('ansis'); // CommonJS
 
 console.log(ansis.green`Hello ${inverse`ANSI`} World!`);
-console.log(black.bgYellow`Warning:` + cyan` /path/to/file.js ` + red`not found!`);
+console.log(black.bgYellow`Warning:${reset.cyan` /path/to/file.js`} ${red`not found!`}`);
 ```
 
 Output:\
@@ -113,9 +113,8 @@ underline.yellowBright('text');
 ```js
 import { red, bold, italic, underline } from 'ansis/colors';
 
-white(`MakBookPro, ${cyan(`RAM:`)} 64 GB`);
-white(`MakBookPro, ${cyan(`RAM:`)} 64 GB | ${green(`GPU:`)} 32 cores`);
-red(`${bold(`${italic(`${underline('underline')} italic`)} bold`)} red`);
+white(`MakBookPro, ${cyan.bold(`RAM:`)} 64 GB`);
+white(`MakBookPro, ${cyan.bold(`RAM:`)} 64 GB | ${green.bold(`GPU:`)} 32 cores`);
 ```
 
 
@@ -146,11 +145,34 @@ italic.yellowBright`text`;
 hex('#FF75D1').bgYellow.bold`text`;
 
 // nested
-white`MakBookPro, ${cyan`RAM:`} 64 GB`;
-white`MakBookPro, ${cyan`RAM:`} 64 GB | ${green`GPU:`} 32 cores`;
-white`MakBookPro, ${cyan`RAM: ${cyanBright`64`} GB`} | ${green`GPU: ${greenBright`32`} cores`}`;
-red`${bold`${italic`${underline`underline`} italic`} bold`} red`;
+white`MakBookPro, ${cyan.bold`RAM:`} 64 GB`;
+white`MakBookPro, ${cyan.bold`RAM:`} 64 GB | ${green.bold`GPU:`} 32 cores`;
+white`MakBookPro, ${cyan.bold`RAM: ${cyanBright`64`} GB`} | ${green.bold`GPU: ${greenBright`32`} cores`}`;
 ```
+
+
+<a id="base-colors" name="base-colors" href="#base-colors"></a>
+## Base colors and styles
+
+| Foreground colors     | Background colors | Styles                                     |
+|:----------------------|:------------------|--------------------------------------------|
+| `black`               | `bgBlack`         | `dim` (alias`faint`)                       |
+| `red`                 | `bgRed`           | **`bold`**                                 |
+| `green`               | `bgGreen`         | _`italic`_                                 |
+| `yellow`              | `bgYellow`        | <u>`underline`</u>                         |
+| `blue`                | `bgBlue`          | <s>`strikethrough`</s> (alias `strike`)    |
+| `magenta`             | `bgMagenta`       | `doubleUnderline` (_not widely supported_) |
+| `cyan`                | `bgCyan`          | `overline` (_not widely supported_)        |
+| `white`               | `bgWhite`         | `frame` (_not widely supported_)           |
+| `gray` (alias `grey`) | `bgGray`          | `encircle` (_not widely supported_)        |
+| `blackBright`         | `bgBlackBright`   | `inverse`                                  |
+| `redBright`           | `bgRedBright`     | `visible`                                  |
+| `greenBright`         | `bgGreenBright`   | `hidden`                                   |
+| `yellowBright`        | `bgYellowBright`  | `reset`                                    |
+| `blueBright`          | `bgBlueBright`    |                                            |
+| `magentaBright`       | `bgMagentaBright` |                                            |
+| `cyanBright`          | `bgCyanBright`    |                                            |
+| `whiteBright`         | `bgWhiteBright`   |                                            |
 
 
 ## Extend base colors
@@ -172,7 +194,7 @@ ansis.pink('text');
 ansis.orange('text');
 ```
 
-Using in TypeScript:
+Usage example with TypeScript:
 ```ts
 import ansis, { AnsiColorsExtend } from 'ansis';
 
@@ -191,64 +213,6 @@ write('pink', 'message'); // extended color OK
 write('orange', 'message'); // extended color OK
 write('unknown', 'message'); // TypeScript Error
 ```
-
-
-<a id="base-colors" name="base-colors" href="#base-colors"></a>
-## Base styles and colors
-### Styles
-
-`reset`
-`inverse`
-`hidden`
-`visible`
-`bold`
-`dim`(alias`faint`)
-`italic`
-`underline`
-`doubleUnderline`
-`overline`
-`strikethrough`(alias `strike`)
-`frame`
-`encircle`
-
-### Foreground colors
-
-`black`
-`red`
-`green`
-`blue`
-`magenta`
-`cyan`
-`white`
-`gray` (alias `grey`)
-`blackBright`
-`redBright`
-`greenBright`
-`yellowBright`
-`blueBright`
-`magentaBright`
-`cyanBright`
-`whiteBright`
-
-### Background colors
-
-`bgBlack`
-`bgRed`
-`bgGreen`
-`bgYellow`
-`bgBlue`
-`bgMagenta`
-`bgCyan`
-`bgWhite`
-`bgGray`
-`bgBlackBright`
-`bgRedBright`
-`bgGreenBright`
-`bgYellowBright`
-`bgBlueBright`
-`bgMagentaBright`
-`bgCyanBright`
-`bgWhiteBright`
 
 
 ## ANSI 256 colors
@@ -354,7 +318,7 @@ The variable `string` will contain the pure string `Hello ANSI World!`.
 
 ## CLI
 
-Defaults, the output in terminal console is colored, and output in a file is uncolored.
+Defaults, the output in terminal console is colored and output in a file is uncolored.
 
 ### Environment variables
 _example.js_
@@ -365,19 +329,31 @@ console.log(ansis.red`COLOR`);
 ```
 
 ```
-$ node example.js # => color output
-$ node example.js > log.txt # => no color output
+$ node example.js           #=> color
+$ node example.js > log.txt #=> no color
 ```
 
 To force disable or enable colored output use environment variables `NO_COLOR` and `FORCE_COLOR`.
 
 ```
-$ NO_COLOR=true node example.js # => force disable colors in output
-$ FORCE_COLOR=true node example.js > log.txt # => force enable colors in output
+$ NO_COLOR=1 node example.js              #=> force disable colors
+$ FORCE_COLOR=0 node example.js           #=> force disable colors
+$ FORCE_COLOR=1 node example.js > log.txt #=> force enable colors
 ```
 
+> **Note**
+>
+> The `NO_COLOR` variable should be presents with any not empty value.
+> The value is not important, see standard description by [NO_COLOR](https://no-color.org/).\
+> `NO_COLOR=1` `NO_COLOR=true` disable colors
+>
+> The `FORCE_COLOR` variable should be presents with one of values:\
+> `FORCE_COLOR=0`  force disable colors\
+> `FORCE_COLOR=1`  force enable colors
+
+
 ### Arguments for executable script
-If you have an executable script file.\
+If you have an executable script.\
 _example.js_
 ```js
 #!/usr/bin/env node
@@ -388,45 +364,55 @@ console.log(ansis.red`COLOR`);
 
 Use arguments `--no-color` or `--color=false` to disable colors and `--color` to enable ones.
 ```
-$ ./example.js # => colors
-$ ./example.js --no-color # => no colors
-$ ./example.js --color=false # => no colors
+$ ./example.js                        #=> color
+$ ./example.js --no-color             #=> no color
+$ ./example.js --color=false          #=> no color
 
-$ ./example.js > log.txt # => no color
-$ ./example.js --color > log.txt # => color
+$ ./example.js > log.txt              #=> no color
+$ ./example.js --color > log.txt      #=> color
+$ ./example.js --color=true > log.txt #=> color
 ```
 
 
 <a id="compare" href="#compare"></a>
 ## Comparison of most popular libraries
 
-| Library                      |  Standard<br>style / color<br>naming   | Chained<br>styles | Nested<br>styles | New<br>Line | ANSI 256<br>colors<br>methods                                    | Truecolor<br>methods | Supports<br>NO_COLOR                               |
-|------------------------------|:--------------------------------------:|:-----------------:|:----------------:|:-----------:|------------------------------------------------------------------|----------------------|:---------------------------------------------------|
-| [`colors.js`][colors.js]     | no, e.g.<br>`brightRed`<br>(16 colors) |        yes        |       yes        |     yes     | -                                                                | -                    | only<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`colorette`][colorette]     |           yes<br>(16 colors)           |         -         |       yes        |      -      | -                                                                | -                    | yes                                                |
-| [`picocolors`][picocolors]   |           yes<br>(8 colors)            |         -         |       yes        |      -      | -                                                                | -                    | yes                                                |
-| [`cli-color`][cli-color]     |           yes<br>(16 colors)           |        yes        |       yes        |      -      | `.xterm(num)`                                                    | -                    | yes                                                |
-| [`color-cli`][color-cli]     | no, e.g.<br>`red_bbt`<br>(16 colors)   |        yes        |     _buggy_      |     yes     | `.x<num>`                                                        | -                    | only<br>`--no-color`<br>`--color`                  |
-| [`ansi-colors`][ansi-colors] |           yes<br>(16 colors)           |        yes        |       yes        |     yes     | -                                                                | -                    | only<br>`FORCE_COLOR`                              |
-| [`kleur`][kleur]             |           yes<br>(8 colors)            |      _yes_*       |       yes        |      -      | -                                                                | -                    | yes                                                |
-| [`chalk`][chalk]             |           yes<br>(16 colors)           |        yes        |       yes        |     yes     | `.ansi256(num)`<br>.`bgAnsi256(num)`                             | `.hex()` `.rgb()`    | yes                                                |
-| [`ansis`][ansis-github]      |           yes<br>(16 colors)           |        yes        |       yes        |     yes     | `.ansi256(num)`<br>`.bgAnsi256(num)`<br>.`fg(num)`<br>.`bg(num)` | `.hex()` `.rgb()`    | yes                                                |
+|                             Library                              |                    <nobr>Naming of</nobr><br><nobr>base colors</nobr>                    | Chained<br>syntax | Nested<br>template strings | New<br>Line |            ANSI 256<br>colors<br>methods             | Truecolor<br>methods | Supports<br>CLI params                                   |
+|:----------------------------------------------------------------:|:----------------------------------------------------------------------------------------:|:-----------------:|:--------------------------:|:-----------:|:----------------------------------------------------:|:--------------------:|:---------------------------------------------------------|
+|         [`colors.js`][colors.js]<br>code size **18.1KB**         | _non-standard_, <nobr>e.g. `brightRed`</nobr> (16 colors)<br><nobr>❌ named import</nobr> |         ✅         |             ❌              |      ✅      |                          ❌                           |          ❌          | only<br>`FORCE_COLOR`<br>`--no-color`<br>`--color`       |
+|         [`colorette`][colorette]<br>code size **3.3KB**          |              **standard**<br>(**16** colors)<br><nobr>✅ named import</nobr>              |         ❌         |             ❌              |      ❌      |                          ❌                           |          ❌          | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+|        [`picocolors`][picocolors]<br>code size **2.6KB**         |                **standard**<br>(8 colors)<br><nobr>❌ named import</nobr>                 |         ❌         |             ❌              |      ❌      |                          ❌                           |          ❌          | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+|                     [`cli-color`][cli-color]                     |              **standard**<br>(**16** colors)<br><nobr>❌ named import</nobr>              |         ✅         |             ❌              |      ❌      |                       `xterm(n)`                     |          ❌          | only<br>`NO_COLOR`                                       |
+|         [`colors-cli`][colors-cli]<br>code size **8.6KB**          |       _non-standard_, e.g. `red_bbt`<br>(16 colors)<br><nobr>❌ named import</nobr>       |         ✅         |             ❌              |      ✅      |                        `x<n>`                        |          ❌          | only<br>`--no-color`<br>`--color`                        |
+| <nobr>[`ansi-colors`][ansi-colors]</nobr><br>code size **5.8KB** |              **standard**<br>(**16** colors)<br><nobr>❌ named import</nobr>              |         ✅         |             ❌              |      ✅      |                          ❌                           |          ❌          | only<br>`FORCE_COLOR`                                    |
+|             [`kleur`][kleur]<br>code size **2.7KB**              |                **standard**<br>(8 colors)<br><nobr>✅ named import</nobr>                 |         ✅         |             ❌              |      ❌      |                          ❌                           |          ❌          | only<br>`NO_COLOR`<br>`FORCE_COLOR`                      |
+|              [`chalk`][chalk]<br>code size **15KB**              |              **standard**<br>(**16** colors)<br><nobr>❌ named import</nobr>              |         ✅         |             ❌              |      ✅      |            `ansi256(n)`<br>`bgAnsi256(n)`            |   `hex()` `rgb()`    | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+|          [`ansis`][ansis-github]<br>code size **3.2KB**          |              **standard**<br>(**16** colors)<br><nobr>✅ named import</nobr>              |         ✅         |             ✅              |      ✅      | `ansi256(n)`<br>`bgAnsi256(n)`<br>`fg(n)`<br>`bg(n)` |   `hex()` `rgb()`    | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
 
-### Column description
 
-- **Standard style and color naming**: `red` `redBright` `bgRed` `bgRedBright` etc., see above the **Foreground /
-  Background colors**.
-- **Chain styles**: `ansis.red.bold.underline('text')`.\
-  `kleur` use the chain of functions: `kleur.red().bold().underline('text')`.
-- **Nested styles**: correct closing of nested escape sequences.
-  ```js
-  c.red(`red ${c.green(`green ${c.underline(`underline`)} green`)} red`)
-- **New Line**: correct break of escape sequences at `end of line`.
-  ```js
-  ansis.bgGreen(`\nAnsis\nNew Line\nNext New Line\n`);
-  ```
-- **NO_COLOR**: supports the environment variables [`NO_COLOR`](https://no-color.org) `FORCE_COLOR` and
-  flags `--no-color` `--color`
+> **Note**
+>
+> **Code size**\
+> The size of distributed code that will be loaded via `require` or `import` into your app. It's not a package size.
+>
+> **Named import**\
+> `import { red, green, blue } from 'lib';`\
+> or\
+> `import { red, green, blue } from 'lib/colors';`
+>
+> **Chained syntax**\
+> `lib.red.bold('text')`
+>
+> **Nested template strings**\
+> ``` lib.red`text ${lib.cyan`nested`} text` ```
+>
+> **New line**\
+> Correct break styles at `end-of-line`.
+> ```
+> lib.bgGreen(`First Line
+> Next Line`);
+> ```
+
 
 ## Show ANSI demo
 
@@ -475,7 +461,7 @@ c.red(`${c.bold(`${c.cyan(`${c.yellow('yellow')}cyan`)}`)}red`);
   colorette           4,572,582 ops/sec
   picocolors          3,841,124 ops/sec
   cli-color             470,320 ops/sec
-  color-cli             109,811 ops/sec
+  colors-cli            109,811 ops/sec
   ansi-colors         1,265,615 ops/sec
   kleur/colors        2,281,415 ops/sec
   kleur               2,228,639 ops/sec
@@ -495,7 +481,7 @@ colors.forEach((color) => c[color]('foo'));
   colorette           1,874,506 ops/sec
   picocolors          8,265,628 ops/sec
   cli-color             305,690 ops/sec
-  color-cli             104,962 ops/sec
+  colors-cli            104,962 ops/sec
   ansi-colors         1,010,628 ops/sec
   kleur/colors        2,074,111 ops/sec
   kleur               5,455,121 ops/sec
@@ -514,7 +500,7 @@ colors.forEach((color) => c[color].bold.underline.italic('foo'));
   colorette     (not supported)
   picocolors    (not supported)
   cli-color             144,837 ops/sec
-  color-cli              52,732 ops/sec
+  colors-cli             52,732 ops/sec
   ansi-colors           158,921 ops/sec
   kleur/colors  (not supported)
   kleur                 514,035 ops/sec
@@ -534,7 +520,7 @@ colors.forEach((color) => c[color](c.bold(c.underline(c.italic('foo')))));
   colorette             695,350 ops/sec
   picocolors            942,592 ops/sec
   cli-color              65,561 ops/sec
-  color-cli              13,800 ops/sec
+  colors-cli             13,800 ops/sec
   ansi-colors           260,316 ops/sec
   kleur/colors          561,111 ops/sec
   kleur                 648,195 ops/sec
@@ -564,7 +550,7 @@ c.red(`a red ${c.white('white')} red ${c.red('red')} red ${c.cyan('cyan')} red $
   colorette             243,139 ops/sec
   picocolors            243,975 ops/sec
   cli-color              41,657 ops/sec
-  color-cli              14,264 ops/sec
+  colors-cli             14,264 ops/sec
   ansi-colors           121,451 ops/sec
   kleur/colors          234,132 ops/sec
   kleur                 221,446 ops/sec
@@ -598,7 +584,7 @@ c.green(
   colorette           1,131,757 ops/sec
   picocolors          1,002,649 ops/sec
   cli-color             213,441 ops/sec
-  color-cli              40,340 ops/sec
+  colors-cli             40,340 ops/sec
   ansi-colors           362,733 ops/sec
   kleur/colors          478,547 ops/sec
   kleur                 464,004 ops/sec
@@ -620,7 +606,7 @@ c.hex('#FBA')('foo');
   colorette             (not supported)
   picocolors            (not supported)
   cli-color             (not supported)
-  color-cli             (not supported)
+  colors-cli            (not supported)
   ansi-colors           (not supported)
   kleur/colors          (not supported)
   kleur                 (not supported)
@@ -641,7 +627,7 @@ Most popular ANSI libraries for `Node.js`:
 - [colorette][colorette]
 - [picocolors][picocolors]
 - [cli-color][cli-color]
-- [color-cli][color-cli]
+- [colors-cli][colors-cli]
 - [ansi-colors][ansi-colors]
 - [kleur][kleur]
 - [chalk][chalk]
@@ -654,7 +640,7 @@ Most popular ANSI libraries for `Node.js`:
 [colorette]: https://github.com/jorgebucaran/colorette
 [picocolors]: https://github.com/alexeyraspopov/picocolors
 [cli-color]: https://github.com/medikoo/cli-color
-[color-cli]: https://github.com/jaywcjlove/colors-cli
+[colors-cli]: https://github.com/jaywcjlove/colors-cli
 [ansi-colors]: https://github.com/doowb/ansi-colors
 [kleur]: https://github.com/lukeed/kleur
 [chalk]: https://github.com/chalk/chalk

@@ -3,18 +3,33 @@
  * @returns {boolean}
  */
 export const isSupported = (processMock) => {
+  /**
+   * Detect whether flags exist with `-` or `--` prefix in command-line arguments.
+   *
+   * @param {RegExp} regex The RegEx to match all possible flags.
+   * @return {boolean}
+   */
+  const oneOfFlags = (regex) => !!argv.find((value) => regex.test(value));
+
   const proc = processMock ? processMock : typeof process !== 'undefined' ? process : {};
   const { stdout, platform } = proc;
-
   const env = proc.env || {};
   const argv = proc.argv || [];
 
-  const isDisabled = 'NO_COLOR' in env || argv.includes('--no-color') || argv.includes('--color=false');
-  const isForced = 'FORCE_COLOR' in env || argv.includes('--color');
-  const isCI = 'CI' in env;
-  const isTerm = stdout && stdout.isTTY != null && /^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM);
+  const hasForceColor = 'FORCE_COLOR' in env;
+  const forceColorValue = env.FORCE_COLOR;
+  const forceColor = forceColorValue === 'true' || parseInt(forceColorValue) > 0;
 
-  return !isDisabled && (isForced || isCI || isTerm || platform === 'win32');
+  const isForceDisabled = 'NO_COLOR' in env
+    || (hasForceColor && !forceColor)
+    || oneOfFlags(/^-{1,2}(no-color|color=false|color=never)$/);
+
+  const isForceEnabled = (hasForceColor && forceColor) || oneOfFlags(/^-{1,2}(color|color=true|color=always)$/);
+
+  const isTerm = stdout && 'isTTY' in stdout &&
+    /^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM);
+
+  return !isForceDisabled && (isForceEnabled || isTerm || platform === 'win32' || 'CI' in env);
 };
 
 export const supported = isSupported();
@@ -25,7 +40,9 @@ const esc = supported ? (open, close) => ({ open: `\x1b[${open}m`, close: `\x1b[
 export const ansi256 = supported ? (code) => ({ open: `\x1B[38;5;${code}m`, close: '\x1B[39m' }) : () => noColor;
 export const bgAnsi256 = supported ? (code) => ({ open: `\x1B[48;5;${code}m`, close: '\x1B[49m' }) : () => noColor;
 export const rgb = supported ? (r, g, b) => ({ open: `\x1B[38;2;${r};${g};${b}m`, close: '\x1B[39m' }) : () => noColor;
-export const bgRgb = supported ? (r, g, b) => ({ open: `\x1B[48;2;${r};${g};${b}m`, close: '\x1B[49m' }) : () => noColor;
+export const bgRgb = supported
+  ? (r, g, b) => ({ open: `\x1B[48;2;${r};${g};${b}m`, close: '\x1B[49m' })
+  : () => noColor;
 
 export const baseStyles = {
   // misc

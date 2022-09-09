@@ -202,7 +202,7 @@ module.exports = {
   // testSequencer: '@jest/test-sequencer',
 
   // Default timeout of a test in milliseconds.
-  testTimeout: 5000,
+  testTimeout: 1000,
 
   // This option sets the URL for the jsdom environment. It is reflected in properties such as location.href
   // testURL: "http://localhost",

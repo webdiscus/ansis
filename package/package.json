@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Formatting text in terminal with ANSI colors & styles.",
   "keywords": [
     "256",

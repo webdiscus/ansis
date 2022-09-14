@@ -1,5 +1,10 @@
 # Change log
 
+## 1.5.3 (2022-09-14)
+- fix: set correct aliases for bgAnsi and fg methods by named export
+- chore: refactor examples
+- docs: update readme
+
 ## 1.5.2 (2022-09-10)
 - fix: regard the value of the environment variable FORCE_COLOR=0 to force disable colors
 - test: added tests for FORCE_COLOR

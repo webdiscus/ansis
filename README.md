@@ -217,10 +217,13 @@ write('unknown', 'message'); // TypeScript Error
 
 ## ANSI 256 colors
 
-Foreground: `.ansi256(code)` has aliases `.ansi(code)` and `.fg(code)`\
-Background: `.bgAnsi256(code)` has aliases `.bgAnsi(code)` and `.bg(code)`
-
 The pre-defined set of 256 colors.
+
+<div align="center">
+  <a href="https://www.npmjs.com/package/ansis">
+    <img width="830" src="docs/img/ansi256.png" alt="ANSI 256 colors">
+  </a>
+</div>
 
 | Code range | Description                               |
 |-----------:|-------------------------------------------|
@@ -229,16 +232,21 @@ The pre-defined set of 256 colors.
 |   16 - 231 | 6 × 6 × 6 cube (216 colors)               |
 |  232 - 255 | grayscale from black to white in 24 steps |
 
+Foreground function: `.ansi(code)` has aliases `.ansi256(code)` and `.fg(code)`\
+Background function: `.bgAnsi(code)` has aliases `.ansi256(code)` and `.bg(code)`
+
 See [ANSI color codes](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit).
 
 ```js
 // foreground color
-ansis.ansi256(96).bold('bold Bright Cyan');
-ansis.fg(96).bold('bold Bright Cyan'); // `fg` is the short alias for `ansi256`
+ansis.ansi(96).bold('bold Bright Cyan');
+ansis.ansi256(96).bold('bold Bright Cyan'); // `ansi256` is the alias for `ansi`
+ansis.fg(96).bold('bold Bright Cyan'); // `fg` is the short alias for `ansi`
 
 // background color
-ansis.bgAnsi256(105)('Bright Magenta');
-ansis.bg(105)('Bright Magenta'); // `bg` is the short alias for `bgAnsi256`
+ansis.bgAnsi(105)('Bright Magenta');
+ansis.bgAnsi256(105)('Bright Magenta'); // `bgAnsi256` is the alias for `bgAnsi`
+ansis.bg(105)('Bright Magenta'); // `bg` is the short alias for `bgAnsi`
 ```
 
 > The `ansi256()` and `bgAnsi256()` methods are implemented for compatibility with the `chalk` API.

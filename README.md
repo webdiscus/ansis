@@ -93,7 +93,7 @@ hex('#FF75D1').bgCyan.bold('text');
 
 ```js
 import ansis from 'ansis';
-import { red, bold, underline } from 'ansis/colors';
+import { red, italic, underline } from 'ansis/colors';
 
 // with namespace
 ansis.red('text');
@@ -102,7 +102,7 @@ ansis.blau.underline.bold('text');
 
 // with named import
 red.italic.bold('text');
-bold.italic.red('text');
+italic.bold.red('text');
 underline.yellowBright('text');
 ```
 
@@ -111,24 +111,22 @@ underline.yellowBright('text');
 ## Nested syntax
 
 ```js
-import { red, bold, italic, underline } from 'ansis/colors';
+import { white, cyan, green } from 'ansis/colors';
 
-white(`MakBookPro, ${cyan.bold(`RAM:`)} 64 GB`);
 white(`MakBookPro, ${cyan.bold(`RAM:`)} 64 GB | ${green.bold(`GPU:`)} 32 cores`);
 ```
 
 
 <a id="templateLiterals" name="templateLiterals" href="#templateLiterals"></a>
 ## Template literals
-**"Killer feature"**
 
-Template literals allow to be complex template more readable and shortly.\
+Template literals allow you to make a complex template more readable and shorter.\
 None of the existing libraries (chalk, kleur, colorette, colors.js etc.) support nested template strings.\
 This does it only one library - `ansis`. Use it and enjoy!
 
 ```js
 // import used standard styles, colors and functions
-import { red, green, greenBright, cyan, cyanBright, bold, italic, hex } from 'ansis/colors';
+import { white, red, green, yellow, cyan, bold, visible, hex } from 'ansis/colors';
 
 // define custom colors
 const pink = hex('#FF75D1');
@@ -140,15 +138,22 @@ pink`text`;
 orange`text`;
 
 // chained
-bold.cyan`text`;
-italic.yellowBright`text`;
+red.bold`text`;
+bold.yellowBright`text`;
 hex('#FF75D1').bgYellow.bold`text`;
 
 // nested
-white`MakBookPro, ${cyan.bold`RAM:`} 64 GB`;
 white`MakBookPro, ${cyan.bold`RAM:`} 64 GB | ${green.bold`GPU:`} 32 cores`;
-white`MakBookPro, ${cyan.bold`RAM: ${cyanBright`64`} GB`} | ${green.bold`GPU: ${greenBright`32`} cores`}`;
+white`MakBookPro, ${cyan.bold`RAM: ${yellow`64`} GB`} | ${green.bold`GPU: ${yellow`32`} cores`}`;
+
+// mutiline nested
+visible`
+CPU:  ${red.bold`${33}%`}
+RAM:  ${green`${44}%`}
+DISK: ${hex('#FFAB40')`${55}%`}
+`;
 ```
+
 
 
 <a id="base-colors" name="base-colors" href="#base-colors"></a>

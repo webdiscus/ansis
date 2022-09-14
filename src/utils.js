@@ -48,6 +48,9 @@ export const clamp = (num, min, max) => (min > num ? min : num > max ? max : num
  * @returns {string}
  */
 export const strReplaceAll = (str, searchValue, replaceValue) => {
+  // visible style has empty open/close props
+  if (searchValue === '') return str;
+
   let pos = str.indexOf(searchValue);
   if (pos < 0) return str;
 

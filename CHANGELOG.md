@@ -1,5 +1,8 @@
 # Change log
 
+## 1.5.4 (2022-09-14)
+- fix: visible style with nested template strings
+
 ## 1.5.3 (2022-09-14)
 - fix: set correct aliases for bgAnsi and fg methods by named export
 - chore: refactor examples

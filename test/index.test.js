@@ -343,6 +343,13 @@ describe('style tests', () => {
     done();
   });
 
+  test(`visible with template literal`, (done) => {
+    const received = ansis.visible`foo ${green`bar`}`;
+    const expected = 'foo \x1b[32mbar\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+
   test(`ansis.green('')`, (done) => {
     const received = ansis.green('');
     const expected = '';

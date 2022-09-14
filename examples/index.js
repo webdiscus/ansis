@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import chalk from 'chalk';
+
 import ansis, { Ansis } from '../src/index.js';
 import {
   white,
@@ -11,11 +13,17 @@ import {
   yellow,
   yellowBright,
   magenta,
+  grey,
+  whiteBright,
   bold,
   italic,
   underline,
+  reset,
   inverse,
+  visible,
   hex,
+  rgb,
+  fg,
 } from '../src/colors.mjs';
 
 import { ansi256Table } from './ansi256.js';
@@ -219,3 +227,23 @@ log(ansis2.bold.orange('orange'));
  */
 // visible
 log(ansis.visible`visible`);
+
+// chalk: non-standard syntax, bad practices, slow because used RegExp
+log(chalk`
+CPU:  {red.bold ${33}%}
+RAM:  {green ${44}%}
+DISK: {hex('#FFAB40') ${55}%}
+`);
+
+// ansis: standard ES2016 syntax, very fast because works native
+log(visible`
+CPU:  ${red.bold`${33}%`}
+RAM:  ${green`${44}%`}
+DISK: ${hex('#FFAB40')`${55}%`}
+`);
+
+log(inverse`
+CPU:  ${red.bold`${33}%`}
+RAM:  ${green`${44}%`}
+DISK: ${hex('#FFAB40')`${55}%`}
+`);

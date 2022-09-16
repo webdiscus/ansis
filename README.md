@@ -98,7 +98,7 @@ import { red, italic, underline } from 'ansis/colors';
 // with namespace
 ansis.red('text');
 ansis.cyan.italic('text');
-ansis.blau.underline.bold('text');
+ansis.blue.underline.bold('text');
 
 // with named import
 red.italic.bold('text');

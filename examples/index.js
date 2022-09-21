@@ -114,6 +114,27 @@ log();
 //log(ansis.green.bold.underline(`foo ${ansis.red.italic('bar')} foo`));
 
 /**
+ * Nested syntax
+ */
+log();
+log(inverse`Nested syntax:`);
+log();
+log(red(`red ${italic`red italic ${underline`red italic underline`}`} red`));
+log();
+// simple variant for readme
+log(
+  green(
+    `green ${yellow(
+      `yellow ${magenta(
+        `magenta ${cyan(
+          `cyan ${red.italic.underline(`red italic underline`)} cyan`,
+        )} magenta`,
+      )} yellow`,
+    )} green`,
+  ),
+);
+
+/**
  * Deep nested chained styles
  */
 log();
@@ -159,12 +180,8 @@ const pink = hex('#FF75D1');
 log(red`red`);
 log(yellow.italic`yellow using ${'some'} variable`);
 log(hex('#fce').bgCyan.underline`text underline`);
-log(red`red ${yellow`yellow ${green`green ${pink`pink`} green`} yellow`} red`);
-log(red`${bold`${italic`${underline`underline`} italic`} bold`} red`);
-
-log(white`MakBookPro, ${cyan`RAM:`} 64 GB`);
-log(white`MakBookPro, ${cyan`RAM:`} 64 GB | ${yellow`GPU:`} 32 cores`);
-log(white`MakBookPro, ${cyan`RAM: ${cyanBright`64`} GB`} | ${yellow`GPU: ${yellowBright`32`} cores`}`);
+log(red`red ${green`green ${pink.italic`pink italic`} green`} red`);
+log(red`red ${cyan.bold`cyan bold ${pink.underline`pink bold underline`} cyan bold`} red`);
 
 /**
  * Extend base colors
@@ -221,29 +238,35 @@ ansis2.extend({
 log(ansis2.pink('pink'));
 log(ansis2.bold.orange('orange'));
 
-
 /**
  * Misc
  */
 // visible
 log(ansis.visible`visible`);
 
-// chalk: non-standard syntax, bad practices, slow because used RegExp
-log(chalk`
-CPU:  {red.bold ${33}%}
-RAM:  {green ${44}%}
-DISK: {hex('#FFAB40') ${55}%}
-`);
+/**
+ * Multiline nested example from readme
+ */
+let cpu = 33;
+let ram = 44;
+let disk = 55;
 
 // ansis: standard ES2016 syntax, very fast because works native
 log(visible`
-CPU:  ${red.bold`${33}%`}
-RAM:  ${green`${44}%`}
-DISK: ${hex('#FFAB40')`${55}%`}
+CPU:  ${red`${cpu}%`}
+RAM:  ${green`${ram}%`}
+DISK: ${hex('#FFAB40')`${disk}%`}
 `);
 
 log(inverse`
-CPU:  ${red.bold`${33}%`}
-RAM:  ${green`${44}%`}
-DISK: ${hex('#FFAB40')`${55}%`}
+CPU:  ${red`${cpu}%`}
+RAM:  ${green`${ram}%`}
+DISK: ${hex('#FFAB40')`${disk}%`}
+`);
+
+// chalk: non-standard syntax, bad practices, slow because used RegExp
+log(chalk`
+CPU:  {red.bold ${cpu}%}
+RAM:  {green ${ram}%}
+DISK: {hex('#FFAB40') ${disk}%}
 `);

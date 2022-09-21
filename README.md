@@ -56,31 +56,37 @@ npm install ansis
 
 ## Usage
 
+You can import module and named colors with ESM or CommonJS syntax.
+
 ```js
-import { black, red, cyan, inverse, reset } from 'ansis/colors'; // named import
-import ansis from 'ansis'; // ESM
-const ansis = require('ansis'); // CommonJS
+// ESM
+import ansis from 'ansis';
+import { red, black, inverse, reset } from 'ansis/colors';
+
+// CommonJS
+const ansis = require('ansis');
+const { red, black, inverse, reset } = require('ansis/colors');
 
 console.log(ansis.green`Hello ${inverse`ANSI`} World!`);
 console.log(black.bgYellow`Warning:${reset.cyan` /path/to/file.js`} ${red`not found!`}`);
 ```
 
 Output:\
-![output](docs/img/quik-start-output.png?raw=true "output")
+![screenshot "Hello ANSI World!"](docs/img/quik-start-output.png?raw=true)
 
 
 ## Named import
 
 You can import named colors, styles and functions.
-All imported colors and styles **are chainable**.
+All imported colors and styles are **chainable**.
 
 > **Note**
 >
-> Imported code is not treeshakeable.\
+> Imported code is not treeshakeable.
 > Don't worry, full functional code is `3KB` only.
 
 ```js
-import { red, green, blue, yellow, hex, bold, italic } from 'ansis/colors';
+import { red, hex, italic } from 'ansis/colors';
 
 red.bold('text');
 italic.underline.cyan('text');
@@ -91,31 +97,52 @@ hex('#FF75D1').bgCyan.bold('text');
 <a id="chained-syntax" name="chained-syntax" href="#chained-syntax"></a>
 ## Chained syntax
 
+All colors, styles and functions are chainable. Each color or style can be combined in any order.
+
 ```js
 import ansis from 'ansis';
-import { red, italic, underline } from 'ansis/colors';
+import { red, cyan, bold, italic, hex } from 'ansis/colors';
 
 // with namespace
 ansis.red('text');
-ansis.cyan.italic('text');
-ansis.blue.underline.bold('text');
+ansis.cyan.bold('text');
+ansis.hex('#FF75D1').bgCyan.bold('text');
+ansis.bold.bgHex('#FF75D1').cyan('text');
+ansis.italic.bold.strike.yellow.bgMagentaBright('text');
 
 // with named import
-red.italic.bold('text');
-italic.bold.red('text');
-underline.yellowBright('text');
+red('text');
+cyan.bold('text');
+hex('#FF75D1').bgCyan.bold('text');
+bold.bgHex('#FF75D1').cyan('text');
+italic.bold.strike.yellow.bgMagentaBright('text');
 ```
 
 
 <a id="nested-syntax" name="nested-syntax" href="#nested-syntax"></a>
 ## Nested syntax
 
-```js
-import { white, cyan, green } from 'ansis/colors';
+Each color or style can be nested with one another.
 
-white(`MakBookPro, ${cyan.bold(`RAM:`)} 64 GB | ${green.bold(`GPU:`)} 32 cores`);
+```js
+import { red, italic, underline } from 'ansis/colors';
+
+red(`red ${italic(`red italic ${underline(`red italic underline`)}`)} red`);
+
+// deep nested chained styles
+green(
+  `green ${yellow(
+    `yellow ${magenta(
+      `magenta ${cyan(
+        `cyan ${red.italic.underline(`red italic underline`)} cyan`,
+      )} magenta`,
+    )} yellow`,
+  )} green`,
+);
 ```
 
+Output:\
+![screenshot nested styles](docs/img/ansis-nested.png?raw=true)
 
 <a id="templateLiterals" name="templateLiterals" href="#templateLiterals"></a>
 ## Template literals
@@ -125,8 +152,8 @@ None of the existing libraries (chalk, kleur, colorette, colors.js etc.) support
 This does it only one library - `ansis`. Use it and enjoy!
 
 ```js
-// import used standard styles, colors and functions
-import { white, red, green, yellow, cyan, bold, visible, hex } from 'ansis/colors';
+// import used base styles, colors and functions
+import { red, green, bold, visible, inverse, hex } from 'ansis/colors';
 
 // define custom colors
 const pink = hex('#FF75D1');
@@ -143,21 +170,38 @@ bold.yellowBright`text`;
 hex('#FF75D1').bgYellow.bold`text`;
 
 // nested
-white`MakBookPro, ${cyan.bold`RAM:`} 64 GB | ${green.bold`GPU:`} 32 cores`;
-white`MakBookPro, ${cyan.bold`RAM: ${yellow`64`} GB`} | ${green.bold`GPU: ${yellow`32`} cores`}`;
+red`red ${green`green ${pink.italic`pink italic`} green`} red`;
+```
 
-// mutiline nested
+Multiline nested example.
+```js
+let cpu = 33;
+let ram = 44;
+let disk = 55;
+
+// normal colors
 visible`
-CPU:  ${red.bold`${33}%`}
-RAM:  ${green`${44}%`}
-DISK: ${hex('#FFAB40')`${55}%`}
+CPU:  ${red`${cpu}%`}
+RAM:  ${green`${ram}%`}
+DISK: ${hex('#FFAB40')`${disk}%`}
+`;
+
+// inversed colors
+inverse`
+CPU:  ${red`${cpu}%`}
+RAM:  ${green`${ram}%`}
+DISK: ${hex('#FFAB40')`${disk}%`}
 `;
 ```
 
+Output:\
+![screenshot multiline nested](docs/img/ansis-multiline-nested.png?raw=true)
 
 
 <a id="base-colors" name="base-colors" href="#base-colors"></a>
 ## Base colors and styles
+
+Colors and styles have standard names used by many popular libraries, such as [chalk][chalk], [colorette][colorette], [kleur][kleur], [cli-color][cli-color], [ansi-colors][ansi-colors].
 
 | Foreground colors     | Background colors | Styles                                     |
 |:----------------------|:------------------|--------------------------------------------|

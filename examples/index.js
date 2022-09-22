@@ -4,26 +4,19 @@ import chalk from 'chalk';
 
 import ansis, { Ansis } from '../src/index.js';
 import {
-  white,
   red,
   green,
   blue,
   cyan,
-  cyanBright,
   yellow,
   yellowBright,
   magenta,
-  grey,
-  whiteBright,
   bold,
   italic,
   underline,
-  reset,
   inverse,
   visible,
   hex,
-  rgb,
-  fg,
 } from '../src/colors.mjs';
 
 import { ansi256Table } from './ansi256.js';
@@ -32,14 +25,13 @@ import { ansisStylesDemo } from './ansis-styles-demo.js';
 
 const log = console.log;
 const style = 'green';
-const c = ansis;
 
 /**
  * ANSIS Logo.
  * Showing in readme.
  */
 
-log(inverse`ANSIS logo:`);
+console.log(inverse`ANSIS logo:`);
 log();
 log(ansisLogo);
 

@@ -54,6 +54,20 @@ describe('default tests', () => {
 });
 
 describe('isSupported', () => {
+  test(`process undefined`, (done) => {
+    // save original `process` object
+    const processOriginal = process;
+    process = undefined;
+
+    const received = isSupported(undefined);
+    const expected = false;
+    expect(received).toEqual(expected);
+
+    // restore original `process` object
+    process = processOriginal;
+    done();
+  });
+
   test(`processMock undefined`, (done) => {
     const received = isSupported(undefined);
     const expected = true;

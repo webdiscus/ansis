@@ -32,17 +32,13 @@ export const isSupported = (processMock) => {
   return !isForceDisabled && (isForceEnabled || isTerm || platform === 'win32' || 'CI' in env);
 };
 
-export const supported = isSupported();
-
 const noColor = { open: '', close: '' };
-const esc = supported ? (open, close) => ({ open: `\x1b[${open}m`, close: `\x1b[${close}m` }) : () => noColor;
+const esc = isSupported() ? (open, close) => ({ open: `\x1b[${open}m`, close: `\x1b[${close}m` }) : () => noColor;
 
-export const ansi256 = supported ? (code) => ({ open: `\x1B[38;5;${code}m`, close: '\x1B[39m' }) : () => noColor;
-export const bgAnsi256 = supported ? (code) => ({ open: `\x1B[48;5;${code}m`, close: '\x1B[49m' }) : () => noColor;
-export const rgb = supported ? (r, g, b) => ({ open: `\x1B[38;2;${r};${g};${b}m`, close: '\x1B[39m' }) : () => noColor;
-export const bgRgb = supported
-  ? (r, g, b) => ({ open: `\x1B[48;2;${r};${g};${b}m`, close: '\x1B[49m' })
-  : () => noColor;
+export const ansi256 = (code) => esc(`38;5;${code}`, 39);
+export const bgAnsi256 = (code) => esc(`48;5;${code}`, 49);
+export const rgb = (r, g, b) => esc(`38;2;${r};${g};${b}`, 39);
+export const bgRgb = (r, g, b) => esc(`48;2;${r};${g};${b}`, 49);
 
 export const baseStyles = {
   // misc
@@ -54,15 +50,15 @@ export const baseStyles = {
   // styles
   bold: esc(1, 22),
   dim: esc(2, 22),
-  faint: esc(2, 22), // alias for dim
+  faint: esc(2, 22), // alias for dim, TODO: remove in next major release
   italic: esc(3, 23),
   underline: esc(4, 24),
-  doubleUnderline: esc(21, 24),
+  doubleUnderline: esc(21, 24), // not widely supported, TODO: remove in next major release
   strikethrough: esc(9, 29),
   strike: esc(9, 29), // alias for strikethrough
-  frame: esc(51, 54),
-  encircle: esc(52, 54),
-  overline: esc(53, 55),
+  frame: esc(51, 54), // not widely supported, TODO: remove in next major release
+  encircle: esc(52, 54), // not widely supported, TODO: remove in next major release
+  overline: esc(53, 55), // not widely supported, TODO: remove in next major release
 
   // foreground colors
   black: esc(30, 39),
@@ -73,8 +69,8 @@ export const baseStyles = {
   magenta: esc(35, 39),
   cyan: esc(36, 39),
   white: esc(37, 39),
-  gray: esc(90, 39), // US spelling alias for blackBright
   grey: esc(90, 39), // UK spelling alias for blackBright
+  gray: esc(90, 39), // US spelling alias for blackBright
   blackBright: esc(90, 39),
   redBright: esc(91, 39),
   greenBright: esc(92, 39),

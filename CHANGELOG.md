@@ -1,5 +1,10 @@
 # Change log
 
+## 1.5.5 (2022-09-22)
+- refactor: optimize code to reduce size by 120 bytes
+- test: added test for isSupported() function
+- docs: update readme, add example screenshots
+
 ## 1.5.4 (2022-09-14)
 - fix: visible style with nested template strings
 

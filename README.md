@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>
+  <h1 align="center">
     <a href="https://www.npmjs.com/package/ansis">
       <img width="323" src="docs/img/ansis-logo.png" alt="ansis"><br>
       ANSI Styling
@@ -13,19 +13,23 @@
 [![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
 [![node](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 
-The ansis use the SGR (Select Graphic Rendition) codes defined in
-the [ECMA-48](https://www.ecma-international.org/publications-and-standards/standards/ecma-48/) standard.
+Ansis is the tiny and faster compatible alternative to [Chalk](https://github.com/chalk/chalk) with even more useful features.
+Colorize your output in a terminal with clean syntax, e.g., ``` green`Hello World!` ``` ``` red`Error!` ``` ``` black.bgYellow`Warning!` ```.
 
-> **Why yet one lib?**\
-> Fastest, small, full [standard ANSI colors & styles](#base-colors), [truecolor](#truecolor), [chainable](#chained-syntax), [nestable](#nested-syntax), [template literals](#template-literals).\
-> See [comparison of most popular ANSI colors libraries](https://github.com/webdiscus/ansis#compare-most-popular-ansi-libraries)
+Other alternatives: [`colors.js`][colors.js], [`colorette`][colorette], [`picocolors`][picocolors], [`cli-color`][cli-color], [`colors-cli`][colors-cli], [`ansi-colors`][ansi-colors], [`kleur`][kleur].\
+See [comparison of most popular ANSI colors libraries](https://github.com/webdiscus/ansis#compare-most-popular-ansi-libraries)
 and [benchmark](https://github.com/webdiscus/ansis#benchmark).
+
+**Why yet one lib?**\
+Fastest, small, full [standard ANSI colors & styles](#base-colors), [truecolor](#truecolor), [chainable](#chained-syntax), [nestable](#nested-syntax), [template literals](#template-literals).
 
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
     <img width="830" src="docs/img/ansis-demo.png" alt="ansis">
   </a>
 </div>
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/stackblitz-starters-gs2gve?file=index.js)
 
 
 ## Features
@@ -58,6 +62,8 @@ npm install ansis
 
 You can import module and named colors with ESM or CommonJS syntax.
 
+Basic example `Hello World!`:
+
 ```js
 // ESM
 import ansis from 'ansis';
@@ -67,12 +73,14 @@ import { red, black, inverse, reset } from 'ansis/colors';
 const ansis = require('ansis');
 const { red, black, inverse, reset } = require('ansis/colors');
 
-console.log(ansis.green`Hello ${inverse`ANSI`} World!`);
-console.log(black.bgYellow`Warning:${reset.cyan` /path/to/file.js`} ${red`not found!`}`);
+console.log(green`Hello ${inverse`ANSI`} World!
+${black.bgYellow`Warning:`} ${cyan`/path/to/file.js`} ${red`not found!`}`);
 ```
 
 Output:\
 ![screenshot "Hello ANSI World!"](docs/img/quik-start-output.png?raw=true)
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/stackblitz-starters-sx74bl?file=index.js)
 
 
 ## Named import

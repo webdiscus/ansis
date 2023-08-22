@@ -14,7 +14,7 @@
     "colors": "1.4.0",
     "colorette": "2.0.16",
     "colors-cli": "1.0.28",
-    "kleur": "4.1.4",
+    "kleur": "4.1.5",
     "picocolors": "1.0.0"
   }
 }

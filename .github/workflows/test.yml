@@ -1,34 +1,42 @@
-name: Running Code Coverage
+name: Test
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches:
+      - master
+      - next
+  pull_request:
+    branches:
+      - master
+      - next
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
+  integration:
     strategy:
       matrix:
-        node-version: [ 12.x, 14.x, 16.x ]
+        os: [ubuntu-latest]
+        node-version: [12, 14, 16, 18, 20]
 
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 2
+          fetch-depth: 1
 
       - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: npm install
+        run: npm i
 
       - name: Run the tests
         run: npm run test:coverage
 
       - name: Submit coverage data to codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
+          flags: integration
           token: ${{ secrets.CODECOV_TOKEN }}

@@ -1,5 +1,12 @@
 # Change log
 
+## 1.5.6 (2023-09-21)
+- chore: update dev dependencies
+- chore: add SECURITY.md
+- chore: add PULL_REQUEST_TEMPLATE.md
+- chore: update ISSUE_TEMPLATE
+- docs: update readme
+
 ## 1.5.5 (2022-09-22)
 - refactor: optimize code to reduce size by 120 bytes
 - test: added test for isSupported() function

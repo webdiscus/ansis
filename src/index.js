@@ -1,5 +1,5 @@
 import { hexToRgb, clamp, strReplaceAll } from './utils.js';
-import { baseStyles, ansi256, bgAnsi256, rgb, bgRgb } from './ansi-codes.js';
+import { baseStyles, fnAnsi256, fnBgAnsi256, fnRgb, fnBgRgb } from './ansi-codes.js';
 
 /**
  * @typedef {Object} AnsisProps
@@ -10,13 +10,15 @@ import { baseStyles, ansi256, bgAnsi256, rgb, bgRgb } from './ansi-codes.js';
  * @property {null | AnsisProps} parent
  */
 
+//Object.defineProperty(exports, '__esModule', { value: !0 });
+
 const { defineProperty, defineProperties, setPrototypeOf } = Object;
 
 const stripANSIRegEx = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
 const regexLF = /(\r*\n)/g;
 
-const Ansis = function () {
+const Ansis = function() {
   const self = (str) => str;
 
   /**
@@ -42,10 +44,10 @@ const Ansis = function () {
       let value = colors[name];
       // detect whether the value is style property Object {open, close} or a string with hex code of color '#FF0000'
       let hasProperty = value.open != null;
-      let styleCodes = hasProperty ? value : rgb(...hexToRgb(value));
+      let styleCodes = hasProperty ? value : fnRgb(...hexToRgb(value));
 
       styles[name] = {
-        get () {
+        get() {
           const style = createStyle(this, styleCodes);
           defineProperty(this, name, { value: style });
           return style;
@@ -93,7 +95,7 @@ const createStyle = ({ props }, { open, close }) => {
  * Wrap the string with styling and reset codes.
  *
  * @param {string | Array<String>} strings A string or template literals.
- * @param {Array<String>} values The values of template literals.
+ * @param {Array<String>} values The values of the template literals.
  * @param {AnsisProps} props
  * @returns {string}
  */
@@ -118,16 +120,16 @@ const wrap = (strings, values, props) => {
 };
 
 const styleMethods = {
-  ansi: (code) => ansi256(clamp(code, 0, 255)),
-  bgAnsi: (code) => bgAnsi256(clamp(code, 0, 255)),
-  hex: (hex) => rgb(...hexToRgb(hex)),
-  bgHex: (hex) => bgRgb(...hexToRgb(hex)),
-  rgb: (r, g, b) => rgb(
+  ansi: (code) => fnAnsi256(clamp(code, 0, 255)),
+  bgAnsi: (code) => fnBgAnsi256(clamp(code, 0, 255)),
+  hex: (hex) => fnRgb(...hexToRgb(hex)),
+  bgHex: (hex) => fnBgRgb(...hexToRgb(hex)),
+  rgb: (r, g, b) => fnRgb(
     clamp(r, 0, 255),
     clamp(g, 0, 255),
     clamp(b, 0, 255),
   ),
-  bgRgb: (r, g, b) => bgRgb(
+  bgRgb: (r, g, b) => fnBgRgb(
     clamp(r, 0, 255),
     clamp(g, 0, 255),
     clamp(b, 0, 255),
@@ -140,7 +142,7 @@ let stylePrototype;
 // extend styles with methods: rgb(), hex(), etc.
 for (let name in styleMethods) {
   styles[name] = {
-    get () {
+    get() {
       return (...args) => createStyle(this, styleMethods[name](...args));
     },
   };
@@ -153,3 +155,71 @@ styles.bgAnsi256 = styles.bg = styles.bgAnsi;
 const ansis = new Ansis();
 
 export { Ansis, ansis as default };
+
+export const ansi256 = ansis.ansi256;
+export const ansi = ansis.ansi;
+export const fg = ansis.fg;
+export const bgAnsi256 = ansis.bgAnsi256;
+export const bgAnsi = ansis.bgAnsi;
+export const bg = ansis.bg;
+export const rgb = ansis.rgb;
+export const bgRgb = ansis.bgRgb;
+export const hex = ansis.hex;
+export const bgHex = ansis.bgHex;
+
+// misc
+export const reset = ansis.reset;
+export const inverse = ansis.inverse;
+export const hidden = ansis.hidden;
+export const visible = ansis.visible;
+
+// styles
+export const bold = ansis.bold;
+export const dim = ansis.dim;
+export const faint = ansis.faint;
+export const italic = ansis.italic;
+export const underline = ansis.underline;
+export const doubleUnderline = ansis.doubleUnderline;
+export const strikethrough = ansis.strikethrough;
+export const strike = ansis.strike;
+export const frame = ansis.frame;
+export const encircle = ansis.encircle;
+export const overline = ansis.overline;
+
+// foreground colors
+export const black = ansis.black;
+export const red = ansis.red;
+export const green = ansis.green;
+export const yellow = ansis.yellow;
+export const blue = ansis.blue;
+export const magenta = ansis.magenta;
+export const cyan = ansis.cyan;
+export const white = ansis.white;
+export const gray = ansis.gray;
+export const grey = ansis.grey;
+export const blackBright = ansis.blackBright;
+export const redBright = ansis.redBright;
+export const greenBright = ansis.greenBright;
+export const yellowBright = ansis.yellowBright;
+export const blueBright = ansis.blueBright;
+export const magentaBright = ansis.magentaBright;
+export const cyanBright = ansis.cyanBright;
+export const whiteBright = ansis.whiteBright;
+
+// background colors
+export const bgBlack = ansis.bgBlack;
+export const bgRed = ansis.bgRed;
+export const bgGreen = ansis.bgGreen;
+export const bgYellow = ansis.bgYellow;
+export const bgBlue = ansis.bgBlue;
+export const bgMagenta = ansis.bgMagenta;
+export const bgCyan = ansis.bgCyan;
+export const bgWhite = ansis.bgWhite;
+export const bgBlackBright = ansis.bgBlackBright;
+export const bgRedBright = ansis.bgRedBright;
+export const bgGreenBright = ansis.bgGreenBright;
+export const bgYellowBright = ansis.bgYellowBright;
+export const bgBlueBright = ansis.bgBlueBright;
+export const bgMagentaBright = ansis.bgMagentaBright;
+export const bgCyanBright = ansis.bgCyanBright;
+export const bgWhiteBright = ansis.bgWhiteBright;

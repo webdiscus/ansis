@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Test npm package in CJS and ESM modes.",
   "main": "index.js",
+  "scripts": {
+    "test:cjs": "node ./cjs/index.js",
+    "test:esm": "node ./esm/index.js"
+  },
   "devDependencies": {
     "@types/node": "^18.7.15",
     "ansis": "file:../../dist"

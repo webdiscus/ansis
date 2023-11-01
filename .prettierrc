@@ -11,7 +11,9 @@
   "bracketSameLine": true,
   "overrides": [
     {
-      "files": ["*.html"],
+      "files": [
+        "*.html"
+      ],
       "options": {
         "tabWidth": 4
       }

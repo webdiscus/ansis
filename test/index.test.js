@@ -1,11 +1,11 @@
-import { execSync } from 'child_process';
+import {execSync} from 'child_process';
 import path from 'path';
 
 // test distributed version
-import ansis, { Ansis } from '../src/index.js';
-import { hexToRgb, clamp } from '../src/utils.js';
-import { isSupported } from '../src/ansi-codes.js';
-import { green, red, yellow } from '../src/colors.mjs';
+import ansis, {Ansis} from '../src/index.js';
+import {hexToRgb, clamp} from '../src/utils.js';
+import {isSupported} from '../src/ansi-codes.js';
+import {green, red, yellow} from '../src/colors.mjs';
 
 const TEST_PATH = path.resolve('./test/');
 
@@ -51,217 +51,6 @@ describe('default tests', () => {
     expect(esc(received)).toEqual(esc(expected));
     done();
   });
-});
-
-describe('isSupported', () => {
-  test(`process undefined`, (done) => {
-    // save original `process` object
-    const processOriginal = process;
-    process = undefined;
-
-    const received = isSupported(undefined);
-    const expected = false;
-    expect(received).toEqual(expected);
-
-    // restore original `process` object
-    process = processOriginal;
-    done();
-  });
-
-  test(`processMock undefined`, (done) => {
-    const received = isSupported(undefined);
-    const expected = true;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`processMock {}`, (done) => {
-    const received = isSupported({});
-    const expected = false;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`colors in linux terminal`, (done) => {
-    const received = isSupported({
-      platform: 'linux',
-      env: { TERM: 'xterm' },
-      argv: [],
-      stdout: { isTTY: true },
-      stderr: { isTTY: true },
-    });
-    const expected = true;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`colors on windows platform`, (done) => {
-    const received = isSupported({
-      platform: 'win32',
-      env: {},
-      argv: [],
-    });
-    const expected = true;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`colors in any CI`, (done) => {
-    const received = isSupported({
-      platform: 'linux',
-      env: { CI: 'GITLAB_CI' },
-      argv: [],
-    });
-    const expected = true;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`no colors, unsupported terminal`, (done) => {
-    const received = isSupported({
-      env: { TERM: 'dumb' },
-      argv: [],
-      stdout: { isTTY: true },
-      stderr: { isTTY: true },
-    });
-    const expected = false;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`no colors, simulate output in file > log.txt`, (done) => {
-    const received = isSupported({
-      env: { TERM: 'xterm' },
-      argv: [],
-    });
-    const expected = false;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`enable colors via --color`, (done) => {
-    const received = isSupported({
-      platform: 'linux',
-      env: {},
-      argv: ['--color'],
-    });
-    const expected = true;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`enable colors via -color`, (done) => {
-    const received = isSupported({
-      platform: 'linux',
-      env: {},
-      argv: ['-color'],
-    });
-    const expected = true;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-
-  test(`enable colors via --color=true`, (done) => {
-    const received = isSupported({
-      platform: 'linux',
-      env: { TERM: 'dumb' },
-      argv: ['--color=true'],
-      stdout: { isTTY: true },
-      stderr: { isTTY: true },
-    });
-    const expected = true;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`enable colors via -color=true`, (done) => {
-    const received = isSupported({
-      platform: 'linux',
-      env: { TERM: 'dumb' },
-      argv: ['-color=true'],
-      stdout: { isTTY: true },
-      stderr: { isTTY: true },
-    });
-    const expected = true;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`disable colors via --color=false`, (done) => {
-    const received = isSupported({
-      platform: 'linux',
-      env: { TERM: 'xterm' },
-      argv: ['--color=false'],
-      stdout: { isTTY: true },
-      stderr: { isTTY: true },
-    });
-    const expected = false;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`disable colors via NO_COLOR=1`, (done) => {
-    const received = isSupported({
-      platform: 'linux',
-      env: { NO_COLOR: '1', TERM: 'xterm' },
-      argv: [],
-      stdout: { isTTY: true },
-      stderr: { isTTY: true },
-    });
-    const expected = false;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`disable colors via FORCE_COLOR=0`, (done) => {
-    const received = isSupported({
-      platform: 'linux',
-      env: { FORCE_COLOR: '0', TERM: 'xterm' },
-      argv: [],
-      stdout: { isTTY: true },
-      stderr: { isTTY: true },
-    });
-    const expected = false;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`disable colors via FORCE_COLOR=false`, (done) => {
-    const received = isSupported({
-      platform: 'linux',
-      env: { FORCE_COLOR: 'false', TERM: 'xterm' },
-      argv: [],
-      stdout: { isTTY: true },
-      stderr: { isTTY: true },
-    });
-    const expected = false;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`enable colors via FORCE_COLOR=1`, (done) => {
-    const received = isSupported({
-      platform: 'linux',
-      env: { FORCE_COLOR: '1' },
-      argv: [],
-    });
-    const expected = true;
-    expect(received).toEqual(expected);
-    done();
-  });
-
-  test(`enable colors via FORCE_COLOR=true`, (done) => {
-    const received = isSupported({
-      platform: 'linux',
-      env: { FORCE_COLOR: 'true' },
-      argv: [],
-    });
-    const expected = true;
-    expect(received).toEqual(expected);
-    done();
-  });
-
 });
 
 describe('utils tests', () => {
@@ -488,10 +277,10 @@ describe('functional tests', () => {
     const rgb = ansis.rgb(100, 80, 155);
     const received = ansis.red(
       `begin ${rgb.bold('RGB')} ${ansis.yellow('yellow')} red ${ansis.italic.cyan('italic cyan')} red ${ansis.red(
-        'red'
+        'red',
       )} red ${ansis.underline.green.italic(
-        `underline italic green ${ansis.rgb(80, 120, 200)('underline italic blue')} underline italic green`
-      )} red ${ansis.cyan('cyan')} red ${ansis.bold.yellow('bold yellow')} red ${ansis.green('green')} end`
+        `underline italic green ${ansis.rgb(80, 120, 200)('underline italic blue')} underline italic green`,
+      )} red ${ansis.cyan('cyan')} red ${ansis.bold.yellow('bold yellow')} red ${ansis.green('green')} end`,
     );
 
     const expected =
@@ -591,7 +380,7 @@ describe('template literals tests', () => {
 
 describe('extend base colors tests', () => {
   test('imported ansis`', (done) => {
-    ansis.extend({ orange: '#FFAB40' });
+    ansis.extend({orange: '#FFAB40'});
 
     const received = ansis.orange.bold('text');
     const expected = '\x1b[38;2;255;171;64m\x1b[1mtext\x1b[22m\x1b[39m';
@@ -601,12 +390,393 @@ describe('extend base colors tests', () => {
 
   test('new ansis`', (done) => {
     const ansis = new Ansis();
-    ansis.extend({ orange: '#FFAB40' });
+    ansis.extend({orange: '#FFAB40'});
 
     // test the order bold > orange
     const received = ansis.bold.orange('text');
     const expected = '\x1b[1m\x1b[38;2;255;171;64mtext\x1b[39m\x1b[22m';
     expect(esc(received)).toEqual(esc(expected));
+    done();
+  });
+});
+
+// Node.JS
+describe('Node.JS isSupported', () => {
+  test(`process undefined`, (done) => {
+    // save original `process` object
+    const processOriginal = process;
+    process = undefined;
+
+    const received = isSupported(undefined);
+    const expected = false;
+    expect(received).toEqual(expected);
+
+    // restore original `process` object
+    process = processOriginal;
+    done();
+  });
+
+  test(`processMock undefined`, (done) => {
+    const received = isSupported(undefined);
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`processMock {}`, (done) => {
+    const received = isSupported({});
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`colors in linux terminal`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {TERM: 'xterm'},
+        argv: [],
+        stdout: {isTTY: true},
+        stderr: {isTTY: true},
+      },
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`colors on windows platform`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'win32',
+        env: {},
+        argv: [],
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`colors in any CI`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {CI: 'GITLAB_CI'},
+        argv: [],
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`no colors, unsupported terminal`, (done) => {
+    const received = isSupported({
+      process: {
+        env: {TERM: 'dumb'},
+        argv: [],
+        stdout: {isTTY: true},
+        stderr: {isTTY: true},
+      },
+
+    });
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`no colors, simulate output in file > log.txt`, (done) => {
+    const received = isSupported({
+      process: {
+        env: {TERM: 'xterm'},
+        argv: [],
+      },
+
+    });
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`enable colors via --color`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {},
+        argv: ['--color'],
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`enable colors via -color`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {},
+        argv: ['-color'],
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`enable colors via --color=true`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {TERM: 'dumb'},
+        argv: ['--color=true'],
+        stdout: {isTTY: true},
+        stderr: {isTTY: true},
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`enable colors via -color=true`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {TERM: 'dumb'},
+        argv: ['-color=true'],
+        stdout: {isTTY: true},
+        stderr: {isTTY: true},
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`disable colors via --color=false`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {TERM: 'xterm'},
+        argv: ['--color=false'],
+        stdout: {isTTY: true},
+        stderr: {isTTY: true},
+      },
+
+    });
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`disable colors via NO_COLOR=1`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {NO_COLOR: '1', TERM: 'xterm'},
+        argv: [],
+        stdout: {isTTY: true},
+        stderr: {isTTY: true},
+      },
+
+    });
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`disable colors via FORCE_COLOR=0`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {FORCE_COLOR: '0', TERM: 'xterm'},
+        argv: [],
+        stdout: {isTTY: true},
+        stderr: {isTTY: true},
+      },
+
+    });
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`disable colors via FORCE_COLOR=false`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {FORCE_COLOR: 'false', TERM: 'xterm'},
+        argv: [],
+        stdout: {isTTY: true},
+        stderr: {isTTY: true},
+      },
+
+    });
+    const expected = false;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`enable colors via FORCE_COLOR=1`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {FORCE_COLOR: '1'},
+        argv: [],
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`enable colors via FORCE_COLOR=true`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {FORCE_COLOR: 'true'},
+        argv: [],
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+});
+
+// Deno
+describe('Deno isSupported', () => {
+  test(`env TERM`, (done) => {
+    const received = isSupported({
+      Deno: {
+        env: {
+          toObject: () => ({TERM: 'xterm-256color'}),
+        },
+        args: [],
+        build: {
+          os: 'linux', // win32
+        },
+        isatty: (rid) => rid === 1, // analog to process.stdout.isTTY in node
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`platform win`, (done) => {
+    const received = isSupported({
+      Deno: {
+        env: {
+          toObject: () => ({TERM: ''}),
+        },
+        args: [],
+        build: {
+          os: 'win32',
+        },
+        isatty: (rid) => false, // analog to process.stdout.isTTY in node
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`FORCE_COLOR`, (done) => {
+    const received = isSupported({
+      Deno: {
+        env: {
+          toObject: () => ({FORCE_COLOR: 1}),
+        },
+        args: [],
+        build: {
+          os: 'linux',
+        },
+        isatty: (rid) => false, // analog to process.stdout.isTTY in node
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`flag '--color'`, (done) => {
+    const received = isSupported({
+      Deno: {
+        env: {
+          toObject: () => ({}),
+        },
+        args: ['--color'],
+        build: {
+          os: 'linux',
+        },
+        isatty: (rid) => false, // analog to process.stdout.isTTY in node
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+});
+
+// Next.JS
+describe('Next.JS isSupported', () => {
+  test(`runtime experimental-edge`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {NEXT_RUNTIME: 'experimental-edge', TERM: 'xterm-256color'},
+        argv: [],
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`runtime edge`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {NEXT_RUNTIME: 'edge', TERM: 'xterm-256color'},
+        argv: [],
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+    done();
+  });
+
+  test(`runtime nodejs`, (done) => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: {NEXT_RUNTIME: 'nodejs', TERM: 'xterm-256color'},
+        argv: [],
+        stdout: {isTTY: true},
+        stderr: {isTTY: true},
+      },
+
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
     done();
   });
 });

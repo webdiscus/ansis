@@ -16,10 +16,12 @@
 [![node](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 
 Ansis is the tiny and faster compatible alternative to [Chalk][chalk] with even more useful features.
-Colorize your output in a terminal with clean syntax, e.g., ``` green`Hello World!` ``` ``` red`Error!` ``` ``` black.bgYellow`Warning!` ```.
+Colorize your output in a terminal with clean syntax,
+e.g., ``` green`Hello World!` ``` ``` red`Error!` ``` ``` black.bgYellow`Warning!` ```.
 
 **Why yet one lib?**\
-See [comparison](https://github.com/webdiscus/ansis#compare-most-popular-ansi-libraries) and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular Node.js libraries:\
+See [comparison](https://github.com/webdiscus/ansis#compare-most-popular-ansi-libraries)
+and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular Node.js libraries:\
 [`chalk`][chalk], [`colors.js`][colors.js], [`colorette`][colorette], [`picocolors`][picocolors], [`kleur`][kleur], [`ansi-colors`][ansi-colors], [`cli-color`][cli-color], [`colors-cli`][colors-cli].
 
 <div align="center">
@@ -30,19 +32,20 @@ See [comparison](https://github.com/webdiscus/ansis#compare-most-popular-ansi-li
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/stackblitz-starters-gs2gve?file=index.js)
 
-
 ## Highlights
 
 - supports both **ESM** and **CommonJS**
+- supports **Deno**, **Next.JS** runtime
 - up to **x3.5 faster** than **chalk**, [see benchmarks](#benchmark)
-- dist code is **3 KB** only
+- dist code is only **5 KB** incl. named import for ESM and CommonJS
 - [standard API](#base-colors) like **chalk**
 - default and [named import](#named-import) `import { red, bold, rgb } from 'ansis/colors'`
 - [chained syntax](#chained-syntax) `red.bold('text')`
 - [nested **template strings**](#nested-syntax) ``` red`R ${green`G`} R` ```
 - [ANSI 256 colors](#256-colors) and [Truecolor](#truecolor) (**RGB**, **HEX**)
 - [extending of base colors](#extend-colors) with named **truecolors**
-- [ANSI codes](#escape-codes) as `open` and `close` property for each style ``` `Hello ${red.open}World${red.close}!` ```
+- [ANSI codes](#escape-codes) as `open` and `close` property for each
+  style ``` `Hello ${red.open}World${red.close}!` ```
 - [strip ANSI codes](#strip) method `ansis.strip()`
 - [correct style break](#new-line) at the `end of line` when used `\n` in string
 - supports the [environment variables](#cli-vars) `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
@@ -50,14 +53,13 @@ See [comparison](https://github.com/webdiscus/ansis#compare-most-popular-ansi-li
 - **TypeScript** friendly
 - zero dependencies
 
-
 <a id="install" name="install" href="#install"></a>
+
 ## Install
 
 ```bash
 npm install ansis
 ```
-
 
 ## Usage
 
@@ -103,12 +105,11 @@ Output:\
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/stackblitz-starters-sx74bl?file=index.js)
 
-
 <a id="named-import" name="named-import" href="#named-import"></a>
+
 ## Named import
 
 The `ansis` supports both the `default import` and `named import`.
-
 
 ```js
 // default import
@@ -127,6 +128,7 @@ red.bold('text');
 ```
 
 <a id="template-literals" name="template-literals" href="#template-literals"></a>
+
 ## Template literals
 
 The `ansis` supports both the function syntax `red('error')` and template literals ``` red`error` ```.
@@ -144,8 +146,8 @@ red`text`;
 red`text ${message} text`;
 ```
 
-
 <a id="chained-syntax" name="chained-syntax" href="#chained-syntax"></a>
+
 ## Chained syntax
 
 All colors, styles and functions are chainable. Each color or style can be combined in any order.
@@ -159,14 +161,15 @@ bold.bgHex('#FF75D1').cyan`text`;
 italic.bold.yellow.bgMagentaBright`text`;
 ```
 
-
 <a id="nested-syntax" name="nested-syntax" href="#nested-syntax"></a>
+
 ## Nested syntax
 
 You can nest functions and template strings within each other.
 None of the other libraries (chalk, kleur, colorette, colors.js etc.) support nested template strings.
 
 Nested template strings:
+
 ```js
 import { red, green } from 'ansis/colors';
 
@@ -174,6 +177,7 @@ red`red ${green`green`} red`;
 ```
 
 Deep nested chained styles:
+
 ```js
 import { red, green, cyan, magenta, yellow, italic, underline } from 'ansis/colors';
 
@@ -195,6 +199,7 @@ Output:\
 ![screenshot nested styles](docs/img/ansis-nested.png?raw=true)
 
 Multiline nested template strings:
+
 ```js
 import { red, green, hex, visible, inverse } from 'ansis/colors';
 
@@ -223,11 +228,12 @@ DISK: ${orange`${disk}%`}
 Output:\
 ![screenshot multiline nested](docs/img/ansis-multiline-nested.png?raw=true)
 
-
 <a id="base-colors" name="base-colors" href="#base-colors"></a>
+
 ## Base colors and styles
 
-Colors and styles have standard names used by many popular libraries, such as [chalk][chalk], [colorette][colorette], [kleur][kleur].
+Colors and styles have standard names used by many popular libraries, such
+as [chalk][chalk], [colorette][colorette], [kleur][kleur].
 
 | Foreground colors     | Background colors | Styles                                     |
 |:----------------------|:------------------|--------------------------------------------|
@@ -249,8 +255,8 @@ Colors and styles have standard names used by many popular libraries, such as [c
 | `cyanBright`          | `bgCyanBright`    |                                            |
 | `whiteBright`         | `bgWhiteBright`   |                                            |
 
-
 <a id="extend-colors" name="extend-colors" href="#extend-colors"></a>
+
 ## Extend base colors
 
 Defaults, the imported `ansis` instance contains [base styles and colors](#base-colors).
@@ -271,6 +277,7 @@ ansis.orange('text');
 ```
 
 Usage example with TypeScript:
+
 ```ts
 import ansis, { AnsiColorsExtend } from 'ansis';
 
@@ -290,8 +297,8 @@ write('orange', 'message'); // extended color OK
 write('unknown', 'message'); // TypeScript Error
 ```
 
-
 <a id="256-colors" name="256-colors" href="#256-colors"></a>
+
 ## ANSI 256 colors
 
 The pre-defined set of 256 colors.
@@ -338,8 +345,8 @@ bgAnsi256(105).ansi256(96)`cyan text on magenta background`
 bg(105).fg(96)`cyan text on magenta background`
 ```
 
-
 <a id="truecolor" name="truecolor" href="#truecolor"></a>
+
 ## Truecolor
 
 You can use the `hex` or `rgb` format.
@@ -348,7 +355,7 @@ Foreground function: `hex()` `rgb()`\
 Background function: `bgHex()` `bgRgb()`
 
 ```js
-import { bold, hex, rgb, bgHex, bgRgb} from 'ansis/colors';
+import { bold, hex, rgb, bgHex, bgRgb } from 'ansis/colors';
 
 // foreground color
 hex('#E0115F').bold`bold Ruby`;
@@ -365,9 +372,11 @@ bold.hex('#E0115F').bgHex('#96C')`ruby bold text on amethyst background`
 ```
 
 <a id="escape-codes" name="escape-codes" href="#escape-codes"></a>
+
 ## Use ANSI codes
 
-You can use the [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors_and_Styles) with `open` and `close` properties for each style.
+You can use the [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors_and_Styles) with `open`
+and `close` properties for each style.
 
 ```js
 import { red, bold } from 'ansis/colors';
@@ -382,6 +391,7 @@ console.log(`Hello ${myStyle.open}ANSI${myStyle.close} World!`);
 ```
 
 <a id="strip" name="strip" href="#strip"></a>
+
 ## Strip ANSI codes
 
 The Ansis class contains the method `strip()` to remove all ANSI codes from string.
@@ -395,8 +405,8 @@ const string = ansis.strip(ansiString);
 
 The variable `string` will contain the pure string without ANSI codes.
 
-
 <a id="new-line" name="new-line" href="#new-line"></a>
+
 ## New lines
 
 Supports correct style break at the `end of line`.
@@ -409,8 +419,8 @@ console.log(bgGreen`\nAnsis\nNew Line\nNext New Line\n`);
 
 ![output](docs/img/break-style-nl.png?raw=true "break styles at EOL")
 
-
 <a id="shortcuts" name="shortcuts" href="#shortcuts"></a>
+
 ## Shortcuts / Themes
 
 Define your own themes:
@@ -431,14 +441,16 @@ theme.warning('warning');
 theme.ruby('Ruby color');
 ```
 
-
 <a id="cli-vars" name="cli-vars" href="#cli-vars"></a>
+
 ## CLI
 
 Defaults, the output in terminal console is colored and output in a file is uncolored.
 
 ### Environment variables
+
 _example.js_
+
 ```js
 import ansis from 'ansis';
 
@@ -468,10 +480,11 @@ $ FORCE_COLOR=1 node example.js > log.txt #=> force enable colors
 > `FORCE_COLOR=0`  force disable colors\
 > `FORCE_COLOR=1`  force enable colors
 
-
 ### Arguments for executable script
+
 If you have an executable script.\
 _example.js_
+
 ```js
 #!/usr/bin/env node
 import ansis from 'ansis';
@@ -480,6 +493,7 @@ console.log(ansis.red`COLOR`);
 ```
 
 Use arguments `--no-color` or `--color=false` to disable colors and `--color` to enable ones.
+
 ```
 $ ./example.js                        #=> color
 $ ./example.js --no-color             #=> no color
@@ -490,8 +504,8 @@ $ ./example.js --color > log.txt      #=> color
 $ ./example.js --color=true > log.txt #=> color
 ```
 
-
 <a id="compare" href="#compare"></a>
+
 ## Comparison of most popular libraries
 
 | Library<br>______________<br> - name<br> - code size<br> - named import    |               Naming colors                | ANSI 256<br>colors | True-<br>color | Chained<br>syntax | Nested<br>template strings | New<br>Line | Supports<br>CLI params                                   |
@@ -504,8 +518,7 @@ $ ./example.js --color=true > log.txt #=> color
 | [`picocolors`][picocolors]<br>**2.6KB**<br><nobr>`❌ named import`</nobr>   |         **standard**<br>`8` colors         |         ❌          |       ❌        |         ❌         |             ❌              |      ❌      | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
 | [`kleur`][kleur]<br>**2.7KB**<br><nobr>`✅ named import`</nobr>             |         **standard**<br>`8` colors         |         ❌          |       ❌        |         ✅         |             ❌              |      ❌      | only<br>`NO_COLOR`<br>`FORCE_COLOR`                      |
 | [`chalk`][chalk]<br>**15KB**<br><nobr>`❌ named import`</nobr>              |        **standard**<br>`16` colors         |         ✅          |       ✅        |         ✅         |             ❌              |      ✅      | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`ansis`][ansis]<br>**3.2KB**<br><nobr>`✅ named import`</nobr>             |        **standard**<br>`16` colors         |         ✅          |       ✅        |         ✅         |             ✅              |      ✅      | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-
+| [`ansis`][ansis]<br>**5KB**<br><nobr>`✅ named import`</nobr>               |        **standard**<br>`16` colors         |         ✅          |       ✅        |         ✅         |             ✅              |      ✅      | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
 
 > **Note**
 >
@@ -547,7 +560,6 @@ $ ./example.js --color=true > log.txt #=> color
 > lib.bgGreen(`First Line
 > Next Line`);
 > ```
-
 
 ## Show ANSI demo
 
@@ -774,11 +786,19 @@ Most popular ANSI libraries for `Node.js`:
 [ISC](https://github.com/webdiscus/ansis/blob/master/LICENSE)
 
 [colors.js]: https://github.com/Marak/colors.js
+
 [colorette]: https://github.com/jorgebucaran/colorette
+
 [picocolors]: https://github.com/alexeyraspopov/picocolors
+
 [cli-color]: https://github.com/medikoo/cli-color
+
 [colors-cli]: https://github.com/jaywcjlove/colors-cli
+
 [ansi-colors]: https://github.com/doowb/ansi-colors
+
 [kleur]: https://github.com/lukeed/kleur
+
 [chalk]: https://github.com/chalk/chalk
+
 [ansis]: https://github.com/webdiscus/ansis

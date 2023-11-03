@@ -9,6 +9,6 @@ trim_trailing_whitespace = true
 indent_size = 2
 tab_width = 2
 
-[{*.htm,*.html,*.pug,*.md}]
+[{*.htm,*.html,*.md}]
 indent_size = 2
 tab_width = 2

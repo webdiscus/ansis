@@ -2,9 +2,8 @@
 
 import chalk from 'chalk';
 
-import ansis, { Ansis } from '../src/index.js';
-import {
-  red,
+import ansis, {
+  Ansis, red,
   green,
   blue,
   cyan,
@@ -17,7 +16,7 @@ import {
   inverse,
   visible,
   hex,
-} from '../src/colors.mjs';
+} from '../src/index.js';
 
 import { ansi256Table } from './ansi256.js';
 import { ansisLogo } from './ansis-logo.js';

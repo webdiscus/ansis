@@ -1,11 +1,10 @@
-import {execSync} from 'child_process';
+import { execSync } from 'child_process';
 import path from 'path';
 
 // test distributed version
-import ansis, {Ansis} from '../src/index.js';
-import {hexToRgb, clamp} from '../src/utils.js';
-import {isSupported} from '../src/ansi-codes.js';
-import {green, red, yellow} from '../src/colors.mjs';
+import { hexToRgb, clamp } from '../src/utils.js';
+import { isSupported } from '../src/ansi-codes.js';
+import ansis, { Ansis, green, red, yellow } from '../src/index.js';
 
 const TEST_PATH = path.resolve('./test/');
 
@@ -223,22 +222,8 @@ describe('style tests', () => {
     done();
   });
 
-  test(`ansis.ansi(97)`, (done) => {
-    const received = ansis.ansi(97)('foo');
-    const expected = '\x1b[38;5;97mfoo\x1b[39m';
-    expect(esc(received)).toEqual(esc(expected));
-    done();
-  });
-
   test(`ansis.bgAnsi256(97)`, (done) => {
     const received = ansis.bgAnsi256(97)('foo');
-    const expected = '\x1b[48;5;97mfoo\x1b[49m';
-    expect(esc(received)).toEqual(esc(expected));
-    done();
-  });
-
-  test(`ansis.bgAnsi(97)`, (done) => {
-    const received = ansis.bgAnsi(97)('foo');
     const expected = '\x1b[48;5;97mfoo\x1b[49m';
     expect(esc(received)).toEqual(esc(expected));
     done();
@@ -380,7 +365,7 @@ describe('template literals tests', () => {
 
 describe('extend base colors tests', () => {
   test('imported ansis`', (done) => {
-    ansis.extend({orange: '#FFAB40'});
+    ansis.extend({ orange: '#FFAB40' });
 
     const received = ansis.orange.bold('text');
     const expected = '\x1b[38;2;255;171;64m\x1b[1mtext\x1b[22m\x1b[39m';
@@ -390,7 +375,7 @@ describe('extend base colors tests', () => {
 
   test('new ansis`', (done) => {
     const ansis = new Ansis();
-    ansis.extend({orange: '#FFAB40'});
+    ansis.extend({ orange: '#FFAB40' });
 
     // test the order bold > orange
     const received = ansis.bold.orange('text');
@@ -434,10 +419,10 @@ describe('Node.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {TERM: 'xterm'},
+        env: { TERM: 'xterm' },
         argv: [],
-        stdout: {isTTY: true},
-        stderr: {isTTY: true},
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
     });
     const expected = true;
@@ -463,7 +448,7 @@ describe('Node.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {CI: 'GITLAB_CI'},
+        env: { CI: 'GITLAB_CI' },
         argv: [],
       },
 
@@ -476,10 +461,10 @@ describe('Node.JS isSupported', () => {
   test(`no colors, unsupported terminal`, (done) => {
     const received = isSupported({
       process: {
-        env: {TERM: 'dumb'},
+        env: { TERM: 'dumb' },
         argv: [],
-        stdout: {isTTY: true},
-        stderr: {isTTY: true},
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
 
     });
@@ -491,7 +476,7 @@ describe('Node.JS isSupported', () => {
   test(`no colors, simulate output in file > log.txt`, (done) => {
     const received = isSupported({
       process: {
-        env: {TERM: 'xterm'},
+        env: { TERM: 'xterm' },
         argv: [],
       },
 
@@ -533,10 +518,10 @@ describe('Node.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {TERM: 'dumb'},
+        env: { TERM: 'dumb' },
         argv: ['--color=true'],
-        stdout: {isTTY: true},
-        stderr: {isTTY: true},
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
 
     });
@@ -549,10 +534,10 @@ describe('Node.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {TERM: 'dumb'},
+        env: { TERM: 'dumb' },
         argv: ['-color=true'],
-        stdout: {isTTY: true},
-        stderr: {isTTY: true},
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
 
     });
@@ -565,10 +550,10 @@ describe('Node.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {TERM: 'xterm'},
+        env: { TERM: 'xterm' },
         argv: ['--color=false'],
-        stdout: {isTTY: true},
-        stderr: {isTTY: true},
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
 
     });
@@ -581,10 +566,10 @@ describe('Node.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {NO_COLOR: '1', TERM: 'xterm'},
+        env: { NO_COLOR: '1', TERM: 'xterm' },
         argv: [],
-        stdout: {isTTY: true},
-        stderr: {isTTY: true},
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
 
     });
@@ -597,10 +582,10 @@ describe('Node.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {FORCE_COLOR: '0', TERM: 'xterm'},
+        env: { FORCE_COLOR: '0', TERM: 'xterm' },
         argv: [],
-        stdout: {isTTY: true},
-        stderr: {isTTY: true},
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
 
     });
@@ -613,10 +598,10 @@ describe('Node.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {FORCE_COLOR: 'false', TERM: 'xterm'},
+        env: { FORCE_COLOR: 'false', TERM: 'xterm' },
         argv: [],
-        stdout: {isTTY: true},
-        stderr: {isTTY: true},
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
 
     });
@@ -629,7 +614,7 @@ describe('Node.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {FORCE_COLOR: '1'},
+        env: { FORCE_COLOR: '1' },
         argv: [],
       },
 
@@ -643,7 +628,7 @@ describe('Node.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {FORCE_COLOR: 'true'},
+        env: { FORCE_COLOR: 'true' },
         argv: [],
       },
 
@@ -661,7 +646,7 @@ describe('Deno isSupported', () => {
     const received = isSupported({
       Deno: {
         env: {
-          toObject: () => ({TERM: 'xterm-256color'}),
+          toObject: () => ({ TERM: 'xterm-256color' }),
         },
         args: [],
         build: {
@@ -680,7 +665,7 @@ describe('Deno isSupported', () => {
     const received = isSupported({
       Deno: {
         env: {
-          toObject: () => ({TERM: ''}),
+          toObject: () => ({ TERM: '' }),
         },
         args: [],
         build: {
@@ -699,7 +684,7 @@ describe('Deno isSupported', () => {
     const received = isSupported({
       Deno: {
         env: {
-          toObject: () => ({FORCE_COLOR: 1}),
+          toObject: () => ({ FORCE_COLOR: 1 }),
         },
         args: [],
         build: {
@@ -740,7 +725,7 @@ describe('Next.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {NEXT_RUNTIME: 'experimental-edge', TERM: 'xterm-256color'},
+        env: { NEXT_RUNTIME: 'experimental-edge', TERM: 'xterm-256color' },
         argv: [],
       },
 
@@ -754,7 +739,7 @@ describe('Next.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {NEXT_RUNTIME: 'edge', TERM: 'xterm-256color'},
+        env: { NEXT_RUNTIME: 'edge', TERM: 'xterm-256color' },
         argv: [],
       },
 
@@ -768,10 +753,10 @@ describe('Next.JS isSupported', () => {
     const received = isSupported({
       process: {
         platform: 'linux',
-        env: {NEXT_RUNTIME: 'nodejs', TERM: 'xterm-256color'},
+        env: { NEXT_RUNTIME: 'nodejs', TERM: 'xterm-256color' },
         argv: [],
-        stdout: {isTTY: true},
-        stderr: {isTTY: true},
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
 
     });

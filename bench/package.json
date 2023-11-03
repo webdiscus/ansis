@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "ansi-colors": "4.1.1",
+    "ansis": "file:../dist",
     "benchmark": "2.1.4",
     "chalk": "5.0.0",
     "cli-color": "2.0.1",

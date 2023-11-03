@@ -27,8 +27,9 @@ export const isSupported = (mockThis) => {
     // Deno: if interactive permission is not granted, do nothing, no colors
   }
 
-  const hasForceColor = 'FORCE_COLOR' in env;
-  const forceColorValue = env.FORCE_COLOR;
+  const FORCE_COLOR = 'FORCE_COLOR';
+  const hasForceColor = FORCE_COLOR in env;
+  const forceColorValue = env[FORCE_COLOR];
   const forceColor = forceColorValue === 'true' || parseInt(forceColorValue, 10) > 0;
 
   const isForceDisabled = 'NO_COLOR' in env

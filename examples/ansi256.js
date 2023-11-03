@@ -1,4 +1,4 @@
-import { fg, bg } from '../src/colors.mjs';
+import { fg, bg } from '../src/index.js';
 
 let out;
 let n;
@@ -66,4 +66,4 @@ for (let i = 232; i <= 255; i++) {
 }
 
 //console.log(out);
-export { out as ansi256Table }
+export { out as ansi256Table };

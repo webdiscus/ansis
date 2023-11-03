@@ -1,5 +1,4 @@
-import ansis from 'ansis';
-import { red, green, blue, yellow, magenta } from 'ansis/colors';
+import ansis, { red, green, blue, yellow, magenta } from 'ansis';
 
 const log = console.log;
 const pink = ansis.hex('#FF75D1');

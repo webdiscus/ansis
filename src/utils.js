@@ -70,8 +70,8 @@ export const strReplaceAll = (str, searchValue, replaceValue) => {
 /**
  * The style must be break at the end of the line and continued on a new line.
  * TODO: compare with str.replace(/(\r*\n)/g, props.closeStack + '$1' + props.openStack);
- *   - compatibility in windows
- *   - performance
+ *   - check compatibility in windows
+ *   - check performance
  *   - delete this function if replace() is faster
  *
  * @param {string} str The string containing linebreaks.

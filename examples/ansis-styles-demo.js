@@ -15,13 +15,18 @@ import {
   underline,
   white, whiteBright,
   yellow, yellowBright,
-} from '../src/colors.mjs';
+} from '../src/index.js';
 
-const out = `${bold`bold`} ${dim`dim`} ${italic`italic`} ${underline`underline`} ${strikethrough`strikethrough`} ${inverse`inverse`} ${bold.italic.underline.strike`bold italic  underline strike`}` + '\n' +
-  `${red`red`} ${green`green`} ${yellow`yellow`} ${blue`blue`} ${magenta`magenta`} ${cyan`cyan`} ${white`white`} ${gray`gray`} ${bold.yellow`bold yellow`} ${dim.cyan`dim cyan`} ${red.italic`italic red`} ` + '\n' +
-  `${black.bgRed`bgRed`} ${black.bgGreen`bgGreen`} ${black.bgYellow`bgYellow`} ${bgBlue`bgBlue`} ${black.bgMagenta`bgMagenta`} ${black.bgCyan`bgCyan`} ${black.bgWhite`bgWhite`} ${black.bgRedBright`bgRedBright`} ${white.bgRed.bold.italic` CocaCola `}` + '\n' +
-  `${greenBright`greenBright`} ${yellowBright`yellowBright`} ${blueBright`blueBright`} ${magentaBright`magentaBright`} ${cyanBright`cyanBright`} ${whiteBright`whiteBright`} ${greenBright`A`}${magentaBright`N`}${yellowBright`S`}${redBright`I`}` + '\n' +
-  `${black.bgGreenBright`bgGreenBright`} ${black.bgYellowBright`bgYellowBright`} ${bgBlueBright`bgBlueBright`} ${black.bgMagentaBright`bgMagentaBright`} ${black.bgCyanBright`bgCyanBright`} ${magentaBright.bgGreenBright`C`}${greenBright.bgMagentaBright`O`}${redBright.bgYellowBright`L`}${yellowBright.bgRedBright`O`}${redBright.bgCyanBright`R`}${yellowBright.bgBlueBright`S`}` + '\n' +
+const out = `${bold`bold`} ${dim`dim`} ${italic`italic`} ${underline`underline`} ${strikethrough`strikethrough`} ${inverse`inverse`} ${bold.italic.underline.strike`bold italic  underline strike`}` +
+  '\n' +
+  `${red`red`} ${green`green`} ${yellow`yellow`} ${blue`blue`} ${magenta`magenta`} ${cyan`cyan`} ${white`white`} ${gray`gray`} ${bold.yellow`bold yellow`} ${dim.cyan`dim cyan`} ${red.italic`italic red`} ` +
+  '\n' +
+  `${black.bgRed`bgRed`} ${black.bgGreen`bgGreen`} ${black.bgYellow`bgYellow`} ${bgBlue`bgBlue`} ${black.bgMagenta`bgMagenta`} ${black.bgCyan`bgCyan`} ${black.bgWhite`bgWhite`} ${black.bgRedBright`bgRedBright`} ${white.bgRed.bold.italic` CocaCola `}` +
+  '\n' +
+  `${greenBright`greenBright`} ${yellowBright`yellowBright`} ${blueBright`blueBright`} ${magentaBright`magentaBright`} ${cyanBright`cyanBright`} ${whiteBright`whiteBright`} ${greenBright`A`}${magentaBright`N`}${yellowBright`S`}${redBright`I`}` +
+  '\n' +
+  `${black.bgGreenBright`bgGreenBright`} ${black.bgYellowBright`bgYellowBright`} ${bgBlueBright`bgBlueBright`} ${black.bgMagentaBright`bgMagentaBright`} ${black.bgCyanBright`bgCyanBright`} ${magentaBright.bgGreenBright`C`}${greenBright.bgMagentaBright`O`}${redBright.bgYellowBright`L`}${yellowBright.bgRedBright`O`}${redBright.bgCyanBright`R`}${yellowBright.bgBlueBright`S`}` +
+  '\n' +
   [
     '#d93611',
     '#d97511',
@@ -52,7 +57,7 @@ const out = `${bold`bold`} ${dim`dim`} ${italic`italic`} ${underline`underline`}
     ' 141 ',
     '  98 ',
     '  92 ',
-  ].reduce((out, code) => out + black.bgAnsi(parseInt(code, 10))(code), '') +
+  ].reduce((out, code) => out + black.bgAnsi256(parseInt(code, 10))(code), '') +
   '\n ';
 
 export { out as ansisStylesDemo };

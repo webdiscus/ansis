@@ -32,17 +32,18 @@ and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular N
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/stackblitz-starters-gs2gve?file=index.js)
 
-## Highlights
+## 💡 Highlights
 
 - supports both **ESM** and **CommonJS**
 - supports **Deno**, **Next.JS** runtime
-- up to **x3.5 faster** than **chalk**, [see benchmarks](#benchmark)
-- dist code is only **5 KB** incl. named import for ESM and CommonJS
+- up to **x3 faster** than **chalk**, [see benchmarks](#benchmark)
+- dist code is only **5 KB** incl. named import of all styles
 - [standard API](#base-colors) like **chalk**
-- default and [named import](#named-import) `import { red, bold, rgb } from 'ansis/colors'`
-- [chained syntax](#chained-syntax) `red.bold('text')`
+- default import `import ansis from 'ansis'`, usage `ansis.red('error')`
+- [named import](#named-import) `import { red } from 'ansis'`, usage ``` red('error') ```
+- [chained syntax](#chained-syntax) `red.bold.underline('text')`
 - [nested **template strings**](#nested-syntax) ``` red`R ${green`G`} R` ```
-- [ANSI 256 colors](#256-colors) and [Truecolor](#truecolor) (**RGB**, **HEX**)
+- [ANSI 256 colors](#256-colors) and [Truecolor](#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ```, ``` hex('#96C')`Amethyst` ```
 - [extending of base colors](#extend-colors) with named **truecolors**
 - [ANSI codes](#escape-codes) as `open` and `close` property for each
   style ``` `Hello ${red.open}World${red.close}!` ```
@@ -52,6 +53,11 @@ and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular N
 - **auto detects** color support
 - **TypeScript** friendly
 - zero dependencies
+
+## ❓Question / Feature Request / Bug
+
+If you have discovered a bug or have a feature suggestion, feel free to create
+an [issue](https://github.com/webdiscus/ansis/issues) on GitHub.
 
 <a id="install" name="install" href="#install"></a>
 
@@ -63,21 +69,20 @@ npm install ansis
 
 ## Usage
 
-You can import module and named colors with ESM or CommonJS syntax.
+You can import default module or named colors with ESM or CommonJS syntax.
 
 ```js
-// ESM
+// ESM default import
 import ansis from 'ansis';
-import { red, green, blue } from 'ansis/colors';
+// ESM named import
+import { red, green, blue } from 'ansis';
 
-// CommonJS
+// CommonJS default import
 const ansis = require('ansis');
-const { red, green, blue } = require('ansis/colors');
+// CommonJS named import
+const { red, green, blue } = require('ansis');
 
-// default import
-console.log(ansis.green(`Success!`));
-
-// named import
+console.log(ansis.green('Success!'));
 console.log(green('Success!'));
 
 // template string
@@ -94,7 +99,7 @@ console.log(red`The ${blue.underline`file.js`} not found!`);
 Basic example `Hello World!`:
 
 ```js
-import { red, black, inverse, reset } from 'ansis/colors';
+import { red, black, inverse, reset } from 'ansis';
 
 console.log(green`Hello ${inverse`ANSI`} World!
 ${black.bgYellow`Warning:`} ${cyan`/path/to/file.js`} ${red`not found!`}`);
@@ -122,7 +127,7 @@ You can import named colors, styles and functions. All imported colors and style
 
 ```js
 // named import
-import { red, hex, italic } from 'ansis/colors';
+import { red, hex, italic } from 'ansis';
 
 red.bold('text');
 ```
@@ -137,7 +142,7 @@ The `template literals` allow you to make a complex template more readable and s
 The `function syntax` can be used to colorize a variable.
 
 ```js
-import { red } from 'ansis/colors';
+import { red } from 'ansis';
 
 let message = 'error';
 
@@ -153,7 +158,7 @@ red`text ${message} text`;
 All colors, styles and functions are chainable. Each color or style can be combined in any order.
 
 ```js
-import { red, bold, italic, hex } from 'ansis/colors';
+import { red, bold, italic, hex } from 'ansis';
 
 red.bold`text`;
 hex('#FF75D1').bgCyan.bold`text`;
@@ -171,7 +176,7 @@ None of the other libraries (chalk, kleur, colorette, colors.js etc.) support ne
 Nested template strings:
 
 ```js
-import { red, green } from 'ansis/colors';
+import { red, green } from 'ansis';
 
 red`red ${green`green`} red`;
 ```
@@ -179,7 +184,7 @@ red`red ${green`green`} red`;
 Deep nested chained styles:
 
 ```js
-import { red, green, cyan, magenta, yellow, italic, underline } from 'ansis/colors';
+import { red, green, cyan, magenta, yellow, italic, underline } from 'ansis';
 
 red(`red ${italic(`red italic ${underline(`red italic underline`)}`)} red`);
 
@@ -201,7 +206,7 @@ Output:\
 Multiline nested template strings:
 
 ```js
-import { red, green, hex, visible, inverse } from 'ansis/colors';
+import { red, green, hex, visible, inverse } from 'ansis';
 
 // defined a truecolor as the constant
 const orange = hex('#FFAB40');
@@ -324,7 +329,7 @@ Background function: `bgAnsi256(code)` has short alias `bg(code)`
 See [ANSI color codes](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit).
 
 ```js
-import { bold, ansi256, fg, bgAnsi256, bg } from 'ansis/colors';
+import { bold, ansi256, fg, bgAnsi256, bg } from 'ansis';
 
 // foreground color
 ansi256(96)`Bright Cyan`;
@@ -355,7 +360,7 @@ Foreground function: `hex()` `rgb()`\
 Background function: `bgHex()` `bgRgb()`
 
 ```js
-import { bold, hex, rgb, bgHex, bgRgb } from 'ansis/colors';
+import { bold, hex, rgb, bgHex, bgRgb } from 'ansis';
 
 // foreground color
 hex('#E0115F').bold`bold Ruby`;
@@ -379,7 +384,7 @@ You can use the [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_co
 and `close` properties for each style.
 
 ```js
-import { red, bold } from 'ansis/colors';
+import { red, bold } from 'ansis';
 
 // each style has `open` and `close` properties
 console.log(`Hello ${red.open}ANSI${red.close} World!`);
@@ -412,7 +417,7 @@ The variable `string` will contain the pure string without ANSI codes.
 Supports correct style break at the `end of line`.
 
 ```js
-import { bgGreen } from 'ansis/colors';
+import { bgGreen } from 'ansis';
 
 console.log(bgGreen`\nAnsis\nNew Line\nNext New Line\n`);
 ```

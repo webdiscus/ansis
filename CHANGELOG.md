@@ -1,5 +1,21 @@
 # Change log
 
+## 2.0.0 (2023-11-03)
+
+- feat: add supports the Deno
+- feat: add supports the Next.js `edge` runtime
+- feat(CHANGE): add named import for `ansis`:\
+  NEW named import: `import { red } from 'ansis'`.\
+  If you use `TypeScript` and your IDE show the error: `TS2307: Cannot find module ansis/colors`,\
+  then you should use the new syntax,
+  update you code: `import { red } from 'ansis/colors'` --> `import { red } from 'ansis'`.
+- feat(DEPRECATE): OLD named import `import { red } from 'ansis/colors'` is deprecated, use the NEW named import
+- feat(DEPRECATE): instead of the `ansi` use `ansi256` or alias `fg`
+- feat(DEPRECATE): instead of the `bgAnsi` use `bgAnsi256` or alias `bg`
+- feat: optimize named export
+- feat: reduce the size of dist/ directory
+- chore: update dev dependencies, new jest requires node.js >= 14
+
 ## 1.6.0-beta.0 (2023-11-01)
 
 - feat: add supports the Deno

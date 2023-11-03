@@ -17,7 +17,7 @@ const colorizeASCII = ({ ascii, data }, paddingLeft = 5) => {
       for (let charWidthIdx = 0; charWidthIdx < width; charWidthIdx++) {
         char = ascii[i++];
         code = Array.isArray(codes) ? codes[row] : codes + row;
-        out += ansis.ansi(code)(char);
+        out += ansis.ansi256(code)(char);
       }
     }
     row++;
@@ -45,7 +45,6 @@ const logo = {
   ],
 };
 
-
-let out = colorizeASCII(logo, 5)
+let out = colorizeASCII(logo, 5);
 
 export { out as ansisLogo };

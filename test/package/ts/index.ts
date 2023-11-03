@@ -1,18 +1,23 @@
-import ansis, {AnsiColorsExtend} from 'ansis';
-import {red, green, blue, yellow, magenta} from 'ansis/colors';
+// NEW named import, >= v1.6.0
+import ansis, { Ansis, AnsiColorsExtend, red, green, blue, yellow, magenta } from 'ansis';
 
 const log = console.log;
 const pink = ansis.hex('#FF75D1');
 
+// create new instance
+const ansis2 = new Ansis();
+log(ansis2.cyan('new instance'));
+
 // Extend base colors
 ansis.extend({
-    pink: '#FF75D1',
-    orange: '#FFAB40',
+  pink: '#FF75D1',
+  orange: '#FFAB40',
 });
 
+// `AnsiColorsExtend` is extendable type for TS to add a custom color
 const write = (style: AnsiColorsExtend<'pink' | 'orange'>, message: string) => {
-    console.log(ansis[style](message));
-}
+  console.log(ansis[style](message));
+};
 
 write('red', 'message'); // default style OK
 write('pink', 'message'); // extended style OK

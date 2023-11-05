@@ -37,7 +37,7 @@ and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular N
 - supports both **ESM** and **CommonJS**
 - supports **Deno**, **Next.JS** runtime
 - up to **x3 faster** than **chalk**, [see benchmarks](#benchmark)
-- dist code is only **5 KB** incl. named import of all styles
+- only **3 KB** dist code
 - [standard API](#base-colors) like **chalk**
 - default import `import ansis from 'ansis'`, usage `ansis.red('error')`
 - [named import](#named-import) `import { red } from 'ansis'`, usage ``` red('error') ```
@@ -130,6 +130,16 @@ You can import named colors, styles and functions. All imported colors and style
 import { red, hex, italic } from 'ansis';
 
 red.bold('text');
+```
+
+Default import and named import can be combined.
+
+```js
+// default and named import
+import ansis, { red } from 'ansis';
+
+const redText = red('text'); // colorized ANSI string
+const text = ansis.strip(redText); // pure string without ANSI codes
 ```
 
 <a id="template-literals" name="template-literals" href="#template-literals"></a>
@@ -454,60 +464,63 @@ Defaults, the output in terminal console is colored and output in a file is unco
 
 ### Environment variables
 
-_example.js_
-
-```js
-import ansis from 'ansis';
-
-console.log(ansis.red`COLOR`);
-```
-
-```
-$ node example.js           #=> color
-$ node example.js > log.txt #=> no color
-```
-
 To force disable or enable colored output use environment variables `NO_COLOR` and `FORCE_COLOR`.
 
-```
-$ NO_COLOR=1 node example.js              #=> force disable colors
-$ FORCE_COLOR=0 node example.js           #=> force disable colors
-$ FORCE_COLOR=1 node example.js > log.txt #=> force enable colors
-```
+The `NO_COLOR` variable should be presents with any not empty value.
+The value is not important, e.g., `NO_COLOR=1` `NO_COLOR=true` disable colors.
+See standard description by [NO_COLOR](https://no-color.org/).
 
-> **Note**
->
-> The `NO_COLOR` variable should be presents with any not empty value.
-> The value is not important, see standard description by [NO_COLOR](https://no-color.org/).\
-> `NO_COLOR=1` `NO_COLOR=true` disable colors
->
-> The `FORCE_COLOR` variable should be presents with one of values:\
-> `FORCE_COLOR=0`  force disable colors\
-> `FORCE_COLOR=1`  force enable colors
+The `FORCE_COLOR` variable should be presents with one of values:\
+`FORCE_COLOR=0`  force disable colors\
+`FORCE_COLOR=1`  force enable colors
 
-### Arguments for executable script
-
-If you have an executable script.\
-_example.js_
+For example, _app.js_:
 
 ```js
-#!/usr/bin/env node
-import ansis from 'ansis';
+import { red } from 'ansis';
 
-console.log(ansis.red`COLOR`);
+console.log(red`red color`);
 ```
+
+Execute the script in a terminal:
+
+```
+$ node app.js           # colored output in terminal
+$ node app.js > log.txt # output in file without ANSI codes
+
+$ NO_COLOR=1 node app.js              # force disable colors, non colored output in terminal
+$ FORCE_COLOR=0 node app.js           # force disable colors, non colored output in terminal
+$ FORCE_COLOR=1 node app.js > log.txt # force enable colors, output in file with ANSI codes
+```
+
+### CLI arguments
 
 Use arguments `--no-color` or `--color=false` to disable colors and `--color` to enable ones.
 
-```
-$ ./example.js                        #=> color
-$ ./example.js --no-color             #=> no color
-$ ./example.js --color=false          #=> no color
+For example, an executable script _app.js_:
 
-$ ./example.js > log.txt              #=> no color
-$ ./example.js --color > log.txt      #=> color
-$ ./example.js --color=true > log.txt #=> color
+```js
+#!/usr/bin/env node
+import { red } from 'ansis';
+
+console.log(red`red color`);
 ```
+
+Execute the script in a terminal:
+
+```
+$ ./app.js                        # colored output in terminal
+$ ./app.js --no-color             # non colored output in terminal
+$ ./app.js --color=false          # non colored output in terminal
+
+$ ./app.js > log.txt              # output in file without ANSI codes
+$ ./app.js --color > log.txt      # output in file with ANSI codes
+$ ./app.js --color=true > log.txt # output in file with ANSI codes
+```
+
+> **Warning**
+>
+> The command line arguments have a higher priority than environment variable.
 
 <a id="compare" href="#compare"></a>
 
@@ -523,7 +536,7 @@ $ ./example.js --color=true > log.txt #=> color
 | [`picocolors`][picocolors]<br>**2.6KB**<br><nobr>`❌ named import`</nobr>   |         **standard**<br>`8` colors         |         ❌          |       ❌        |         ❌         |             ❌              |      ❌      | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
 | [`kleur`][kleur]<br>**2.7KB**<br><nobr>`✅ named import`</nobr>             |         **standard**<br>`8` colors         |         ❌          |       ❌        |         ✅         |             ❌              |      ❌      | only<br>`NO_COLOR`<br>`FORCE_COLOR`                      |
 | [`chalk`][chalk]<br>**15KB**<br><nobr>`❌ named import`</nobr>              |        **standard**<br>`16` colors         |         ✅          |       ✅        |         ✅         |             ❌              |      ✅      | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`ansis`][ansis]<br>**5KB**<br><nobr>`✅ named import`</nobr>               |        **standard**<br>`16` colors         |         ✅          |       ✅        |         ✅         |             ✅              |      ✅      | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`ansis`][ansis]<br>**3.2KB**<br><nobr>`✅ named import`</nobr>             |        **standard**<br>`16` colors         |         ✅          |       ✅        |         ✅         |             ✅              |      ✅      | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
 
 > **Note**
 >
@@ -577,19 +590,12 @@ npm run demo
 
 <a id="benchmark" href="#benchmark"></a>
 
-## Benchmark
-
-### Setup
+## Run benchmark
 
 ```bash
 git clone https://github.com/webdiscus/ansis.git
-cd ./ansis/bench
+cd ./ansis
 npm i
-```
-
-### Run benchmark
-
-```bash
 npm run bench
 ```
 

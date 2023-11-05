@@ -3,7 +3,8 @@
 import chalk from 'chalk';
 
 import ansis, {
-  Ansis, red,
+  Ansis,
+  red,
   green,
   blue,
   cyan,
@@ -16,7 +17,7 @@ import ansis, {
   inverse,
   visible,
   hex,
-} from '../src/index.js';
+} from 'ansis';
 
 import { ansi256Table } from './ansi256.js';
 import { ansisLogo } from './ansis-logo.js';
@@ -189,7 +190,7 @@ ansis.extend({
 log(ansis.pink('pink'));
 log(ansis.orange('orange'));
 log(ansis.orange.bold('orange'));
-//log(ansis.bold.orange('orange')); // => error
+//log(ansis.bold.orange('orange')); // => error, but by 2nd extension it works, see the `side effect` below
 
 /**
  * Problem description
@@ -227,7 +228,8 @@ ansis2.extend({
 });
 
 log(ansis2.pink('pink'));
-log(ansis2.bold.orange('orange'));
+// SIDE EFFECT: here works only because the ansis is already extended: ansis.extend({orange:'..'}), see above
+log(ansis2.italic.orange('orange'));
 
 /**
  * Misc

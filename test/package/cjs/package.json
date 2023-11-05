@@ -1,5 +1,5 @@
 {
-  "name": "ansis",
+  "name": "package-ansis-cjs",
   "description": "CommonJS version",
   "type": "commonjs"
 }

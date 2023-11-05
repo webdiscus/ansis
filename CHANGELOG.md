@@ -1,5 +1,15 @@
 # Change log
 
+## 2.0.1 (2023-11-03)
+
+- fix: missing exports of ansis.strip() and ansis.export() functions (issue was introduced in v2.0.0)
+- refactor: optimize code to reduce distributed size
+- test: add test for generated npm package in CJS and ESM mode
+- test: add test for env variables and CLI flags
+- test: add test to detect Deno
+- test: add test to detect Next.js runtime
+- docs: update readme
+
 ## 2.0.0 (2023-11-03)
 
 - feat: add supports the Deno

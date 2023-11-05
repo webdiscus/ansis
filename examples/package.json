@@ -1,0 +1,8 @@
+{
+  "name": "demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "demo": "node ./"
+  }
+}

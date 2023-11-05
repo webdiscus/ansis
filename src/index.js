@@ -118,8 +118,8 @@ const wrap = (strings, values, props) => {
 };
 
 const styleMethods = {
-  ansi: (code) => fnAnsi256(clamp(code, 0, 255)),
-  bgAnsi: (code) => fnBgAnsi256(clamp(code, 0, 255)),
+  fg: (code) => fnAnsi256(clamp(code, 0, 255)),
+  bg: (code) => fnBgAnsi256(clamp(code, 0, 255)),
   hex: (hex) => fnRgb(...hexToRgb(hex)),
   bgHex: (hex) => fnBgRgb(...hexToRgb(hex)),
   rgb: (r, g, b) => fnRgb(
@@ -146,81 +146,15 @@ for (let name in styleMethods) {
   };
 }
 
+// TODO: DEPRECATE ansi and bgAnsi
 // define method aliases for compatibility with chalk
-styles.ansi256 = styles.fg = styles.ansi;
-styles.bgAnsi256 = styles.bg = styles.bgAnsi;
+styles.ansi256 = styles.ansi = styles.fg;
+styles.bgAnsi256 = styles.bgAnsi = styles.bg;
 
 const ansis = new Ansis();
 
-export { Ansis, ansis as default };
+// for distribution code, the export will be replaced (via @rollup/plugin-replace) with the following export:
+// module.exports = ansis;
+// module.exports.Ansis = Ansis;
 
-export const {
-  // color functions
-  ansi256,
-  ansi,
-  fg,
-  bgAnsi256,
-  bgAnsi,
-  bg,
-  rgb,
-  bgRgb,
-  hex,
-  bgHex,
-
-  // misc
-  reset,
-  inverse,
-  hidden,
-  visible,
-
-  // styles
-  bold,
-  dim,
-  faint,
-  italic,
-  underline,
-  doubleUnderline,
-  strikethrough,
-  strike,
-  frame,
-  encircle,
-  overline,
-
-  // foreground colors
-  black,
-  red,
-  green,
-  yellow,
-  blue,
-  magenta,
-  cyan,
-  white,
-  gray,
-  grey,
-  blackBright,
-  redBright,
-  greenBright,
-  yellowBright,
-  blueBright,
-  magentaBright,
-  cyanBright,
-  whiteBright,
-
-  // background colors
-  bgBlack,
-  bgRed,
-  bgGreen,
-  bgYellow,
-  bgBlue,
-  bgMagenta,
-  bgCyan,
-  bgWhite,
-  bgBlackBright,
-  bgRedBright,
-  bgGreenBright,
-  bgYellowBright,
-  bgBlueBright,
-  bgMagentaBright,
-  bgCyanBright,
-  bgWhiteBright,
-} = ansis;
+export { ansis as default, Ansis };

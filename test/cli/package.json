@@ -1,5 +1,5 @@
 {
-  "name": "package-ansis-esm",
+  "name": "ansis-esm",
   "description": "ESM version",
   "type": "module"
 }

@@ -1,6 +1,8 @@
 import terser from '@rollup/plugin-terser';
+import replace from '@rollup/plugin-replace';
 import copy from 'rollup-plugin-copy';
 import dts from 'rollup-plugin-dts';
+import { minify } from 'terser';
 
 // last ECMA version compatible with node.js 12
 const ecma = 2019;
@@ -17,6 +19,12 @@ export default [
       },
     ],
     plugins: [
+      replace({
+        preventAssignment: false, // allow modifying exports
+        // the order of exports is other than is needed
+        'exports.Ansis = Ansis': 'module.exports = ansis', // firstly must be defined default export
+        'exports.default = ansis': 'module.exports.Ansis = Ansis', // then on the next line can be named export
+      }),
       terser({
         ecma,
         compress: {
@@ -27,7 +35,12 @@ export default [
       }),
       copy({
         targets: [
-          { src: 'package/package.json', dest: 'dist/' },
+          {
+            src: 'src/index.mjs',
+            dest: 'dist/',
+            transform: async (contents, name) => (await minify(contents.toString())).code,
+          },
+          { src: 'pkg/package.json', dest: 'dist/' },
           { src: 'README.md', dest: 'dist/' },
           { src: 'LICENSE', dest: 'dist/' },
         ],

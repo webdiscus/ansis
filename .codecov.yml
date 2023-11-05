@@ -8,4 +8,4 @@ coverage:
         target: 90%
 
 ignore:
-  - test/.*
+  - test/**/*

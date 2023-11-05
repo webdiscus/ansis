@@ -1,4 +1,4 @@
-import ansis from '../src/index.js';
+import ansis from 'ansis';
 
 const colorizeASCII = ({ ascii, data }, paddingLeft = 5) => {
   // start index in logo is 1, because first char is \n

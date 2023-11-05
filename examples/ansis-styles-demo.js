@@ -15,7 +15,7 @@ import {
   underline,
   white, whiteBright,
   yellow, yellowBright,
-} from '../src/index.js';
+} from 'ansis';
 
 const out = `${bold`bold`} ${dim`dim`} ${italic`italic`} ${underline`underline`} ${strikethrough`strikethrough`} ${inverse`inverse`} ${bold.italic.underline.strike`bold italic  underline strike`}` +
   '\n' +

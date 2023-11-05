@@ -1,4 +1,4 @@
-import { fg, bg } from '../src/index.js';
+import { fg, bg } from 'ansis';
 
 let out;
 let n;

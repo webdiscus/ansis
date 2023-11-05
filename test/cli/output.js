@@ -1,14 +1,16 @@
-import ansis from '../../src/index.js';
-const c = ansis;
+#!/usr/bin/env node
+import { red, rgb, bgRgb, hex, bgHex } from '../../src/index.mjs';
+
+// test output into terminal, depends on flags (--no-color, --color) and environment variables (NO_COLOR, FORCE_COLOR)
 
 console.log(
-  c.red('red') +
-    '|' +
-    c.rgb(80, 80, 80)('rgb') +
-    '|' +
-    c.bgRgb(80, 80, 80)('bgRgb') +
-    '|' +
-    c.hex('#fff')('hex') +
-    '|' +
-    c.bgHex('#fff')('bgHex')
+  red('red') +
+  '|' +
+  rgb(80, 80, 80)('rgb') +
+  '|' +
+  bgRgb(80, 80, 80)('bgRgb') +
+  '|' +
+  hex('#fff')('hex') +
+  '|' +
+  bgHex('#fff')('bgHex'),
 );

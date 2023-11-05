@@ -14,7 +14,7 @@ ansis.extend({
   orange: '#FFAB40',
 });
 
-// `AnsiColorsExtend` is extendable type for TS to add a custom color
+// `AnsiColorsExtend` is an extendable type for TS to add a custom color
 const write = (style: AnsiColorsExtend<'pink' | 'orange'>, message: string) => {
   console.log(ansis[style](message));
 };

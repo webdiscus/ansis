@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Colorize text in terminal or console output with ANSI colors & styles",
   "keywords": [
     "ansi",
@@ -59,10 +59,12 @@
   "types": "./src/index.d.ts",
   "exports": {
     ".": {
+      "types": "./index.d.ts",
       "import": "./index.mjs",
       "require": "./index.js"
     },
     "./colors": {
+      "types": "./index.d.ts",
       "import": "./index.mjs",
       "require": "./index.js"
     }

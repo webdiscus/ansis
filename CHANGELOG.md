@@ -1,5 +1,9 @@
 # Change log
 
+## 2.0.2 (2023-11-14)
+
+- fix: could not find a declaration file for module 'ansis'
+
 ## 2.0.1 (2023-11-03)
 
 - fix: missing exports of ansis.strip() and ansis.export() functions (issue was introduced in v2.0.0)

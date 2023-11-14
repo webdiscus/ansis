@@ -20,7 +20,7 @@ Colorize your output in a terminal with clean syntax,
 e.g., ``` green`Hello World!` ``` ``` red`Error!` ``` ``` black.bgYellow`Warning!` ```.
 
 **Why yet one lib?**\
-See [comparison](https://github.com/webdiscus/ansis#compare-most-popular-ansi-libraries)
+See [comparison](https://github.com/webdiscus/ansis#compare)
 and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular Node.js libraries:\
 [`chalk`][chalk], [`colors.js`][colors.js], [`colorette`][colorette], [`picocolors`][picocolors], [`kleur`][kleur], [`ansi-colors`][ansi-colors], [`cli-color`][cli-color], [`colors-cli`][colors-cli].
 

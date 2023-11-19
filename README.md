@@ -618,8 +618,8 @@ c.red(`${c.bold(`${c.cyan(`${c.yellow('yellow')}cyan`)}`)}red`);
 +  colorette           4,572,582 ops/sec   very fast
    picocolors          3,841,124 ops/sec   very fast
 -> ansis               2,669,734 ops/sec   fast
-   kleur/colors        2,281,415 ops/sec   fast
    chalk               2,287,146 ops/sec   fast
+   kleur/colors        2,281,415 ops/sec   fast
    kleur               2,228,639 ops/sec   fast
    ansi-colors         1,265,615 ops/sec   slow
    colors.js           1,158,572 ops/sec   slow
@@ -650,6 +650,7 @@ colors.forEach((color) => c[color]('foo'));
 ### Chained styles
 
 ```js
+const colors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
 colors.forEach((color) => c[color].bold.underline.italic('foo'));
 ```
 
@@ -661,14 +662,15 @@ colors.forEach((color) => c[color].bold.underline.italic('foo'));
    cli-color             144,837 ops/sec  too slow
    colors.js             138,219 ops/sec  too slow
    colors-cli             52,732 ops/sec  too slow
-   kleur/colors  (not supported)
-   colorette     (not supported)
-   picocolors    (not supported)
+   kleur/colors        (not supported)
+   colorette           (not supported)
+   picocolors          (not supported)
 ```
 
 ### Nested calls
 
 ```js
+const colors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
 colors.forEach((color) => c[color](c.bold(c.underline(c.italic('foo')))));
 ```
 
@@ -689,25 +691,16 @@ colors.forEach((color) => c[color](c.bold(c.underline(c.italic('foo')))));
 
 ```js
 c.red(
-  `a red ${c.white('white')} red ${c.red('red')} red ${c.cyan('cyan')} red ${c.black('black')} red ${c.red(
-    'red'
-  )} red ${c.green('green')} red ${c.red('red')} red ${c.yellow('yellow')} red ${c.blue('blue')} red ${c.red(
-    'red'
-  )} red ${c.magenta('magenta')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red(
-    'red'
-  )} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red(
-    'red'
-  )} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.green(
-    'green'
-  )} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red(
-    'red'
-  )} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.magenta(
-    'magenta'
-  )} red ${c.red('red')} red ${c.red('red')} red ${c.cyan('cyan')} red ${c.red('red')} red ${c.red(
-    'red'
-  )} red ${c.yellow('yellow')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red(
-    'red'
-  )} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} message`
+  `a red ${c.white('white')} red ${c.red('red')} red ${c.cyan('cyan')} red ${c.black('black')} red ${c.red('red')} red
+  ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red
+  ${c.green('green')} red ${c.red('red')} red ${c.yellow('yellow')} red ${c.blue('blue')} red ${c.red('red')} red
+  ${c.magenta('magenta')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red
+  ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red
+  ${c.black('black')} red ${c.yellow('yellow')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red
+  ${c.yellow('yellow')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red
+  ${c.green('green')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red
+  ${c.magenta('magenta')} red ${c.red('red')} red ${c.red('red')} red ${c.cyan('cyan')} red ${c.red('red')} red
+  ${c.cyan('cyan')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red message`
 );
 ```
 
@@ -743,7 +736,7 @@ c.green(
 ```diff
 +  colorette           1,131,757 ops/sec  very fast
    picocolors          1,002,649 ops/sec  very fast
--> ansis                 882,220 ops/sec  fast
+-> ansis                 882,220 ops/sec  very fast
    chalk                 565,965 ops/sec  fast
    kleur/colors          478,547 ops/sec  fast
    kleur                 464,004 ops/sec  fast
@@ -755,7 +748,7 @@ c.green(
 
 ### HEX colors
 
-Only two libraries supported truecolor methods: `ansis` and `chalk`
+Only two libraries support truecolor: `ansis` and `chalk`
 
 ```js
 c.hex('#FBA')('foo');
@@ -764,14 +757,14 @@ c.hex('#FBA')('foo');
 ```diff
 +  ansis               4,944,572 ops/sec  very fast
    chalk               2,891,684 ops/sec  fast
-   colors.js             (not supported)
-   colorette             (not supported)
-   picocolors            (not supported)
-   cli-color             (not supported)
-   colors-cli            (not supported)
-   ansi-colors           (not supported)
-   kleur/colors          (not supported)
-   kleur                 (not supported)
+   colors.js           (not supported)
+   colorette           (not supported)
+   picocolors          (not supported)
+   cli-color           (not supported)
+   colors-cli          (not supported)
+   ansi-colors         (not supported)
+   kleur/colors        (not supported)
+   kleur               (not supported)
 ```
 
 ## Testing

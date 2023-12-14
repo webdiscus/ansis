@@ -1,5 +1,9 @@
 # Change log
 
+## 2.0.3 (2023-12-14)
+
+- fix(index.d.ts): use function overload to make the tagged template have the correct type, #16
+
 ## 2.0.2 (2023-11-14)
 
 - fix: could not find a declaration file for module 'ansis'

@@ -6,7 +6,8 @@ interface Ansis {
    *
    * @param {string | TemplateStringsArray} string
    */
-  (string: string | TemplateStringsArray): string;
+  (string: string): string;
+  (string: TemplateStringsArray, ...parameters: string[]): string;
 
   /**
    * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for foreground color.

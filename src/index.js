@@ -1,5 +1,5 @@
-import { hexToRgb, clamp, strReplaceAll } from './utils.js';
-import { baseStyles, fnAnsi256, fnBgAnsi256, fnRgb, fnBgRgb } from './ansi-codes.js';
+import { hexToRgb, strReplaceAll } from './utils.js';
+import { baseStyles, styleMethods, fnRgb } from './ansi-codes.js';
 
 /**
  * @typedef {Object} AnsisProps
@@ -10,11 +10,67 @@ import { baseStyles, fnAnsi256, fnBgAnsi256, fnRgb, fnBgRgb } from './ansi-codes
  * @property {null | AnsisProps} props
  */
 
+const styles = {};
+
 const { defineProperty, defineProperties, setPrototypeOf } = Object;
 
 const stripANSIRegEx = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
-
 const regexLF = /(\r*\n)/g;
+
+/**
+ * Wrap the string with styling and reset codes.
+ *
+ * @param {string | Array<String>} strings A string or template literals.
+ * @param {Array<String>} values The values of the template literals.
+ * @param {AnsisProps} props
+ * @returns {string}
+ */
+const wrap = (strings, values, props) => {
+  if (!strings) return '';
+
+  const { openStack, closeStack } = props;
+  let string = strings.raw != null ? String.raw(strings, ...values) : strings;
+
+  if (~string.indexOf('\x1b')) {
+    while (props != null) {
+      string = strReplaceAll(string, props.close, props.open);
+      props = props.props;
+    }
+
+  }
+
+  if (~string.indexOf('\n')) {
+    string = string.replace(regexLF, closeStack + '$1' + openStack);
+  }
+
+  return openStack + string + closeStack;
+};
+
+/**
+ * @param {Object} self
+ * @param {AnsisProps} self.props
+ * @param {Object} codes
+ * @param {string} codes.open
+ * @param {string} codes.close
+ * @returns {Ansis}
+ */
+const createStyle = ({ props }, { open, close }) => {
+  const style = (strings, ...values) => wrap(strings, values, style.props);
+  let openStack = open;
+  let closeStack = close;
+
+  if (props != null) {
+    openStack = props.openStack + open;
+    closeStack = close + props.closeStack;
+  }
+
+  setPrototypeOf(style, stylePrototype);
+  style.props = { open, close, openStack, closeStack, props: props };
+  style.open = openStack;
+  style.close = closeStack;
+
+  return style;
+};
 
 const Ansis = function() {
   const self = (str) => str;
@@ -53,7 +109,7 @@ const Ansis = function() {
       };
     }
 
-    stylePrototype = defineProperties(() => {}, styles);
+    stylePrototype = defineProperties({}, styles);
     setPrototypeOf(self, stylePrototype);
   };
 
@@ -62,80 +118,6 @@ const Ansis = function() {
 
   return self;
 };
-
-/**
- * @param {Object} self
- * @param {AnsisProps} self.props
- * @param {Object} codes
- * @param {string} codes.open
- * @param {string} codes.close
- * @returns {Ansis}
- */
-const createStyle = ({ props }, { open, close }) => {
-  const style = (strings, ...values) => wrap(strings, values, style.props);
-  let openStack = open;
-  let closeStack = close;
-
-  if (props !== undefined) {
-    openStack = props.openStack + open;
-    closeStack = close + props.closeStack;
-  }
-
-  setPrototypeOf(style, stylePrototype);
-  style.props = { open, close, openStack, closeStack, props: props };
-  style.open = openStack;
-  style.close = closeStack;
-
-  return style;
-};
-
-/**
- * Wrap the string with styling and reset codes.
- *
- * @param {string | Array<String>} strings A string or template literals.
- * @param {Array<String>} values The values of the template literals.
- * @param {AnsisProps} props
- * @returns {string}
- */
-const wrap = (strings, values, props) => {
-  if (!strings) return '';
-
-  const { openStack, closeStack } = props;
-  let string = strings.raw != null ? String.raw(strings, ...values) : strings;
-
-  if (~string.indexOf('\x1b')) {
-    while (props !== undefined) {
-      string = strReplaceAll(string, props.close, props.open);
-      props = props.props;
-    }
-  }
-
-  if (~string.indexOf('\n')) {
-    string = string.replace(regexLF, closeStack + '$1' + openStack);
-  }
-
-  return openStack + string + closeStack;
-};
-
-const styleMethods = {
-  fg: (code) => fnAnsi256(clamp(code, 0, 255)),
-  bg: (code) => fnBgAnsi256(clamp(code, 0, 255)),
-  hex: (hex) => fnRgb(...hexToRgb(hex)),
-  bgHex: (hex) => fnBgRgb(...hexToRgb(hex)),
-  rgb: (r, g, b) => fnRgb(
-    clamp(r, 0, 255),
-    clamp(g, 0, 255),
-    clamp(b, 0, 255),
-  ),
-  bgRgb: (r, g, b) => fnBgRgb(
-    clamp(r, 0, 255),
-    clamp(g, 0, 255),
-    clamp(b, 0, 255),
-  ),
-};
-
-const styles = {};
-let stylePrototype;
 
 // extend styles with methods: rgb(), hex(), etc.
 for (let name in styleMethods) {
@@ -151,6 +133,8 @@ for (let name in styleMethods) {
 styles.ansi256 = styles.ansi = styles.fg;
 styles.bgAnsi256 = styles.bgAnsi = styles.bg;
 
+// note: place it here to allow the compiler to group all constants
+let stylePrototype;
 const ansis = new Ansis();
 
 // for distribution code, the export will be replaced (via @rollup/plugin-replace) with the following export:

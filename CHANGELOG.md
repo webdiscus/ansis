@@ -1,5 +1,12 @@
 # Change log
 
+## 2.1.0 (2024-01-30)
+
+- feat: add `bgGrey` and `bgGray` aliases for `bgBlackBright`
+- refactor: optimize source code
+- test: refactor tests
+- docs: update readme
+
 ## 2.0.3 (2023-12-14)
 
 - fix(index.d.ts): use function overload to make the tagged template have the correct type, #16

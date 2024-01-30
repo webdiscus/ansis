@@ -5,7 +5,7 @@
       ANSI Styling
     </a>
   </h1>
-  <div>The Node.js library for formatting text in terminal with ANSI colors & styles</div>
+  <div>The Node.js library for formatting Terminal and Console output with ANSI colors & styles</div>
 </div>
 
 ---
@@ -15,9 +15,8 @@
 [![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
 [![node](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 
-Ansis is the tiny and faster compatible alternative to [Chalk][chalk] with even more useful features.
-Colorize your output in a terminal with clean syntax,
-e.g., ``` green`Hello World!` ``` ``` red`Error!` ``` ``` black.bgYellow`Warning!` ```.
+**Ansis** is a **smaller** and **faster** alternative to [Chalk][chalk] with additional useful features and **clean syntax**.\
+For example: ``` green`Succeful!` ``` ``` red`Error!` ``` ``` black.bgYellow`Warning!` ``` ``` hex('#E0115F').bold`Ruby` ```.
 
 **Why yet one lib?**\
 See [comparison](https://github.com/webdiscus/ansis#compare)
@@ -34,25 +33,32 @@ and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular N
 
 ## 💡 Highlights
 
-- supports both **ESM** and **CommonJS**
-- supports **Deno**, **Next.JS** runtime
-- up to **x3 faster** than **chalk**, [see benchmarks](#benchmark)
-- only **3 KB** dist code
-- [standard API](#base-colors) like **chalk**
-- default import `import ansis from 'ansis'`, usage `ansis.red('error')`
-- [named import](#named-import) `import { red } from 'ansis'`, usage ``` red('error') ```
-- [chained syntax](#chained-syntax) `red.bold.underline('text')`
-- [nested **template strings**](#nested-syntax) ``` red`R ${green`G`} R` ```
+- Supports both **ESM** and **CommonJS**
+- Supports **TypeScript**
+- Supports **Deno**, **Next.JS** runtimes
+- [Standard API](#base-colors) compatible with **Chalk**, switch from **Chalk** to **Ansis** without changing your code
+  ```diff
+  - import chalk from 'chalk';
+  + import chalk, { red } from 'ansis';
+
+  chalk.red.bold('Error!'); // <- the original Chalk code works fine
+  red.bold`Error!`;         // <- the same result with Ansis
+  ```
+- Default import `import ansis from 'ansis'` or `const ansis = require('ansis')`
+- [Named import](#named-import) `import { red } from 'ansis'` or `const { red } = require('ansis')`
+- [Chained syntax](#chained-syntax) `red.bold.underline('text')`
+- [Nested **template strings**](#nested-syntax) ``` red`R ${green`G`} R` ```
 - [ANSI 256 colors](#256-colors) and [Truecolor](#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ```, ``` hex('#96C')`Amethyst` ```
-- [extending of base colors](#extend-colors) with named **truecolors**
+- [Extending of base colors](#extend-colors) with named **truecolors**
 - [ANSI codes](#escape-codes) as `open` and `close` property for each
   style ``` `Hello ${red.open}World${red.close}!` ```
-- [strip ANSI codes](#strip) method `ansis.strip()`
-- [correct style break](#new-line) at the `end of line` when used `\n` in string
-- supports the [environment variables](#cli-vars) `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
-- **auto detects** color support
-- **TypeScript** friendly
-- zero dependencies
+- [Strip ANSI codes](#strip) method `ansis.strip()`
+- [Correct style break](#new-line) at the `end of line` when used `\n` in string
+- Supports the [environment variables](#cli-vars) `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
+- **Auto detects** color support
+- Up to **x3 faster** than **Chalk**, [see benchmarks](#benchmark) and only **3 KB** dist code
+- Doesn't extend `String.prototype`
+- Zero dependencies
 
 ## ❓Question / Feature Request / Bug
 
@@ -76,12 +82,18 @@ You can import default module or named colors with ESM or CommonJS syntax.
 import ansis from 'ansis';
 // ESM named import
 import { red, green, blue } from 'ansis';
+```
 
+or
+
+```js
 // CommonJS default import
 const ansis = require('ansis');
 // CommonJS named import
 const { red, green, blue } = require('ansis');
+```
 
+```js
 console.log(ansis.green('Success!'));
 console.log(green('Success!'));
 
@@ -250,25 +262,25 @@ Output:\
 Colors and styles have standard names used by many popular libraries, such
 as [chalk][chalk], [colorette][colorette], [kleur][kleur].
 
-| Foreground colors     | Background colors | Styles                                     |
-|:----------------------|:------------------|--------------------------------------------|
-| `black`               | `bgBlack`         | `dim` (alias`faint`)                       |
-| `red`                 | `bgRed`           | **`bold`**                                 |
-| `green`               | `bgGreen`         | _`italic`_                                 |
-| `yellow`              | `bgYellow`        | <u>`underline`</u>                         |
-| `blue`                | `bgBlue`          | <s>`strikethrough`</s> (alias `strike`)    |
-| `magenta`             | `bgMagenta`       | `doubleUnderline` (_not widely supported_) |
-| `cyan`                | `bgCyan`          | `overline` (_not widely supported_)        |
-| `white`               | `bgWhite`         | `frame` (_not widely supported_)           |
-| `gray` (alias `grey`) | `bgGray`          | `encircle` (_not widely supported_)        |
-| `blackBright`         | `bgBlackBright`   | `inverse`                                  |
-| `redBright`           | `bgRedBright`     | `visible`                                  |
-| `greenBright`         | `bgGreenBright`   | `hidden`                                   |
-| `yellowBright`        | `bgYellowBright`  | `reset`                                    |
-| `blueBright`          | `bgBlueBright`    |                                            |
-| `magentaBright`       | `bgMagentaBright` |                                            |
-| `cyanBright`          | `bgCyanBright`    |                                            |
-| `whiteBright`         | `bgWhiteBright`   |                                            |
+| Foreground colors     | Background colors         | Styles                                     |
+|:----------------------|:--------------------------|--------------------------------------------|
+| `black`               | `bgBlack`                 | `dim` (alias`faint`)                       |
+| `red`                 | `bgRed`                   | **`bold`**                                 |
+| `green`               | `bgGreen`                 | _`italic`_                                 |
+| `yellow`              | `bgYellow`                | <u>`underline`</u>                         |
+| `blue`                | `bgBlue`                  | <s>`strikethrough`</s> (alias `strike`)    |
+| `magenta`             | `bgMagenta`               | `doubleUnderline` (_not widely supported_) |
+| `cyan`                | `bgCyan`                  | `overline` (_not widely supported_)        |
+| `white`               | `bgWhite`                 | `frame` (_not widely supported_)           |
+| `gray` (alias `grey`) | `bgGray` (alias `bgGrey`) | `encircle` (_not widely supported_)        |
+| `blackBright`         | `bgBlackBright`           | `inverse`                                  |
+| `redBright`           | `bgRedBright`             | `visible`                                  |
+| `greenBright`         | `bgGreenBright`           | `hidden`                                   |
+| `yellowBright`        | `bgYellowBright`          | `reset`                                    |
+| `blueBright`          | `bgBlueBright`            |                                            |
+| `magentaBright`       | `bgMagentaBright`         |                                            |
+| `cyanBright`          | `bgCyanBright`            |                                            |
+| `whiteBright`         | `bgWhiteBright`           |                                            |
 
 <a id="extend-colors" name="extend-colors" href="#extend-colors"></a>
 

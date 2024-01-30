@@ -4,7 +4,7 @@ import { esc, execScriptSync } from './utils/helpers.js';
 const TEST_PATH = path.resolve('./test/');
 
 describe('Usage `ansis` npm package', () => {
-  test(`CommonJS mode`, (done) => {
+  test(`CommonJS mode`, () => {
     const filename = path.join(TEST_PATH, './package/cjs/test.cjs');
     const received = execScriptSync(filename, ['--color']);
     const expected =
@@ -26,10 +26,9 @@ describe('Usage `ansis` npm package', () => {
       '\x1b[36m\x1b[1mcyan bold\x1b[22m\x1b[39m\n' +
       '\x1b[34m\x1b[3mblue italic\x1b[23m\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
-    done();
   });
 
-  test(`ESM mode`, (done) => {
+  test(`ESM mode`, () => {
     const filename = path.join(TEST_PATH, './package/esm/test.mjs');
     const received = execScriptSync(filename, ['--color']);
     const expected =
@@ -51,6 +50,5 @@ describe('Usage `ansis` npm package', () => {
       '\x1b[36m\x1b[1mcyan bold\x1b[22m\x1b[39m\n' +
       '\x1b[34m\x1b[3mblue italic\x1b[23m\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
-    done();
   });
 });

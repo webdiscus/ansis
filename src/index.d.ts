@@ -7,6 +7,7 @@ interface Ansis {
    * @param {string | TemplateStringsArray} string
    */
   (string: string): string;
+
   (string: TemplateStringsArray, ...parameters: string[]): string;
 
   /**
@@ -174,8 +175,8 @@ interface Ansis {
   readonly magenta: this;
   readonly cyan: this;
   readonly white: this;
-  readonly gray: this;
   readonly grey: this;
+  readonly gray: this;
   readonly blackBright: this;
   readonly redBright: this;
   readonly greenBright: this;
@@ -192,6 +193,7 @@ interface Ansis {
   readonly bgMagenta: this;
   readonly bgCyan: this;
   readonly bgWhite: this;
+  readonly bgGrey: this;
   readonly bgGray: this;
   readonly bgBlackBright: this;
   readonly bgRedBright: this;
@@ -239,8 +241,8 @@ type AnsiColors = (
   | 'magenta'
   | 'cyan'
   | 'white'
-  | 'gray'
   | 'grey'
+  | 'gray'
   | 'blackBright'
   | 'redBright'
   | 'greenBright'
@@ -257,6 +259,7 @@ type AnsiColors = (
   | 'bgMagenta'
   | 'bgCyan'
   | 'bgWhite'
+  | 'bgGrey'
   | 'bgGray'
   | 'bgBlackBright'
   | 'bgRedBright'

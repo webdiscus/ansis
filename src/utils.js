@@ -66,37 +66,3 @@ export const strReplaceAll = (str, searchValue, replaceValue) => {
 
   return result + str.slice(lastPos);
 };
-
-/**
- * The style must be break at the end of the line and continued on a new line.
- * TODO: compare with str.replace(/(\r*\n)/g, props.closeStack + '$1' + props.openStack);
- *   - check compatibility in windows
- *   - check performance
- *   - delete this function if replace() is faster
- *
- * @param {string} str The string containing linebreaks.
- * @param {string} open The code of styling.
- * @param {string} close The reset of styling.
- * @param {number} pos The position of the first linebreak.
- * @returns {string}
- */
-// export const breakStyle = (str, open, close, pos) => {
-//   let result = '',
-//     lastPos = 0;
-//
-//   while (pos > -1) {
-//     let len = pos,
-//       LF = '\n';
-//     // fix for windows
-//     if (str[pos - 1] === '\r') {
-//       LF = '\r\n';
-//       len--;
-//     }
-//
-//     result += str.substr(lastPos, len - lastPos) + close + LF + open;
-//     lastPos = pos + 1;
-//     pos = str.indexOf('\n', lastPos);
-//   }
-//
-//   return result + str.slice(lastPos);
-// };

@@ -1,60 +1,53 @@
 import { hexToRgb, clamp } from '../src/utils.js';
-import { isSupported } from '../src/ansi-codes.js';
+import { isSupported } from '../src/color-support.js';
 
 describe('utils tests', () => {
-  test(`hexToRgb('FFAA99')`, (done) => {
+  test(`hexToRgb('FFAA99')`, () => {
     const received = hexToRgb('FFAA99');
     const expected = [255, 170, 153];
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`hexToRgb('#FFAA99')`, (done) => {
+  test(`hexToRgb('#FFAA99')`, () => {
     const received = hexToRgb('#FFAA99');
     const expected = [255, 170, 153];
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`hexToRgb('#FA9')`, (done) => {
+  test(`hexToRgb('#FA9')`, () => {
     const received = hexToRgb('#FA9');
     const expected = [255, 170, 153];
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`hexToRgb('#FF99')`, (done) => {
+  test(`hexToRgb('#FF99')`, () => {
     const received = hexToRgb('#FF99');
     const expected = [0, 0, 0];
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`hexToRgb('something')`, (done) => {
+  test(`hexToRgb('something')`, () => {
     const received = hexToRgb('something');
     const expected = [0, 0, 0];
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`clamp(3, 0, 2)`, (done) => {
+  test(`clamp(3, 0, 2)`, () => {
     const received = clamp(3, 0, 2);
     const expected = 2;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`clamp(0, 1, 2)`, (done) => {
+  test(`clamp(0, 1, 2)`, () => {
     const received = clamp(0, 1, 2);
     const expected = 1;
     expect(received).toEqual(expected);
-    done();
   });
 });
 
 // Node.JS
 describe('Node.JS isSupported', () => {
-  test(`process undefined`, (done) => {
+  test(`process undefined`, () => {
     // save original `process` object
     const processOriginal = process;
     process = undefined;
@@ -65,24 +58,21 @@ describe('Node.JS isSupported', () => {
 
     // restore original `process` object
     process = processOriginal;
-    done();
   });
 
-  test(`processMock undefined`, (done) => {
+  test(`processMock undefined`, () => {
     const received = isSupported(undefined);
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`processMock {}`, (done) => {
+  test(`processMock {}`, () => {
     const received = isSupported({});
     const expected = false;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`colors in linux terminal`, (done) => {
+  test(`colors in linux terminal`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -94,10 +84,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`colors on windows platform`, (done) => {
+  test(`colors on windows platform`, () => {
     const received = isSupported({
       process: {
         platform: 'win32',
@@ -108,10 +97,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`colors in any CI`, (done) => {
+  test(`colors in any CI`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -122,10 +110,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`no colors, unsupported terminal`, (done) => {
+  test(`no colors, unsupported terminal`, () => {
     const received = isSupported({
       process: {
         env: { TERM: 'dumb' },
@@ -137,10 +124,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = false;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`no colors, simulate output in file > log.txt`, (done) => {
+  test(`no colors, simulate output in file > log.txt`, () => {
     const received = isSupported({
       process: {
         env: { TERM: 'xterm' },
@@ -150,10 +136,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = false;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`enable colors via --color`, (done) => {
+  test(`enable colors via --color`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -164,10 +149,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`enable colors via -color`, (done) => {
+  test(`enable colors via -color`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -178,10 +162,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`enable colors via --color=true`, (done) => {
+  test(`enable colors via --color=true`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -194,10 +177,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`enable colors via -color=true`, (done) => {
+  test(`enable colors via -color=true`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -210,10 +192,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`disable colors via --color=false`, (done) => {
+  test(`disable colors via --color=false`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -226,10 +207,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = false;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`disable colors via NO_COLOR=1`, (done) => {
+  test(`disable colors via NO_COLOR=1`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -242,10 +222,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = false;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`disable colors via FORCE_COLOR=0`, (done) => {
+  test(`disable colors via FORCE_COLOR=0`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -258,10 +237,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = false;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`disable colors via FORCE_COLOR=false`, (done) => {
+  test(`disable colors via FORCE_COLOR=false`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -274,10 +252,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = false;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`enable colors via FORCE_COLOR=1`, (done) => {
+  test(`enable colors via FORCE_COLOR=1`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -288,10 +265,9 @@ describe('Node.JS isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`enable colors via FORCE_COLOR=true`, (done) => {
+  test(`enable colors via FORCE_COLOR=true`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -302,14 +278,12 @@ describe('Node.JS isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
-
 });
 
 // Deno
 describe('Deno isSupported', () => {
-  test(`env TERM`, (done) => {
+  test(`env TERM`, () => {
     const received = isSupported({
       Deno: {
         env: {
@@ -325,10 +299,9 @@ describe('Deno isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`platform win`, (done) => {
+  test(`platform win`, () => {
     const received = isSupported({
       Deno: {
         env: {
@@ -344,10 +317,9 @@ describe('Deno isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`FORCE_COLOR`, (done) => {
+  test(`FORCE_COLOR`, () => {
     const received = isSupported({
       Deno: {
         env: {
@@ -363,10 +335,9 @@ describe('Deno isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`flag '--color'`, (done) => {
+  test(`flag '--color'`, () => {
     const received = isSupported({
       Deno: {
         env: {
@@ -382,13 +353,12 @@ describe('Deno isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 });
 
 // Next.JS
 describe('Next.JS isSupported', () => {
-  test(`runtime experimental-edge`, (done) => {
+  test(`runtime experimental-edge`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -399,10 +369,9 @@ describe('Next.JS isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`runtime edge`, (done) => {
+  test(`runtime edge`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -413,10 +382,9 @@ describe('Next.JS isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 
-  test(`runtime nodejs`, (done) => {
+  test(`runtime nodejs`, () => {
     const received = isSupported({
       process: {
         platform: 'linux',
@@ -429,6 +397,5 @@ describe('Next.JS isSupported', () => {
     });
     const expected = true;
     expect(received).toEqual(expected);
-    done();
   });
 });

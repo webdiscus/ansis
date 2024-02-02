@@ -15,12 +15,18 @@
 [![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
 [![node](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 
-**Ansis** is a **smaller** and **faster** alternative to [Chalk][chalk] with additional useful features and **clean syntax**.\
-For example: ``` green`Succeful!` ``` ``` red`Error!` ``` ``` black.bgYellow`Warning!` ``` ``` hex('#E0115F').bold`Ruby` ```.
+**Ansis** is a **smaller** and **faster** alternative to [Chalk][chalk] with additional useful features and clean syntax.\
+For example:
+
+```js
+green`Succeful!`
+red`Error!`
+black.bgYellow`Warning!`
+hex('#E0115F').bold.underline('Hello World!')
+```
 
 **Why yet one lib?**\
-See [comparison](https://github.com/webdiscus/ansis#compare)
-and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular Node.js libraries:\
+See the features [comparison](https://github.com/webdiscus/ansis#compare) and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular Node.js libraries:\
 [`chalk`][chalk], [`colors.js`][colors.js], [`colorette`][colorette], [`picocolors`][picocolors], [`kleur`][kleur], [`ansi-colors`][ansi-colors], [`cli-color`][cli-color], [`colors-cli`][colors-cli].
 
 <div align="center">
@@ -44,17 +50,20 @@ and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular N
   chalk.red.bold('Error!'); // <- the original Chalk code works fine
   red.bold`Error!`;         // <- the same result with Ansis
   ```
-- Default import `import ansis from 'ansis'` or `const ansis = require('ansis')`
-- [Named import](#named-import) `import { red } from 'ansis'` or `const { red } = require('ansis')`
+- Default import
+  - ESM: `import ansis from 'ansis'`
+  - CJS: `const ansis = require('ansis')`
+- [Named import](#named-import)
+  - ESM: `import { red, green, bold, underline } from 'ansis'`
+  - CJS: `const { red, green, bold, underline } = require('ansis')`
 - [Chained syntax](#chained-syntax) `red.bold.underline('text')`
-- [Nested **template strings**](#nested-syntax) ``` red`R ${green`G`} R` ```
+- [Nested **template strings**](#nested-syntax) ``` green`GREEN text ${red`RED text`} GREEN text` ```
 - [ANSI 256 colors](#256-colors) and [Truecolor](#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ```, ``` hex('#96C')`Amethyst` ```
 - [Extending of base colors](#extend-colors) with named **truecolors**
-- [ANSI codes](#escape-codes) as `open` and `close` property for each
-  style ``` `Hello ${red.open}World${red.close}!` ```
+- [ANSI codes](#escape-codes) as `open` and `close` properties ``` `Hello ${red.open}World${red.close}!` ```
 - [Strip ANSI codes](#strip) method `ansis.strip()`
 - [Correct style break](#new-line) at the `end of line` when used `\n` in string
-- Supports the [environment variables](#cli-vars) `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
+- Supports [environment variables](#cli-vars) `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
 - **Auto detects** color support
 - Up to **x3 faster** than **Chalk**, [see benchmarks](#benchmark) and only **3 KB** dist code
 - Doesn't extend `String.prototype`

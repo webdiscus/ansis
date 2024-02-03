@@ -20,7 +20,7 @@ const regexLF = /(\r*\n)/g;
 /**
  * Wrap the string with styling and reset codes.
  *
- * @param {string | Array<String>} strings A string or template literals.
+ * @param {string | Array<String> | number} strings A string or template literals.
  * @param {Array<String>} values The values of the template literals.
  * @param {AnsisProps} props
  * @returns {string}
@@ -29,14 +29,14 @@ const wrap = (strings, values, props) => {
   if (!strings) return '';
 
   const { openStack, closeStack } = props;
-  let string = strings.raw != null ? String.raw(strings, ...values) : strings;
+  // convert the number to the string
+  let string = strings.raw != null ? String.raw(strings, ...values) : strings + '';
 
   if (~string.indexOf('\x1b')) {
     while (props != null) {
       string = strReplaceAll(string, props.close, props.open);
       props = props.props;
     }
-
   }
 
   if (~string.indexOf('\n')) {
@@ -73,7 +73,7 @@ const createStyle = ({ props }, { open, close }) => {
 };
 
 const Ansis = function() {
-  const self = (str) => str;
+  const self = (str) => str + '';
 
   /**
    * Remove ANSI styling codes.

@@ -1,11 +1,9 @@
 {
-  "name": "benchmarks",
+  "name": "compare",
   "private": true,
   "type": "module",
-  "types": "lib/bench.d.ts",
   "scripts": {
-    "bench": "node ./",
-    "bench:ansis": "node ./ansis.js"
+    "start": "node ./"
   },
   "dependencies": {
     "ansi-colors": "4.1.1",

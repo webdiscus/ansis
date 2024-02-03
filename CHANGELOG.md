@@ -1,5 +1,13 @@
 # Change log
 
+## 2.2.0 (2024-02-03)
+
+- feat: add supports the argument as `number`
+- test: add tests for new feature
+- chore: add features compare of different libs, just run: `npm run compare`
+- chore: add compare example on [stackblitz](https://stackblitz.com/edit/compare-colorize-libraries?file=index.js)
+- docs: update readme
+
 ## 2.1.0 (2024-01-30)
 
 - feat: add `bgGrey` and `bgGray` aliases for `bgBlackBright`

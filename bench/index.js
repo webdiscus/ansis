@@ -28,7 +28,7 @@
 import Bench from './lib/bench.js';
 import { createFixture } from './lib/utils.js';
 
-// vendor libraries for benchmark
+// vendor libraries
 import chalk from 'chalk';
 import colorsJs from 'colors';
 import * as colorette from 'colorette';
@@ -39,7 +39,6 @@ import kleur from 'kleur';
 import * as kleurColors from 'kleur/colors';
 import picocolors from 'picocolors';
 import { Ansis, green, red, yellow, hex } from 'ansis';
-//import { Ansis, green, red, yellow, hex } from '../_ignored/index-2.0.3.min.js';
 
 const log = console.log;
 
@@ -78,21 +77,6 @@ let fixture = [];
 
 log(hex('#F88').inverse.bold` -= Benchmark =- `);
 
-//showSupportOfDeepNestedStyling();
-//showSupportOfDeepNestedChainedStyling();
-//showSupportOfBreakStyleAtNewLine();
-
-// Supports the template literals
-//log(chalk.red`red ${chalk.yellow`yellow ${chalk.green`green`} yellow`} red`); // fail
-//log(kleur.red`red ${kleur.yellow`yellow ${kleur.green`green`} yellow`} red`); // fail
-//log(colorsJs.red`red ${colorsJs.yellow`yellow ${colorsJs.green`green`} yellow`} red`); // fail
-//log(colorette.red`red ${colorette.yellow`yellow ${colorette.green`green`} yellow`} red`); // fail
-//log(ansiColors.red`red ${ansiColors.yellow`yellow ${ansiColors.green`green`} yellow`} red`); // fail
-//log(cliColor.red`red ${cliColor.yellow`yellow ${cliColor.green`green`} yellow`} red`); // fail
-//log(colorCli.red`red ${colorCli.yellow`yellow ${colorCli.green`green`} yellow`} red`); // fail
-//log(picocolors.red`red ${picocolors.yellow`yellow ${picocolors.green`green`} yellow`} red`); // fail
-//log(red`red ${yellow`yellow ${green`green`} yellow`} red`); // OK
-
 // Colorette bench
 // https://github.com/jorgebucaran/colorette/blob/main/bench/index.js
 fixture = createFixture(vendors, coloretteBench);
@@ -106,10 +90,7 @@ bench('Colorette bench').
   add(vendors[6].name, () => fixture[6](vendors[6].lib)).
   add(vendors[7].name, () => fixture[7](vendors[7].lib)).
   add(vendors[8].name, () => fixture[8](vendors[8].lib)).
-  add(vendors[9].name, () => fixture[9](vendors[9].lib))
-  //.add('chalk', () => chalk.red(`${chalk.bold(`${chalk.cyan(`${chalk.yellow('yellow')}cyan`)}`)}red`))
-  //.add('ansis', () => ansis.red(`${ansis.bold(`${ansis.cyan(`${ansis.yellow('yellow')}cyan`)}`)}red`))
-  .run();
+  add(vendors[9].name, () => fixture[9](vendors[9].lib)).run();
 
 // Base colors
 bench('Base colors').
@@ -206,11 +187,12 @@ bench('Deep nested styles').
 // Check support of correct break style at new line
 
 // Break style at new line
+//const breakStyleAtNewLineFixture = `\nAnsis\nNEW LINE\nNEXT NEW LINE\n`;
 // bench('New Line')
-//   .add('colors.js', () => colorsJs.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//   .add('ansi-colors', () => ansiColors.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//   .add('chalk', () => chalk.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
-//   .add('ansis', () => ansis.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`))
+//   .add('colors.js', () => colorsJs.bgGreen(breakStyleAtNewLineFixture))
+//   .add('ansi-colors', () => ansiColors.bgGreen(breakStyleAtNewLineFixture))
+//   .add('chalk', () => chalk.bgGreen(breakStyleAtNewLineFixture))
+//   .add('ansis', () => ansis.bgGreen(breakStyleAtNewLineFixture))
 //   .run();
 
 bench('RGB colors').add('chalk', () => {
@@ -271,43 +253,4 @@ function deepNestedFixture(c) {
       )} cyan`,
     )} green`,
   );
-}
-
-function complexNestedFixture(c) {
-  return c.red(
-    `red ${c.yellow('yellow')} red ${c.italic.cyan('italic cyan')} red ${c.underline.green(
-      `underline green ${c.yellow('underline yellow')} underline green`,
-    )} red ${c.cyan('cyan')} red ${c.bold.yellow('bold yellow')} red ${c.green('green')} red`,
-  );
-}
-
-function showSupportOfDeepNestedStyling() {
-  log('colors.js: ', deepNestedFixture(colorsJs));
-  log('colorette: ', deepNestedFixture(colorette));
-  log('picocolors: ', deepNestedFixture(picocolors));
-  log('cli-color: ', deepNestedFixture(cliColor));
-  log('color-cli: ', deepNestedFixture(colorCli)); // buggy
-  log('ansi-colors: ', deepNestedFixture(ansiColors));
-  log('kleur/colors: ', deepNestedFixture(kleurColors));
-  log('kleur: ', deepNestedFixture(kleur));
-  log('chalk: ', deepNestedFixture(chalk));
-  log('ansis: ', deepNestedFixture(ansis));
-}
-
-function showSupportOfDeepNestedChainedStyling() {
-  log('chalk: ', complexNestedFixture(chalk));
-  log('ansis: ', complexNestedFixture(ansis));
-}
-
-function showSupportOfBreakStyleAtNewLine() {
-  log('colors.js: ', colorsJs.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // OK
-  log('colorette: ', colorette.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // (not supported)
-  log('picocolors: ', picocolors.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // (not supported)
-  log('cli-color: ', cliColor.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // (not supported)
-  log('color-cli: ', colorCli.green_b(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // (not supported)
-  log('ansi-colors: ', ansiColors.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // OK
-  log('kleur/colors: ', kleurColors.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // (not supported)
-  log('kleur: ', kleur.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // (not supported)
-  log('chalk: ', chalk.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // OK
-  log('ansis: ', ansis.bgGreen(`\nAnsis\nNEW LINE\nNEXT NEW LINE\n`)); // OK
 }

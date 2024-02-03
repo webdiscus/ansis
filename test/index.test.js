@@ -1,5 +1,5 @@
 import { esc } from './utils/helpers.js';
-import ansis, { Ansis, red, yellow, green } from '../src/index.mjs';
+import ansis, { Ansis, red, yellow, green, bold, hex } from '../src/index.mjs';
 
 describe('style tests', () => {
   test(`ansis.visible('foo')`, () => {
@@ -18,7 +18,6 @@ describe('style tests', () => {
     const received = ansis.green('');
     const expected = '';
     expect(esc(received)).toEqual(esc(expected));
-
   });
 
   test(`ansis.green('foo', 'bar')`, () => {
@@ -236,6 +235,57 @@ describe('extend base colors tests', () => {
     // test the order bold > orange
     const received = ansis.bold.orange('text');
     const expected = '\x1b[1m\x1b[38;2;255;171;64mtext\x1b[39m\x1b[22m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+});
+
+describe('handling numbers', () => {
+  test(`ansis(123)`, () => {
+    const num = 123;
+    const received = ansis(num);
+    const expected = '123';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`ansis.red(123)`, () => {
+    const num = 123;
+    const received = ansis.red(num);
+    const expected = '\x1b[31m123\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`red(123)`, () => {
+    const num = 123;
+    const received = red(num);
+    const expected = '\x1b[31m123\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`bold(123)`, () => {
+    const num = 123;
+    const received = bold(num);
+    const expected = '\x1b[1m123\x1b[22m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`red.bold(123)`, () => {
+    const num = 123;
+    const received = red.bold(num);
+    const expected = '\x1b[31m\x1b[1m123\x1b[22m\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`hex('#A00')(123)`, () => {
+    const num = 123;
+    const received = hex('#A00')(num);
+    const expected = '\x1b[38;2;170;0;0m123\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test('red`size: ${123}px`', () => {
+    const num = 123;
+    const received = red`size: ${num}px`;
+    const expected = '\x1b[31msize: 123px\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
 });

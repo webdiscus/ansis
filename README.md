@@ -547,6 +547,14 @@ $ ./app.js --color=true > log.txt # output in file with ANSI codes
 
 ## Comparison of most popular libraries
 
+Run the command to see the support of some features by various libraries:
+
+```
+npm run compare
+```
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/compare-colorize-libraries?file=index.js)
+
 | Library<br>______________<br> - name<br> - code size<br> - named import    |               Naming colors                | ANSI 256<br>colors | True-<br>color | Chained<br>syntax | Nested<br>template strings | New<br>Line | Supports<br>CLI params                                   |
 |:---------------------------------------------------------------------------|:------------------------------------------:|:------------------:|:--------------:|:-----------------:|:--------------------------:|:-----------:|:---------------------------------------------------------|
 | [`colors.js`][colors.js]<br>**18.1KB**<br><nobr>`❌ named import`</nobr>    | <nobr>_non-standard_</nobr><br>`16` colors |         ❌          |       ❌        |         ✅         |             ❌              |      ✅      | only<br>`FORCE_COLOR`<br>`--no-color`<br>`--color`       |

@@ -47,7 +47,8 @@ See the features [comparison](https://github.com/webdiscus/ansis#compare) and [b
   - import chalk from 'chalk';
   + import chalk, { red } from 'ansis';
 
-  chalk.red.bold('Error!'); // <- the original Chalk code works fine
+  chalk.red.bold('Error!'); // <- the Chalk like syntax works fine
+  red.bold('Error!');       // <- the same result with Ansis
   red.bold`Error!`;         // <- the same result with Ansis
   ```
 - Default import

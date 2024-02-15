@@ -72,20 +72,6 @@ describe('Node.JS isSupported', () => {
     expect(received).toEqual(expected);
   });
 
-  test(`colors in linux terminal`, () => {
-    const received = isSupported({
-      process: {
-        platform: 'linux',
-        env: { TERM: 'xterm' },
-        argv: [],
-        stdout: { isTTY: true },
-        stderr: { isTTY: true },
-      },
-    });
-    const expected = true;
-    expect(received).toEqual(expected);
-  });
-
   test(`colors on windows platform`, () => {
     const received = isSupported({
       process: {
@@ -279,6 +265,107 @@ describe('Node.JS isSupported', () => {
     const expected = true;
     expect(received).toEqual(expected);
   });
+});
+
+describe('support colors in terminals', () => {
+  test(`xterm`, () => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'xterm' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+  });
+
+  test(`vt220`, () => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'vt220' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+  });
+
+  test(`vt320-w`, () => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'vt320-w' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+  });
+
+  test(`vt525`, () => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'vt525' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+  });
+
+  test(`tmux`, () => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'tmux' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+  });
+
+  test(`mintty-direct`, () => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'mintty-direct' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+  });
+
+  test(`ansi.sysk`, () => {
+    const received = isSupported({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'ansi.sysk' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+    });
+    const expected = true;
+    expect(received).toEqual(expected);
+  });
+
 });
 
 // Deno

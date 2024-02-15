@@ -41,7 +41,7 @@ See the features [comparison](https://github.com/webdiscus/ansis#compare) and [b
 
 - Supports both **ESM** and **CommonJS**
 - Supports **TypeScript**
-- Supports **Deno**, **Next.JS** runtimes
+- Supports **Bun**, **Deno**, **Next.JS** runtimes
 - [Standard API](#base-colors) compatible with **Chalk**, switch from **Chalk** to **Ansis** without changing your code
   ```diff
   - import chalk from 'chalk';

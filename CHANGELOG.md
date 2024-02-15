@@ -1,5 +1,10 @@
 # Change log
 
+## 2.3.0 (2024-02-15)
+
+- feat: add detection of additional terminals, thanks @dse, [colors.js:issue #42](https://github.com/DABH/colors.js/issues/42)
+- test: add test to detect various terminals
+
 ## 2.2.0 (2024-02-03)
 
 - feat: add supports the argument as `number`

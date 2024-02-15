@@ -46,7 +46,7 @@ export const isSupported = (mockThis) => {
   const isNextJS = (env.NEXT_RUNTIME || '').indexOf('edge') > -1;
 
   const isTerm = (isTTY || isNextJS) &&
-    /^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM);
+    /^screen|^tmux|^xterm|^vt[1-5][0-9][0-9]|^ansi|color|cygwin|linux|mintty|rxvt/i.test(env.TERM);
 
   return !isForceDisabled && (isForceEnabled || isTerm || isWin || 'CI' in env);
 };

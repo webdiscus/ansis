@@ -1,7 +1,7 @@
 {
   "name": "ansis",
-  "version": "2.3.0",
-  "description": "Colorize text in terminal or console output with ANSI colors & styles",
+  "version": "3.0.0",
+  "description": "Colorize text in terminal and console output with ANSI colors & styles",
   "keywords": [
     "ansi",
     "colour",
@@ -70,33 +70,33 @@
     "demo": "node --experimental-modules ./examples/index.js",
     "bench": "(cd ./bench/ && npm install); node ./bench/index.js",
     "compare": "(cd ./compare/ && npm install); node ./compare/index.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles",
-    "test:unit": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --runTestsByPath ./test/unit.test.js",
-    "test:index": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --runTestsByPath ./test/index.test.js",
-    "test:flags": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --runTestsByPath ./test/flags.test.js",
-    "test:package": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --runTestsByPath ./test/package.test.js",
+    "test": "vitest run",
+    "test:unit": "vitest run ./test/unit.test.js",
+    "test:ansi16": "vitest run ./test/ansi16.test.js",
+    "test:ansi256": "vitest run ./test/ansi256.test.js",
+    "test:index": "vitest run ./test/index.test.js",
+    "test:flags": "vitest run ./test/flags.test.js",
+    "test:package": "vitest run ./test/package.test.js",
     "test:cjs": "node ./test/package/cjs/test.cjs",
     "test:esm": "node ./test/package/esm/test.mjs",
-    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --collectCoverage",
+    "test:coverage": "vitest run --coverage",
     "publish:public": "(npm run build) && npm publish ./dist --access public",
     "publish:beta": "(npm run build) && npm publish ./dist --tag beta"
   },
   "engines": {
-    "node": ">=12.13"
+    "node": ">=15"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.2",
-    "@babel/preset-env": "^7.23.2",
     "@rollup/plugin-replace": "^5.0.5",
     "@rollup/plugin-terser": "^0.4.4",
-    "@types/jest": "^29.5.7",
-    "@types/node": "^20.8.10",
+    "@types/node": "^20.11.30",
+    "@vitest/coverage-v8": "^1.4.0",
     "ansis": "file:dist",
-    "jest": "^29.7.0",
-    "prettier": "^3.0.3",
-    "rollup": "^4.2.0",
+    "prettier": "^3.2.5",
+    "rollup": "^4.13.0",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-dts": "^6.1.0",
-    "terser": "^5.24.0"
+    "terser": "^5.30.0",
+    "vitest": "^1.4.0"
   }
 }

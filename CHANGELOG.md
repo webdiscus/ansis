@@ -1,5 +1,57 @@
 # Change log
 
+## 3.0.0 (2024-03-29)
+
+- feat: add detection of color spaces support: TrueColor, 256 colors, 16 colors, no color
+- feat: add fallback for supported color space: truecolor —> 256 colors —> 16 colors —> no colors
+- perform: improve performance for `hex()` function
+- chore: size increased from 3.2 KB to 3.8 KB as new features were added
+- test: switch from jest to vitest
+- test: add tests for new features
+- docs: update readme for color spaces support
+
+### BREAKING CHANGE
+
+In the new major version `3.x` are removed unused styles and methods.
+
+> ⚠️ Warning
+>
+> Before update, please check your code whether is used deleted styles and methods.
+
+### Support Node.js
+
+Drop supports for Node <= `14`. Minimal supported version is `15.0.0` (Released 2020-10-20).
+In the theory the `v3` can works with Node`12`, but we can't test it.
+
+### Deleted styles
+
+The `not widely supported` styles are deleted:
+
+- `faint` (alias for dim), replace in your code with `dim`
+- `doubleUnderline`, replace in your code with `underline`
+- `frame`, replace in your code with `underline`
+- `encircle`, replace in your code with `underline`
+- `overline`, replace in your code with `underline`
+
+### Deleted methods
+
+The methods are deleted:
+
+- `ansi`, replace in your code with `ansi256` or `fg`
+- `bgAnsi`, replace in your code with `bgAnsi256` or `bg`
+
+### Deleted clamp in functions
+
+The clamp (0, 255) for the ANSI 256 codes and RGB values is removed, because is unused.
+You should self check the function arguments.
+
+The affected functions:
+
+- `ansi256` and `fg` (alias to ansi256) - expected a code in the range `0 - 255`
+- `bgAnsi256` and `bg` (alias to bgAnsi256) - expected a code in the range`0 - 255`
+- `rgb` - expected r, g, b values in the range `0 - 255`
+- `bgRgb` - expected r, g, b values in the range `0 - 255`
+
 ## 2.3.0 (2024-02-15)
 
 - feat: add detection of additional terminals, thanks @dse, [colors.js:issue #42](https://github.com/DABH/colors.js/issues/42)

@@ -1,4 +1,9 @@
+import { expect, describe, test } from 'vitest';
 import { esc } from './utils/helpers.js';
+
+// import env variables to simulate truecolor color space in CLI
+import './env/color-space.truecolor.js';
+
 import ansis, { Ansis, red, yellow, green, bold, hex } from '../src/index.mjs';
 
 describe('style tests', () => {
@@ -132,12 +137,6 @@ describe('functional tests', () => {
 });
 
 describe('alias tests', () => {
-  test(`faint == dim`, () => {
-    const received = ansis.faint('foo');
-    const expected = ansis.dim('foo');
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
   test(`strike == strikethrough`, () => {
     const received = ansis.strike('foo');
     const expected = ansis.strikethrough('foo');
@@ -174,21 +173,9 @@ describe('alias tests', () => {
     expect(esc(received)).toEqual(esc(expected));
   });
 
-  test(`ansi == ansi256`, () => {
-    const received = ansis.ansi(96)('foo');
-    const expected = ansis.ansi256(96)('foo');
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
   test(`fg == ansi256`, () => {
     const received = ansis.fg(96)('foo');
     const expected = ansis.ansi256(96)('foo');
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`bgAnsi == bgAnsi256`, () => {
-    const received = ansis.bgAnsi(96)('foo');
-    const expected = ansis.bgAnsi256(96)('foo');
     expect(esc(received)).toEqual(esc(expected));
   });
 
@@ -198,9 +185,9 @@ describe('alias tests', () => {
     expect(esc(received)).toEqual(esc(expected));
   });
 
-  test(`ansi256(96).ansi(96).fg(96)('foo')`, () => {
-    const received = ansis.ansi256(96).ansi(96).fg(96)('foo');
-    const expected = '\x1b[38;5;96m\x1b[38;5;96m\x1b[38;5;96mfoo\x1b[39m\x1b[39m\x1b[39m';
+  test(`ansi256(96).fg(96)('foo')`, () => {
+    const received = ansis.ansi256(96).fg(96)('foo');
+    const expected = '\x1b[38;5;96m\x1b[38;5;96mfoo\x1b[39m\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
 });

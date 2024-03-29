@@ -17,6 +17,9 @@ import {
   yellow, yellowBright,
 } from 'ansis';
 
+import { hexToRgb } from '../src/utils.js';
+import spectrum from '../examples/fixtures/spectrum.js';
+
 const out = `${bold`bold`} ${dim`dim`} ${italic`italic`} ${underline`underline`} ${strikethrough`strikethrough`} ${inverse`inverse`} ${bold.italic.underline.strike`bold italic  underline strike`}` +
   '\n' +
   `${red`red`} ${green`green`} ${yellow`yellow`} ${blue`blue`} ${magenta`magenta`} ${cyan`cyan`} ${white`white`} ${gray`gray`} ${bold.yellow`bold yellow`} ${dim.cyan`dim cyan`} ${red.italic`italic red`} ` +
@@ -41,6 +44,24 @@ const out = `${bold`bold`} ${dim`dim`} ${italic`italic`} ${underline`underline`}
     '#f10794',
   ].reduce((out, hex) => out + black.hex(hex)(hex), '') +
   '\n' +
+  spectrum.reduce((out, hex) => out + black.hex(hex)('█'), '') +
+  '\n' +
+  [
+    '#d93611',
+    //'#d97511',
+    '#d9d609',
+    //'#a0d911',
+    '#18d911',
+    //'#11d9c2',
+    '#099dd9',
+    //'#1157d9',
+    '#7a09f6',
+    '#c509d9',
+    '#f10794',
+  ].reduce((out, hex) => {
+    let [r, g, b] = hexToRgb(hex);
+    return out + black.hex(hex)(`[${r},${g},${b}]`);
+  }, '') + '\n' +
   [
     ' 197 ',
     ' 203 ',

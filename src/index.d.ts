@@ -30,13 +30,6 @@ interface Ansis {
    *
    * @param {number} code in range [0, 255].
    */
-  ansi: (code: number) => this;
-
-  /**
-   * Alias for ansi256.
-   *
-   * @param {number} code in range [0, 255].
-   */
   fg: (code: number) => this;
 
   /**
@@ -53,13 +46,6 @@ interface Ansis {
    * @param {number} code in range [0, 255].
    */
   bgAnsi256: (code: number) => this;
-
-  /**
-   * Alias for bgAnsi256.
-   *
-   * @param {number} code in range [0, 255].
-   */
-  bgAnsi: (code: number) => this;
 
   /**
    * Alias for bgAnsi256.
@@ -137,11 +123,8 @@ interface Ansis {
   /** <b>Bold</b> style (high intensity). */
   readonly bold: this;
 
-  /** Faint style (low intensity or dim). The alias for `faint`. */
+  /** Faint style (low intensity or dim). */
   readonly dim: this;
-
-  /** Faint style (low intensity or dim). The name defined by ECMA-48. */
-  readonly faint: this;
 
   /** <i>Italic</i> style. (Not widely supported) */
   readonly italic: this;
@@ -149,23 +132,11 @@ interface Ansis {
   /** U̲n̲d̲e̲r̲l̲i̲n̲e̲ style. (Not widely supported) */
   readonly underline: this;
 
-  /** D̳o̳u̳b̳l̳e̳ ̳u̳n̳d̳e̳r̳l̳i̳n̳e̳ style. (Not widely supported) */
-  readonly doubleUnderline: this;
-
-  /** O̅v̅e̅r̅l̅i̅n̅e̅ style. (Not widely supported) */
-  readonly overline: this;
-
   /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) */
   readonly strikethrough: this;
 
   /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) The alias for `strikethrough`. */
   readonly strike: this;
-
-  /** Frame style. (Not widely supported) */
-  readonly frame: this;
-
-  /** Encircle style. (Not widely supported) */
-  readonly encircle: this;
 
   readonly black: this;
   readonly red: this;
@@ -218,15 +189,10 @@ type AnsiStyles = (
   | 'visible'
   | 'bold'
   | 'dim'
-  | 'faint'
   | 'italic'
   | 'underline'
-  | 'doubleUnderline'
-  | 'overline'
   | 'strikethrough'
   | 'strike'
-  | 'frame'
-  | 'encircle'
   );
 
 /**
@@ -301,15 +267,10 @@ export declare const visible: Ansis;
 // styles
 export declare const bold: Ansis;
 export declare const dim: Ansis;
-export declare const faint: Ansis;
 export declare const italic: Ansis;
 export declare const underline: Ansis;
-export declare const doubleUnderline: Ansis;
 export declare const strikethrough: Ansis;
 export declare const strike: Ansis;
-export declare const frame: Ansis;
-export declare const encircle: Ansis;
-export declare const overline: Ansis;
 
 // foreground colors
 export declare const black: Ansis;

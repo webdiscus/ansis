@@ -38,9 +38,19 @@ import colorCli from 'colors-cli/lib/color-safe.js';
 import kleur from 'kleur';
 import * as kleurColors from 'kleur/colors';
 import picocolors from 'picocolors';
-import { Ansis, green, red, yellow, hex } from 'ansis';
+import { Ansis, green, red, yellow, hex, rgb } from 'ansis';
+
+import spectrum from '../examples/fixtures/spectrum.js';
+import { getColorSpace } from '../src/color-support.js';
+
+const colorSpace = getColorSpace();
 
 const log = console.log;
+
+if (colorSpace < 3) {
+  log(red.inverse` WARNING `, yellow`Your terminal don't support TrueColor!`);
+  log('The result of some tests can be NOT correct! Choose a modern terminal, e.g. iTerm.\n');
+}
 
 // create a new instance of Ansis for correct measure in benchmark
 const ansis = new Ansis();
@@ -72,8 +82,7 @@ const bench = new Bench({
 
 // colors present in all libraries
 const baseColors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
-
-let fixture = [];
+let fixture;
 
 log(hex('#F88').inverse.bold` -= Benchmark =- `);
 
@@ -90,7 +99,8 @@ bench('Colorette bench').
   add(vendors[6].name, () => fixture[6](vendors[6].lib)).
   add(vendors[7].name, () => fixture[7](vendors[7].lib)).
   add(vendors[8].name, () => fixture[8](vendors[8].lib)).
-  add(vendors[9].name, () => fixture[9](vendors[9].lib)).run();
+  add(vendors[9].name, () => fixture[9](vendors[9].lib)).
+  run();
 
 // Base colors
 bench('Base colors').
@@ -119,8 +129,8 @@ bench('Chained styles').
   add('kleur/colors (not supported)', () =>
     baseColors.forEach((style) => kleurColors[style].bold.underline.italic('foo')),
   ).
-  add('kleur', () => baseColors.forEach((style) => kleur[style]().bold().underline().italic('foo'))) // alternate syntax
-  .add('chalk', () => baseColors.forEach((style) => chalk[style].bold.underline.italic('foo'))).
+  // add('kleur', () => baseColors.forEach((style) => kleur[style]().bold().underline().italic('foo'))). // alternate syntax
+  add('chalk', () => baseColors.forEach((style) => chalk[style].bold.underline.italic('foo'))).
   add('ansis', () => baseColors.forEach((style) => ansis[style].bold.underline.italic('foo'))).
   run();
 
@@ -198,14 +208,32 @@ bench('Deep nested styles').
 bench('RGB colors').add('chalk', () => {
   for (let i = 0; i < 256; i++) chalk.rgb(i, 150, 200)('foo');
 }).add('ansis', () => {
-  for (let i = 0; i < 256; i++) ansis.rgb(i, 150, 200)('foo');
+  for (let i = 0; i < 256; i++) rgb(i, 150, 200)('foo');
 }).run();
 
 // HEX colors
 // the hex(), rgb(), bgHex(), bgRgb() methods support only chalk and ansis
 bench('HEX colors').
   add('chalk', () => chalk.hex('#FBA')('foo')).
-  add('ansis', () => ansis.hex('#FBA')('foo')).
+  add('ansis', () => hex('#FBA')('foo')).
+  run();
+
+// Spectrum HEX colors
+bench('Spectrum HEX colors').
+  add('chalk', () => {
+    let str = '';
+    spectrum.forEach(color => {
+      str += chalk.hex(color)('█');
+    });
+    return str;
+  }).
+  add('ansis', () => {
+    let str = '';
+    spectrum.forEach(color => {
+      str += hex(color)('█');
+    });
+    return str;
+  }).
   run();
 
 // Template literals

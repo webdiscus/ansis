@@ -1,7 +1,7 @@
 {
   "name": "ansis",
-  "version": "2.3.0",
-  "description": "Colorize text in terminal or console output with ANSI colors & styles",
+  "version": "3.0.0",
+  "description": "Colorize text in terminal and console output with ANSI colors & styles",
   "keywords": [
     "ansi",
     "colour",
@@ -65,7 +65,7 @@
     }
   },
   "engines": {
-    "node": ">=12.13"
+    "node": ">=15"
   },
   "files": [
     "index.d.ts",

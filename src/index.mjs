@@ -5,10 +5,8 @@ export { Ansis, ansis as default };
 export const {
   // color functions
   ansi256,
-  ansi,
   fg,
   bgAnsi256,
-  bgAnsi,
   bg,
   rgb,
   bgRgb,
@@ -24,15 +22,10 @@ export const {
   // styles
   bold,
   dim,
-  faint,
   italic,
   underline,
-  doubleUnderline,
   strikethrough,
   strike,
-  frame,
-  encircle,
-  overline,
 
   // foreground colors
   black,

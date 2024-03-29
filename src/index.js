@@ -1,5 +1,5 @@
-import { hexToRgb, strReplaceAll } from './utils.js';
-import { baseStyles, styleMethods, fnRgb } from './ansi-codes.js';
+import { baseStyles, styleMethods, rgb } from './ansi-codes.js';
+import { hexToRgb, replaceAll } from './utils.js';
 
 /**
  * @typedef {Object} AnsisProps
@@ -10,12 +10,11 @@ import { baseStyles, styleMethods, fnRgb } from './ansi-codes.js';
  * @property {null | AnsisProps} props
  */
 
-const styles = {};
-
 const { defineProperty, defineProperties, setPrototypeOf } = Object;
-
-const stripANSIRegEx = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+const stripANSIRegEx = /[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 const regexLF = /(\r*\n)/g;
+const ESC = '\x1b';
+const styles = {};
 
 /**
  * Wrap the string with styling and reset codes.
@@ -32,9 +31,10 @@ const wrap = (strings, values, props) => {
   // convert the number to the string
   let string = strings.raw != null ? String.raw(strings, ...values) : strings + '';
 
-  if (~string.indexOf('\x1b')) {
+  if (~string.indexOf(ESC)) {
     while (props != null) {
-      string = strReplaceAll(string, props.close, props.open);
+      string = replaceAll(string, props.close, props.open); // much faster than native replaceAll
+      //string = string.replaceAll(props.close, props.open); // too slow!
       props = props.props;
     }
   }
@@ -98,7 +98,7 @@ const Ansis = function() {
       let value = colors[name];
       // detect whether the value is style property Object {open, close} or a string with hex code of color '#FF0000'
       let hasProperty = value.open != null;
-      let styleCodes = hasProperty ? value : fnRgb(...hexToRgb(value));
+      let styleCodes = hasProperty ? value : rgb(...hexToRgb(value));
 
       styles[name] = {
         get() {
@@ -128,10 +128,9 @@ for (let name in styleMethods) {
   };
 }
 
-// TODO: DEPRECATE ansi and bgAnsi
 // define method aliases for compatibility with chalk
-styles.ansi256 = styles.ansi = styles.fg;
-styles.bgAnsi256 = styles.bgAnsi = styles.bg;
+styles.ansi256 = styles.fg;
+styles.bgAnsi256 = styles.bg;
 
 // note: place it here to allow the compiler to group all constants
 let stylePrototype;

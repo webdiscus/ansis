@@ -48,13 +48,9 @@ const out = `${bold`bold`} ${dim`dim`} ${italic`italic`} ${underline`underline`}
   '\n' +
   [
     '#d93611',
-    //'#d97511',
     '#d9d609',
-    //'#a0d911',
     '#18d911',
-    //'#11d9c2',
     '#099dd9',
-    //'#1157d9',
     '#7a09f6',
     '#c509d9',
     '#f10794',

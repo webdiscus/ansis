@@ -12,8 +12,9 @@ import { hexToRgb, replaceAll } from './utils.js';
 
 const { defineProperty, defineProperties, setPrototypeOf } = Object;
 const stripANSIRegEx = /[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
-const regexLF = /(\r*\n)/g;
+const regexLFCR = /(\r?\n)/g;
 const ESC = '\x1b';
+const LF = '\x0a';
 const styles = {};
 
 /**
@@ -27,20 +28,20 @@ const styles = {};
 const wrap = (strings, values, props) => {
   if (!strings) return '';
 
-  const { openStack, closeStack } = props;
+  const { _a: openStack, _b: closeStack } = props;
   // convert the number to the string
   let string = strings.raw != null ? String.raw(strings, ...values) : strings + '';
 
-  if (~string.indexOf(ESC)) {
+  if (string.includes(ESC)) {
     while (props != null) {
       string = replaceAll(string, props.close, props.open); // much faster than native replaceAll
       //string = string.replaceAll(props.close, props.open); // too slow!
-      props = props.props;
+      props = props._p;
     }
   }
 
-  if (~string.indexOf('\n')) {
-    string = string.replace(regexLF, closeStack + '$1' + openStack);
+  if (string.includes(LF)) {
+    string = string.replace(regexLFCR, closeStack + '$1' + openStack);
   }
 
   return openStack + string + closeStack;
@@ -48,24 +49,24 @@ const wrap = (strings, values, props) => {
 
 /**
  * @param {Object} self
- * @param {AnsisProps} self.props
+ * @param {AnsisProps} self._p
  * @param {Object} codes
  * @param {string} codes.open
  * @param {string} codes.close
  * @returns {Ansis}
  */
-const createStyle = ({ props }, { open, close }) => {
-  const style = (strings, ...values) => wrap(strings, values, style.props);
+const createStyle = ({ _p: props }, { open, close }) => {
+  const style = (strings, ...values) => wrap(strings, values, style._p);
   let openStack = open;
   let closeStack = close;
 
   if (props != null) {
-    openStack = props.openStack + open;
-    closeStack = close + props.closeStack;
+    openStack = props._a + open;
+    closeStack = close + props._b;
   }
 
   setPrototypeOf(style, stylePrototype);
-  style.props = { open, close, openStack, closeStack, props: props };
+  style._p = { open, close, _a: openStack, _b: closeStack, _p: props };
   style.open = openStack;
   style.close = closeStack;
 
@@ -97,8 +98,8 @@ const Ansis = function() {
     for (let name in colors) {
       let value = colors[name];
       // detect whether the value is style property Object {open, close} or a string with hex code of color '#FF0000'
-      let hasProperty = value.open != null;
-      let styleCodes = hasProperty ? value : rgb(...hexToRgb(value));
+      let isStyle = value.open != null;
+      let styleCodes = isStyle ? value : rgb(...hexToRgb(value));
 
       styles[name] = {
         get() {
@@ -134,6 +135,7 @@ styles.bgAnsi256 = styles.bg;
 
 // note: place it here to allow the compiler to group all constants
 let stylePrototype;
+
 const ansis = new Ansis();
 
 // for distribution code, the export will be replaced (via @rollup/plugin-replace) with the following export:

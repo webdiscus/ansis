@@ -31,12 +31,6 @@ describe('style tests', () => {
     expect(esc(received)).toEqual(esc(expected));
   });
 
-  test(`ansis.bgMagenta('foo')`, () => {
-    const received = ansis.bgMagenta('foo');
-    const expected = '\x1b[45mfoo\x1b[49m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
   test(`ansis.green.bold.underline.italic()`, () => {
     const received = ansis.green.bold.underline.italic('foo');
     const expected = '\x1b[32m\x1b[1m\x1b[4m\x1b[3mfoo\x1b[23m\x1b[24m\x1b[22m\x1b[39m';
@@ -94,6 +88,13 @@ describe('style tests', () => {
 \x1b[32m\x1b[39m`;
     expect(esc(received)).toEqual(esc(expected));
   });
+
+  // experimental link: not widely supported
+  // test(`ansis.link('foo')`, () => {
+  //   const received = ansis.link('https://github.com/webdiscus/ansis')('foo');
+  //   const expected = '\x1b]8;;https://github.com/webdiscus/ansis\x07foo\x1b]8;;\x07';
+  //   expect(esc(received)).toEqual(esc(expected));
+  // });
 });
 
 describe('functional tests', () => {
@@ -273,6 +274,172 @@ describe('handling numbers', () => {
     const num = 123;
     const received = red`size: ${num}px`;
     const expected = '\x1b[31msize: 123px\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+});
+
+describe('base ANSI 16 colors', () => {
+  // foreground colors
+  test(`ansis.black('foo')`, () => {
+    const received = ansis.black('foo');
+    const expected = '\x1b[30mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.red('foo')`, () => {
+    const received = ansis.red('foo');
+    const expected = '\x1b[31mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.green('foo')`, () => {
+    const received = ansis.green('foo');
+    const expected = '\x1b[32mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.yellow('foo')`, () => {
+    const received = ansis.yellow('foo');
+    const expected = '\x1b[33mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.blue('foo')`, () => {
+    const received = ansis.blue('foo');
+    const expected = '\x1b[34mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.magenta('foo')`, () => {
+    const received = ansis.magenta('foo');
+    const expected = '\x1b[35mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.cyan('foo')`, () => {
+    const received = ansis.cyan('foo');
+    const expected = '\x1b[36mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.white('foo')`, () => {
+    const received = ansis.white('foo');
+    const expected = '\x1b[37mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.blackBright('foo')`, () => {
+    const received = ansis.blackBright('foo');
+    const expected = '\x1b[90mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.redBright('foo')`, () => {
+    const received = ansis.redBright('foo');
+    const expected = '\x1b[91mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.greenBright('foo')`, () => {
+    const received = ansis.greenBright('foo');
+    const expected = '\x1b[92mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.yellowBright('foo')`, () => {
+    const received = ansis.yellowBright('foo');
+    const expected = '\x1b[93mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.blueBright('foo')`, () => {
+    const received = ansis.blueBright('foo');
+    const expected = '\x1b[94mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.magentaBright('foo')`, () => {
+    const received = ansis.magentaBright('foo');
+    const expected = '\x1b[95mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.cyanBright('foo')`, () => {
+    const received = ansis.cyanBright('foo');
+    const expected = '\x1b[96mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.whiteBright('foo')`, () => {
+    const received = ansis.whiteBright('foo');
+    const expected = '\x1b[97mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  // background colors
+  test(`ansis.bgBlack('foo')`, () => {
+    const received = ansis.bgBlack('foo');
+    const expected = '\x1b[40mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgRed('foo')`, () => {
+    const received = ansis.bgRed('foo');
+    const expected = '\x1b[41mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgGreen('foo')`, () => {
+    const received = ansis.bgGreen('foo');
+    const expected = '\x1b[42mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgYellow('foo')`, () => {
+    const received = ansis.bgYellow('foo');
+    const expected = '\x1b[43mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgBlue('foo')`, () => {
+    const received = ansis.bgBlue('foo');
+    const expected = '\x1b[44mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgMagenta('foo')`, () => {
+    const received = ansis.bgMagenta('foo');
+    const expected = '\x1b[45mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgCyan('foo')`, () => {
+    const received = ansis.bgCyan('foo');
+    const expected = '\x1b[46mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgWhite('foo')`, () => {
+    const received = ansis.bgWhite('foo');
+    const expected = '\x1b[47mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgBlackBright('foo')`, () => {
+    const received = ansis.bgBlackBright('foo');
+    const expected = '\x1b[100mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgRedBright('foo')`, () => {
+    const received = ansis.bgRedBright('foo');
+    const expected = '\x1b[101mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgGreenBright('foo')`, () => {
+    const received = ansis.bgGreenBright('foo');
+    const expected = '\x1b[102mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgYellowBright('foo')`, () => {
+    const received = ansis.bgYellowBright('foo');
+    const expected = '\x1b[103mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgBlueBright('foo')`, () => {
+    const received = ansis.bgBlueBright('foo');
+    const expected = '\x1b[104mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgMagentaBright('foo')`, () => {
+    const received = ansis.bgMagentaBright('foo');
+    const expected = '\x1b[105mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgCyanBright('foo')`, () => {
+    const received = ansis.bgCyanBright('foo');
+    const expected = '\x1b[106mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+  test(`ansis.bgWhiteBright('foo')`, () => {
+    const received = ansis.bgWhiteBright('foo');
+    const expected = '\x1b[107mfoo\x1b[49m';
     expect(esc(received)).toEqual(esc(expected));
   });
 });

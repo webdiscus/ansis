@@ -1,5 +1,14 @@
 # Change log
 
+## 3.0.1 (2024-04-01)
+
+- refactor: improve code
+- chore: reduce code bundle size from 3.8 KB to 3.4 KB
+- chore: update benchmark
+- chore: update compare tests
+- test: add more tests
+- docs: improve readme
+
 ## 3.0.0 (2024-03-29)
 
 - feat: add detection of color spaces support: TrueColor, 256 colors, 16 colors, no color

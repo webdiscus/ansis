@@ -11,7 +11,7 @@ npm i
 ## Run
 
 ```
-npm run compare
+npm start
 ```
 
 ## View and edit in browser

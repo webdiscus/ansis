@@ -25,9 +25,21 @@ black.bgYellow`Warning!`
 hex('#E0115F').bold.underline('Hello World!')
 ```
 
-**Why yet one lib?**\
-See the features [comparison](https://github.com/webdiscus/ansis#compare) and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular Node.js libraries:\
-[`chalk`][chalk], [`colors.js`][colors.js], [`colorette`][colorette], [`picocolors`][picocolors], [`kleur`][kleur], [`ansi-colors`][ansi-colors], [`cli-color`][cli-color], [`colors-cli`][colors-cli].
+🚀 [Install and Quick Start](#install)
+
+<a id="top" name="top"></a>
+
+## 👀 Why yet one lib?
+
+- Quality is first, test coverage 100%.
+- Ansis has a lot of useful [features](#features), compare with [other libraries](#compare).
+- Ansis is one of the smallest, 3.4 KB only.
+- Ansis is one of the [fastest](#benchmark).
+- Ansis is stable, continuously developing and improving.
+- Ansis is open for your [feature requests](https://github.com/webdiscus/ansis/issues).
+
+See the features [comparison](#compare) and [benchmarks](#benchmark) of most popular Node.js libraries:\
+[chalk][chalk], [colors.js][colors.js], [colorette][colorette], [picocolors][picocolors], [kleur][kleur], [kolorist][kolorist], [ansi-colors][ansi-colors], [cli-color][cli-color], [colors-cli][colors-cli].
 
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
@@ -37,7 +49,7 @@ See the features [comparison](https://github.com/webdiscus/ansis#compare) and [b
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/stackblitz-starters-gs2gve?file=index.js)
 
-<a id="top" name="top"></a>
+<a id="features" name="features"></a>
 
 ## 💡 Highlights
 
@@ -49,7 +61,7 @@ See the features [comparison](https://github.com/webdiscus/ansis#compare) and [b
   - import chalk from 'chalk';
   + import chalk, { red } from 'ansis';
 
-  chalk.red.bold('Error!'); // <- the Chalk like syntax works fine with Ansis
+  chalk.red.bold('Error!'); // <- Chalk like syntax works fine with Ansis
   red.bold('Error!');       // <- the same result with Ansis
   red.bold`Error!`;         // <- the same result with Ansis
   ```
@@ -61,15 +73,18 @@ See the features [comparison](https://github.com/webdiscus/ansis#compare) and [b
   - CJS: `const { red, green, bold, underline } = require('ansis')`
 - [Chained syntax](#chained-syntax) `red.bold.underline('text')`
 - [Nested **template strings**](#nested-syntax) ``` green`GREEN text ${red`RED text`} GREEN text` ```
-- [ANSI 256 colors](#256-colors) and [TrueColor](#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ```, ``` hex('#96C')`Amethyst` ```
+- [Base ANSI styles](#base-colors) `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>
+- [Base ANSI 16 colors](#base-colors) ``` red`Error!` ``` ``` redBright`Error!` ``` ``` bgRed`Error!` ``` ``` bgRedBright`Error!` ```
+- [ANSI 256 colors](#256-colors) ``` fg(56)`violet` ``` ``` bg(208)`orange` ```
+- [TrueColor](#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ```, ``` hex('#96C')`Amethyst` ```
+- [Fallback](#fallback) to supported [color space](#color-support): TrueColor —> 256 colors —> 16 colors —> no colors
 - [Extending of base colors](#extend-colors) with named **True Colors**
 - [ANSI codes](#escape-codes) as `open` and `close` properties ``` `Hello ${red.open}World${red.close}!` ```
 - [Strip ANSI codes](#strip) method `ansis.strip()`
 - [Correct style break](#new-line) at the `end of line` when used `\n` in string
 - Supports [environment variables](#cli-vars) `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
-- **Auto detects** [color spaces support](#color-support): TrueColor, 256 colors, 16 colors, no color (black & white)
-- [Fallback](#fallback) to supported color space: TrueColor —> 256 colors —> 16 colors —> no colors
-- Up to **x3 faster** than **Chalk**, [see benchmarks](#benchmark) and code bundle size is only **3.8 KB**
+- Up to **x3 faster** than **Chalk**, [see benchmarks](#benchmark)
+- Code bundle is only **3.4 KB**
 - Doesn't extend `String.prototype`
 - Zero dependencies
 
@@ -90,13 +105,11 @@ an [issue](https://github.com/webdiscus/ansis/issues) on GitHub.
 
 <a id="install" name="install"></a>
 
-## Install
+## Install and Quick Start
 
 ```bash
 npm install ansis
 ```
-
-## Usage
 
 You can import default module or named colors with ESM or CommonJS syntax.
 
@@ -115,6 +128,8 @@ const ansis = require('ansis');
 // CommonJS named import
 const { red, green, blue } = require('ansis');
 ```
+
+See the list of the [ANSI colors and styles](#base-colors).
 
 ```js
 console.log(ansis.green('Success!'));
@@ -284,30 +299,29 @@ Output:\
 
 <a id="base-colors" name="base-colors"></a>
 
-## Base colors and styles
+## Base ANSI 16 colors and styles
 
 Colors and styles have standard names used by many popular libraries, such
 as [chalk][chalk], [colorette][colorette], [kleur][kleur].
 
-| Foreground colors     | Background colors         | Styles                                  |
-|:----------------------|:--------------------------|-----------------------------------------|
-| `black`               | `bgBlack`                 | `dim`                                   |
-| `red`                 | `bgRed`                   | **`bold`**                              |
-| `green`               | `bgGreen`                 | _`italic`_                              |
-| `yellow`              | `bgYellow`                | <u>`underline`</u>                      |
-| `blue`                | `bgBlue`                  | <s>`strikethrough`</s> (alias `strike`) |
-| `magenta`             | `bgMagenta`               | `inverse`                               |
-| `cyan`                | `bgCyan`                  | `visible`                               |
-| `white`               | `bgWhite`                 | `hidden`                                |
-| `gray` (alias `grey`) | `bgGray` (alias `bgGrey`) | `reset`                                 |
-| `blackBright`         | `bgBlackBright`           |                                         |
-| `redBright`           | `bgRedBright`             |                                         |
-| `greenBright`         | `bgGreenBright`           |                                         |
-| `yellowBright`        | `bgYellowBright`          |                                         |
-| `blueBright`          | `bgBlueBright`            |                                         |
-| `magentaBright`       | `bgMagentaBright`         |                                         |
-| `cyanBright`          | `bgCyanBright`            |                                         |
-| `whiteBright`         | `bgWhiteBright`           |                                         |
+| Foreground colors                                         | Background colors                                               | Styles                                  |
+|:----------------------------------------------------------|:----------------------------------------------------------------|-----------------------------------------|
+| `black`                                                   | `bgBlack`                                                       | `dim`                                   |
+| `red`                                                     | `bgRed`                                                         | **`bold`**                              |
+| `green`                                                   | `bgGreen`                                                       | _`italic`_                              |
+| `yellow`                                                  | `bgYellow`                                                      | <u>`underline`</u>                      |
+| `blue`                                                    | `bgBlue`                                                        | <s>`strikethrough`</s> (alias `strike`) |
+| `magenta`                                                 | `bgMagenta`                                                     | `inverse`                               |
+| `cyan`                                                    | `bgCyan`                                                        | `visible`                               |
+| `white`                                                   | `bgWhite`                                                       | `hidden`                                |
+| `blackBright`<br>aliases:<br>`grey`<br>`gray` US spelling | `bgBlackBright`<br>aliases:<br>`bgGrey`<br>`bgGray` US spelling | `reset`                                 |
+| `redBright`                                               | `bgRedBright`                                                   |                                         |
+| `greenBright`                                             | `bgGreenBright`                                                 |                                         |
+| `yellowBright`                                            | `bgYellowBright`                                                |                                         |
+| `blueBright`                                              | `bgBlueBright`                                                  |                                         |
+| `magentaBright`                                           | `bgMagentaBright`                                               |                                         |
+| `cyanBright`                                              | `bgCyanBright`                                                  |                                         |
+| `whiteBright`                                             | `bgWhiteBright`                                                 |                                         |
 
 <a id="extend-colors" name="extend-colors"></a>
 
@@ -589,26 +603,33 @@ $ ./app.js --color=true > log.txt # output in file with ANSI codes
 
 ## Color support
 
+Ansis automatically detects the supported color space:
+
+- TrueColor
+- ANSI 256 colors
+- ANSI 16 colors
+- black & white (no color)
+
 There is no standard way to detect which color space is supported.
 The most common way to detect color support is to check the `TERM` and `COLORTERM` environment variables.
 CI systems can be detected by checking for the existence of the `CI` and other specifically environment variables.
 Combine that with the knowledge about which operating system the program is running on, and we have a decent enough way to detect colors.
 
-| Name                             | ANSI 16<br>colors | ANSI 256<br>colors | True<br>Color | $TERM          | $COLORTERM | specifically ENV variable               |
-|:---------------------------------|-------------------|:-------------------|:--------------|:---------------|:----------:|:----------------------------------------|
-| Azure CI                         | ✅                 | ❌                  | ❌             | dumb           |            | $TF_BUILD<br>$AGENT_NAME                |
-| GitHub CI                        | ✅                 | ✅                  | ✅             | dumb           |            | $CI<br>$GITHUB_ACTIONS                  |
-| GitTea CI                        | ✅                 | ✅                  | ✅             | dumb           |            | $CI<br>$GITEA_ACTIONS                   |
-| GitLab CI                        | ✅                 | ❌                  | ❌             | dumb           |            | $CI<br>$GITLAB_CI                       |
-| Travis CI                        | ✅                 | ❌                  | ❌             | dumb           |            | $TRAVIS                                 |
-| JetBrains TeamCity<br>>=2020.1.1 | ✅                 | ✅                  | ❌             |                |            | $TEAMCITY_VERSION                       |
-| JetBrains IDEA                   | ✅                 | ✅                  | ✅             | xterm-256color |            | $TERMINAL_EMULATOR='JetBrains-JediTerm' |
-| VS Code                          | ✅                 | ✅                  | ✅             | xterm-256color | truecolor  |                                         |
-| Windows<br>Terminal              | ✅                 | ✅                  | ✅*            |                |            |                                         |
-| Windows<br>PowerShell            | ✅                 | ✅                  | ✅*            |                |            |                                         |
-| macOS Terminal                   | ✅                 | ✅                  | ❌             | xterm-256color |            |                                         |
-| iTerm                            | ✅                 | ✅                  | ✅             | xterm-256color | truecolor  |                                         |
-| Terminal emulator Kitty          | ✅                 | ✅                  | ✅             | xterm-kitty    |            |                                         |
+| Terminal                         | ANSI 16<br>colors | ANSI 256<br>colors | True<br>Color |  env.<br>TERM  | env.<br>COLORTERM | Specifically ENV variables             |
+|:---------------------------------|-------------------|:-------------------|:--------------|:--------------:|:-----------------:|:---------------------------------------|
+| Azure CI                         | ✅                 | ❌                  | ❌             |      dumb      |                   | TF_BUILD<br>AGENT_NAME                 |
+| GitHub CI                        | ✅                 | ✅                  | ✅             |      dumb      |                   | CI<br>GITHUB_ACTIONS                   |
+| GitTea CI                        | ✅                 | ✅                  | ✅             |      dumb      |                   | CI<br>GITEA_ACTIONS                    |
+| GitLab CI                        | ✅                 | ❌                  | ❌             |      dumb      |                   | CI<br>GITLAB_CI                        |
+| Travis CI                        | ✅                 | ❌                  | ❌             |      dumb      |                   | TRAVIS                                 |
+| JetBrains TeamCity<br>>=2020.1.1 | ✅                 | ✅                  | ❌             |                |                   | TEAMCITY_VERSION                       |
+| JetBrains IDEA                   | ✅                 | ✅                  | ✅             | xterm-256color |                   | TERMINAL_EMULATOR='JetBrains-JediTerm' |
+| VS Code                          | ✅                 | ✅                  | ✅             | xterm-256color |     truecolor     |                                        |
+| Windows<br>Terminal              | ✅                 | ✅                  | ✅*            |                |                   |                                        |
+| Windows<br>PowerShell            | ✅                 | ✅                  | ✅*            |                |                   |                                        |
+| macOS Terminal                   | ✅                 | ✅                  | ❌             | xterm-256color |                   |                                        |
+| iTerm                            | ✅                 | ✅                  | ✅             | xterm-256color |     truecolor     |                                        |
+| Terminal emulator Kitty          | ✅                 | ✅                  | ✅             |  xterm-kitty   |                   |                                        |
 
 *The Windows terminal supports true color since Windows 10 revision 14931 (2016-09-21).
 
@@ -628,17 +649,18 @@ npm run compare
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/compare-colorize-libraries?file=index.js)
 
-| Library<br>______________<br> - name<br> - code size<br> - named import    |           Naming<br>base colors            | ANSI 256<br>colors | True<br>Color | Chained<br>syntax | Nested<br>template strings | New<br>Line | Supports<br>CLI params                                   |
-|:---------------------------------------------------------------------------|:------------------------------------------:|:------------------:|:-------------:|:-----------------:|:--------------------------:|:-----------:|:---------------------------------------------------------|
-| [`colors.js`][colors.js]<br>**18.1KB**<br><nobr>`❌ named import`</nobr>    | <nobr>_non-standard_</nobr><br>`16` colors |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | only<br>`FORCE_COLOR`<br>`--no-color`<br>`--color`       |
-| [`colors-cli`][colors-cli]<br>**8.6KB**<br><nobr>`❌ named import`</nobr>   | <nobr>_non-standard_</nobr><br>`16` colors |         ✅          |       ❌       |         ✅         |             ❌              |      ✅      | only<br>`--no-color`<br>`--color`                        |
-| [`cli-color`][cli-color]<br><nobr>`❌ named import`</nobr>                  |        **standard**<br>`16` colors         |         ✅          |       ❌       |         ✅         |             ❌              |      ❌      | only<br>`NO_COLOR`                                       |
-| [`ansi-colors`][ansi-colors]<br>**5.8KB**<br><nobr>`❌ named import`</nobr> |        **standard**<br>`16` colors         |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | only<br>`FORCE_COLOR`                                    |
-| [`colorette`][colorette]<br>**3.3KB**<br><nobr>`✅ named import`</nobr>     |        **standard**<br>`16` colors         |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`picocolors`][picocolors]<br>**2.6KB**<br><nobr>`❌ named import`</nobr>   |         **standard**<br>`8` colors         |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`kleur`][kleur]<br>**2.7KB**<br><nobr>`✅ named import`</nobr>             |         **standard**<br>`8` colors         |         ❌          |       ❌       |         ✅         |             ❌              |      ❌      | only<br>`NO_COLOR`<br>`FORCE_COLOR`                      |
-| [`chalk`][chalk]<br>**15KB**<br><nobr>`❌ named import`</nobr>              |        **standard**<br>`16` colors         |         ✅          |       ✅       |         ✅         |             ❌              |      ✅      | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`ansis`][ansis]<br>**3.8KB**<br><nobr>`✅ named import`</nobr>             |        **standard**<br>`16` colors         |         ✅          |       ✅       |         ✅         |             ✅              |      ✅      | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| Library<br><nobr>________________</nobr><br> - name<br> - bundle size<br> - named import<br>- naming colors | ANSI base colors | ANSI 256<br>colors | True<br>Color | Chained<br>syntax | Nested<br>template strings | New<br>Line | Fallbacks                          | Supports<br>ENV vars<br>CLI flags                        |
+|:------------------------------------------------------------------------------------------------------------|:----------------:|:------------------:|:-------------:|:-----------------:|:--------------------------:|:-----------:|------------------------------------|:---------------------------------------------------------|
+| [`colors.js`][colors.js]<br>**18.1KB**<br><nobr>`❌ named import`</nobr><br>`❌ standard`                     |   `16` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | no color                           | `FORCE_COLOR`<br>`--no-color`<br>`--color`               |
+| [`colors-cli`][colors-cli]<br>**8.6KB**<br><nobr>`❌ named import`</nobr><br>`❌ standard`                    |   `16` colors    |         ✅          |       ❌       |         ✅         |             ❌              |      ✅      | no color                           | `--no-color`<br>`--color`                                |
+| [`cli-color`][cli-color]<br><nobr>`❌ named import`</nobr><br>`✅ standard`                                   |   `16` colors    |         ✅          |       ❌       |         ✅         |             ❌              |      ❌      | 16 colors<br>no color              | `NO_COLOR`                                               |
+| [`ansi-colors`][ansi-colors]<br>**5.8KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                  |   `16` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | ❌                                  | `FORCE_COLOR`                                            |
+| [`colorette`][colorette]<br>**3.3KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                      |   `16` colors    |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | no color                           | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`picocolors`][picocolors]<br>**2.6KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                    |    `8` colors    |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | no color                           | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`kleur`][kleur]<br>**2.7KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                              |    `8` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ❌      | no color                           | `NO_COLOR`<br>`FORCE_COLOR`                              |
+| [`kolorist`][kolorist]<br>**6.8KB**<br><nobr>`✅ named import`</nobr><br>`❌ standard`                        |   `16` colors    |         ✅          |       ✅       |         ❌         |             ❌              |      ❌      | 256 color<br>❌<br>no color         | `NO_COLOR`<br>`FORCE_COLOR`                              |
+| [`chalk`][chalk]<br>**15KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                               |   `16` colors    |         ✅          |       ✅       |         ✅         |             ❌              |      ✅      | 256 color<br>16 colors<br>no color | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`ansis`][ansis]<br>**3.4KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                              |   `16` colors    |         ✅          |       ✅       |         ✅         |             ✅              |      ✅      | 256 color<br>16 colors<br>no color | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
 
 > **Note**
 >
@@ -694,7 +716,24 @@ npm run demo
 
 <a id="benchmark" name="#benchmark"></a>
 
-## Run benchmark
+## Benchmark
+
+To measure performance is used [benchmark.js](https://github.com/bestiejs/benchmark.js).
+
+> ‼️ **Warning**
+>
+> **Don't trust** other test results using [vitest benchmark](https://vitest.dev/config/#benchmark).
+>
+> The `vitest benchmark` generate FALSE/**unreal** results.\
+> For example, the results of the simple bench:
+> ```
+> chalk.red('foo') -  7.000.000 ops/sec
+> ansis.red('foo') - 23.000.000 ops/sec (x3 faster is WRONG result)
+> ```
+>
+> The real performance results of `chalk` and `ansis` in this test are very close.
+
+### Run benchmark
 
 ```bash
 git clone https://github.com/webdiscus/ansis.git
@@ -908,6 +947,8 @@ Most popular ANSI libraries for `Node.js`:
 [ansi-colors]: https://github.com/doowb/ansi-colors
 
 [kleur]: https://github.com/lukeed/kleur
+
+[kolorist]: https://github.com/marvinhagemeister/kolorist
 
 [chalk]: https://github.com/chalk/chalk
 

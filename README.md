@@ -393,16 +393,28 @@ Background function: `bgAnsi256(code)` has short alias `bg(code)`
 
 See [ANSI color codes](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit).
 
+#### Fallback
+
+If a terminal supports only 16 colors then ANSI 256 colors will be interpolated into base 16 colors.
+
+<div align="center">
+  <a href="https://www.npmjs.com/package/ansis">
+    <img width="830" src="docs/img/ansi256-fallback.png" alt="Fallback ANSI 256 colors to 16 colors">
+  </a>
+</div>
+
+#### Usage example
+
 ```js
 import { bold, ansi256, fg, bgAnsi256, bg } from 'ansis';
 
 // foreground color
 ansi256(96)`Bright Cyan`;
-fg(96)`Bright Cyan`;
+fg(96)`Bright Cyan`; // alias for ansi256
 
 // background color
 bgAnsi256(105)`Bright Magenta`;
-bg(105)`Bright Magenta`;
+bg(105)`Bright Magenta`; // alias for bgAnsi256
 
 // function is chainable
 ansi256(96).bold`bold Bright Cyan`;

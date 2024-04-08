@@ -1,5 +1,10 @@
 # Change log
 
+## 3.0.2 (2024-04-08)
+
+- chore: create mini version of README for NPM to minify package size
+- docs: update readme
+
 ## 3.0.1 (2024-04-01)
 
 - refactor: improve code

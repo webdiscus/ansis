@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Colorize text in terminal and console output with ANSI colors & styles",
   "keywords": [
     "ansi",

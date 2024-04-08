@@ -5,24 +5,27 @@
       ANSI Styling
     </a>
   </h1>
-  <div>The Node.js library to colorize terminal and console output with ANSI colors & styles</div>
 </div>
 
----
 [![npm](https://img.shields.io/npm/v/ansis?logo=npm&color=brightgreen "npm package")](https://www.npmjs.com/package/ansis "download npm package")
 [![node](https://img.shields.io/node/v/ansis)](https://nodejs.org)
 [![Test](https://github.com/webdiscus/ansis/actions/workflows/test.yml/badge.svg)](https://github.com/webdiscus/ansis/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
 [![node](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 
-**Ansis** is a **smaller** and **faster** alternative to [Chalk][chalk] with additional useful features and clean syntax.\
-For example:
+The Node.js library to colorize terminal with ANSI colors & styles, **smaller** and **faster** alternative to [Chalk][chalk] with additional useful [features](#features).
+
+#### Usage example
 
 ```js
-green`Succeful!`
+import ansis, { red, green, black, ansi256, hex } from 'ansis';
+
+ansis.cyan('path/to/file')
+green('Succeful!')
 red`Error!`
 black.bgYellow`Warning!`
-hex('#E0115F').bold.underline('Hello World!')
+ansi256(214)`Orange`
+hex('#E0115F').bold.underline('Hello TrueColor!')
 ```
 
 🚀 [Install and Quick Start](#install)
@@ -38,8 +41,14 @@ hex('#E0115F').bold.underline('Hello World!')
 - Ansis is stable, continuously developing and improving.
 - Ansis is open for your [feature requests](https://github.com/webdiscus/ansis/issues).
 
-See the features [comparison](#compare) and [benchmarks](#benchmark) of most popular Node.js libraries:\
-[chalk][chalk], [colors.js][colors.js], [colorette][colorette], [picocolors][picocolors], [kleur][kleur], [kolorist][kolorist], [ansi-colors][ansi-colors], [cli-color][cli-color], [colors-cli][colors-cli].
+## 🏆 Compare & Benchmark
+
+See the [features comparison](#compare) and [benchmarks](#benchmark) of most popular terminal colors libraries:\
+[ansis][ansis], [chalk][chalk], [kleur][kleur], [kolorist][kolorist], [colors.js][colors.js], [colorette][colorette], [picocolors][picocolors], [ansi-colors][ansi-colors], [cli-color][cli-color], [colors-cli][colors-cli].
+
+<a id="features" name="features"></a>
+
+## 💡 Highlights
 
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
@@ -48,10 +57,6 @@ See the features [comparison](#compare) and [benchmarks](#benchmark) of most pop
 </div>
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/stackblitz-starters-gs2gve?file=index.js)
-
-<a id="features" name="features"></a>
-
-## 💡 Highlights
 
 - Supports both **ESM** and **CommonJS**
 - Supports **TypeScript**
@@ -65,14 +70,9 @@ See the features [comparison](#compare) and [benchmarks](#benchmark) of most pop
   red.bold('Error!');       // <- the same result with Ansis
   red.bold`Error!`;         // <- the same result with Ansis
   ```
-- Default import
-  - ESM: `import ansis from 'ansis'`
-  - CJS: `const ansis = require('ansis')`
-- [Named import](#named-import)
-  - ESM: `import { red, green, bold, underline } from 'ansis'`
-  - CJS: `const { red, green, bold, underline } = require('ansis')`
+- Default and [named import](#named-import) `import ansis, { red, green, bold, underline } from 'ansis'`
 - [Chained syntax](#chained-syntax) `red.bold.underline('text')`
-- [Nested **template strings**](#nested-syntax) ``` green`GREEN text ${red`RED text`} GREEN text` ```
+- [Nested **template strings**](#nested-syntax) ``` red`RED text ${green`GREEN text`} RED text` ```
 - [Base ANSI styles](#base-colors) `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>
 - [Base ANSI 16 colors](#base-colors) ``` red`Error!` ``` ``` redBright`Error!` ``` ``` bgRed`Error!` ``` ``` bgRedBright`Error!` ```
 - [ANSI 256 colors](#256-colors) ``` fg(56)`violet` ``` ``` bg(208)`orange` ```
@@ -645,7 +645,10 @@ Combine that with the knowledge about which operating system the program is runn
 
 *The Windows terminal supports true color since Windows 10 revision 14931 (2016-09-21).
 
-Used reference: [So you want to render colors in your terminal](https://marvinh.dev/blog/terminal-colors/).
+See also:
+
+- [Truecolor Support in Output Devices](https://github.com/termstandard/colors#truecolor-support-in-output-devices).
+- [So you want to render colors in your terminal](https://marvinh.dev/blog/terminal-colors/).
 
 #### [↑ top](#top)
 

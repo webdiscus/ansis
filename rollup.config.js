@@ -1,5 +1,6 @@
 import terser from '@rollup/plugin-terser';
 import replace from '@rollup/plugin-replace';
+import cleanup from 'rollup-plugin-cleanup';
 import copy from 'rollup-plugin-copy';
 import dts from 'rollup-plugin-dts';
 import { minify } from 'terser';
@@ -60,6 +61,7 @@ export default [
       },
     ],
     plugins: [
+      cleanup({ extensions: ['ts'] }),
       dts(),
     ],
   },

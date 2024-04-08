@@ -1,54 +1,20 @@
 {
   "name": "ansis",
-  "version": "3.0.2",
-  "description": "Colorize text in terminal and console output with ANSI colors & styles",
+  "version": "3.0.3",
+  "description": "Colorize terminal with ANSI colors & styles",
   "keywords": [
     "ansi",
-    "colour",
     "color",
-    "colors",
-    "styles",
-    "terminal",
-    "xterm",
-    "console",
-    "cli",
-    "log",
-    "logging",
-    "strip-color",
     "truecolor",
-    "rgb",
-    "red",
-    "green",
-    "yellow",
-    "blue",
-    "magenta",
-    "cyan",
-    "FORCE_COLOR",
-    "NO_COLOR",
-    "ansi-colors",
-    "chalk",
-    "colorette",
-    "colors.js",
-    "kleur",
-    "picocolors"
+    "ansi256",
+    "terminal",
+    "cli",
+    "chalk"
   ],
   "license": "ISC",
-  "author": "webdiscus (https://github.com/webdiscus)",
-  "maintainers": [
-    "webdiscus (https://github.com/webdiscus)"
-  ],
-  "funding": {
-    "type": "patreon",
-    "url": "https://patreon.com/biodiscus"
-  },
+  "author": "webdiscus",
   "homepage": "https://github.com/webdiscus/ansis",
-  "bugs": {
-    "url": "https://github.com/webdiscus/ansis/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/webdiscus/ansis.git"
-  },
+  "repository": "webdiscus/ansis",
   "sideEffects": false,
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -74,6 +40,5 @@
     "package.json",
     "LICENSE",
     "README.md"
-  ],
-  "dependencies": {}
+  ]
 }

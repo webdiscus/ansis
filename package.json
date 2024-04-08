@@ -1,7 +1,7 @@
 {
   "name": "ansis",
-  "version": "3.0.2",
-  "description": "Colorize text in terminal and console output with ANSI colors & styles",
+  "version": "3.0.3",
+  "description": "Colorize terminal with ANSI colors & styles",
   "keywords": [
     "ansi",
     "colour",
@@ -94,6 +94,7 @@
     "ansis": "file:dist",
     "prettier": "^3.2.5",
     "rollup": "^4.13.0",
+    "rollup-plugin-cleanup": "^3.2.1",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-dts": "^6.1.0",
     "terser": "^5.30.0",

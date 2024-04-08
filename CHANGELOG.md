@@ -1,5 +1,10 @@
 # Change log
 
+## 3.0.3 (2024-04-09)
+
+- chore: add rollup-plugin-cleanup to remove comments from d.ts file for dist, that save yet 3 KB
+- chore: update license year
+
 ## 3.0.2 (2024-04-08)
 
 - chore: create mini version of README for NPM to minify package size

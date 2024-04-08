@@ -1,12 +1,11 @@
-<div align="center">
-  <h1 align="center">
-    <a href="https://www.npmjs.com/package/ansis">
-      <img width="323" src="docs/img/ansis-logo.png" alt="ansis"><br>
-      ANSI Styling
-    </a>
-  </h1>
-</div>
+<p align="center">
+  <a href="https://www.npmjs.com/package/ansis">
+    <img width="323" src="docs/img/ansis-logo.png" alt="ansis"><br>
+    ANSI Styling
+  </a>
+</p>
 
+---
 [![npm](https://img.shields.io/npm/v/ansis?logo=npm&color=brightgreen "npm package")](https://www.npmjs.com/package/ansis "download npm package")
 [![node](https://img.shields.io/node/v/ansis)](https://nodejs.org)
 [![Test](https://github.com/webdiscus/ansis/actions/workflows/test.yml/badge.svg)](https://github.com/webdiscus/ansis/actions/workflows/test.yml)

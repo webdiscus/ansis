@@ -1,18 +1,17 @@
-<div align="center">
-  <h1 align="center">
-    <a href="https://github.com/webdiscus/ansis">
-      <img width="323" src="docs/img/ansis-logo.png" alt="ansis"><br>
-      ANSI Styling
-    </a>
-  </h1>
-</div>
+<p align="center">
+  <a href="https://github.com/webdiscus/ansis">
+    <img width="323" src="docs/img/ansis-logo.png" alt="ansis"><br>
+    ANSI Styling
+  </a>
+</p>
 
+---
 [![node](https://img.shields.io/node/v/ansis)](https://nodejs.org)
 [![Test](https://github.com/webdiscus/ansis/actions/workflows/test.yml/badge.svg)](https://github.com/webdiscus/ansis/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
 [![node](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 
-The Node.js library to colorize terminal with ANSI colors & styles, **smaller** and **faster** alternative to [Chalk][chalk].
+The Node.js library to colorize terminal with ANSI colors & styles, **smaller** and **faster** alternative to [Chalk](https://github.com/chalk/chalk).
 
 #### Usage example
 
@@ -28,12 +27,12 @@ hex('#E0115F').bold.underline('Hello TrueColor!')
 ```
 
 🚀 [Install and Quick Start](https://github.com/webdiscus/ansis#install)\
-📖 [Read full docs on GitHub][ansis]
+📖 [Read full docs on GitHub](https://github.com/webdiscus/ansis)
 
 ## 🏆 Compare & Benchmark
 
 See the [features comparison](https://github.com/webdiscus/ansis#compare) and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular terminal colors libraries:\
-[ansis][ansis], [chalk][chalk], [kleur][kleur], [kolorist][kolorist], [colors.js][colors.js], [colorette][colorette], [picocolors][picocolors], [ansi-colors][ansi-colors], [cli-color][cli-color], [colors-cli][colors-cli].
+`ansis` `chalk` `kleur` `kolorist` `colors.js` `colorette` `picocolors` `ansi-colors` `cli-color` `colors-cli`.
 
 ## 💡 Highlights
 
@@ -50,7 +49,7 @@ See the [features comparison](https://github.com/webdiscus/ansis#compare) and [b
 - [Base ANSI 16 colors](https://github.com/webdiscus/ansis#base-colors) ``` red`Error!` ``` ``` redBright`Error!` ``` ``` bgRed`Error!` ``` ``` bgRedBright`Error!` ```
 - [ANSI 256 colors](https://github.com/webdiscus/ansis#256-colors) ``` fg(56)`violet` ``` ``` bg(208)`orange` ```
 - [TrueColor](https://github.com/webdiscus/ansis#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ```, ``` hex('#96C')`Amethyst` ```
-- [Fallback](https://github.com/webdiscus/ansis#fallback) to supported [color space](https://github.com/webdiscus/ansis#color-support): TrueColor —> 256 colors —> 16 colors —> no
+- [Fallback](https://github.com/webdiscus/ansis#fallback) to supported color space: TrueColor —> 256 colors —> 16 colors —> no
   colors
 - [ANSI codes](https://github.com/webdiscus/ansis#escape-codes) as `open` and `close` properties ``` `Hello ${red.open}World${red.close}!` ```
 - [Strip ANSI codes](https://github.com/webdiscus/ansis#strip) method `ansis.strip()`
@@ -62,23 +61,3 @@ See the [features comparison](https://github.com/webdiscus/ansis#compare) and [b
 ## License
 
 [ISC](https://github.com/webdiscus/ansis/blob/master/LICENSE)
-
-[colors.js]: https://github.com/Marak/colors.js
-
-[colorette]: https://github.com/jorgebucaran/colorette
-
-[picocolors]: https://github.com/alexeyraspopov/picocolors
-
-[cli-color]: https://github.com/medikoo/cli-color
-
-[colors-cli]: https://github.com/jaywcjlove/colors-cli
-
-[ansi-colors]: https://github.com/doowb/ansi-colors
-
-[kleur]: https://github.com/lukeed/kleur
-
-[kolorist]: https://github.com/marvinhagemeister/kolorist
-
-[chalk]: https://github.com/chalk/chalk
-
-[ansis]: https://github.com/webdiscus/ansis

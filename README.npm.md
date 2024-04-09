@@ -11,7 +11,7 @@
 [![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
 [![node](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 
-The Node.js library to colorize terminal with ANSI colors & styles, **smaller** and **faster** alternative to [Chalk](https://github.com/chalk/chalk).
+Colorize terminal with ANSI colors & styles, **smaller** and **faster** alternative to [Chalk](https://github.com/chalk/chalk).
 
 #### Usage example
 
@@ -49,8 +49,7 @@ See the [features comparison](https://github.com/webdiscus/ansis#compare) and [b
 - [Base ANSI 16 colors](https://github.com/webdiscus/ansis#base-colors) ``` red`Error!` ``` ``` redBright`Error!` ``` ``` bgRed`Error!` ``` ``` bgRedBright`Error!` ```
 - [ANSI 256 colors](https://github.com/webdiscus/ansis#256-colors) ``` fg(56)`violet` ``` ``` bg(208)`orange` ```
 - [TrueColor](https://github.com/webdiscus/ansis#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ```, ``` hex('#96C')`Amethyst` ```
-- [Fallback](https://github.com/webdiscus/ansis#fallback) to supported color space: TrueColor —> 256 colors —> 16 colors —> no
-  colors
+- [Fallback](https://github.com/webdiscus/ansis#fallback) to supported color space: TrueColor → 256 colors → 16 colors → no colors
 - [ANSI codes](https://github.com/webdiscus/ansis#escape-codes) as `open` and `close` properties ``` `Hello ${red.open}World${red.close}!` ```
 - [Strip ANSI codes](https://github.com/webdiscus/ansis#strip) method `ansis.strip()`
 - [Correct style break](https://github.com/webdiscus/ansis#new-line) at the `end of line` when used `\n` in string

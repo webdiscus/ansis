@@ -9,6 +9,8 @@ import { SPACE_MONO, SPACE_16_COLORS, SPACE_256_COLORS, SPACE_TRUE_COLORS } from
  * - iTerm, VSCode, JetBrains-JediTerm
  * - xterm-kitty
  *
+ * See console programs supporting TrueColor https://github.com/termstandard/colors#truecolor-support-in-output-devices
+ *
  * @param {object} env
  * @param {boolean} isTTY
  * @return {number}

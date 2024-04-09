@@ -41,10 +41,7 @@ export default [
             dest: 'dist/',
             transform: async (contents, name) => (await minify(contents.toString())).code,
           },
-          { src: 'pkg/package.json', dest: 'dist/' },
-          // full version
-          //{ src: 'README.md', dest: 'dist/' },
-          // mini version for npm
+          { src: 'package.npm.json', dest: 'dist/', rename: 'package.json' },
           { src: 'README.npm.md', dest: 'dist/', rename: 'README.md' },
           { src: 'LICENSE', dest: 'dist/' },
         ],

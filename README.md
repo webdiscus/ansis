@@ -12,7 +12,7 @@
 [![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
 [![node](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 
-The Node.js library to colorize terminal with ANSI colors & styles, **smaller** and **faster** alternative to [Chalk][chalk] with additional useful [features](#features).
+Colorize terminal with ANSI colors & styles, **smaller** and **faster** alternative to [Chalk][chalk] with additional useful [features](#features).
 
 #### Usage example
 
@@ -76,7 +76,7 @@ See the [features comparison](#compare) and [benchmarks](#benchmark) of most pop
 - [Base ANSI 16 colors](#base-colors) ``` red`Error!` ``` ``` redBright`Error!` ``` ``` bgRed`Error!` ``` ``` bgRedBright`Error!` ```
 - [ANSI 256 colors](#256-colors) ``` fg(56)`violet` ``` ``` bg(208)`orange` ```
 - [TrueColor](#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ```, ``` hex('#96C')`Amethyst` ```
-- [Fallback](#fallback) to supported [color space](#color-support): TrueColor —> 256 colors —> 16 colors —> no colors
+- [Fallback](#fallback) to supported [color space](#color-support): TrueColor → 256 colors → 16 colors → no colors
 - [Extending of base colors](#extend-colors) with named **True Colors**
 - [ANSI codes](#escape-codes) as `open` and `close` properties ``` `Hello ${red.open}World${red.close}!` ```
 - [Strip ANSI codes](#strip) method `ansis.strip()`
@@ -633,16 +633,18 @@ Combine that with the knowledge about which operating system the program is runn
 | GitTea CI                        | ✅                 | ✅                  | ✅             |      dumb      |                   | CI<br>GITEA_ACTIONS                    |
 | GitLab CI                        | ✅                 | ❌                  | ❌             |      dumb      |                   | CI<br>GITLAB_CI                        |
 | Travis CI                        | ✅                 | ❌                  | ❌             |      dumb      |                   | TRAVIS                                 |
+| PM2<br>not isTTY                 | ✅[^1]             | ✅[^1]              | ✅[^1]         |      dumb      |                   | PM2_HOME<br>pm_id                      |
 | JetBrains TeamCity<br>>=2020.1.1 | ✅                 | ✅                  | ❌             |                |                   | TEAMCITY_VERSION                       |
 | JetBrains IDEA                   | ✅                 | ✅                  | ✅             | xterm-256color |                   | TERMINAL_EMULATOR='JetBrains-JediTerm' |
 | VS Code                          | ✅                 | ✅                  | ✅             | xterm-256color |     truecolor     |                                        |
-| Windows<br>Terminal              | ✅                 | ✅                  | ✅*            |                |                   |                                        |
-| Windows<br>PowerShell            | ✅                 | ✅                  | ✅*            |                |                   |                                        |
+| Windows<br>Terminal              | ✅                 | ✅                  | ✅[^2]         |                |                   |                                        |
+| Windows<br>PowerShell            | ✅                 | ✅                  | ✅[^2]         |                |                   |                                        |
 | macOS Terminal                   | ✅                 | ✅                  | ❌             | xterm-256color |                   |                                        |
 | iTerm                            | ✅                 | ✅                  | ✅             | xterm-256color |     truecolor     |                                        |
 | Terminal emulator Kitty          | ✅                 | ✅                  | ✅             |  xterm-kitty   |                   |                                        |
 
-*The Windows terminal supports true color since Windows 10 revision 14931 (2016-09-21).
+[^1]: Colors supported depends on actual terminal.
+[^2]: The Windows terminal supports true color since Windows 10 revision 14931 (2016-09-21).
 
 See also:
 

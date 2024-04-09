@@ -646,6 +646,42 @@ describe('Node.JS different env', () => {
     const expected = SPACE_TRUE_COLORS;
     expect(received).toEqual(expected);
   });
+
+  test(`PM2: no isTTY but COLORTERM: 'truecolor'`, () => {
+    const received = colorSpace({
+      process: {
+        env: {
+          PM2_HOME: "/var/www/",
+          pm_id: "1",
+          COLORTERM: 'truecolor'
+        },
+        argv: [],
+        stdout: {},
+        stderr: {},
+      },
+
+    });
+    const expected = SPACE_TRUE_COLORS;
+    expect(received).toEqual(expected);
+  });
+
+  test(`PM2: no isTTY and unsupported terminal`, () => {
+    const received = colorSpace({
+      process: {
+        env: {
+          PM2_HOME: "/var/www/",
+          pm_id: "1",
+          TERM: 'dumb'
+        },
+        argv: [],
+        stdout: {},
+        stderr: {},
+      },
+
+    });
+    const expected = SPACE_MONO;
+    expect(received).toEqual(expected);
+  });
 });
 
 // Deno

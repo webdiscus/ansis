@@ -1,5 +1,9 @@
 # Change log
 
+## 3.1.0 (2024-04-10)
+
+- feat: add detection of color support when using PM2 process manager
+
 ## 3.0.3 (2024-04-09)
 
 - chore: add rollup-plugin-cleanup to remove comments from d.ts file for dist, that save yet 3 KB

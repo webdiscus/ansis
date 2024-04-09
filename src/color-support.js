@@ -121,7 +121,9 @@ export const getColorSpace = (mockThis) => {
   // when Next.JS runtime is `edge`, process.stdout is undefined, but colors output is supported
   // runtime values supported colors: `nodejs`, `edge`, `experimental-edge`
   const isNextJS = (env.NEXT_RUNTIME || '').indexOf('edge') > -1;
-  const isTTY = isNextJS || (isDeno ? Deno.isatty(1) : stdout && 'isTTY' in stdout);
+  // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
+  const isPM2 = 'PM2_HOME' in env && 'pm_id' in env;
+  const isTTY = isNextJS || isPM2 || (isDeno ? Deno.isatty(1) : stdout && 'isTTY' in stdout);
 
   if (isForceDisabled) return SPACE_MONO;
 

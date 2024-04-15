@@ -95,7 +95,7 @@ export const getColorSpace = (mockThis) => {
   // Node -> `argv`, Deno -> `args`
   const argv = proc.argv || proc.args || [];
   let env = proc.env || {};
-  let colorSpace;
+  let colorSpace = -1;
 
   if (isDeno) {
     try {
@@ -107,29 +107,37 @@ export const getColorSpace = (mockThis) => {
     }
   }
 
+  // When FORCE_COLOR is present and not an empty string (regardless of its value, except `false` or `0`),
+  // it should force the addition of ANSI color.
+  // See https://force-color.org
+
   const FORCE_COLOR = 'FORCE_COLOR';
-  const hasForceColor = FORCE_COLOR in env;
   const forceColorValue = env[FORCE_COLOR];
-  const forceColor = forceColorValue === 'true' || parseInt(forceColorValue, 10) > 0;
+  const forceColorNum = parseInt(forceColorValue);
+  const forceColor = forceColorValue === 'false' ? SPACE_MONO : isNaN(forceColorNum) ? SPACE_TRUE_COLORS : forceColorNum;
 
   const isForceDisabled = 'NO_COLOR' in env
-    || (hasForceColor && !forceColor)
+    || forceColor === SPACE_MONO
     // --no-color --color=false --color=never
     || hasFlag(/^-{1,2}(no-color|color=(false|never))$/);
 
   // --color --color=true --color=always
-  const isForceEnabled = (hasForceColor && forceColor) || hasFlag(/^-{1,2}color=?(true|always)?$/);
+  const isForceEnabled = (FORCE_COLOR in env && forceColor) || hasFlag(/^-{1,2}color=?(true|always)?$/);
 
   // when Next.JS runtime is `edge`, process.stdout is undefined, but colors output is supported
   // runtime values supported colors: `nodejs`, `edge`, `experimental-edge`
   const isNextJS = (env.NEXT_RUNTIME || '').indexOf('edge') > -1;
+
   // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
   const isPM2 = 'PM2_HOME' in env && 'pm_id' in env;
+
+  // whether the output is supported
   const isTTY = isNextJS || isPM2 || (isDeno ? Deno.isatty(1) : stdout && 'isTTY' in stdout);
 
+  // optimisation: placed here to reduce the size of the compiled bundle
   if (isForceDisabled) return SPACE_MONO;
 
-  if (colorSpace == null) {
+  if (colorSpace < 0) {
     // truecolor support starts from Windows 10 build 14931 (2016-09-21), in 2024 we assume modern Windows is used
     colorSpace = isWin ? SPACE_TRUE_COLORS : detectColorSpace(env, isTTY);
   }

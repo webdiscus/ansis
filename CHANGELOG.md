@@ -1,5 +1,11 @@
 # Change log
 
+## 3.1.1 (2024-04-15)
+
+- fix: interpret FORCE_COLOR=false or FORCE_COLOR=0 as force disable colors\
+  others values, e.g., FORCE_COLOR=true or FORCE_COLOR=1 - force enable colors.\
+  See https://force-color.org.
+
 ## 3.1.0 (2024-04-10)
 
 - feat: add detection of color support when using PM2 process manager

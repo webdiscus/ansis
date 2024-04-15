@@ -294,11 +294,54 @@ describe('flags and options', () => {
     expect(received).toEqual(expected);
   });
 
+  test(`disable colors via --color=never`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'xterm' },
+        argv: ['--color=never'],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+
+    });
+    const expected = SPACE_MONO;
+    expect(received).toEqual(expected);
+  });
+
   test(`disable colors via NO_COLOR=1`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
         env: { NO_COLOR: '1', TERM: 'xterm' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+
+    });
+    const expected = SPACE_MONO;
+    expect(received).toEqual(expected);
+  });
+
+  test(`not exists FORCE_COLOR`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: {},
+        argv: [],
+      },
+
+    });
+    const expected = SPACE_MONO;
+    expect(received).toEqual(expected);
+  });
+
+  test(`disable colors via FORCE_COLOR=false`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: 'false', TERM: 'xterm' },
         argv: [],
         stdout: { isTTY: true },
         stderr: { isTTY: true },
@@ -324,18 +367,16 @@ describe('flags and options', () => {
     expect(received).toEqual(expected);
   });
 
-  test(`disable colors via FORCE_COLOR=false`, () => {
+  test(`enable colors via FORCE_COLOR=true`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
-        env: { FORCE_COLOR: 'false', TERM: 'xterm' },
+        env: { FORCE_COLOR: 'true' },
         argv: [],
-        stdout: { isTTY: true },
-        stderr: { isTTY: true },
       },
 
     });
-    const expected = SPACE_MONO;
+    const expected = SPACE_TRUE_COLORS;
     expect(received).toEqual(expected);
   });
 
@@ -352,11 +393,11 @@ describe('flags and options', () => {
     expect(received).toEqual(expected);
   });
 
-  test(`enable colors via FORCE_COLOR=true`, () => {
+  test(`enable colors via FORCE_COLOR=something`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
-        env: { FORCE_COLOR: 'true' },
+        env: { FORCE_COLOR: 'something' },
         argv: [],
       },
 
@@ -651,9 +692,9 @@ describe('Node.JS different env', () => {
     const received = colorSpace({
       process: {
         env: {
-          PM2_HOME: "/var/www/",
-          pm_id: "1",
-          COLORTERM: 'truecolor'
+          PM2_HOME: '/var/www/',
+          pm_id: '1',
+          COLORTERM: 'truecolor',
         },
         argv: [],
         stdout: {},
@@ -669,9 +710,9 @@ describe('Node.JS different env', () => {
     const received = colorSpace({
       process: {
         env: {
-          PM2_HOME: "/var/www/",
-          pm_id: "1",
-          TERM: 'dumb'
+          PM2_HOME: '/var/www/',
+          pm_id: '1',
+          TERM: 'dumb',
         },
         argv: [],
         stdout: {},

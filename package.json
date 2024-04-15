@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Colorize terminal with ANSI colors & styles",
   "keywords": [
     "ansi",
@@ -74,7 +74,7 @@
     "test:unit": "vitest run ./test/unit.test.js",
     "test:ansi16": "vitest run ./test/ansi16.test.js",
     "test:ansi256": "vitest run ./test/ansi256.test.js",
-    "test:index": "vitest run ./test/index.test.js",
+    "test:functional": "vitest run ./test/functional.test.js",
     "test:flags": "vitest run ./test/flags.test.js",
     "test:package": "vitest run ./test/package.test.js",
     "test:cjs": "node ./test/package/cjs/test.cjs",

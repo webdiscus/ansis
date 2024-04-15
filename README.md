@@ -89,7 +89,7 @@ See the [features comparison](#compare) and [benchmarks](#benchmark) of most pop
 
 ## 🔆 What's New in v3
 
-- **NEW** added detection of supported color space: TrueColor, 256 colors, 16 colors, no color (black & white)
+- **NEW** added detection of supported color space: TrueColor, 256 colors, 16 colors, no colors (black & white)
 - **NEW** added fallback to supported color space: TrueColor —> 256 colors —> 16 colors —> no colors
 
 > #### ⚠️ Warning
@@ -619,7 +619,7 @@ Ansis automatically detects the supported color space:
 - TrueColor
 - ANSI 256 colors
 - ANSI 16 colors
-- black & white (no color)
+- black & white (no colors)
 
 There is no standard way to detect which color space is supported.
 The most common way to detect color support is to check the `TERM` and `COLORTERM` environment variables.
@@ -665,18 +665,18 @@ npm run compare
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/compare-colorize-libraries?file=index.js)
 
-| Library<br><nobr>________________</nobr><br> - name<br> - bundle size<br> - named import<br>- naming colors | ANSI base colors | ANSI 256<br>colors | True<br>Color | Chained<br>syntax | Nested<br>template strings | New<br>Line | Fallbacks                          | Supports<br>ENV vars<br>CLI flags                        |
-|:------------------------------------------------------------------------------------------------------------|:----------------:|:------------------:|:-------------:|:-----------------:|:--------------------------:|:-----------:|------------------------------------|:---------------------------------------------------------|
-| [`colors.js`][colors.js]<br>**18.1KB**<br><nobr>`❌ named import`</nobr><br>`❌ standard`                     |   `16` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | no color                           | `FORCE_COLOR`<br>`--no-color`<br>`--color`               |
-| [`colors-cli`][colors-cli]<br>**8.6KB**<br><nobr>`❌ named import`</nobr><br>`❌ standard`                    |   `16` colors    |         ✅          |       ❌       |         ✅         |             ❌              |      ✅      | no color                           | `--no-color`<br>`--color`                                |
-| [`cli-color`][cli-color]<br><nobr>`❌ named import`</nobr><br>`✅ standard`                                   |   `16` colors    |         ✅          |       ❌       |         ✅         |             ❌              |      ❌      | 16 colors<br>no color              | `NO_COLOR`                                               |
-| [`ansi-colors`][ansi-colors]<br>**5.8KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                  |   `16` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | ❌                                  | `FORCE_COLOR`                                            |
-| [`colorette`][colorette]<br>**3.3KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                      |   `16` colors    |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | no color                           | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`picocolors`][picocolors]<br>**2.6KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                    |    `8` colors    |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | no color                           | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`kleur`][kleur]<br>**2.7KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                              |    `8` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ❌      | no color                           | `NO_COLOR`<br>`FORCE_COLOR`                              |
-| [`kolorist`][kolorist]<br>**6.8KB**<br><nobr>`✅ named import`</nobr><br>`❌ standard`                        |   `16` colors    |         ✅          |       ✅       |         ❌         |             ❌              |      ❌      | 256 color<br>❌<br>no color         | `NO_COLOR`<br>`FORCE_COLOR`                              |
-| [`chalk`][chalk]<br>**15KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                               |   `16` colors    |         ✅          |       ✅       |         ✅         |             ❌              |      ✅      | 256 color<br>16 colors<br>no color | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`ansis`][ansis]<br>**3.4KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                              |   `16` colors    |         ✅          |       ✅       |         ✅         |             ✅              |      ✅      | 256 color<br>16 colors<br>no color | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| Library<br><nobr>________________</nobr><br> - name<br> - bundle size<br> - named import<br>- naming colors | ANSI base colors | ANSI 256<br>colors | True<br>Color | Chained<br>syntax | Nested<br>template strings | New<br>Line | Fallbacks                           | Supports<br>ENV vars<br>CLI flags                        |
+|:------------------------------------------------------------------------------------------------------------|:----------------:|:------------------:|:-------------:|:-----------------:|:--------------------------:|:-----------:|-------------------------------------|:---------------------------------------------------------|
+| [`colors.js`][colors.js]<br>**18.1KB**<br><nobr>`❌ named import`</nobr><br>`❌ standard`                     |   `16` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | no colors                           | `FORCE_COLOR`<br>`--no-color`<br>`--color`               |
+| [`colors-cli`][colors-cli]<br>**8.6KB**<br><nobr>`❌ named import`</nobr><br>`❌ standard`                    |   `16` colors    |         ✅          |       ❌       |         ✅         |             ❌              |      ✅      | no colors                           | `--no-color`<br>`--color`                                |
+| [`cli-color`][cli-color]<br><nobr>`❌ named import`</nobr><br>`✅ standard`                                   |   `16` colors    |         ✅          |       ❌       |         ✅         |             ❌              |      ❌      | 16 colors<br>no colors              | `NO_COLOR`                                               |
+| [`ansi-colors`][ansi-colors]<br>**5.8KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                  |   `16` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | ❌                                   | `FORCE_COLOR`                                            |
+| [`colorette`][colorette]<br>**3.3KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                      |   `16` colors    |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | no colors                           | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`picocolors`][picocolors]<br>**2.6KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                    |    `8` colors    |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | no colors                           | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`kleur`][kleur]<br>**2.7KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                              |    `8` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ❌      | no colors                           | `NO_COLOR`<br>`FORCE_COLOR`                              |
+| [`kolorist`][kolorist]<br>**6.8KB**<br><nobr>`✅ named import`</nobr><br>`❌ standard`                        |   `16` colors    |         ✅          |       ✅       |         ❌         |             ❌              |      ❌      | 256 color<br>❌<br>no colors         | `NO_COLOR`<br>`FORCE_COLOR`                              |
+| [`chalk`][chalk]<br>**15KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                               |   `16` colors    |         ✅          |       ✅       |         ✅         |             ❌              |      ✅      | 256 color<br>16 colors<br>no colors | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`ansis`][ansis]<br>**3.4KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                              |   `16` colors    |         ✅          |       ✅       |         ✅         |             ✅              |      ✅      | 256 color<br>16 colors<br>no colors | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
 
 > **Note**
 >

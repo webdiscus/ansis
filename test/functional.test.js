@@ -97,7 +97,7 @@ describe('style tests', () => {
   // });
 });
 
-describe('functional tests', () => {
+describe('advanced features tests', () => {
   test(`ansis('OK')`, () => {
     const received = ansis('OK');
     const expected = 'OK';

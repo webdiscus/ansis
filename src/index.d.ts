@@ -2,6 +2,13 @@ type ColorExtend = Record<string, string | { open: string, close: string }>
 
 interface Ansis {
   /**
+   * Whether the output supports ANSI color and styles.
+   *
+   * @return {boolean}
+   */
+  isSupported: () => boolean;
+
+  /**
    * Return styled string.
    *
    * @param {string | TemplateStringsArray} string

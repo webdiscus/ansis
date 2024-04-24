@@ -2,10 +2,10 @@ import { hexToRgb, rgbToAnsi256, rgbToAnsi16, ansi256To16 } from './utils.js';
 import { getColorSpace } from './color-support.js';
 
 const colorSpace = getColorSpace();
-const hasColor = colorSpace > 0;
+export const isSupported = colorSpace > 0;
 const mono = { open: '', close: '' };
 const monoFn = () => mono;
-const esc = hasColor ? (open, close) => ({ open: `\x1b[${open}m`, close: `\x1b[${close}m` }) : monoFn;
+const esc = isSupported ? (open, close) => ({ open: `\x1b[${open}m`, close: `\x1b[${close}m` }) : monoFn;
 const closeCode = 39;
 const bgCloseCode = 49;
 

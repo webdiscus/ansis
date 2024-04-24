@@ -1,4 +1,4 @@
-import { baseStyles, styleMethods, rgb } from './ansi-codes.js';
+import { baseStyles, styleMethods, rgb, isSupported } from './ansi-codes.js';
 import { hexToRgb, replaceAll } from './utils.js';
 
 /**
@@ -75,6 +75,13 @@ const createStyle = ({ _p: props }, { open, close }) => {
 
 const Ansis = function() {
   const self = (str) => str + '';
+
+  /**
+   * Whether the output supports ANSI color and styles.
+   *
+   * @return {boolean}
+   */
+  self.isSupported = () => isSupported;
 
   /**
    * Remove ANSI styling codes.

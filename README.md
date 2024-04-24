@@ -35,7 +35,7 @@ hex('#E0115F').bold.underline('Hello TrueColor!')
 
 - Quality is first, test coverage 100%.
 - Ansis has a lot of useful [features](#features), compare with [other libraries](#compare).
-- Ansis is one of the smallest, 3.4 KB only.
+- Ansis is one of the smallest, 3.5 KB only.
 - Ansis is one of the [fastest](#benchmark).
 - Ansis is stable, continuously developing and improving.
 - Ansis is open for your [feature requests](https://github.com/webdiscus/ansis/issues).
@@ -82,8 +82,9 @@ See the [features comparison](#compare) and [benchmarks](#benchmark) of most pop
 - [Strip ANSI codes](#strip) method `ansis.strip()`
 - [Correct style break](#new-line) at the `end of line` when used `\n` in string
 - Supports [environment variables](#cli-vars) `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
+- Detect [color support](#color-support) using `ansis.isSupported()` method
 - Up to **x3 faster** than **Chalk**, [see benchmarks](#benchmark)
-- Code bundle is only **3.4 KB**
+- Code bundle is only **3.5 KB**
 - Doesn't extend `String.prototype`
 - Zero dependencies
 
@@ -622,6 +623,14 @@ Ansis automatically detects the supported color space:
 - ANSI 16 colors
 - black & white (no colors)
 
+Ansis has the method `isSupported()` that returns a `boolean` value whether the output supports ANSI color and styles.
+
+```js
+import ansis from 'ansis';
+
+console.log('Color output: ', ansis.isSupported());
+```
+
 There is no standard way to detect which color space is supported.
 The most common way to detect color support is to check the `TERM` and `COLORTERM` environment variables.
 CI systems can be detected by checking for the existence of the `CI` and other specifically environment variables.
@@ -677,7 +686,7 @@ npm run compare
 | [`kleur`][kleur]<br>**2.7KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                              |    `8` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ❌      | no colors                           | `NO_COLOR`<br>`FORCE_COLOR`                              |
 | [`kolorist`][kolorist]<br>**6.8KB**<br><nobr>`✅ named import`</nobr><br>`❌ standard`                        |   `16` colors    |         ✅          |       ✅       |         ❌         |             ❌              |      ❌      | 256 color<br>❌<br>no colors         | `NO_COLOR`<br>`FORCE_COLOR`                              |
 | [`chalk`][chalk]<br>**15KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                               |   `16` colors    |         ✅          |       ✅       |         ✅         |             ❌              |      ✅      | 256 color<br>16 colors<br>no colors | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`ansis`][ansis]<br>**3.4KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                              |   `16` colors    |         ✅          |       ✅       |         ✅         |             ✅              |      ✅      | 256 color<br>16 colors<br>no colors | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`ansis`][ansis]<br>**3.5KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                              |   `16` colors    |         ✅          |       ✅       |         ✅         |             ✅              |      ✅      | 256 color<br>16 colors<br>no colors | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
 
 > **Note**
 >

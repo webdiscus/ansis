@@ -1,5 +1,9 @@
 # Change log
 
+## 3.2.0 (2024-04-24)
+
+- feat: add `ansis.isSupported()` method to detect color support
+
 ## 3.1.1 (2024-04-15)
 
 - fix: interpret FORCE_COLOR=false or FORCE_COLOR=0 as force disable colors\

@@ -7,6 +7,12 @@ import './env/color-space.truecolor.js';
 import ansis, { Ansis, red, yellow, green, bold, hex } from '../src/index.mjs';
 
 describe('style tests', () => {
+  test(`ansis.isSupported()`, () => {
+    const received = ansis.isSupported();
+    const expected = true;
+    expect(received).toEqual(expected);
+  });
+
   test(`ansis.visible('foo')`, () => {
     const received = ansis.visible('foo');
     const expected = 'foo';

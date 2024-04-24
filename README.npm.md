@@ -53,6 +53,7 @@ See the [features comparison](https://github.com/webdiscus/ansis#compare) and [b
 - [ANSI codes](https://github.com/webdiscus/ansis#escape-codes) as `open` and `close` properties ``` `Hello ${red.open}World${red.close}!` ```
 - [Strip ANSI codes](https://github.com/webdiscus/ansis#strip) method `ansis.strip()`
 - [Correct style break](https://github.com/webdiscus/ansis#new-line) at the `end of line` when used `\n` in string
+- Detect [color support](https://github.com/webdiscus/ansis#color-support) using `ansis.isSupported()` method
 - Supports [CLI](https://github.com/webdiscus/ansis#cli-vars) `NO_COLOR` `FORCE_COLOR` `--no-color` `--color`
 - Doesn't extend `String.prototype`
 - Zero dependencies

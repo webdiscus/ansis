@@ -39,6 +39,8 @@ hex('#E0115F').bold.underline('Hello TrueColor!')
 - Ansis is one of the [fastest](#benchmark).
 - Ansis is stable, continuously developing and improving.
 - Ansis is open for your [feature requests](https://github.com/webdiscus/ansis/issues).
+- Quick response to issues.
+- Long term support.
 
 ## 🏆 Compare & Benchmark
 

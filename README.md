@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/ansis">
-    <img width="323" src="docs/img/ansis-logo.png" alt="ansis"><br>
+    <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-logo.png" alt="ansis"><br>
     ANSI Styling
   </a>
 </p>
@@ -10,21 +10,22 @@
 [![node](https://img.shields.io/node/v/ansis)](https://nodejs.org)
 [![Test](https://github.com/webdiscus/ansis/actions/workflows/test.yml/badge.svg)](https://github.com/webdiscus/ansis/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
-[![node](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
+[![downloads](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/ansis@3.2.0)](https://bundlephobia.com/package/ansis@3.2.0)
 
 Colorize terminal with ANSI colors & styles, **smaller** and **faster** alternative to [Chalk][chalk] with additional useful [features](#features).
 
-#### Usage example
+#### Usage examples
 
 ```js
-import ansis, { red, green, black, ansi256, hex } from 'ansis';
+import ansis, { red, green, cyan, black, ansi256, hex } from 'ansis';
 
-ansis.cyan('path/to/file')
-green('Succeful!')
-red`Error!`
+ansis.blueBright('file.txt')
+green`Succeful!`
+red`Error: ${cyan(file)} not found!`
 black.bgYellow`Warning!`
 ansi256(214)`Orange`
-hex('#E0115F').bold.underline('Hello TrueColor!')
+hex('#E0115F').bold.underline('TrueColor!')
 ```
 
 🚀 [Install and Quick Start](#install)
@@ -34,9 +35,9 @@ hex('#E0115F').bold.underline('Hello TrueColor!')
 ## 👀 Why yet one lib?
 
 - Quality is first, test coverage 100%.
-- Ansis has a lot of useful [features](#features), compare with [other libraries](#compare).
-- Ansis is one of the smallest, 3.5 KB only.
-- Ansis is one of the [fastest](#benchmark).
+- Ansis has all [features](#features) that you need, compare with [other libraries](#compare).
+- Ansis is one of the smallest, [3.5 KB](https://bundlephobia.com/package/ansis@3.2.0) only.
+- Ansis is one of the [fastest](#benchmark), up to **x3 faster** than **Chalk**, [see benchmarks](#benchmark).
 - Ansis is stable, continuously developing and improving.
 - Ansis is open for your [feature requests](https://github.com/webdiscus/ansis/issues).
 - Quick response to issues.
@@ -53,7 +54,7 @@ See the [features comparison](#compare) and [benchmarks](#benchmark) of most pop
 
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
-    <img width="830" src="docs/img/ansis-demo.png" alt="ansis">
+    <img width="830" src="https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-demo.png" alt="ansis">
   </a>
 </div>
 
@@ -85,8 +86,6 @@ See the [features comparison](#compare) and [benchmarks](#benchmark) of most pop
 - [Correct style break](#new-line) at the `end of line` when used `\n` in string
 - Supports [environment variables](#cli-vars) `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
 - Detect [color support](#color-support) using `ansis.isSupported()` method
-- Up to **x3 faster** than **Chalk**, [see benchmarks](#benchmark)
-- Code bundle is only **3.5 KB**
 - Doesn't extend `String.prototype`
 - Zero dependencies
 
@@ -158,7 +157,7 @@ ${black.bgYellow`Warning:`} ${cyan`/path/to/file.js`} ${red`not found!`}`);
 ```
 
 Output:\
-![screenshot "Hello ANSI World!"](docs/img/quik-start-output.png?raw=true)
+![screenshot "Hello ANSI World!"](https://github.com/webdiscus/ansis/raw/master/docs/img/quik-start-output.png?raw=true)
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/stackblitz-starters-sx74bl?file=index.js)
 
@@ -265,7 +264,7 @@ green(
 ```
 
 Output:\
-![screenshot nested styles](docs/img/ansis-nested.png?raw=true)
+![screenshot nested styles](https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-nested.png?raw=true)
 
 Multiline nested template strings:
 
@@ -295,7 +294,7 @@ DISK: ${orange`${disk}%`}
 ```
 
 Output:\
-![screenshot multiline nested](docs/img/ansis-multiline-nested.png?raw=true)
+![screenshot multiline nested](https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-multiline-nested.png?raw=true)
 
 #### [↑ top](#top)
 
@@ -377,7 +376,7 @@ The pre-defined set of 256 colors.
 
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
-    <img width="830" src="docs/img/ansi256.png" alt="ANSI 256 colors">
+    <img width="830" src="https://github.com/webdiscus/ansis/raw/master/docs/img/ansi256.png" alt="ANSI 256 colors">
   </a>
 </div>
 
@@ -401,7 +400,7 @@ If a terminal supports only 16 colors then ANSI 256 colors will be interpolated 
 
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
-    <img width="830" src="docs/img/ansi256-fallback.png" alt="Fallback ANSI 256 colors to 16 colors">
+    <img width="830" src="https://github.com/webdiscus/ansis/raw/master/docs/img/ansi256-fallback.png" alt="Fallback ANSI 256 colors to 16 colors">
   </a>
 </div>
 
@@ -469,7 +468,7 @@ TrueColor —> 256 colors —> 16 colors —> no colors (black & white)
 
 If you use the `hex()`, `rgb()` or `ansis256()` functions in a terminal not supported TrueColor or 256 colors, then colors will be interpolated.
 
-![output](docs/img/ansis-fallback.png?raw=true "Fallback to ANSI colors")
+![output](https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-fallback.png?raw=true "Fallback to ANSI colors")
 
 #### [↑ top](#top)
 
@@ -519,7 +518,7 @@ import { bgGreen } from 'ansis';
 console.log(bgGreen`\nAnsis\nNew Line\nNext New Line\n`);
 ```
 
-![output](docs/img/break-style-nl.png?raw=true "break styles at EOL")
+![output](https://github.com/webdiscus/ansis/raw/master/docs/img/break-style-nl.png?raw=true "break styles at EOL")
 
 <a id="shortcuts" name="shortcuts"></a>
 

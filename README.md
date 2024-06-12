@@ -15,7 +15,7 @@
 
 Colorize terminal with ANSI colors & styles, **smaller** and **faster** alternative to [Chalk][chalk] with additional useful [features](#features).
 
-#### Usage examples
+#### Usage
 
 ```js
 import ansis, { red, green, cyan, black, ansi256, hex } from 'ansis';
@@ -67,12 +67,13 @@ See the [features comparison](#compare) and [benchmarks](#benchmark) of most pop
   ```diff
   - import chalk from 'chalk';
   + import chalk, { red } from 'ansis';
-
+  ```
+  ```js
   chalk.red.bold('Error!'); // <- Chalk like syntax works fine with Ansis
   red.bold('Error!');       // <- the same result with Ansis
   red.bold`Error!`;         // <- the same result with Ansis
   ```
-- Default and [named import](#named-import) `import ansis, { red, green, bold, underline } from 'ansis'`
+- Default and [named import](#named-import) `import ansis, { red, bold, ansi256, hex } from 'ansis'`
 - [Chained syntax](#chained-syntax) `red.bold.underline('text')`
 - [Nested **template strings**](#nested-syntax) ``` red`RED text ${green`GREEN text`} RED text` ```
 - [Base ANSI styles](#base-colors) `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>

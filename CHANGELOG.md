@@ -1,5 +1,10 @@
 # Change log
 
+## 3.2.1 (2024-07-12)
+
+- chore: reduce unpacked size by ~ 1 KB
+- docs: optimize README for NPM
+
 ## 3.2.0 (2024-04-24)
 
 - feat: add `ansis.isSupported()` method to detect color support

@@ -11,11 +11,13 @@
 [![Test](https://github.com/webdiscus/ansis/actions/workflows/test.yml/badge.svg)](https://github.com/webdiscus/ansis/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
 [![downloads](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
-[![npm bundle size](https://img.shields.io/bundlephobia/minzip/ansis@3.2.0)](https://bundlephobia.com/package/ansis@3.2.0)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/ansis)](https://bundlephobia.com/package/ansis)
 
 Colorize terminal with ANSI colors & styles, **smaller** and **faster** alternative to [Chalk][chalk] with additional useful [features](#features).
 
-#### Usage
+🚀 [Install and Quick Start](#install)
+
+## Usage
 
 ```js
 import ansis, { red, green, cyan, black, ansi256, hex } from 'ansis';
@@ -27,8 +29,6 @@ black.bgYellow`Warning!`
 ansi256(214)`Orange`
 hex('#E0115F').bold.underline('TrueColor!')
 ```
-
-🚀 [Install and Quick Start](#install)
 
 <a id="top" name="top"></a>
 
@@ -63,7 +63,7 @@ See the [features comparison](#compare) and [benchmarks](#benchmark) of most pop
 - Supports both **ESM** and **CommonJS**
 - Supports **TypeScript**
 - Supports **Bun**, **Deno**, **Next.JS** runtimes
-- [Standard API](#base-colors) compatible with **Chalk**, switch from **Chalk** to **Ansis** without changing your code
+- [Standard API](#base-colors), drop-in replacement for **Chalk**
   ```diff
   - import chalk from 'chalk';
   + import chalk, { red } from 'ansis';
@@ -75,18 +75,18 @@ See the [features comparison](#compare) and [benchmarks](#benchmark) of most pop
   ```
 - Default and [named import](#named-import) `import ansis, { red, bold, ansi256, hex } from 'ansis'`
 - [Chained syntax](#chained-syntax) `red.bold.underline('text')`
-- [Nested **template strings**](#nested-syntax) ``` red`RED text ${green`GREEN text`} RED text` ```
-- [Base ANSI styles](#base-colors) `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>
-- [Base ANSI 16 colors](#base-colors) ``` red`Error!` ``` ``` redBright`Error!` ``` ``` bgRed`Error!` ``` ``` bgRedBright`Error!` ```
+- [Nested **template strings**](#nested-syntax) ``` red`RED ${green`GREEN`} RED` ```
+- [ANSI styles](#base-colors) `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>
+- [ANSI 16 colors](#base-colors) ``` red`Error!` ``` ``` redBright`Error!` ``` ``` bgRed`Error!` ``` ``` bgRedBright`Error!` ```
 - [ANSI 256 colors](#256-colors) ``` fg(56)`violet` ``` ``` bg(208)`orange` ```
-- [TrueColor](#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ```, ``` hex('#96C')`Amethyst` ```
+- [TrueColor](#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ``` ``` hex('#96C')`Amethyst` ```
 - [Fallback](#fallback) to supported [color space](#color-support): TrueColor → 256 colors → 16 colors → no colors
 - [Extending of base colors](#extend-colors) with named **True Colors**
-- [ANSI codes](#escape-codes) as `open` and `close` properties ``` `Hello ${red.open}World${red.close}!` ```
+- [Raw ANSI codes](#escape-codes) as `open` and `close` properties ``` `foo ${red.open}red{red.close} bar` ```
 - [Strip ANSI codes](#strip) method `ansis.strip()`
-- [Correct style break](#new-line) at the `end of line` when used `\n` in string
-- Supports [environment variables](#cli-vars) `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
 - Detect [color support](#color-support) using `ansis.isSupported()` method
+- Supports [environment variables](#cli-vars) `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
+- [Correct style break](#new-line) at the `end of line` when used `\n` in string
 - Doesn't extend `String.prototype`
 - Zero dependencies
 

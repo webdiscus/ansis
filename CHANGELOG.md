@@ -1,5 +1,21 @@
 # Change log
 
+## 3.3.0 (2024-07-14)
+
+- feat(BREAKING CHANGE): remove `old` named import DEPRECATED in `v2.0.0` (2023-11-03).
+  If you update the package from `v1.x` to `v3.3.0` then check your code:\
+  ESM
+  ```diff
+  - import { red } from 'ansis/colors';
+  + import { red } from 'ansis';
+  ```
+  CJS
+  ```diff
+  - const { red } = require('ansis/colors');
+  + const { red } = require('ansis');
+  ```
+- chore: cleanup/optimize `package.json` for npm package
+
 ## 3.2.1 (2024-07-12)
 
 - chore: reduce unpacked size by ~ 1 KB
@@ -38,6 +54,8 @@
 - test: add more tests
 - docs: improve readme
 
+<a id="v3-0-0" name="v3-0-0"></a>
+
 ## 3.0.0 (2024-03-29)
 
 - feat: add detection of color spaces support: TrueColor, 256 colors, 16 colors, no color
@@ -60,6 +78,22 @@ In the new major version `3.x` are removed unused styles and methods.
 
 Drop supports for Node <= `14`. Minimal supported version is `15.0.0` (Released 2020-10-20).
 In the theory the `v3` can works with Node`12`, but we can't test it.
+
+### Deleted DEPRECATED named import syntax (since `v3.3.0`)
+
+ESM
+
+```diff
+- import { red } from 'ansis/colors';
++ import { red } from 'ansis';
+```
+
+CJS
+
+```diff
+- const { red } = require('ansis/colors');
++ const { red } = require('ansis');
+```
 
 ### Deleted styles
 

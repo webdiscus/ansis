@@ -1,10 +1,7 @@
 const ansis = require('ansis');
 
-// test new named import
-const { Ansis, red, green, yellow, hex } = require('ansis');
-
-// test old named import
-const { magenta, cyan, blue } = require('ansis/colors');
+// test named import
+const { Ansis, red, green, hex } = require('ansis');
 
 const log = console.log;
 
@@ -42,8 +39,3 @@ log(ansis2.italic.orange('extend: ansis2.italic.orange'));
 const greenText = green`green text`;
 log('colored: ', greenText);
 log('striped: ', ansis.strip(greenText));
-
-log(`--- OLD  named import: ${yellow`const { magenta, cyan, blue } = require('ansis/colors');`}`);
-log(magenta`magenta`);
-log(cyan.bold`cyan bold`);
-log(blue.italic`blue italic`);

@@ -43,10 +43,15 @@ hex('#E0115F').bold.underline('TrueColor!')
 - Quick response to issues.
 - Long term support.
 
-## 🏆 Compare & Benchmark
+## ⚖️ Similar packages
 
-See the [features comparison](#compare) and [benchmarks](#benchmark) of most popular terminal colors libraries:\
-[ansis][ansis], [chalk][chalk], [kleur][kleur], [kolorist][kolorist], [colors.js][colors.js], [colorette][colorette], [picocolors][picocolors], [ansi-colors][ansi-colors], [cli-color][cli-color], [colors-cli][colors-cli].
+Most popular ANSI libraries for Node.js:
+
+[chalk][chalk], [kleur][kleur], [kolorist][kolorist], [colors.js][colors.js], [colorette][colorette], [picocolors][picocolors], [ansi-colors][ansi-colors], [cli-color][cli-color], [colors-cli][colors-cli]
+
+- ✅ [Compare features](#compare)
+
+- 📊 [Benchmarks](#benchmark)
 
 <a id="features" name="features"></a>
 
@@ -97,8 +102,8 @@ See the [features comparison](#compare) and [benchmarks](#benchmark) of most pop
 
 > #### ⚠️ Warning
 >
-> The `v3` has the **BREAKING CHANGES** (removed not widely supported styles and deprecated methods).\
-> For details see the [changelog](https://github.com/webdiscus/ansis/blob/master/CHANGELOG.md).
+> The `v3` has the **BREAKING CHANGES** (removed not widely supported styles and DEPRECATIONS).\
+> For details see the [changelog](https://github.com/webdiscus/ansis/blob/master/CHANGELOG.md#v3-0-0).
 
 ## ❓Question / Feature Request / Bug
 
@@ -696,8 +701,9 @@ npm run compare
 > The size of distributed code that will be loaded via `require` or `import` into your app. It's not a package size.
 >
 > **Named import**\
+> ESM\
 > `import { red, green, blue } from 'lib';`\
-> or\
+> CJS\
 > `const { red, green, blue } = require('lib');`
 >
 > **Naming colors**
@@ -744,7 +750,7 @@ npm run demo
 
 <a id="benchmark" name="#benchmark"></a>
 
-## Benchmark
+## Benchmarks
 
 To measure performance is used [benchmark.js](https://github.com/bestiejs/benchmark.js).
 
@@ -761,7 +767,7 @@ To measure performance is used [benchmark.js](https://github.com/bestiejs/benchm
 >
 > The real performance results of `chalk` and `ansis` in this test are very close.
 
-### Run benchmark
+### Run benchmarks
 
 ```bash
 git clone https://github.com/webdiscus/ansis.git
@@ -944,19 +950,6 @@ c.hex('#FBA')('foo');
 
 `npm run test` will run the unit and integration tests.\
 `npm run test:coverage` will run the tests with coverage.
-
-## Also See
-
-Most popular ANSI libraries for `Node.js`:
-
-- [colors.js][colors.js]
-- [colorette][colorette]
-- [picocolors][picocolors]
-- [cli-color][cli-color]
-- [colors-cli][colors-cli]
-- [ansi-colors][ansi-colors]
-- [kleur][kleur]
-- [chalk][chalk]
 
 ## License
 

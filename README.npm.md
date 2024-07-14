@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/webdiscus/ansis">
-    <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-logo.png" alt="ansis"><br>
+    <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-logo.png"><br>
     ANSI Styling
   </a>
 </p>
@@ -14,6 +14,10 @@ Colorize terminal with ANSI colors & styles, smaller and faster alternative to C
 
 🚀 [Install and Quick Start](https://github.com/webdiscus/ansis#install)
 
+✅ [Compare features](https://github.com/webdiscus/ansis#compare) with similar packages
+
+📊 [Benchmarks](https://github.com/webdiscus/ansis#benchmark)
+
 📖 [Read full docs on GitHub](https://github.com/webdiscus/ansis)
 
 ## Usage
@@ -21,26 +25,20 @@ Colorize terminal with ANSI colors & styles, smaller and faster alternative to C
 ```js
 import ansis, { red, green, black, ansi256, hex } from 'ansis';
 
-ansis.cyan('path/to/file')
-green('Succeful!')
-red`Error!`
-black.bgYellow`Warning!`
+ansis.cyan('file')
+green('Ok')
+red`Error`
+black.bgYellow`Warning`
 ansi256(214)`Orange`
-hex('#E0115F').bold.underline('TrueColor')
+hex('#E0115F').bold('TrueColor')
 ```
 
-## 🏆 Compare & Benchmark
-
-See the [features comparison](https://github.com/webdiscus/ansis#compare) and [benchmarks](https://github.com/webdiscus/ansis#benchmark) of most popular terminal colors libraries:\
-`ansis` `chalk` `kleur` `kolorist` `colors.js` `colorette` `picocolors` `ansi-colors` `cli-color` `colors-cli`.
-
-## 💡 Highlights
+## Highlights
 
 ![ANSI demo](https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-demo.png)
 
-- Supports ESM, CommonJS, TypeScript, Bun, Deno, Next.JS
-- [Standard API](https://github.com/webdiscus/ansis#base-colors), drop-in replacement for Chalk
-- Default and named import: `import ansis, { red, bold, hex } from 'ansis'`
+- Supports ESM, CJS, TypeScript, Bun, Deno, Next.JS
+- Named import: `import ansis, { red, bold, hex } from 'ansis'`
 - Chained syntax: `red.bold.underline('text')`
 - Nested template strings: ``` red`RED ${green`GREEN`} RED` ```
 - ANSI styles: `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>
@@ -48,10 +46,10 @@ See the [features comparison](https://github.com/webdiscus/ansis#compare) and [b
 - ANSI 256 colors: ``` fg(56)`violet` ``` ``` bg(208)`orange` ```
 - TrueColor: ``` rgb(224, 17, 95)`Ruby` ``` ``` hex('#96C')`Amethyst` ```
 - Color fallback: TrueColor → 256 colors → 16 colors → no colors
-- Raw ANSI codes: ``` `foo ${red.open}red{red.close} bar` ```
+- Raw ANSI codes: ``` `foo ${red.open}bar{red.close} foo` ```
 - Strip ANSI codes: `ansis.strip()`
 - Detect color support: `ansis.isSupported()`
 - Supports CLI: `NO_COLOR` `FORCE_COLOR` `--no-color` `--color`
 - Correct style break at the `end of line` when used `\n`
 - Doesn't extend `String.prototype`
-- Zero dependencies
+- No dependencies

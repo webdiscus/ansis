@@ -1,8 +1,5 @@
-// test new named import
-import ansis, { Ansis, red, green, yellow, hex } from 'ansis';
-
-// test old named import
-import { magenta, cyan, blue } from 'ansis/colors';
+// test named import
+import ansis, { Ansis, red, green, hex } from 'ansis';
 
 const log = console.log;
 
@@ -40,8 +37,3 @@ log(ansis2.italic.orange('extend: ansis2.italic.orange'));
 const greenText = green`green text`;
 log('colored: ', greenText);
 log('striped: ', ansis.strip(greenText));
-
-log(`--- OLD  named import: ${yellow`import { magenta, cyan, blue } from 'ansis/colors';`}`);
-log(magenta`magenta`);
-log(cyan.bold`cyan bold`);
-log(blue.italic`blue italic`);

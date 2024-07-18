@@ -1,5 +1,11 @@
 # Change log
 
+## 3.3.1 (2024-07-18)
+
+- chore: optimize code to reduce the size by ~600 bytes,
+- chore: minify `index.d.ts` to reduce the size by ~200 bytes,
+- chore: increase performance, e.g. using chained styles, 70.000.000 -> 80.000.000 ops/sec
+
 ## 3.3.0 (2024-07-14)
 
 - feat(BREAKING CHANGE): remove `old` named import DEPRECATED in `v2.0.0` (2023-11-03).

@@ -9,6 +9,21 @@ import { minify } from 'terser';
 const ecma = 2019;
 
 export default [
+  // remove comments from d.ts file
+  {
+    input: 'src/index.d.ts',
+    output: [
+      {
+        file: 'dist/index.d.ts',
+        format: 'es',
+      },
+    ],
+    plugins: [
+      cleanup({ extensions: ['ts'] }),
+      dts(),
+    ],
+  },
+
   {
     input: 'src/index.js',
     output: [
@@ -39,27 +54,21 @@ export default [
           {
             src: 'src/index.mjs',
             dest: 'dist/',
-            transform: async (contents, name) => (await minify(contents.toString())).code,
+            transform: async (contents, name) => (await minify(contents.toString(), { ecma: 2015 })).code,
           },
+
+          // minify d.ts file generated after cleanup
+          {
+            src: 'dist/index.d.ts',
+            dest: 'dist/',
+            transform: (contents, name) => { return contents.toString().replaceAll(/\n/g, '');},
+          },
+
           { src: 'package.npm.json', dest: 'dist/', rename: 'package.json' },
           { src: 'README.npm.md', dest: 'dist/', rename: 'README.md' },
           { src: 'LICENSE', dest: 'dist/' },
         ],
       }),
-    ],
-  },
-
-  {
-    input: 'src/index.d.ts',
-    output: [
-      {
-        file: 'dist/index.d.ts',
-        format: 'es',
-      },
-    ],
-    plugins: [
-      cleanup({ extensions: ['ts'] }),
-      dts(),
     ],
   },
 ];

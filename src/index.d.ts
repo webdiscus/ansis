@@ -1,4 +1,4 @@
-type ColorExtend = Record<string, string | { open: string, close: string }>
+type ColorExtend = Record<string, string | { open: string, close: string }>;
 
 interface Ansis {
   /**

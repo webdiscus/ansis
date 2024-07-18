@@ -1,5 +1,5 @@
 import { baseStyles, styleMethods, rgb, isSupported } from './ansi-codes.js';
-import { hexToRgb, replaceAll } from './utils.js';
+import { hexToRgb } from './utils.js';
 
 /**
  * @typedef {Object} AnsisProps
@@ -18,36 +18,6 @@ const LF = '\x0a';
 const styles = {};
 
 /**
- * Wrap the string with styling and reset codes.
- *
- * @param {string | Array<String> | number} strings A string or template literals.
- * @param {Array<String>} values The values of the template literals.
- * @param {AnsisProps} props
- * @returns {string}
- */
-const wrap = (strings, values, props) => {
-  if (!strings) return '';
-
-  const { _a: openStack, _b: closeStack } = props;
-  // convert the number to the string
-  let string = strings.raw != null ? String.raw(strings, ...values) : strings + '';
-
-  if (string.includes(ESC)) {
-    while (props != null) {
-      string = replaceAll(string, props.close, props.open); // much faster than native replaceAll
-      //string = string.replaceAll(props.close, props.open); // too slow!
-      props = props._p;
-    }
-  }
-
-  if (string.includes(LF)) {
-    string = string.replace(regexLFCR, closeStack + '$1' + openStack);
-  }
-
-  return openStack + string + closeStack;
-};
-
-/**
  * @param {Object} self
  * @param {AnsisProps} self._p
  * @param {Object} codes
@@ -56,7 +26,58 @@ const wrap = (strings, values, props) => {
  * @returns {Ansis}
  */
 const createStyle = ({ _p: props }, { open, close }) => {
-  const style = (strings, ...values) => wrap(strings, values, style._p);
+  /**
+   * Wrap the string with ANSI codes.
+   * @param {string} strings The normal or template string.
+   * @param {array} values The values of the template string.
+   * @return {string}
+   */
+  const style = (strings, ...values) => {
+    if (!strings) return '';
+
+    let props = style._p;
+    let { _a: openStack, _b: closeStack } = props;
+
+    let str = strings.raw != null
+      // render template strings
+      ? String.raw(strings, ...values)
+      // convert the number to the string
+      : '' + strings;
+
+    // on node.js, the performance of `includes()` and `~indexOf()` is the same, no difference
+    if (str.includes(ESC)) {
+      while (props != null) {
+        // this implementation is over 30% faster than String.replaceAll()
+        // -- begin replaceAll
+        let search = props.close;
+        let searchLength = search.length;
+
+        // the `visible` style has empty open/close props
+        if (searchLength) {
+          let lastPos = 0;
+          let result = '';
+          let pos;
+
+          while (~(pos = str.indexOf(search, lastPos))) {
+            result += str.slice(lastPos, pos) + props.open;
+            lastPos = pos + searchLength;
+          }
+
+          if (lastPos) str = result + str.slice(lastPos);
+        }
+        // -- end replaceAll
+
+        props = props._p;
+      }
+    }
+
+    if (str.includes(LF)) {
+      str = str.replace(regexLFCR, closeStack + '$1' + openStack);
+    }
+
+    return openStack + str + closeStack;
+  };
+
   let openStack = open;
   let closeStack = close;
 
@@ -74,7 +95,7 @@ const createStyle = ({ _p: props }, { open, close }) => {
 };
 
 const Ansis = function() {
-  const self = (str) => str + '';
+  const self = (str) => '' + str;
 
   /**
    * Whether the output supports ANSI color and styles.

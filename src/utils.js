@@ -1,32 +1,6 @@
 const { round, floor, max } = Math;
 
 /**
- * Replace all matched strings.
- * Note: this implementation is over 30% faster than String.replaceAll().
- *
- * @param {string} str
- * @param {string} searchValue
- * @param {string} replaceValue
- * @returns {string}
- */
-export const replaceAll = (str, searchValue, replaceValue) => {
-  // visible style has empty open/close props
-  if (searchValue === '') return str;
-
-  let substringLength = searchValue.length;
-  let lastPos = 0;
-  let result = '';
-  let pos;
-
-  while (~(pos = str.indexOf(searchValue, lastPos))) {
-    result += str.slice(lastPos, pos) + replaceValue;
-    lastPos = pos + substringLength;
-  }
-
-  return lastPos ? result + str.slice(lastPos) : str;
-};
-
-/**
  * Convert hex color string to RGB values.
  *
  * A hexadecimal color code can be 3 or 6 digits with an optional "#" prefix.
@@ -77,7 +51,6 @@ export const rgbToAnsi256 = (r, g, b) => {
     + (36 * round(r / 51))
     + (6 * round(g / 51))
     + round(b / 51);
-
 };
 
 /**
@@ -87,7 +60,7 @@ export const rgbToAnsi256 = (r, g, b) => {
  * @return {number}
  */
 export const ansi256To16 = (code) => {
-  let r, g, b;
+  let r, g, b, value, code16, remainder;
 
   if (code < 8) return 30 + code;
   if (code < 16) return 90 + (code - 8);
@@ -97,19 +70,18 @@ export const ansi256To16 = (code) => {
     r = g = b = (((code - 232) * 10) + 8) / 255;
   } else {
     code -= 16;
-
-    const remainder = code % 36;
+    remainder = code % 36;
 
     r = floor(code / 36) / 5;
     g = floor(remainder / 6) / 5;
     b = (remainder % 6) / 5;
   }
 
-  const value = max(r, g, b) * 2;
+  value = max(r, g, b) * 2;
 
   if (value === 0) return 30;
 
-  let code16 = 30 + ((round(b) << 2) | (round(g) << 1) | round(r));
+  code16 = 30 + ((round(b) << 2) | (round(g) << 1) | round(r));
 
   return value === 2 ? code16 + 60 : code16;
 };

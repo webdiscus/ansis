@@ -9,10 +9,6 @@ const esc = isSupported ? (open, close) => ({ open: `\x1b[${open}m`, close: `\x1
 const closeCode = 39;
 const bgCloseCode = 49;
 
-const ESC = '\x1b';
-const BEL = '\x07';
-const ZWSP = '\u200B';
-
 // defaults, true color
 let fnAnsi256 = (code) => esc(`38;5;${code}`, closeCode);
 let fnBgAnsi256 = (code) => esc(`48;5;${code}`, bgCloseCode);
@@ -122,11 +118,6 @@ export const styleMethods = {
   // note: the `...` operator is too slow
   //bgHex: (hex) => fnBgRgb(...hexToRgb(hex)),
   bgHex: createHexFn(fnBgRgb),
-
-  // reserved for future: hyperlink (OSC 8) is not widely supported (works in iTerm)
-  // link: hasColor
-  //   ? (url) => ({ open: ESC + ']8;;' + url + BEL, close: ESC + ']8;;' + BEL })
-  //   : (url) => ({ open: '', close: `(${ZWSP}${url}${ZWSP})` }),
 };
 
 export const rgb = fnRgb;

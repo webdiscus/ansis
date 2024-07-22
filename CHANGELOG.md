@@ -1,5 +1,12 @@
 # Change log
 
+## 3.3.2 (2024-07-22)
+
+- chore: optimize code to reduce the size by ~50 bytes
+- chore: add benchmarks for `kolorist` package
+- test: add test matrix for windows on GitHub
+- docs: add compare the size of most popular packages
+
 ## 3.3.1 (2024-07-18)
 
 - chore: optimize code to reduce the size by ~600 bytes,

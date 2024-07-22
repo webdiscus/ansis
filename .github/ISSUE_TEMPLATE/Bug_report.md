@@ -21,9 +21,8 @@ about: Create a report to help us improve
 
 <!-- Tell us versions of your environment: -->
 
-- OS: [macOS, Linux, Windows]
+- OS (inc. version): [macOS, Linux, Windows]
 - version of Node.js:
-- version of Webpack:
 - version of the Plugin:
 
 ## Additional context

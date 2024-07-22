@@ -47,10 +47,10 @@ hex('#E0115F').bold.underline('TrueColor!')
 
 Most popular ANSI libraries for Node.js:
 
-[chalk][chalk], [kleur][kleur], [kolorist][kolorist], [colors.js][colors.js], [colorette][colorette], [picocolors][picocolors], [ansi-colors][ansi-colors], [cli-color][cli-color], [colors-cli][colors-cli]
+[chalk][chalk], [kleur][kleur], [ansi-colors][ansi-colors], [kolorist][kolorist], [colorette][colorette], [picocolors][picocolors], [cli-color][cli-color], [colors-cli][colors-cli], [colors.js][colors.js]
 
 - ✅ [Compare features](#compare)
-
+- 💾 [Compare package sizes](#compare-size)
 - 📊 [Benchmarks](#benchmark)
 
 <a id="features" name="features"></a>
@@ -672,7 +672,7 @@ See also:
 
 <a id="compare" name="compare"></a>
 
-## Comparison of most popular libraries
+## Compare the features of most popular libraries
 
 Run the command to see the support of some features by various libraries:
 
@@ -682,23 +682,20 @@ npm run compare
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/compare-colorize-libraries?file=index.js)
 
-| Library<br><nobr>________________</nobr><br> - name<br> - bundle size<br> - named import<br>- naming colors | ANSI base colors | ANSI 256<br>colors | True<br>Color | Chained<br>syntax | Nested<br>template strings | New<br>Line | Fallbacks                           | Supports<br>ENV vars<br>CLI flags                        |
-|:------------------------------------------------------------------------------------------------------------|:----------------:|:------------------:|:-------------:|:-----------------:|:--------------------------:|:-----------:|-------------------------------------|:---------------------------------------------------------|
-| [`colors.js`][colors.js]<br>**18.1KB**<br><nobr>`❌ named import`</nobr><br>`❌ standard`                     |   `16` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | no colors                           | `FORCE_COLOR`<br>`--no-color`<br>`--color`               |
-| [`colors-cli`][colors-cli]<br>**8.6KB**<br><nobr>`❌ named import`</nobr><br>`❌ standard`                    |   `16` colors    |         ✅          |       ❌       |         ✅         |             ❌              |      ✅      | no colors                           | `--no-color`<br>`--color`                                |
-| [`cli-color`][cli-color]<br><nobr>`❌ named import`</nobr><br>`✅ standard`                                   |   `16` colors    |         ✅          |       ❌       |         ✅         |             ❌              |      ❌      | 16 colors<br>no colors              | `NO_COLOR`                                               |
-| [`ansi-colors`][ansi-colors]<br>**5.8KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                  |   `16` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | ❌                                   | `FORCE_COLOR`                                            |
-| [`colorette`][colorette]<br>**3.3KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                      |   `16` colors    |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | no colors                           | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`picocolors`][picocolors]<br>**2.6KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                    |    `8` colors    |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | no colors                           | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`kleur`][kleur]<br>**2.7KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                              |    `8` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ❌      | no colors                           | `NO_COLOR`<br>`FORCE_COLOR`                              |
-| [`kolorist`][kolorist]<br>**6.8KB**<br><nobr>`✅ named import`</nobr><br>`❌ standard`                        |   `16` colors    |         ✅          |       ✅       |         ❌         |             ❌              |      ❌      | 256 color<br>❌<br>no colors         | `NO_COLOR`<br>`FORCE_COLOR`                              |
-| [`chalk`][chalk]<br>**15KB**<br><nobr>`❌ named import`</nobr><br>`✅ standard`                               |   `16` colors    |         ✅          |       ✅       |         ✅         |             ❌              |      ✅      | 256 color<br>16 colors<br>no colors | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`ansis`][ansis]<br>**3.5KB**<br><nobr>`✅ named import`</nobr><br>`✅ standard`                              |   `16` colors    |         ✅          |       ✅       |         ✅         |             ✅              |      ✅      | 256 color<br>16 colors<br>no colors | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| Library<br><nobr>________________</nobr><br> - name<br> - named import<br>- naming colors | ANSI base colors | ANSI 256<br>colors | True<br>Color | Chained<br>syntax | Nested<br>template strings | New<br>Line | Fallback to colors  | Supports<br>ENV vars<br>CLI flags                        |
+|:------------------------------------------------------------------------------------------|:----------------:|:------------------:|:-------------:|:-----------------:|:--------------------------:|:-----------:|---------------------|:---------------------------------------------------------|
+| [`chalk`][chalk]<br><nobr>`❌ named import`</nobr><br>`✅ standard`                         |   `16` colors    |         ✅          |       ✅       |         ✅         |             ❌              |      ✅      | →256<br>→16<br>→b&w | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`ansis`][ansis]<br><nobr>`✅ named import`</nobr><br>`✅ standard`                         |   `16` colors    |         ✅          |       ✅       |         ✅         |             ✅              |      ✅      | →256<br>→16<br>→b&w | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`kolorist`][kolorist]<br><nobr>`✅ named import`</nobr><br>`❌ standard`                   |   `16` colors    |         ✅          |       ✅       |         ❌         |             ❌              |      ❌      | →256<br>❌<br>→b&w   | `NO_COLOR`<br>`FORCE_COLOR`                              |
+| [`cli-color`][cli-color]<br><nobr>`❌ named import`</nobr><br>`✅ standard`                 |   `16` colors    |         ✅          |       ❌       |         ✅         |             ❌              |      ❌      | →16<br>→b&w         | `NO_COLOR`                                               |
+| [`colors-cli`][colors-cli]<br><nobr>`❌ named import`</nobr><br>`❌ standard`               |   `16` colors    |         ✅          |       ❌       |         ✅         |             ❌              |      ✅      | ❌<br>→b&w           | `--no-color`<br>`--color`                                |
+| [`colors.js`][colors.js]<br><nobr>`❌ named import`</nobr><br>`❌ standard`                 |   `16` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | →b&w                | `FORCE_COLOR`<br>`--no-color`<br>`--color`               |
+| [`ansi-colors`][ansi-colors]<br><nobr>`❌ named import`</nobr><br>`✅ standard`             |   `16` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | ❌                   | `FORCE_COLOR`                                            |
+| [`kleur`][kleur]<br><nobr>`✅ named import`</nobr><br>`✅ standard`                         |    `8` colors    |         ❌          |       ❌       |         ✅         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`                              |
+| [`colorette`][colorette]<br><nobr>`✅ named import`</nobr><br>`✅ standard`                 |   `16` colors    |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`picocolors`][picocolors]<br><nobr>`❌ named import`</nobr><br>`✅ standard`               |    `8` colors    |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
 
 > **Note**
->
-> **Code size**\
-> The size of distributed code that will be loaded via `require` or `import` into your app. It's not a package size.
 >
 > **Named import**\
 > ESM\
@@ -736,6 +733,36 @@ npm run compare
 > lib.bgGreen(`First Line
 > Next Line`);
 > ```
+
+#### [↑ top](#top)
+
+<a id="compare-size" name="compare-size"></a>
+
+## Compare the size of most popular packages
+
+| Npm package                  | Require size |                   Install size |                                                         Download size |
+|:-----------------------------|-------------:|-------------------------------:|----------------------------------------------------------------------:|
+| [`chalk`][chalk]             |      16.4 kB |           [43.7 kB][npm-chalk] |           [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |
+| [`ansis`][ansis]             |       3.4 kB |           [11.4 kB][npm-ansis] |            [4.6 kB](https://arve0.github.io/npm-download-size/#ansis) |
+| [`kolorist`][kolorist]       |       6.8 kB |        [51.0 kB][npm-kolorist] |         [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |
+| [`cli-color`][cli-color]     |      12.1 kB | [39.6 / 754 kB][npm-cli-color] | [13.8 / 216 kB](https://arve0.github.io/npm-download-size/#cli-color) |
+| [`colors-cli`][colors-cli]   |       8.7 kB |     [511.0 kB][npm-colors-cli] |     [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |
+| [`colors.js`][colors.js]     |      18.1 kB |       [39.5 kB][npm-colors.js] |          [11.0 kB](https://arve0.github.io/npm-download-size/#colors) |
+| [`ansi-colors`][ansi-colors] |       5.8 kB |     [26.1 kB][npm-ansi-colors] |      [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |
+| [`kleur`][kleur]             |       2.7 kB |           [20.3 kB][npm-kleur] |            [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |
+| [`colorette`][colorette]     |       3.4 kB |       [17.0 kB][npm-colorette] |        [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |
+| [`picocolors`][picocolors]   |       2.1 kB |       [5.1 kB][npm-picocolors] |       [2.4 kB](https://arve0.github.io/npm-download-size/#picocolors) |
+
+**Require size**: The size of distributed code that will be loaded via `require` or `import` into your app.\
+**Install size:** The unpacked size of the npm package in the `node_modules/` directory.\
+**Download size:** The gzipped size of the npm package.
+
+See also:
+
+- [npmjs](https://www.npmjs.com/package) - show install size of the published package, w/o dependencies
+- [packagephobia](https://packagephobia.com) - show total install size, incl. dependencies
+- [npm download size](https://arve0.github.io/npm-download-size) - show tarball and total download size
+- [bundlephobia](https://bundlephobia.com) - useless, doesn't show real tarball size of the downloaded npm package
 
 #### [↑ top](#top)
 
@@ -974,3 +1001,25 @@ c.hex('#FBA')('foo');
 [chalk]: https://github.com/chalk/chalk
 
 [ansis]: https://github.com/webdiscus/ansis
+
+---
+
+[npm-colors.js]: https://www.npmjs.com/package/colors
+
+[npm-colorette]: https://www.npmjs.com/package/colorette
+
+[npm-picocolors]: https://www.npmjs.com/package/picocolors
+
+[npm-cli-color]: https://www.npmjs.com/package/cli-color
+
+[npm-colors-cli]: https://www.npmjs.com/package/colors-cli
+
+[npm-ansi-colors]: https://www.npmjs.com/package/ansi-colors
+
+[npm-kleur]: https://www.npmjs.com/package/kleur
+
+[npm-kolorist]: https://www.npmjs.com/package/kolorist
+
+[npm-chalk]: https://www.npmjs.com/package/chalk
+
+[npm-ansis]: https://www.npmjs.com/package/ansis

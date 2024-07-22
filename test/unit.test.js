@@ -641,6 +641,8 @@ describe('Node.JS different env', () => {
         platform: 'win32',
         env: {},
         argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
 
     });
@@ -776,7 +778,7 @@ describe('Deno support', () => {
         build: {
           os: 'win32',
         },
-        isatty: (rid) => false, // analog to process.stdout.isTTY in node
+        isatty: (rid) => true, // analog to process.stdout.isTTY in node
       },
 
     });

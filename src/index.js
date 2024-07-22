@@ -1,4 +1,4 @@
-import { baseStyles, styleMethods, rgb, isSupported } from './ansi-codes.js';
+import { styleData, fnRgb, isSupported } from './ansi-codes.js';
 import { hexToRgb } from './utils.js';
 
 /**
@@ -125,41 +125,39 @@ const Ansis = function() {
   self.extend = (colors) => {
     for (let name in colors) {
       let value = colors[name];
-      // detect whether the value is style property Object {open, close} or a string with hex code of color '#FF0000'
-      let isStyle = value.open != null;
-      let styleCodes = isStyle ? value : rgb(...hexToRgb(value));
+      let type = typeof value;
 
-      styles[name] = {
-        get() {
-          const style = createStyle(this, styleCodes);
-          defineProperty(this, name, { value: style });
-          return style;
-        },
-      };
+      // detect whether the value is style property Object {open, close}
+      // or a string with hex code of a color, e.g.: '#FF0000'
+      let styleProps = type === 'string' ? fnRgb(...hexToRgb(value)) : value;
+
+      if (type === 'function') {
+        styles[name] = {
+          get() {
+            return (...args) => createStyle(this, value(...args));
+          },
+        };
+      } else {
+        styles[name] = {
+          get() {
+            let style = createStyle(this, styleProps);
+            defineProperty(this, name, { value: style });
+
+            return style;
+          },
+        };
+      }
     }
 
     stylePrototype = defineProperties({}, styles);
     setPrototypeOf(self, stylePrototype);
   };
 
-  // extend styles with base colors & styles
-  self.extend(baseStyles);
+  // define functions, colors and styles
+  self.extend(styleData);
 
   return self;
 };
-
-// extend styles with methods: rgb(), hex(), etc.
-for (let name in styleMethods) {
-  styles[name] = {
-    get() {
-      return (...args) => createStyle(this, styleMethods[name](...args));
-    },
-  };
-}
-
-// define method aliases for compatibility with chalk
-styles.ansi256 = styles.fg;
-styles.bgAnsi256 = styles.bg;
 
 // note: place it here to allow the compiler to group all constants
 let stylePrototype;

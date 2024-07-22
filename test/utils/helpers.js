@@ -1,5 +1,7 @@
 import { execSync } from 'child_process';
 
+const isWin = process.platform === 'win32';
+
 /**
  * Escape the slash `\` in ESC-symbol.
  * Use it to show by an error the received ESC sequence string in console output.
@@ -12,13 +14,22 @@ export const esc = (str) => str.replace(/\x1b/g, '\\x1b');
 /**
  * Return output of javascript file.
  *
- * @param {string} file
- * @param {Array<string>} flags
- * @param {Array<string>} env
- * @return {string}
+ * @param {string} file The file path to execute.
+ * @param {Array<string>} flags The CLI flags.
+ * @param {Array<string>} env The environment variables.
+ * @return {string} CLI output as result of execution.
  */
 export const execScriptSync = (file, flags = [], env = []) => {
-  const envVars = env.length ? '' + env.join(' ') + ' ' : '';
+  let envVars = env.length ? '' + env.join(' ') + ' ' : '';
+
+  // set ENV variables on Windows, e.g.: `set FORCE_COLOR=true | node app.js`
+  if (isWin) {
+    envVars = [];
+    env.forEach((expression) => {
+      envVars.push(`set ${expression} | `);
+    });
+  }
+
   const cmd = envVars + 'node ' + file + ' ' + flags.join(' ');
   const result = execSync(cmd);
 

@@ -13,9 +13,10 @@ import { SPACE_MONO, SPACE_16_COLORS, SPACE_256_COLORS, SPACE_TRUE_COLORS } from
  *
  * @param {object} env
  * @param {boolean} isTTY
+ * @param {boolean} isWin
  * @return {number}
  */
-const detectColorSpace = (env, isTTY) => {
+const detectColorSpace = (env, isTTY, isWin) => {
   const inEnvSome = (arr) => arr.some(val => val in env);
   const { TERM: term, COLORTERM: colorterm } = env;
 
@@ -48,6 +49,9 @@ const detectColorSpace = (env, isTTY) => {
   // unknown output or colors are not supported
   if (!isTTY || /-mono|dumb/i.test(term)) return SPACE_MONO;
 
+  // truecolor support starts from Windows 10 build 14931 (2016-09-21), in 2024 we assume modern Windows is used
+  if (isWin) return SPACE_TRUE_COLORS;
+
   // terminals, that support truecolor, e.g., iTerm, VSCode
   if (colorterm === 'truecolor' || colorterm === '24bit') return SPACE_TRUE_COLORS;
 
@@ -63,8 +67,7 @@ const detectColorSpace = (env, isTTY) => {
   if (/-256(colou?r)?$/i.test(term)) return SPACE_256_COLORS;
 
   // known terminals supporting 16 colors
-  if (/^screen|^tmux|^xterm|^vt[1-5][0-9]([0-9])?|^ansi|color|cygwin|linux|mintty|rxvt/i.test(
-    term)) return SPACE_16_COLORS;
+  if (/^screen|^tmux|^xterm|^vt[1-5][0-9]([0-9])?|^ansi|color|cygwin|linux|mintty|rxvt/i.test(term)) return SPACE_16_COLORS;
 
   // note: for unknown terminals we allow truecolor output,
   // because all terminals supporting only 16 or 256 colors have already been detected above
@@ -138,8 +141,7 @@ export const getColorSpace = (mockThis) => {
   if (isForceDisabled) return SPACE_MONO;
 
   if (colorSpace < 0) {
-    // truecolor support starts from Windows 10 build 14931 (2016-09-21), in 2024 we assume modern Windows is used
-    colorSpace = isWin ? SPACE_TRUE_COLORS : detectColorSpace(env, isTTY);
+    colorSpace = detectColorSpace(env, isTTY, isWin);
   }
 
   return isForceEnabled && colorSpace === SPACE_MONO ? SPACE_TRUE_COLORS : colorSpace;

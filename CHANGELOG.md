@@ -1,7 +1,8 @@
 # Change log
 
-## 3.3.2 (2024-07-22)
+## 3.3.2 (2024-07-23)
 
+- fix: correct detect TTY on Windows platform
 - chore: optimize code to reduce the size by ~50 bytes
 - chore: add benchmarks for `kolorist` package
 - test: add test matrix for windows on GitHub

@@ -1002,7 +1002,6 @@ c.hex('#FBA')('foo');
 
 [ansis]: https://github.com/webdiscus/ansis
 
----
 
 [npm-colors.js]: https://www.npmjs.com/package/colors
 

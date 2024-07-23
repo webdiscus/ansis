@@ -42,8 +42,8 @@ export let styleData = {
   bgAnsi256: fnBgAnsi256, // alias for compatibility with chalk
   fg: fnAnsi256,
   bg: fnBgAnsi256,
-  rgb: fnRgb, bgRgb:
-  fnBgRgb,
+  rgb: fnRgb,
+  bgRgb: fnBgRgb,
   hex: createHexFn(fnRgb),
   bgHex: createHexFn(fnBgRgb),
 

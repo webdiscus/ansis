@@ -241,6 +241,13 @@ describe('handling numbers', () => {
     expect(esc(received)).toEqual(esc(expected));
   });
 
+  test(`ansis.bold(123)`, () => {
+    const num = 123;
+    const received = ansis.bold(num);
+    const expected = '\x1b[1m123\x1b[22m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
   test(`ansis.red(123)`, () => {
     const num = 123;
     const received = ansis.red(num);

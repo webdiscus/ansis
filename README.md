@@ -536,15 +536,15 @@ Define your own themes:
 import ansis from 'ansis';
 
 const theme = {
-  error: ansis.red.bold,
   info: ansis.cyan.italic,
-  warning: ansis.black.bgYellowBright,
+  warn: ansis.black.bgYellowBright,
+  error: ansis.red.bold,
   ruby: ansis.hex('#E0115F'),
 };
 
-theme.error('error');
 theme.info('info');
-theme.warning('warning');
+theme.warn('warning');
+theme.error('error');
 theme.ruby('Ruby color');
 ```
 

@@ -16,3 +16,7 @@ about: Suggest an idea for this project
 
 **Describe alternatives you've considered**
 <!-- A clear and concise description of any alternative solutions or features you've considered. -->
+
+## Appreciation for the useful project
+
+- [ ] After the feature is implemented, do not forget to give a star ⭐

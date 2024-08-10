@@ -28,3 +28,7 @@ about: Create a report to help us improve
 ## Additional context
 
 <!-- Add any other context about the problem here. -->
+
+## Appreciation for the useful project
+
+- [ ] After the problem is resolved, do not forget to give a star ⭐

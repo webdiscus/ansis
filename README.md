@@ -588,6 +588,40 @@ $ FORCE_COLOR=0 node app.js           # force disable colors, non colored output
 $ FORCE_COLOR=1 node app.js > log.txt # force enable colors, output in file with ANSI codes
 ```
 
+#### How to force enable 256 colors
+
+If your environment supports 256 colors, but `ansis` detects only 16 or mono,
+you can manually set the `TERM` variable with standard values: `screen-256color` or `xterm-256color`.
+
+You can set the variable in CLI:
+
+```
+TERM=screen-256color node script.js
+```
+
+or directly in your script:
+
+```js
+process.env.TERM = 'screen-256color';
+```
+
+#### How to force enable truecolor
+
+If your environment supports truecolor, but `ansis` detects only 256, 16 or mono,
+you can manually set the `COLORTERM` variable with standard values: `truecolor` or `24bit`.
+
+You can set the variable in CLI:
+
+```
+COLORTERM=truecolor node script.js
+```
+
+or directly in your script:
+
+```js
+process.env.COLORTERM = 'truecolor';
+```
+
 ### CLI arguments
 
 Use arguments `--no-color` or `--color=false` to disable colors and `--color` to enable ones.
@@ -682,18 +716,18 @@ npm run compare
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/compare-colorize-libraries?file=index.js)
 
-| Library<br><nobr>________________</nobr><br> - named import<br>- naming colors |  ANSI 16 colors  | ANSI 256<br>colors | True<br>Color | Chained<br>syntax | Nested<br>template strings | New<br>Line | Fallback to colors  | Supports<br>ENV vars<br>CLI flags                        |
-|:-------------------------------------------------------------------------------|:----------------:|:------------------:|:-------------:|:-----------------:|:--------------------------:|:-----------:|---------------------|:---------------------------------------------------------|
-| [`ansis`][ansis]<br><nobr>`✅ named import`</nobr><br>`✅ standard`              |        ✅         |         ✅          |       ✅       |         ✅         |             ✅              |      ✅      | →256<br>→16<br>→b&w | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`chalk`][chalk]<br><nobr>`❌ named import`</nobr><br>`✅ standard`              |        ✅         |         ✅          |       ✅       |         ✅         |             ❌              |      ✅      | →256<br>→16<br>→b&w | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`kolorist`][kolorist]<br><nobr>`✅ named import`</nobr><br>`❌ standard`        |        ✅         |         ✅          |       ✅       |         ❌         |             ❌              |      ❌      | →256<br>→b&w        | `NO_COLOR`<br>`FORCE_COLOR`                              |
-| [`cli-color`][cli-color]<br><nobr>`❌ named import`</nobr><br>`✅ standard`      |        ✅         |         ✅          |       ❌       |         ✅         |             ❌              |      ❌      | →16<br>→b&w         | `NO_COLOR`                                               |
-| [`colors-cli`][colors-cli]<br><nobr>`❌ named import`</nobr><br>`❌ standard`    |        ✅         |         ✅          |       ❌       |         ✅         |             ❌              |      ✅      | →b&w                | `--no-color`<br>`--color`                                |
-| [`colors.js`][colors.js]<br><nobr>`❌ named import`</nobr><br>`❌ standard`      |        ✅         |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | →b&w                | `FORCE_COLOR`<br>`--no-color`<br>`--color`               |
-| [`ansi-colors`][ansi-colors]<br><nobr>`❌ named import`</nobr><br>`✅ standard`  |        ✅         |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | ❌                   | `FORCE_COLOR`                                            |
-| [`colorette`][colorette]<br><nobr>`✅ named import`</nobr><br>`✅ standard`      |        ✅         |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`kleur`][kleur]<br><nobr>`✅ named import`</nobr><br>`✅ standard`              | ❌<br> `8` colors |         ❌          |       ❌       |         ✅         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`                              |
-| [`picocolors`][picocolors]<br><nobr>`❌ named import`</nobr><br>`✅ standard`    | ❌<br> `8` colors |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| Library<br><nobr>________________</nobr><br> - named import<br>- naming colors |  ANSI 16 colors   | ANSI 256<br>colors | True<br>Color | Chained<br>syntax | Nested<br>template strings | New<br>Line | Fallback to colors  | Supports<br>ENV vars<br>CLI flags                        |
+|:-------------------------------------------------------------------------------|:-----------------:|:------------------:|:-------------:|:-----------------:|:--------------------------:|:-----------:|---------------------|:---------------------------------------------------------|
+| [`ansis`][ansis]<br><nobr>`✅ named import`</nobr><br>`✅ standard`              |         ✅         |         ✅          |       ✅       |         ✅         |             ✅              |      ✅      | →256<br>→16<br>→b&w | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`chalk`][chalk]<br><nobr>`❌ named import`</nobr><br>`✅ standard`              |         ✅         |         ✅          |       ✅       |         ✅         |             ❌              |      ✅      | →256<br>→16<br>→b&w | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`kolorist`][kolorist]<br><nobr>`✅ named import`</nobr><br>`❌ standard`        |         ✅         |         ✅          |       ✅       |         ❌         |             ❌              |      ❌      | →256<br>→b&w        | `NO_COLOR`<br>`FORCE_COLOR`                              |
+| [`cli-color`][cli-color]<br><nobr>`❌ named import`</nobr><br>`✅ standard`      |         ✅         |         ✅          |       ❌       |         ✅         |             ❌              |      ❌      | →16<br>→b&w         | `NO_COLOR`                                               |
+| [`colors-cli`][colors-cli]<br><nobr>`❌ named import`</nobr><br>`❌ standard`    |         ✅         |         ✅          |       ❌       |         ✅         |             ❌              |      ✅      | →b&w                | `--no-color`<br>`--color`                                |
+| [`colors.js`][colors.js]<br><nobr>`❌ named import`</nobr><br>`❌ standard`      |         ✅         |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | →b&w                | `FORCE_COLOR`<br>`--no-color`<br>`--color`               |
+| [`ansi-colors`][ansi-colors]<br><nobr>`❌ named import`</nobr><br>`✅ standard`  |         ✅         |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | ❌                   | `FORCE_COLOR`                                            |
+| [`colorette`][colorette]<br><nobr>`✅ named import`</nobr><br>`✅ standard`      |         ✅         |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`picocolors`][picocolors]<br><nobr>`❌ named import`</nobr><br>`✅ standard`    | ✅<br>since v1.1.0 |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
+| [`kleur`][kleur]<br><nobr>`✅ named import`</nobr><br>`✅ standard`              | ❌<br> `8` colors  |         ❌          |       ❌       |         ✅         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`                              |
 
 > **Note**
 >
@@ -742,16 +776,16 @@ npm run compare
 
 | Npm package                  | Require size |                   Install size |                                                         Download size |
 |:-----------------------------|-------------:|-------------------------------:|----------------------------------------------------------------------:|
-| [`ansis`][ansis]             |       3.4 kB |           [11.4 kB][npm-ansis] |            [4.6 kB](https://arve0.github.io/npm-download-size/#ansis) |
-| [`chalk`][chalk]             |      16.4 kB |           [43.7 kB][npm-chalk] |           [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |
-| [`kolorist`][kolorist]       |       6.8 kB |        [51.0 kB][npm-kolorist] |         [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |
-| [`cli-color`][cli-color]     |      12.1 kB | [39.6 (754 kB)][npm-cli-color] | [13.8 (216 kB)](https://arve0.github.io/npm-download-size/#cli-color) |
-| [`colors-cli`][colors-cli]   |       8.7 kB |     [511.0 kB][npm-colors-cli] |     [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |
-| [`colors.js`][colors.js]     |      18.1 kB |       [39.5 kB][npm-colors.js] |          [11.0 kB](https://arve0.github.io/npm-download-size/#colors) |
-| [`ansi-colors`][ansi-colors] |       5.8 kB |     [26.1 kB][npm-ansi-colors] |      [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |
+| [`picocolors`][picocolors]   |       2.6 kB |      [11.4 kB][npm-picocolors] |       [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |
 | [`kleur`][kleur]             |       2.7 kB |           [20.3 kB][npm-kleur] |            [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |
+| [`ansis`][ansis]             |       3.4 kB |           [11.4 kB][npm-ansis] |            [4.6 kB](https://arve0.github.io/npm-download-size/#ansis) |
 | [`colorette`][colorette]     |       3.4 kB |       [17.0 kB][npm-colorette] |        [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |
-| [`picocolors`][picocolors]   |       2.1 kB |       [5.1 kB][npm-picocolors] |       [2.4 kB](https://arve0.github.io/npm-download-size/#picocolors) |
+| [`ansi-colors`][ansi-colors] |       5.8 kB |     [26.1 kB][npm-ansi-colors] |      [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |
+| [`kolorist`][kolorist]       |       6.8 kB |        [51.0 kB][npm-kolorist] |         [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |
+| [`colors-cli`][colors-cli]   |       8.7 kB |     [511.0 kB][npm-colors-cli] |     [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |
+| [`cli-color`][cli-color]     |      12.1 kB | [39.6 (754 kB)][npm-cli-color] | [13.8 (216 kB)](https://arve0.github.io/npm-download-size/#cli-color) |
+| [`chalk`][chalk]             |      16.4 kB |           [43.7 kB][npm-chalk] |           [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |
+| [`colors.js`][colors.js]     |      18.1 kB |       [39.5 kB][npm-colors.js] |          [11.0 kB](https://arve0.github.io/npm-download-size/#colors) |
 
 **Require size**: The size of distributed code that will be loaded via `require` or `import` into your app.\
 **Install size:** The unpacked size of the npm package in the `node_modules/` directory, `(incl. dependencies)`.\

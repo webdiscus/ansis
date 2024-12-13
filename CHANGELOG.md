@@ -1,5 +1,19 @@
 # Change log
 
+## 3.4.0-beta.1 (2024-12-12)
+
+- fix: url to GitHub in readme for npm package
+
+## 3.4.0-beta.0 (2024-12-12)
+
+- refactor: invisible code optimisations
+- refactor: optimize readme for npm package to save ~400 bytes
+- refactor: optimize index.d.ts for npm package to save ~500 bytes
+- test: refactor benchmark tests
+- test: add new representative benchmark tests for using 1, 2, 3 and 4 styles
+- test: add picocolors complex benchmark test
+- docs: update readme
+
 ## 3.3.2 (2024-07-23)
 
 - fix: correct detect TTY on Windows platform

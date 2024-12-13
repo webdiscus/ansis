@@ -1,3 +1,4 @@
+<a id="top" name="top"></a>
 <p align="center">
   <a href="https://www.npmjs.com/package/ansis">
     <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-logo.png" alt="ansis"><br>
@@ -30,28 +31,37 @@ ansi256(214)`Orange`
 hex('#E0115F').bold.underline('TrueColor!')
 ```
 
-<a id="top" name="top"></a>
-
 ## 👀 Why yet one lib?
 
 - Quality is first, test coverage 100%.
-- Ansis has all [features](#features) that you need, compare with [other libraries](#compare).
-- Ansis is one of the smallest, [3.5 KB](https://bundlephobia.com/package/ansis@3.2.0) only.
-- Ansis is one of the [fastest](#benchmark), up to **x3 faster** than **Chalk**, [see benchmarks](#benchmark).
-- Ansis is stable, continuously developing and improving.
+- Ansis has all [features](#features) that you need, compare with [similar libraries](#compare).
+- Ansis is one of the smallest, [3.5 kB](https://bundlephobia.com/package/ansis@3.2.0) minified and only [2 kB](https://bundlephobia.com/package/ansis@3.2.0) minzipped.
+- Ansis is one of the [fastest](#benchmark), faster than **Chalk** and **Picocolors** (in some use cases), see [benchmarks](#benchmark).
 - Ansis is open for your [feature requests](https://github.com/webdiscus/ansis/issues).
-- Quick response to issues.
 - Long term support.
+- Used
+  by [NestJS](https://github.com/nestjs/nest), [Facebook/StyleX](https://github.com/facebook/stylex), [Sequelize](https://github.com/sequelize/sequelize), [Salesforce](https://github.com/salesforcecli/cli), [WebpackBar](https://github.com/unjs/webpackbar).
 
 ## ⚖️ Similar packages
 
-Most popular ANSI libraries for Node.js:
+The most popular similar libraries for Node.js:
 
 [chalk][chalk], [kleur][kleur], [ansi-colors][ansi-colors], [kolorist][kolorist], [colorette][colorette], [picocolors][picocolors], [cli-color][cli-color], [colors-cli][colors-cli], [colors.js][colors.js]
 
 - ✅ [Compare features](#compare)
 - 💾 [Compare package sizes](#compare-size)
 - 📊 [Benchmarks](#benchmark)
+
+## 🔄 [Switch to Ansis](#switch-to-ansis)
+
+Ansis provides a powerful, small, and fast solution, enabling seamless replacement of heavy, legacy libraries.
+
+- [Replacing `chalk`](#replacing-chalk)
+- [Replacing `colorette`](#replacing-colorette)
+- [Replacing `picocolors`](#replacing-picocolors)
+- [Replacing `ansi-colors`](#replacing-ansi-colors)
+- [Replacing `kleur`](#replacing-kleur)
+- [Replacing `cli-color`](#replacing-cli-color)
 
 <a id="features" name="features"></a>
 
@@ -68,19 +78,14 @@ Most popular ANSI libraries for Node.js:
 - Supports both **ESM** and **CommonJS**
 - Supports **TypeScript**
 - Supports **Bun**, **Deno**, **Next.JS** runtimes
-- [Standard API](#base-colors), drop-in replacement for **Chalk**
-  ```diff
-  - import chalk from 'chalk';
-  + import chalk, { red } from 'ansis';
-  ```
-  ```js
-  chalk.red.bold('Error!'); // <- Chalk like syntax works fine with Ansis
-  red.bold('Error!');       // <- the same result with Ansis
-  red.bold`Error!`;         // <- the same result with Ansis
-  ```
+- [Standard API](#base-colors)
+- Drop-in replacement for [`chalk`](#replacing-chalk)
+- Drop-in replacement for [`colorette`](#replacing-colorette)
+- Drop-in replacement for [`picocolors`](#replacing-picocolors)
+- Drop-in replacement for [`ansi-colors`](#replacing-ansi-colors)
 - Default and [named import](#named-import) `import ansis, { red, bold, ansi256, hex } from 'ansis'`
 - [Chained syntax](#chained-syntax) `red.bold.underline('text')`
-- [Nested **template strings**](#nested-syntax) ``` red`RED ${green`GREEN`} RED` ```
+- [Nested **template strings**](#nested-syntax) ``` red`Error: ${blue`file.js`} not found!` ```
 - [ANSI styles](#base-colors) `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>
 - [ANSI 16 colors](#base-colors) ``` red`Error!` ``` ``` redBright`Error!` ``` ``` bgRed`Error!` ``` ``` bgRedBright`Error!` ```
 - [ANSI 256 colors](#256-colors) ``` fg(56)`violet` ``` ``` bg(208)`orange` ```
@@ -95,6 +100,7 @@ Most popular ANSI libraries for Node.js:
 - Doesn't extend `String.prototype`
 - Zero dependencies
 
+<!--
 ## 🔆 What's New in v3
 
 - **NEW** added detection of supported color space: TrueColor, 256 colors, 16 colors, no colors (black & white)
@@ -104,6 +110,7 @@ Most popular ANSI libraries for Node.js:
 >
 > The `v3` has the **BREAKING CHANGES** (removed not widely supported styles and DEPRECATIONS).\
 > For details see the [changelog](https://github.com/webdiscus/ansis/blob/master/CHANGELOG.md#v3-0-0).
+-->
 
 ## ❓Question / Feature Request / Bug
 
@@ -309,7 +316,7 @@ Output:\
 ## Base ANSI 16 colors and styles
 
 Colors and styles have standard names used by many popular libraries, such
-as [chalk][chalk], [colorette][colorette], [kleur][kleur].
+as [chalk], [colorette], [picocolors], [kleur].
 
 | Foreground colors                                         | Background colors                                               | Styles                                  |
 |:----------------------------------------------------------|:----------------------------------------------------------------|-----------------------------------------|
@@ -776,9 +783,9 @@ npm run compare
 
 | Npm package                  | Require size |                   Install size |                                                         Download size |
 |:-----------------------------|-------------:|-------------------------------:|----------------------------------------------------------------------:|
-| [`picocolors`][picocolors]   |       2.6 kB |      [11.4 kB][npm-picocolors] |       [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |
+| [`picocolors`][picocolors]   |       2.6 kB |       [6.4 kB][npm-picocolors] |       [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |
 | [`kleur`][kleur]             |       2.7 kB |           [20.3 kB][npm-kleur] |            [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |
-| [`ansis`][ansis]             |       3.4 kB |           [11.4 kB][npm-ansis] |            [4.6 kB](https://arve0.github.io/npm-download-size/#ansis) |
+| [`ansis`][ansis]             |       3.4 kB |           [10.3 kB][npm-ansis] |            [4.6 kB](https://arve0.github.io/npm-download-size/#ansis) |
 | [`colorette`][colorette]     |       3.4 kB |       [17.0 kB][npm-colorette] |        [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |
 | [`ansi-colors`][ansi-colors] |       5.8 kB |     [26.1 kB][npm-ansi-colors] |      [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |
 | [`kolorist`][kolorist]       |       6.8 kB |        [51.0 kB][npm-kolorist] |         [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |
@@ -815,9 +822,9 @@ npm run demo
 
 To measure performance is used [benchmark.js](https://github.com/bestiejs/benchmark.js).
 
-> ‼️ **Warning**
+> [!WARNING]
 >
-> **Don't trust** other test results using [vitest benchmark](https://vitest.dev/config/#benchmark).
+> ‼️ **Don't trust** other test results using [vitest benchmark](https://vitest.dev/config/#benchmark).
 >
 > The `vitest benchmark` generate FALSE/**unreal** results.\
 > For example, the results of the simple bench:
@@ -834,128 +841,133 @@ To measure performance is used [benchmark.js](https://github.com/bestiejs/benchm
 git clone https://github.com/webdiscus/ansis.git
 cd ./ansis
 npm i
+npm run build
 npm run bench
 ```
 
 > ### Tested on
 >
 > MacBook Pro 16" M1 Max 64GB\
-> macOS Monterey 12.1\
-> Node.js v16.13.1\
+> macOS Sequoia 15.1\
+> Node.js v22.11.0\
 > Terminal `iTerm2`
 
-### Colorette bench
+---
 
-The benchmark used in [`colorette`](https://github.com/jorgebucaran/colorette/blob/main/bench/index.js).
+> [!NOTE]
+>
+> In the tests, each library uses the **fastest** styling method available to compare the **absolute performance** of each library.
+>
+> In real practice, no one would use the **slowest** method (such as nested calls) to style a string when the library offers a **faster** and more concise chained method.
+>
+> For example:
+>
+> ```js
+> lib.red.bgWhite.bold(' ERROR ')           // <= faster, shorter, readable
+> lib.red(lib.bgWhite(lib.bold(' ERROR '))) // <= slower, longer, unreadable
+> ```
+
+### Simple bench
+
+The simple test uses only single style.
+Picocolors, Colorette and Kleur do not support [chained syntax](#chained-syntax) or [correct style break](#new-line) (wenn used ``` `\n` ``` in a string),
+so they are the fastest in this simple use case. _No function, no performance overhead_.
 
 ```js
-c.red(`${c.bold(`${c.cyan(`${c.yellow('yellow')}cyan`)}`)}red`);
+ansis.red('foo')
+chalk.red('foo')
+picocolors.red('foo')
+...
 ```
 
 ```diff
-+  colorette           4,572,582 ops/sec   very fast
-   picocolors          3,841,124 ops/sec   very fast
--> ansis               2,725,758 ops/sec   fast
-   chalk               2,287,146 ops/sec   fast
-   kleur/colors        2,281,415 ops/sec   fast
-   kleur               2,228,639 ops/sec   fast
-   ansi-colors         1,265,615 ops/sec   slow
-   colors.js           1,158,572 ops/sec   slow
-   cli-color             470,320 ops/sec   too slow
-   colors-cli            109,811 ops/sec   too slow
++  colorette@2.0.20    109.829.822 ops/sec
+-  picocolors@1.1.1    108.598.201 ops/sec
+   kleur@4.1.5          85.231.268 ops/sec
+-> ansis@3.3.3          59.923.848 ops/sec  -45.4% (~2x slower than 1st place)
+-  chalk@5.3.0          55.828.562 ops/sec  -49.2%
+   kolorist@1.8.0       37.159.398 ops/sec
+   ansi-colors@4.1.3    14.202.622 ops/sec
+   colors@1.4.0          6.999.011 ops/sec
+   cli-color@2.0.4       2.742.775 ops/sec
+   colors-cli@1.0.33       913.542 ops/sec
 ```
 
-### Base colors
+### Using 2 styles
+
+Using only 2 styles, picocolors is already a bit slower, because using the [chained syntax](#chained-syntax) is faster than nested calls.
 
 ```js
-const colors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
-colors.forEach((color) => c[color]('foo'));
+ansis.red.bold('foo')
+chalk.red.bold('foo')
+picocolors.red(picocolors.bold('foo')) // chained syntax is not supported
+...
 ```
 
 ```diff
-+  picocolors          8,265,628 ops/sec  very fast
--> ansis               6,197,754 ops/sec  fast
-   kleur               5,455,121 ops/sec  fast
-   chalk               4,428,884 ops/sec  fast
-   kleur/colors        2,074,111 ops/sec  slow
-   colorette           1,874,506 ops/sec  slow
-   ansi-colors         1,010,628 ops/sec  slow
-   colors.js             640,101 ops/sec  too slow
-   cli-color             305,690 ops/sec  too slow
-   colors-cli            104,962 ops/sec  too slow
++  ansis@3.3.3          59.838.727 ops/sec
+-  picocolors@1.1.1     58.180.994 ops/sec   -2.8%
+-  chalk@5.3.0          48.213.743 ops/sec  -19.4%
+   colorette@2.0.20     33.308.706 ops/sec
+   kolorist@1.8.0       13.320.722 ops/sec
+   kleur@4.1.5           5.977.286 ops/sec
+   ansi-colors@4.1.3     4.123.687 ops/sec
+   colors@1.4.0          2.986.743 ops/sec
+   cli-color@2.0.4       1.783.370 ops/sec
+   colors-cli@1.0.33       690.808 ops/sec
 ```
 
-### Chained styles
+### Using 3 styles
+
+Using 3 styles, picocolors is 2x slower than ansis.
 
 ```js
-const colors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
-colors.forEach((color) => c[color].bold.underline.italic('foo'));
+ansis.red.bold.underline('foo')
+chalk.red.bold.underline('foo')
+picocolors.red(picocolors.bold(picocolors.underline('foo'))) // chained syntax is not supported
+...
 ```
 
 ```diff
-+  ansis               5,515,868 ops/sec  very fast
-   chalk               1,234,573 ops/sec  fast
-   kleur                 514,035 ops/sec  slow
-   ansi-colors           158,921 ops/sec  too slow
-   cli-color             144,837 ops/sec  too slow
-   colors.js             138,219 ops/sec  too slow
-   colors-cli             52,732 ops/sec  too slow
-   kleur/colors        (not supported)
-   colorette           (not supported)
-   picocolors          (not supported)
++  ansis@3.3.3          59.602.490 ops/sec
+-  chalk@5.3.0          42.015.098 ops/sec  -29.5%
+-  picocolors@1.1.1     31.657.041 ops/sec  -46.9% (~2x slower than Ansis)
+   colorette@2.0.20     14.499.195 ops/sec
+   kolorist@1.8.0        6.902.305 ops/sec
+   kleur@4.1.5           5.316.469 ops/sec
+   ansi-colors@4.1.3     2.231.060 ops/sec
+   colors@1.4.0          1.772.706 ops/sec
+   cli-color@2.0.4       1.461.792 ops/sec
+   colors-cli@1.0.33       555.396 ops/sec
 ```
 
-### Nested calls
+### Using 4 styles
+
+In rare cases, when using 4 styles, picocolors becomes 3.4x slower than ansis.
 
 ```js
-const colors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
-colors.forEach((color) => c[color](c.bold(c.underline(c.italic('foo')))));
+ansis.red.bold.italic.underline('foo')
+chalk.red.bold.italic.underline('foo')
+picocolors.red(picocolors.bold(picocolors.italic(picocolors.underline('foo')))) // chained syntax is not supported
+...
 ```
 
 ```diff
-+  picocolors            942,592 ops/sec  very fast
-   colorette             695,350 ops/sec  fast
-   kleur                 648,195 ops/sec  fast
-   kleur/colors          561,111 ops/sec  fast
--> ansis                 558,575 ops/sec  fast
-   chalk                 497,292 ops/sec  fast
-   ansi-colors           260,316 ops/sec  slow
-   colors.js             166,425 ops/sec  slow
-   cli-color              65,561 ops/sec  too slow
-   colors-cli             13,800 ops/sec  too slow
++  ansis@3.3.3          58.094.313 ops/sec
+-  chalk@5.3.0          36.304.684 ops/sec  -37.5%
+-  picocolors@1.1.1     17.335.630 ops/sec  -70.2% (~3.4x slower than Ansis)
+   colorette@2.0.20      8.705.424 ops/sec
+   kleur@4.1.5           4.801.696 ops/sec
+   kolorist@1.8.0        4.324.112 ops/sec
+   ansi-colors@4.1.3     1.524.480 ops/sec
+   colors@1.4.0          1.263.322 ops/sec
+   cli-color@2.0.4       1.210.104 ops/sec
+   colors-cli@1.0.33       484.108 ops/sec
 ```
 
-### Nested styles
+### Deeply nested styles
 
-```js
-c.red(
-  `a red ${c.white('white')} red ${c.red('red')} red ${c.cyan('cyan')} red ${c.black('black')} red ${c.red('red')} red
-  ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red
-  ${c.green('green')} red ${c.red('red')} red ${c.yellow('yellow')} red ${c.blue('blue')} red ${c.red('red')} red
-  ${c.magenta('magenta')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red
-  ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red
-  ${c.black('black')} red ${c.yellow('yellow')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red
-  ${c.yellow('yellow')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red
-  ${c.green('green')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red
-  ${c.magenta('magenta')} red ${c.red('red')} red ${c.red('red')} red ${c.cyan('cyan')} red ${c.red('red')} red
-  ${c.cyan('cyan')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red ${c.red('red')} red message`
-);
-```
-
-```diff
-+  picocolors            243,975 ops/sec  very fast
-   colorette             243,139 ops/sec  very fast
-   kleur/colors          234,132 ops/sec  very fast
-   kleur                 221,446 ops/sec  very fast
--> ansis                 211,868 ops/sec  very fast
-   chalk                 189,960 ops/sec  fast
-   ansi-colors           121,451 ops/sec  slow
-   colors.js              89,633 ops/sec  too slow
-   cli-color              41,657 ops/sec  too slow
-   colors-cli             14,264 ops/sec  too slow
-```
-
-### Deep nested styles
+The complex test with deeply nested styles.
 
 ```js
 c.green(
@@ -963,47 +975,324 @@ c.green(
     `cyan ${c.red(
       `red ${c.yellow(
         `yellow ${c.blue(
-          `blue ${c.magenta(`magenta ${c.underline(`underline ${c.italic(`italic`)} underline`)} magenta`)} blue`
-        )} yellow`
-      )} red`
-    )} cyan`
-  )} green`
-);
+          `blue ${c.magenta(`magenta ${c.underline(`underline ${c.italic(`italic`)} underline`)} magenta`)} blue`,
+        )} yellow`,
+      )} red`,
+    )} cyan`,
+  )} green`,
+)
 ```
 
 ```diff
-+  colorette           1,131,757 ops/sec  very fast
-   picocolors          1,002,649 ops/sec  very fast
--> ansis                 882,220 ops/sec  very fast
-   chalk                 565,965 ops/sec  fast
-   kleur/colors          478,547 ops/sec  fast
-   kleur                 464,004 ops/sec  fast
-   colors.js             451,592 ops/sec  fast
-   ansi-colors           362,733 ops/sec  slow
-   cli-color             213,441 ops/sec  slow
-   colors-cli             40,340 ops/sec  too slow
++  colorette@2.0.20      1.101.447 ops/sec
+-  picocolors@1.1.1      1.058.215 ops/sec
+-> ansis@3.3.3             852.390 ops/sec  -22.6%
+   kolorist@1.8.0          837.577 ops/sec
+-  chalk@5.3.0             571.903 ops/sec  -48.0%
+   kleur@4.1.5             466.172 ops/sec
+   colors@1.4.0            452.397 ops/sec
+   ansi-colors@4.1.3       380.633 ops/sec
+   cli-color@2.0.4         215.335 ops/sec
+   colors-cli@1.0.33        41.589 ops/sec
 ```
 
-### HEX colors
+### Colorette bench
 
-Only two libraries support TrueColor: `ansis` and `chalk`
+The benchmark used in [`colorette`](https://github.com/jorgebucaran/colorette/blob/main/bench/index.js).
 
 ```js
-c.hex('#FBA')('foo');
+c.red(`${c.bold(`${c.cyan(`${c.yellow('yellow')}cyan`)}`)}red`)
 ```
 
 ```diff
-+  ansis               4,944,572 ops/sec  very fast
-   chalk               2,891,684 ops/sec  fast
-   colors.js           (not supported)
-   colorette           (not supported)
-   picocolors          (not supported)
-   cli-color           (not supported)
-   colors-cli          (not supported)
-   ansi-colors         (not supported)
-   kleur/colors        (not supported)
-   kleur               (not supported)
++  picocolors@1.1.1      3.911.687 ops/sec
+   colorette@2.0.20      3.901.652 ops/sec
+-> ansis@3.3.3           2.992.624 ops/sec  -23.5%
+   kolorist@1.8.0        2.555.819 ops/sec
+-  chalk@5.3.0           2.544.110 ops/sec  -35.0%
+   kleur@4.1.5           2.258.746 ops/sec
+   ansi-colors@4.1.3     1.457.300 ops/sec
+   colors@1.4.0          1.121.523 ops/sec
+   cli-color@2.0.4         481.131 ops/sec
+   colors-cli@1.0.33       115.755 ops/sec
 ```
+
+### Picocolors complex bench
+
+The [`picocolors`](https://github.com/alexeyraspopov/picocolors/blob/main/benchmarks/complex.mjs) benchmark, slightly modified.
+Added a bit more complexity by applying 2 styles to the colorized word instead of one.
+
+```js
+let index = 1e8;
+c.red('.') +
+c.yellow('.') +
+c.green('.') +
+c.red.bold(' ERROR ') +
+c.red('Add plugin ' + c.cyan.underline('name') + ' to use time limit with ' + c.cyan(++index));
+```
+
+```diff
++  picocolors@1.1.1      2,552,271 ops/sec
+-> ansis@3.3.3           2,449,720 ops/sec  -4.0%
+-  chalk@5.3.0           2,320,215 ops/sec  -9.0%
+   colorette@2.0.20      2,279,859 ops/sec
+   kleur@4.1.5           1,729,928 ops/sec
+   kolorist@1.8.0        1,651,713 ops/sec
+   ansi-colors@4.1.3       807,154 ops/sec
+   colors@1.4.0            530,762 ops/sec
+   cli-color@2.0.4         289,246 ops/sec
+   colors-cli@1.0.33        96,758 ops/sec
+```
+
+> [!NOTE]
+>
+> In this test, which is closer to practical use, each library uses the **fastest** styling method available.
+>
+> So, `chalk`, `ansis`, `ansi-colors`, `cli-color`, `colors-cli` and `colors` uses chained method, e.g. `c.red.bold(' ERROR ')`.
+> While `picocolors`, `colorette` and `kolorist` uses nested calls, e.g. `c.red(c.bold(' ERROR '))`, because doesn't support the chained syntax.
+
+
+---
+
+#### [↑ top](#top)
+
+<a id="switch-to-ansis" name="switch-to-ansis"></a>
+
+## How to switch to `ansis`
+
+Ansis is a powerful, small, and fast replacement that requires **no code migration** for many similar libraries.\
+Just replace your `import ... from ...` or `require(...)` to `ansis`.
+
+<a id="replacing-chalk" name="replacing-chalk"></a>
+
+### Drop-in replacement for [chalk], no migration required
+
+```diff
+- import chalk from 'chalk';
++ import chalk from 'ansis';
+```
+
+Ansis supports the Chalk syntax and is compatible* with [styles and color names](https://github.com/chalk/chalk?tab=readme-ov-file#styles), so you don't need to modify the
+original code:
+
+```js
+chalk.red.bold('Error!');
+
+// colorize "Error: file not found!"
+chalk.red(`Error: ${chalk.cyan.bold('file')} not found!`);
+
+// ANSI 256 colors
+chalk.ansi256(93)('Violet color');
+chalk.bgAnsi256(194)('Honeydew, more or less');
+
+// truecolor
+chalk.hex('#FFA500').bold('Bold orange color');
+chalk.rgb(123, 45, 67).underline('Underlined reddish color');
+chalk.bgHex('#E0115F')('Ruby');
+chalk.bgHex('#96C')('Amethyst');
+```
+
+> [!WARNING]
+>
+> Ansis doesn't not support the `overline` style, because it's **not widely supported** and no one uses it.\
+> Check you code and remove the `overline` style:
+>
+> ```diff
+> - chalk.red.overline('text');
+> + chalk.red('text');
+> ```
+
+Optionally, you can rewrite the same code to make it even shorter and cleaner:
+
+```js
+import { red, cyan, ansi256, bgAnsi256, fg, bg, hex, rgb, bgHex, bgRgb } from 'ansis';
+
+red.bold('Error!'); // using parentheses
+red.bold`Error!`;   // using template string
+
+// colorize "Error: file not found!"
+red`Error: ${cyan.bold`file`} not found!`;
+
+// ANSI 256 colors
+ansi256(93)`Violet color`;
+bgAnsi256(194)`Honeydew, more or less`;
+fg(93)`Violet color`; // alias for ansi256
+bg(194)`Honeydew, more or less`;  // alias for bgAnsi256
+
+// truecolor
+hex('#FFA500').bold`Bold orange color`;
+rgb(123, 45, 67).underline`Underlined reddish color`;
+bgHex('#E0115F')`Ruby`;
+bgHex('#96C')`Amethyst`;
+```
+
+<a id="replacing-colorette" name="replacing-colorette"></a>
+
+### Drop-in replacement for [colorette], no migration required
+
+```diff
+- import { red, bold, underline } from 'colorette';
++ import { red, bold, underline } from 'ansis';
+```
+
+Ansis is fully compatible with `colorette` [styles and color names](https://github.com/jorgebucaran/colorette#supported-colors), so you don't need to modify the
+original code:
+
+```js
+red.bold('Error!');
+bold(`I'm ${red(`da ba ${underline("dee")} da ba`)} daa`);
+```
+
+Optionally, you can rewrite the same code to make it even shorter and cleaner:
+
+```js
+red.bold`Error!`;
+bold`I'm ${red`da ba ${underline`dee`} da ba`} daa`;
+```
+
+<a id="replacing-picocolors" name="replacing-picocolors"></a>
+
+### Drop-in replacement for [picocolors], no migration required
+
+```diff
+- import pico from 'picocolors';
++ import pico from 'ansis';
+```
+
+Ansis is fully compatible with `picocolors` [styles and color names](https://github.com/alexeyraspopov/picocolors#usage), so you don't need to modify the
+original code:
+
+```js
+pico.red(pico.bold('text'));
+pico.red(pico.bold(variable));
+
+// colorize "Error: file not found!"
+pico.red('Error: ' + pico.cyan(pico.bold('file')) + ' not found!');
+```
+
+Optionally, you can rewrite the same code to make it even shorter and cleaner:
+
+```js
+import { red, cyan } from 'ansis';
+
+red.bold`text`;
+red.bold(variable);
+
+// colorize "Error: file not found!"
+red`Error: ${cyan.bold`file`} not found!`
+```
+
+<a id="replacing-ansi-colors" name="replacing-ansi-colors"></a>
+
+### Drop-in replacement for [ansi-colors], no migration required
+
+```diff
+- const c = require('ansi-colors');
++ const c = require('ansis');
+```
+
+Ansis is fully compatible with `ansi-color` [styles and color names](https://github.com/doowb/ansi-colors#available-styles), so you don't need to modify the
+original code:
+
+```js
+c.red.bold('Error!');
+
+// colorize "Error: file not found!"
+c.red(`Error: ${c.cyan.bold('file')} not found!`);
+```
+
+Optionally, you can rewrite the same code to make it even shorter and cleaner:
+
+```js
+import { red, cyan } from 'ansis';
+
+red.bold('Error!'); // using parentheses
+red.bold`Error!`;   // using template string
+
+// colorize "Error: file not found!"
+red`Error: ${cyan.bold`file`} not found!`;
+```
+
+<a id="replacing-kleur" name="replacing-kleur"></a>
+
+### Migration from [kleur]
+
+```diff
+- import { red, green, yellow, cyan } from 'kleur';
++ import { red, green, yellow, cyan } from 'ansis';
+```
+
+Ansis is fully compatible with `kleur` [styles and color names](https://github.com/lukeed/kleur#api),
+but Kleur `v3.0` no longer uses Chalk-style syntax (magical getter):
+
+```js
+green().bold().underline('this is a bold green underlined message');
+yellow(`foo ${red().bold('red')} bar ${cyan('cyan')} baz`);
+```
+
+If you uses chained methods then it requires a simple code modification.
+Just replace `().` with `.`:
+
+```js
+green.bold.underline('this is a bold green underlined message');
+yellow(`foo ${red.bold('red')} bar ${cyan('cyan')} baz`);
+```
+
+Optionally, you can rewrite the same code to make it even shorter and cleaner:
+
+```js
+yellow`foo ${red.bold`red`} bar ${cyan`cyan`} baz`;
+```
+
+<a id="replacing-cli-color" name="replacing-cli-color"></a>
+
+### Migration from [cli-color]
+
+```diff
+- const clc = require('cli-color');
++ const clc = require('ansis');
+```
+
+Ansis is compatible* with `cli-color` [styles and color names](https://github.com/medikoo/cli-color#colors):
+
+```js
+clc.red.bold('Error!');
+
+// colorize "Error: file not found!"
+clc.red(`Error: ${c.cyan.bold('file')} not found!`);
+```
+
+> [!WARNING]
+>
+> Ansis doesn't not support the `blink` style, because it's **not widely supported** and no one uses it.\
+> Check you code and remove the `blink` style:
+>
+> ```diff
+> - clc.red.blink('text');
+> + clc.red('text');
+> ```
+
+If you use ANSI 256 color functions `xterm` or `bgXterm`, these must be replaced with `ansi256` `fn` or `bgAnsi256` `bg`:
+
+```diff
+- clc.xterm(202).bgXterm(236)('Orange text on dark gray background');
++ clc.ansi256(202).bgAnsi256(236)('Orange text on dark gray background');
+```
+
+Optionally, you can rewrite the same code to make it even shorter and cleaner:
+
+```js
+import { red, cyan, fg, bg } from 'ansis';
+
+red.bold`Error!`;
+
+// colorize "Error: file not found!"
+red`Error: ${cyan.bold`file`} not found!`;
+
+fg(202).bg(236)`Orange text on dark gray background`;
+```
+
+---
 
 #### [↑ top](#top)
 
@@ -1011,6 +1300,10 @@ c.hex('#FBA')('foo');
 
 `npm run test` will run the unit and integration tests.\
 `npm run test:coverage` will run the tests with coverage.
+
+---
+
+#### [↑ top](#top)
 
 ## License
 
@@ -1035,7 +1328,6 @@ c.hex('#FBA')('foo');
 [chalk]: https://github.com/chalk/chalk
 
 [ansis]: https://github.com/webdiscus/ansis
-
 
 [npm-colors.js]: https://www.npmjs.com/package/colors
 

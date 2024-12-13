@@ -19,7 +19,7 @@
     "colors-cli": "1.0.33",
     "kleur": "4.1.5",
     "kolorist": "1.8.0",
-    "picocolors": "1.1.0",
+    "picocolors": "1.1.1",
     "vitest": "^2.1.1"
   }
 }

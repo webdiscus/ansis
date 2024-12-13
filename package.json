@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "3.3.2",
+  "version": "3.4.0",
   "description": "Colorize terminal output with ANSI colors & styles",
   "keywords": [
     "ansi",
@@ -14,7 +14,6 @@
     "cli",
     "log",
     "logging",
-    "strip-color",
     "truecolor",
     "rgb",
     "red",

@@ -61,7 +61,21 @@ export default [
           {
             src: 'dist/index.d.ts',
             dest: 'dist/',
-            transform: (contents, name) => { return contents.toString().replaceAll(/\n/g, '');},
+            transform: (contents, name) => {
+              return contents.toString().
+                // remove insignificant spaces
+                replaceAll(/\n/g, '').
+                replaceAll(/\s{2}/g, ' ').
+                replaceAll(' | ', '|').
+                replaceAll(' = ', '=').
+                replaceAll(' => ', '=>').
+                replaceAll(', ', ',').
+                replaceAll(': ', ':').
+                replaceAll('{ ', '{').
+                replaceAll(' {', '{').
+                replaceAll(' }', '}').
+                replaceAll('; ', ';');
+            },
           },
 
           { src: 'package.npm.json', dest: 'dist/', rename: 'package.json' },

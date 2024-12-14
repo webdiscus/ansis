@@ -1,5 +1,9 @@
 # Change log
 
+## 3.4.0 (2024-12-14)
+
+- refactor: optimise npm package to reduce size by ~1 KB, from 11.3 kB to 10.3 kB
+
 ## 3.4.0-beta.1 (2024-12-12)
 
 - fix: url to GitHub in readme for npm package

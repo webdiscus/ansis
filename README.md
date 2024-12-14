@@ -833,7 +833,7 @@ To measure performance is used [benchmark.js](https://github.com/bestiejs/benchm
 > ansis.red('foo') - 23.000.000 ops/sec (x3 faster is WRONG result)
 > ```
 >
-> The real performance results of `chalk` and `ansis` in this test are very close.
+> The actual performance results of Chalk and Ansis in this test are very similar.
 
 ### Run benchmarks
 

@@ -1,12 +1,11 @@
 <a id="top" name="top"></a>
 <p align="center">
   <a href="https://www.npmjs.com/package/ansis">
-    <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-logo.png" alt="ansis"><br>
-    ANSI Styling
+    <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-logo.png" alt="ansis">
+    <h1 align="center">ANSI Styles</h1>
   </a>
 </p>
 
----
 [![npm](https://img.shields.io/npm/v/ansis?logo=npm&color=brightgreen "npm package")](https://www.npmjs.com/package/ansis "download npm package")
 [![node](https://img.shields.io/node/v/ansis)](https://nodejs.org)
 [![Test](https://github.com/webdiscus/ansis/actions/workflows/test.yml/badge.svg)](https://github.com/webdiscus/ansis/actions/workflows/test.yml)
@@ -97,10 +96,7 @@ Both are recommended by the [ES Tooling](https://github.com/es-tooling) communit
 - Supports **TypeScript**
 - Supports **Bun**, **Deno**, **Next.JS** runtimes
 - [Standard API](#base-colors)
-- Drop-in replacement for [`chalk`](#replacing-chalk)
-- Drop-in replacement for [`colorette`](#replacing-colorette)
-- Drop-in replacement for [`picocolors`](#replacing-picocolors)
-- Drop-in replacement for [`ansi-colors`](#replacing-ansi-colors)
+- Drop-in replacement for [`chalk`](#replacing-chalk) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) [`ansi-colors`](#replacing-ansi-colors)
 - Default and [named import](#named-import) `import ansis, { red, bold, ansi256, hex } from 'ansis'`
 - [Chained syntax](#chained-syntax) `red.bold.underline('text')`
 - [Nested **template strings**](#nested-syntax) ``` red`Error: ${blue`file.js`} not found!` ```

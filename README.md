@@ -33,12 +33,10 @@ hex('#E0115F').bold.underline('TrueColor!')
 
 ## 👀 Why yet one lib?
 
-- Quality is first, test coverage 100%.
+- Quality is first, test coverage 100%. Long term support.
 - Ansis has all [features](#features) that you need, compare with [similar libraries](#compare).
 - Ansis is one of the smallest, [3.5 kB](https://bundlephobia.com/package/ansis@3.2.0) minified and only [2 kB](https://bundlephobia.com/package/ansis@3.2.0) minzipped.
 - Ansis is one of the [fastest](#benchmark), faster than **Chalk** and **Picocolors** (in some use cases), see [benchmarks](#benchmark).
-- Ansis is open for your [feature requests](https://github.com/webdiscus/ansis/issues).
-- Long term support.
 - Used
   by [NestJS](https://github.com/nestjs/nest), [Facebook/StyleX](https://github.com/facebook/stylex), [Sequelize](https://github.com/sequelize/sequelize), [Salesforce](https://github.com/salesforcecli/cli), [WebpackBar](https://github.com/unjs/webpackbar).
 
@@ -54,14 +52,34 @@ The most popular similar libraries for Node.js:
 
 ## 🔄 [Switch to Ansis](#switch-to-ansis)
 
-Ansis provides a powerful, small, and fast solution, enabling seamless replacement of heavy, legacy libraries.
+Ansis provides a powerful, small, and fast solution with drop-in replacement of heavy or legacy libraries.
+
+Today, the two [smallest](#compare-size) and [fastest](#benchmark) libraries are  `ansis` and `picocolors`.\
+Both are recommended by the [ES Tooling](https://github.com/es-tooling) community as the best replacements for other alternatives.
+
+- If you only use a single style, such as `red('foo')`, the best solution is `picocolors`.
+
+- However, if you need more, like combining multiple styles (e.g., `red` + `bold` + `bgWhite`) or [ANSI256 colors](#256-colors) or [Truecolor](#truecolor) then `ansis` is the better choice.
+
+
+> [!NOTE]
+> If libraries such as `ansis` and `chalk` offer chained syntax, use it.\
+> Avoid nested calls, as they are [much slower](#bench-3-styles) and less readable compared to chained syntax.\
+> _**Keep your code clean and readable!**_
+> ```js
+> red.bold.bgWhite`Error`                    ✅ ansis: faster, shorter, readable
+> pico.red(pico.bold(pico.bgWhite('Error'))) ❌ picocolor: slower, longer, unreadable
+>
+> red`Error: ${cyan.underline(file)} not found!`                   ✅ ansis 😊
+> pico.red(`Error: ${pico.cyan(pico.underline(file))} not found!`) ❌ picocolor 🥴
+> ```
 
 - [Replacing `chalk`](#replacing-chalk)
-- [Replacing `colorette`](#replacing-colorette)
-- [Replacing `picocolors`](#replacing-picocolors)
-- [Replacing `ansi-colors`](#replacing-ansi-colors)
-- [Replacing `kleur`](#replacing-kleur)
-- [Replacing `cli-color`](#replacing-cli-color)
+- [Replacing `colorette`](#replacing-colorette) last updated [2 years ago](https://www.npmjs.com/package/colorette)
+- [Replacing `picocolors`](#replacing-picocolors) last updated a [few months ago](https://www.npmjs.com/package/picocolors)
+- [Replacing `ansi-colors`](#replacing-ansi-colors) last updated [3 years ago](https://www.npmjs.com/package/ansi-colors)
+- [Replacing `kleur`](#replacing-kleur) last updated [2 years ago](https://www.npmjs.com/package/kleur)
+- [Replacing `cli-color`](#replacing-cli-color) last updated [~1 year ago](https://www.npmjs.com/package/cli-color)
 
 <a id="features" name="features"></a>
 
@@ -781,22 +799,22 @@ npm run compare
 
 ## Compare the size of most popular packages
 
-| Npm package                  | Require size |                   Install size |                                                         Download size |
-|:-----------------------------|-------------:|-------------------------------:|----------------------------------------------------------------------:|
-| [`picocolors`][picocolors]   |       2.6 kB |       [6.4 kB][npm-picocolors] |       [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |
-| [`kleur`][kleur]             |       2.7 kB |           [20.3 kB][npm-kleur] |            [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |
-| [`ansis`][ansis]             |       3.4 kB |           [10.3 kB][npm-ansis] |            [4.6 kB](https://arve0.github.io/npm-download-size/#ansis) |
-| [`colorette`][colorette]     |       3.4 kB |       [17.0 kB][npm-colorette] |        [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |
-| [`ansi-colors`][ansi-colors] |       5.8 kB |     [26.1 kB][npm-ansi-colors] |      [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |
-| [`kolorist`][kolorist]       |       6.8 kB |        [51.0 kB][npm-kolorist] |         [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |
-| [`colors-cli`][colors-cli]   |       8.7 kB |     [511.0 kB][npm-colors-cli] |     [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |
-| [`cli-color`][cli-color]     |      12.1 kB | [39.6 (754 kB)][npm-cli-color] | [13.8 (216 kB)](https://arve0.github.io/npm-download-size/#cli-color) |
-| [`chalk`][chalk]             |      16.4 kB |           [43.7 kB][npm-chalk] |           [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |
-| [`colors.js`][colors.js]     |      18.1 kB |       [39.5 kB][npm-colors.js] |          [11.0 kB](https://arve0.github.io/npm-download-size/#colors) |
+| Npm package                  |                                                 Download tarball size |                  Unpacked Size | Code size |
+|:-----------------------------|----------------------------------------------------------------------:|-------------------------------:|----------:|
+| [`picocolors`][picocolors]   |       [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |       [6.4 kB][npm-picocolors] |    2.6 kB
+| [`ansis`][ansis]             |            [4.5 kB](https://arve0.github.io/npm-download-size/#ansis) |           [10.3 kB][npm-ansis] |    3.4 kB
+| [`colorette`][colorette]     |        [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |       [17.0 kB][npm-colorette] |    3.4 kB
+| [`kleur`][kleur]             |            [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |           [20.3 kB][npm-kleur] |    2.7 kB
+| [`ansi-colors`][ansi-colors] |      [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |     [26.1 kB][npm-ansi-colors] |    5.8 kB
+| [`kolorist`][kolorist]       |         [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |        [51.0 kB][npm-kolorist] |    6.8 kB
+| [`colors.js`][colors.js]     |          [11.0 kB](https://arve0.github.io/npm-download-size/#colors) |       [39.5 kB][npm-colors.js] |   18.1 kB
+| [`chalk`][chalk]             |           [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |           [43.7 kB][npm-chalk] |   16.4 kB
+| [`cli-color`][cli-color]     | [13.8 (216 kB)](https://arve0.github.io/npm-download-size/#cli-color) | [39.6 (754 kB)][npm-cli-color] |   12.1 kB
+| [`colors-cli`][colors-cli]   |     [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |     [511.0 kB][npm-colors-cli] |    8.7 kB
 
-**Require size**: The size of distributed code that will be loaded via `require` or `import` into your app.\
-**Install size:** The unpacked size of the npm package in the `node_modules/` directory, `(incl. dependencies)`.\
-**Download size:** The gzipped size of the npm package.
+**Download size:** The gzipped size of the npm package.\
+**Unpacked Size:** The size of the npm package in the `node_modules/` directory, `(incl. dependencies)`.\
+**Code size**: The size of distributed code that will be loaded via `require` or `import` into your app.
 
 See also:
 
@@ -863,8 +881,8 @@ npm run bench
 > For example:
 >
 > ```js
-> lib.red.bgWhite.bold(' ERROR ')           // <= faster, shorter, readable
-> lib.red(lib.bgWhite(lib.bold(' ERROR '))) // <= slower, longer, unreadable
+> lib.red.bold.bgWhite(' ERROR ')           // ✅ faster, shorter, readable
+> lib.red(lib.bold(lib.bgWhite(' ERROR '))) // ❌ slower, longer, unreadable
 > ```
 
 ### Simple bench
@@ -893,6 +911,7 @@ picocolors.red('foo')
    colors-cli@1.0.33       913.542 ops/sec
 ```
 
+<a id="bench-2-styles" name="bench-2-styles"></a>
 ### Using 2 styles
 
 Using only 2 styles, picocolors is already a bit slower, because using the [chained syntax](#chained-syntax) is faster than nested calls.
@@ -917,14 +936,15 @@ picocolors.red(picocolors.bold('foo')) // chained syntax is not supported
    colors-cli@1.0.33       690.808 ops/sec
 ```
 
+<a id="bench-3-styles" name="bench-3-styles"></a>
 ### Using 3 styles
 
 Using 3 styles, picocolors is 2x slower than ansis.
 
 ```js
-ansis.red.bold.underline('foo')
-chalk.red.bold.underline('foo')
-picocolors.red(picocolors.bold(picocolors.underline('foo'))) // chained syntax is not supported
+ansis.red.bold.bgWhite('foo')
+chalk.red.bold.bgWhite('foo')
+picocolors.red(picocolors.bold(picocolors.bgWhite('foo'))) // chained syntax is not supported
 ...
 ```
 
@@ -946,9 +966,9 @@ picocolors.red(picocolors.bold(picocolors.underline('foo'))) // chained syntax i
 In rare cases, when using 4 styles, picocolors becomes 3.4x slower than ansis.
 
 ```js
-ansis.red.bold.italic.underline('foo')
-chalk.red.bold.italic.underline('foo')
-picocolors.red(picocolors.bold(picocolors.italic(picocolors.underline('foo')))) // chained syntax is not supported
+ansis.red.bold.underline.bgWhite('foo')
+chalk.red.bold.underline.bgWhite('foo')
+picocolors.red(picocolors.bold(picocolors.underline(picocolors.bgWhite('foo')))) // chained syntax is not supported
 ...
 ```
 

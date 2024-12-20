@@ -1,10 +1,10 @@
 <a id="top" name="top"></a>
-<p align="center">
+<div align="center">
   <a href="https://www.npmjs.com/package/ansis">
     <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-logo.png" alt="ansis">
-    <h1 align="center">ANSI Styles</h1>
   </a>
-</p>
+  <h1 align="center">ANSI Styles</h1>
+</div>
 
 [![npm](https://img.shields.io/npm/v/ansis?logo=npm&color=brightgreen "npm package")](https://www.npmjs.com/package/ansis "download npm package")
 [![node](https://img.shields.io/node/v/ansis)](https://nodejs.org)
@@ -13,7 +13,8 @@
 [![downloads](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/ansis)](https://bundlephobia.com/package/ansis)
 
-Colorize terminal with ANSI colors & styles, **smaller** and **faster** alternative to [Chalk][chalk] with additional useful [features](#features).
+ANSI colors and styles in terminal output for Node.js.
+
 
 🚀 [Install and Quick Start](#install)
 
@@ -30,14 +31,17 @@ ansi256(214)`Orange`
 hex('#E0115F').bold.underline('TrueColor!')
 ```
 
-## 👀 Why yet one lib?
+## 👀 Why use Ansis?
 
 - Quality is first, test coverage 100%. Long term support.
-- Ansis has all [features](#features) that you need, compare with [similar libraries](#compare).
-- Ansis is one of the smallest, [3.5 kB](https://bundlephobia.com/package/ansis@3.2.0) minified and only [2 kB](https://bundlephobia.com/package/ansis@3.2.0) minzipped.
-- Ansis is one of the [fastest](#benchmark), faster than **Chalk** and **Picocolors** (in some use cases), see [benchmarks](#benchmark).
-- Used
-  by [NestJS](https://github.com/nestjs/nest), [Facebook/StyleX](https://github.com/facebook/stylex), [Sequelize](https://github.com/sequelize/sequelize), [Salesforce](https://github.com/salesforcecli/cli), [WebpackBar](https://github.com/unjs/webpackbar).
+- Ansis is **small**, [3.4 kB](https://bundlephobia.com/package/ansis@3.4.0) minified and only [2 kB](https://bundlephobia.com/package/ansis@3.4.0) minzipped.
+- Ansis is [faster](#benchmark) than **Chalk** and **Picocolors** (in some use cases), see [benchmarks](#benchmark).
+- Ansis has [all features](#features) that you need, compare with [similar libraries](#compare).
+- Detects color support across a wide range of [environments](#color-support).
+
+## 🌍 Used by
+
+[NestJS](https://github.com/nestjs/nest), [Facebook/StyleX](https://github.com/facebook/stylex), [Sequelize](https://github.com/sequelize/sequelize), [Salesforce](https://github.com/salesforcecli/cli), [WebpackBar](https://github.com/unjs/webpackbar)
 
 ## ⚖️ Similar packages
 
@@ -51,19 +55,18 @@ The most popular similar libraries for Node.js:
 
 ## 🔄 [Switch to Ansis](#switch-to-ansis)
 
-Ansis provides a powerful, small, and fast solution with drop-in replacement of heavy or legacy libraries.
-
 Today, the two [smallest](#compare-size) and [fastest](#benchmark) libraries are  `ansis` and `picocolors`.\
 Both are recommended by the [ES Tooling](https://github.com/es-tooling) community as the best replacements for other alternatives.
 
 - If you only use a single style, such as `red('foo')`, the best solution is `picocolors`.
 
-- However, if you need more, like combining multiple styles (e.g., `red` + `bold` + `bgWhite`) or [ANSI256 colors](#256-colors) or [Truecolor](#truecolor) then `ansis` is the better choice.
+- However, if you need more, like combining multiple styles (e.g., `red` + `bold` + `bgWhite`), [ANSI256 colors](#256-colors) or [Truecolor](#truecolor) then `ansis` is the better choice.
 
 
-> [!NOTE]
-> If libraries such as `ansis` and `chalk` offer chained syntax, use it.\
-> Avoid nested calls, as they are [much slower](#bench-3-styles) and less readable compared to chained syntax.\
+> [!TIP]
+>
+> Use the chained syntax provided by libraries like `ansis` and `chalk`.\
+> Avoid using nested calls, as they are [much slower](#bench-3-styles) and less readable than the chained syntax.\
 > _**Keep your code clean and readable!**_
 > ```js
 > red.bold.bgWhite`Error`                    ✅ ansis: faster, shorter, readable

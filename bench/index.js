@@ -68,9 +68,6 @@ const bench = new Bench({
   failColor: benchStyle.red.bold,
 });
 
-let file = 'file';
-console.log(picocolors.red(`Error: ${picocolors.cyan(file)} not found!`));
-
 log(hex('#F88').inverse.bold` -= Benchmark =- `);
 
 // Simple bench
@@ -111,7 +108,7 @@ bench('Use 3 styles').
   add(packages['ansi-colors'], () => ansiColors.red.bold.bgWhite('foo')).
   add(packages['kolorist'], () => kolorist.red(kolorist.bold(kolorist.bgWhite('foo')))).
   add(packages['cli-color'], () => cliColor.red.bold.bgWhite('foo')).
-  add(packages['colors-cli'], () => colorCli.red.bold.bgWhite('foo')).
+  add(packages['colors-cli'], () => colorCli.red.bold.white_bt('foo')).
   add(packages['colors'], () => colorsJs.red.bold.bgWhite('foo')).
   run();
 
@@ -125,7 +122,7 @@ bench('Use 4 styles').
   add(packages['ansi-colors'], () => ansiColors.red.bold.underline.bgWhite('foo')).
   add(packages['kolorist'], () => kolorist.red(kolorist.bold(kolorist.underline(kolorist.bgWhite('foo'))))).
   add(packages['cli-color'], () => cliColor.red.bold.underline.bgWhite('foo')).
-  add(packages['colors-cli'], () => colorCli.red.bold.underline.bgWhite('foo')).
+  add(packages['colors-cli'], () => colorCli.red.bold.underline.white_bt('foo')).
   add(packages['colors'], () => colorsJs.red.bold.underline.bgWhite('foo')).
   run();
 
@@ -136,7 +133,7 @@ bench('Chained syntax').
   add(packages['kleur'], () => kleur.red().bold().underline().bgWhite('foo')).
   add(packages['ansi-colors'], () => ansiColors.red.bold.underline.bgWhite('foo')).
   add(packages['cli-color'], () => cliColor.red.bold.underline.bgWhite('foo')).
-  add(packages['colors-cli'], () => colorCli.red.bold.underline.bgWhite('foo')).
+  add(packages['colors-cli'], () => colorCli.red.bold.underline.white_bt('foo')).
   add(packages['colors'], () => colorsJs.red.bold.underline.bgWhite('foo')).
   // colorette - (not supported)
   // picocolors - (not supported)
@@ -153,7 +150,7 @@ bench('Nested styles').
   add(packages['ansi-colors'], () => ansiColors.red(ansiColors.bold(ansiColors.underline(ansiColors.bgWhite('foo'))))).
   add(packages['kolorist'], () => kolorist.red(kolorist.bold(kolorist.underline(kolorist.bgWhite('foo'))))).
   add(packages['cli-color'], () => cliColor.red(cliColor.bold(cliColor.underline(cliColor.bgWhite('foo'))))).
-  add(packages['colors-cli'], () => colorCli.red(colorCli.bold(colorCli.underline(colorCli.bgWhite('foo'))))).
+  add(packages['colors-cli'], () => colorCli.red(colorCli.bold(colorCli.underline(colorCli.white_bt('foo'))))).
   add(packages['colors'], () => colorsJs.red(colorsJs.bold(colorsJs.underline(colorsJs.bgWhite('foo'))))).
   run();
 

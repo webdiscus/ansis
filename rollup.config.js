@@ -1,29 +1,17 @@
 import terser from '@rollup/plugin-terser';
 import replace from '@rollup/plugin-replace';
-import cleanup from 'rollup-plugin-cleanup';
 import copy from 'rollup-plugin-copy';
-import dts from 'rollup-plugin-dts';
 import { minify } from 'terser';
 
 // last ECMA version compatible with node.js 12
 const ecma = 2019;
 
-export default [
-  // remove comments from d.ts file
-  {
-    input: 'src/index.d.ts',
-    output: [
-      {
-        file: 'dist/index.d.ts',
-        format: 'es',
-      },
-    ],
-    plugins: [
-      cleanup({ extensions: ['ts'] }),
-      dts(),
-    ],
-  },
+function removeComments(string){
+  //Takes a string of code, not an actual function.
+  return string.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim();//Strip comments
+}
 
+export default [
   {
     input: 'src/index.js',
     output: [
@@ -38,8 +26,11 @@ export default [
       replace({
         preventAssignment: false, // allow modifying exports
         // the order of exports is other than is needed
-        'exports.Ansis = Ansis': 'module.exports = ansis', // firstly must be defined default export
-        'exports.default = ansis': 'module.exports.Ansis = Ansis', // then on the next line can be named export
+        // firstly must be defined default export
+        'exports.Ansis = Ansis': 'module.exports = ansis',
+        // then on the next line can be named and default export,
+        // `ansis.default = ansis` is needed for tsc using default import, e.g. `import ansis from 'ansis'`
+        'exports.default = ansis': 'module.exports.Ansis = Ansis, ansis.default = ansis',
       }),
       terser({
         ecma,
@@ -59,15 +50,18 @@ export default [
 
           // minify d.ts file generated after cleanup
           {
-            src: 'dist/index.d.ts',
+            //src: 'src/index.interface.d.ts', // Ansis instance expressed via interface: 3713 bytes
+            src: 'src/index.type.d.ts', // Ansis instance expressed via type dynamic properties: 3161 bytes
+            rename: 'index.d.ts',
             dest: 'dist/',
             transform: (contents, name) => {
-              return contents.toString().
+              return removeComments(contents.toString()).
                 // remove insignificant spaces
                 replaceAll(/\n/g, '').
-                replaceAll(/\s{2}/g, ' ').
+                replaceAll(/\s{2,}/g, ' ').
                 replaceAll(' | ', '|').
                 replaceAll(' = ', '=').
+                replaceAll('=|', '=').
                 replaceAll(' => ', '=>').
                 replaceAll(', ', ',').
                 replaceAll(': ', ':').
@@ -80,7 +74,7 @@ export default [
 
           { src: 'package.npm.json', dest: 'dist/', rename: 'package.json' },
           { src: 'README.npm.md', dest: 'dist/', rename: 'README.md' },
-          { src: 'LICENSE', dest: 'dist/' },
+          { src: 'LICENSE.npm', dest: 'dist/', rename: 'LICENSE' },
         ],
       }),
     ],

@@ -1,6 +1,19 @@
-import { execSync } from 'child_process';
+import { exec, execSync } from 'child_process';
+import util from 'util';
+import { expect } from 'vitest';
+
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, resolve, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const __testDirname = resolve(join(__dirname, '../'));
 
 const isWin = process.platform === 'win32';
+
+// Promisify exec for ease of testing
+const execPromise = util.promisify(exec);
 
 /**
  * Escape the slash `\` in ESC-symbol.
@@ -10,6 +23,19 @@ const isWin = process.platform === 'win32';
  * @returns {string}
  */
 export const esc = (str) => str.replace(/\x1b/g, '\\x1b');
+
+/**
+ * Return content of file as string.
+ *
+ * @param {string} file
+ * @return {any}
+ */
+export const readTextFileSync = (file) => {
+  if (!fs.existsSync(file)) {
+    throw new Error(`\nERROR: the file "${file}" not found.`);
+  }
+  return fs.readFileSync(file, 'utf-8');
+};
 
 /**
  * Return output of javascript file.
@@ -63,3 +89,59 @@ export const execScriptSync = (file, flags = [], env = []) => {
 //
 //   return output;
 // };
+
+export const getCompareFileContents = function(
+  receivedFile,
+  expectedFile,
+  filter = /.(js|out)$/,
+) {
+  return filter.test(receivedFile) && filter.test(expectedFile)
+    ? { received: readTextFileSync(receivedFile), expected: readTextFileSync(expectedFile) }
+    : { received: '', expected: '' };
+};
+
+/**
+ * Execute TS file and compare output result with expected file.
+ *
+ * @param {string} testPath The path to test directory relative to `test/` folder.
+ * @param {'tsc'|'swc'|'esbuild'} compiler  The compiler, defaults `tsc`.
+ * @return {Promise<void>}
+ */
+export const executeTSFile = (testPath, compiler = 'tsc') => {
+  const compilers = {
+    tsc: 'build',
+    swc: 'build:swc',
+    esbuild: 'build:esbuild',
+  };
+
+  const buildCompiler = compilers[compiler] || 'build';
+
+  const cmd = `cd ./test/${testPath} && npm run ${buildCompiler}`;
+  return execPromise(cmd).then((result) => {
+    // execution result
+    //console.log('>> result: ', result);
+
+    const receivedFile = join(__testDirname, testPath, 'dist/index.out');
+    const expectedFile = join(__testDirname, testPath, 'expected/index.out');
+    const { received, expected } = getCompareFileContents(receivedFile, expectedFile);
+
+    this.result = { received, expected };
+
+    expect(received).toEqual(expected);
+  })
+  // debugging inner errors
+  .catch((error) => {
+    let message;
+    //console.log('>> err: ', error);
+    if (typeof error === 'string') {
+      message = '\n' + error;
+    } else if('stdout' in error && 'stderr' in error) {
+      message = error.stdout + '\n' + error.stderr;
+    } else {
+      message = '\n' + error.toString();
+    }
+
+    expect.fail(testPath + message);
+  });
+
+};

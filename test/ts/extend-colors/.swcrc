@@ -1,0 +1,15 @@
+{
+  "jsc": {
+    "target": "ES6",
+    "parser": {
+      "syntax": "typescript", // or "ecmascript" if you're using plain JavaScript
+      "tsx": false,           // set to true if using React/TSX
+      "decorators": true      // set to true if using decorators
+    }
+  },
+  "module": {
+    "type": "commonjs", // Default to ES modules
+    "strict": true, // Enable strict ES module output
+    "noInterop": true  // Disable interop for default and named exports
+  }
+}

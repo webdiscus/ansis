@@ -1,5 +1,20 @@
 # Change log
 
+## 3.5.0-beta.1 (2024-12-23)
+
+- refactor: optimise npm package to reduce the size by ~1.5 kB, from 8.9 kB to 7.5 kB
+
+## 3.5.0-beta.0 (2024-12-21)
+
+- feat: add support for terminals where the GPG is installed.
+  If GPG is installed, `GPG_TTY` will be set to `ENV` instead of `isTTY`.
+- fix: default import in TypeScript, compiled with `tsc`:
+  `import ansis from 'ansis'` now works so well as `import * as ansis from 'ansis'`
+- refactor: optimise npm package to reduce size by ~1.3 kB, from 10.3 kB to 8.9 kB
+- refactor: optimize index.d.ts, remove insignificant spaces and words, use the `type` with dynamic properties instead of the `interface`
+- test: add integration tests to execute compiled TypeScript and compare outputs with expected strings
+- test: add tests for `tsc`, `swc` and `esbuild` compilers
+
 ## 3.4.0 (2024-12-14)
 
 - refactor: optimise npm package to reduce size by ~1 KB, from 11.3 kB to 10.3 kB

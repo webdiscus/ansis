@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build": "del dist/* && tsc && node dist/index.js --color=true > dist/index.out",
+    "build:swc": "del dist/* && swc ./src -d dist && node dist/index.js --color=true > dist/index.out",
+    "build:esbuild": "del dist/* && esbuild src/index.ts --bundle --outfile=dist/index.js && node dist/index.js --color=true > dist/index.out",
+    "view": "node ./dist/index.js"
+  }
+}

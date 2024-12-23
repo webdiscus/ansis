@@ -14,51 +14,23 @@ type AnsiStyles = (
   | 'strike'
   );
 
+
+// BasicColors
+type BC = | 'black' | 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white' | 'gray' | 'grey';
+
+// BrightColors
+type BBC = `${BC}Bright`;
+
 /**
  * Base ANSI Colors
  */
-type AnsiColors = (
-  | 'black'
-  | 'red'
-  | 'green'
-  | 'yellow'
-  | 'blue'
-  | 'magenta'
-  | 'cyan'
-  | 'white'
-  | 'grey'
-  | 'gray'
-  | 'blackBright'
-  | 'redBright'
-  | 'greenBright'
-  | 'yellowBright'
-  | 'blueBright'
-  | 'magentaBright'
-  | 'cyanBright'
-  | 'whiteBright'
-  | 'bgBlack'
-  | 'bgRed'
-  | 'bgGreen'
-  | 'bgYellow'
-  | 'bgBlue'
-  | 'bgMagenta'
-  | 'bgCyan'
-  | 'bgWhite'
-  | 'bgGrey'
-  | 'bgGray'
-  | 'bgBlackBright'
-  | 'bgRedBright'
-  | 'bgGreenBright'
-  | 'bgYellowBright'
-  | 'bgBlueBright'
-  | 'bgMagentaBright'
-  | 'bgCyanBright'
-  | 'bgWhiteBright'
-  );
+type AnsiColors =
+  | BC
+  | BBC
+  | `bg${Capitalize<BC>}`
+  | `bg${Capitalize<BBC>}`;
 
-type StringUnion<T, B extends string> = T | (B & Record<never, never>);
-type AnsiColorsExtend<T extends string> = StringUnion<AnsiColors, T>;
-type ColorExtend = Record<string, string | { open: string, close: string }>;
+type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>);
 
 interface Ansis {
   /**
@@ -162,88 +134,113 @@ interface Ansis {
   strip(str: string): string;
 
   /**
-   * Extend base colors with custom ones.
+   * Extends the current `Ansis` instance with additional colors.
    *
-   * @param {Object.<name:string, value:string|{open:string, close:string}>} colors The object with key as color name
-   *  and value as hex code of custom color or the object with 'open' and 'close' codes.
+   * For example:
+   *
+   * const myTheme = {
+   *   apple: '#4FA83D',
+   *   pink: '#FF75D1',
+   * };
+   * const customAnsis = ansis.extend(myTheme);
+   * const { apple, pink, red } = customAnsis;
+   *
+   * @param colors A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
+   * @returns An instance of `Ansis` with the extended colors available as properties.
    */
-  extend(colors: ColorExtend): void;
+  //extend<U extends string>(colors: Record<U, string | { open: string; close: string }>): this & Record<U, this>;
+
+  /**
+   * Extends the current `Ansis` instance with additional colors.
+   *
+   * For example:
+   *
+   * const myTheme = {
+   *   apple: '#4FA83D',
+   *   pink: '#FF75D1',
+   * };
+   * ansis.extend(myTheme);
+   * const { apple, pink, red } = ansis;
+   *
+   * @param colors A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
+   */
+  extend<U extends string>(colors: Record<U, string | { open: string; close: string }>): asserts this is this & Record<U, this>;
 
   /** The ANSI escape sequences for starting the current style. */
-  readonly open: string;
+  open: string;
 
   /** The ANSI escape sequences for ending the current style. */
-  readonly close: string;
+  close: string;
 
   /** Reset the current style. */
-  readonly reset: this;
+  reset: this;
 
   /** Invert background and foreground colors. */
-  readonly inverse: this;
+  inverse: this;
 
   /** Print the invisible text. */
-  readonly hidden: this;
+  hidden: this;
 
   /** Print visible text without ANSI styling. */
-  readonly visible: this;
+  visible: this;
 
   /** <b>Bold</b> style (high intensity). */
-  readonly bold: this;
+  bold: this;
 
   /** Faint style (low intensity or dim). */
-  readonly dim: this;
+  dim: this;
 
   /** <i>Italic</i> style. (Not widely supported) */
-  readonly italic: this;
+  italic: this;
 
   /** U̲n̲d̲e̲r̲l̲i̲n̲e̲ style. (Not widely supported) */
-  readonly underline: this;
+  underline: this;
 
   /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) */
-  readonly strikethrough: this;
+  strikethrough: this;
 
   /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) Alias for `strikethrough`. */
-  readonly strike: this;
+  strike: this;
 
   // Colors
-  readonly black: this;
-  readonly red: this;
-  readonly green: this;
-  readonly yellow: this;
-  readonly blue: this;
-  readonly magenta: this;
-  readonly cyan: this;
-  readonly white: this;
-  readonly grey: this;
-  readonly gray: this; // Alias for grey
-  readonly blackBright: this;
-  readonly redBright: this;
-  readonly greenBright: this;
-  readonly yellowBright: this;
-  readonly blueBright: this;
-  readonly magentaBright: this;
-  readonly cyanBright: this;
-  readonly whiteBright: this;
+  black: this;
+  red: this;
+  green: this;
+  yellow: this;
+  blue: this;
+  magenta: this;
+  cyan: this;
+  white: this;
+  grey: this;
+  gray: this; // Alias for grey
+  blackBright: this;
+  redBright: this;
+  greenBright: this;
+  yellowBright: this;
+  blueBright: this;
+  magentaBright: this;
+  cyanBright: this;
+  whiteBright: this;
 
   // Background colors
-  readonly bgBlack: this;
-  readonly bgRed: this;
-  readonly bgGreen: this;
-  readonly bgYellow: this;
-  readonly bgBlue: this;
-  readonly bgMagenta: this;
-  readonly bgCyan: this;
-  readonly bgWhite: this;
-  readonly bgGrey: this;
-  readonly bgGray: this; // Alias for bgGrey
-  readonly bgBlackBright: this;
-  readonly bgRedBright: this;
-  readonly bgGreenBright: this;
-  readonly bgYellowBright: this;
-  readonly bgBlueBright: this;
-  readonly bgMagentaBright: this;
-  readonly bgCyanBright: this;
-  readonly bgWhiteBright: this;
+  bgBlack: this;
+  bgRed: this;
+  bgGreen: this;
+  bgYellow: this;
+  bgBlue: this;
+  bgMagenta: this;
+  bgCyan: this;
+  bgWhite: this;
+  bgGrey: this;
+  bgGray: this; // Alias for bgGrey
+  bgBlackBright: this;
+  bgRedBright: this;
+  bgGreenBright: this;
+  bgYellowBright: this;
+  bgBlueBright: this;
+  bgMagentaBright: this;
+  bgCyanBright: this;
+  bgWhiteBright: this;
 }
 
 declare const ansis: Ansis;
@@ -255,7 +252,7 @@ export {
   ansis as default,
 };
 
-export const Ansis: new () => Ansis;
+export declare const Ansis: new () => Ansis;
 
 export declare function ansi256(code: number): Ansis;
 

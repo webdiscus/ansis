@@ -1,0 +1,13 @@
+[36mnew instance[39m
+[1mtext bold[22m
+[38;2;255;117;209m[1mpink[22m[39m
+[38;2;191;255;0m[1mlime[22m[39m
+[31mred[39m
+[32m[1mgreen[22m[39m
+[34m[4m[3mblue[23m[24m[39m
+[33m[3myellow using string variable[23m[39m
+[31m[46m[4m[38;2;255;204;238mtext underline[39m[24m[49m[39m
+[35m[4m[3munderline italic magenta[23m[24m[39m
+underline italic magenta <= strip ANSI codes
+[42m[3m[TIP][23m[49m [37mThe tip message.[39m
+[44m[30m[INFO][39m[49m [37mThe information.[39m

@@ -1,7 +1,7 @@
 <a id="top" name="top"></a>
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
-    <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-logo.png" alt="ansis">
+    <img width="323" src="docs/img/logo.png" alt="ansis">
   </a>
   <h1 align="center">ANSI Styles</h1>
 </div>
@@ -801,7 +801,7 @@ npm run compare
 | Npm package                  |                                                 Download tarball size |                  Unpacked Size | Code size |
 |:-----------------------------|----------------------------------------------------------------------:|-------------------------------:|----------:|
 | [`picocolors`][picocolors]   |       [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |       [6.4 kB][npm-picocolors] |    2.6 kB
-| [`ansis`][ansis]             |            [4.5 kB](https://arve0.github.io/npm-download-size/#ansis) |           [10.3 kB][npm-ansis] |    3.4 kB
+| [`ansis`][ansis]             |            [4.0 kB](https://arve0.github.io/npm-download-size/#ansis) |            [7.5 kB][npm-ansis] |    3.4 kB
 | [`colorette`][colorette]     |        [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |       [17.0 kB][npm-colorette] |    3.4 kB
 | [`kleur`][kleur]             |            [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |           [20.3 kB][npm-kleur] |    2.7 kB
 | [`ansi-colors`][ansi-colors] |      [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |     [26.1 kB][npm-ansi-colors] |    5.8 kB

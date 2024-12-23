@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-import chalk from 'chalk';
-
 import ansis, {
   Ansis,
   red,
@@ -258,8 +256,8 @@ DISK: ${hex('#FFAB40')`${disk}%`}
 `);
 
 // chalk: non-standard syntax, bad practices, slow because used RegExp
-log(chalk`
-CPU:  {red.bold ${cpu}%}
-RAM:  {green ${ram}%}
-DISK: {hex('#FFAB40') ${disk}%}
-`);
+// log(chalk`
+// CPU:  {red.bold ${cpu}%}
+// RAM:  {green ${ram}%}
+// DISK: {hex('#FFAB40') ${disk}%}
+// `);

@@ -123,6 +123,7 @@ const Ansis = function() {
    *
    * @param {Object.<name:string, value:string|{open:string, close:string}>} colors The object with key as color name
    *  and value as hex code of custom color or the object with 'open' and 'close' codes.
+   * @return {(function(*): string)|Ansis|(function(...[*]): Ansis)}
    */
   self.extend = (colors) => {
     for (let name in colors) {
@@ -153,6 +154,9 @@ const Ansis = function() {
 
     stylePrototype = defineProperties({}, styles);
     setPrototypeOf(self, stylePrototype);
+
+    // return is required for TypeScript to access extended colors
+    return self;
   };
 
   // define functions, colors and styles
@@ -169,5 +173,6 @@ const ansis = new Ansis();
 // for distribution code, the export will be replaced (via @rollup/plugin-replace) with the following export:
 // module.exports = ansis;
 // module.exports.Ansis = Ansis;
+// ansis.default = ansis; // needs for tsc
 
 export { ansis as default, Ansis };

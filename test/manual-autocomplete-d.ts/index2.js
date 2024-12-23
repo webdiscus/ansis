@@ -18,7 +18,6 @@ log(styledText);
 log(ansis.strip(styledText));
 
 // Extend base colors
-/** @type {AnsiColorsExtend<'pink' | 'orange | rubin'>} */
 ansis.extend({
   //pink: '#FF75D1',
   pink: pink.props,
@@ -28,8 +27,6 @@ ansis.extend({
 
 log(pink`pink`);
 log(ansis.orange.italic`orange ${pink`pink`} orange ${ansis.bold.red`rubin`}`);
-
-ansis.rubin
 
 log(ansis.rubin`rubin`);
 log(ansis.rubin.bold`rubin`);

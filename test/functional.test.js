@@ -1,18 +1,21 @@
-import { expect, describe, test } from 'vitest';
+import { describe, test, expect } from 'vitest';
 import { esc } from './utils/helpers.js';
 
 // import env variables to simulate truecolor color space in CLI
 import './env/color-space.truecolor.js';
 
-import ansis, { Ansis, red, yellow, green, bold, hex } from '../src/index.mjs';
+//import ansis, { Ansis, red, yellow, green, bold, hex } from '../src/index.mjs'; // use it for debugging only
+import ansis, { Ansis, red, yellow, green, bold, hex } from 'ansis'; // test build package
 
-describe('style tests', () => {
+describe('support colors', () => {
   test(`ansis.isSupported()`, () => {
     const received = ansis.isSupported();
     const expected = true;
     expect(received).toEqual(expected);
   });
+});
 
+describe('style tests', () => {
   test(`ansis.visible('foo')`, () => {
     const received = ansis.visible('foo');
     const expected = 'foo';
@@ -217,7 +220,10 @@ describe('extend base colors tests', () => {
   test('imported ansis`', () => {
     ansis.extend({ orange: '#FFAB40' });
 
-    const received = ansis.orange.bold('text');
+    // destruct extended color
+    const { orange } = ansis;
+
+    const received = orange.bold('text');
     const expected = '\x1b[38;2;255;171;64m\x1b[1mtext\x1b[22m\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });

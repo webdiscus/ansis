@@ -134,8 +134,11 @@ export const getColorSpace = (mockThis) => {
   // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
   const isPM2 = 'PM2_HOME' in env && 'pm_id' in env;
 
+  // is used in any shell if GPG is installed
+  const isGPG_TTY = 'GPG_TTY' in env;
+
   // whether the output is supported
-  const isTTY = isNextJS || isPM2 || (isDeno ? Deno.isatty(1) : stdout && 'isTTY' in stdout);
+  const isTTY = isGPG_TTY || isPM2 || isNextJS || (isDeno ? Deno.isatty(1) : stdout && 'isTTY' in stdout);
 
   // optimisation: placed here to reduce the size of the compiled bundle
   if (isForceDisabled) return SPACE_MONO;

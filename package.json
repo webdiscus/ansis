@@ -1,7 +1,7 @@
 {
   "name": "ansis",
-  "version": "3.4.0",
-  "description": "Colorize terminal output with ANSI colors & styles",
+  "version": "3.5.0-beta.1",
+  "description": "ANSI colors and styles in terminal output",
   "keywords": [
     "ansi",
     "colour",
@@ -78,25 +78,33 @@
     "test:package": "vitest run ./test/package.test.js",
     "test:cjs": "node ./test/package/cjs/test.cjs",
     "test:esm": "node ./test/package/esm/test.mjs",
+    "test:tsc": "vitest run ./test/ts-compiler.test.js",
     "test:coverage": "vitest run --coverage",
     "publish:public": "(npm run build) && npm publish ./dist --access public",
     "publish:beta": "(npm run build) && npm publish ./dist --tag beta"
   },
   "engines": {
-    "node": ">=15"
+    "node": ">=16"
   },
   "devDependencies": {
-    "@rollup/plugin-replace": "^6.0.1",
+    "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
-    "@types/node": "^20.11.30",
-    "@vitest/coverage-v8": "^2.1.1",
+    "@types/node": "^22.10.2",
+    "@vitest/coverage-v8": "^2.1.8",
     "ansis": "file:dist",
-    "prettier": "^3.3.3",
-    "rollup": "^4.22.5",
-    "rollup-plugin-cleanup": "^3.2.1",
+    "del-cli": "^6.0.0",
+    "esbuild": "^0.24.2",
+    "prettier": "^3.4.2",
+    "rollup": "^4.29.1",
     "rollup-plugin-copy": "^3.5.0",
-    "rollup-plugin-dts": "^6.1.1",
-    "terser": "^5.34.1",
-    "vitest": "^2.1.1"
+    "swc": "^1.0.11",
+    "terser": "^5.37.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "overrides": {
+    "rollup-plugin-copy": {
+      "globby": "^11.0.0"
+    }
   }
 }

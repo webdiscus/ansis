@@ -34,7 +34,10 @@ export const readTextFileSync = (file) => {
   if (!fs.existsSync(file)) {
     throw new Error(`\nERROR: the file "${file}" not found.`);
   }
-  return fs.readFileSync(file, 'utf-8');
+  let content = fs.readFileSync(file, 'utf-8');
+
+  // ensue that the correct line endings are used across different operating systems
+  return isWin ? content.replace(/\r\n/g, '\n') : content;
 };
 
 /**
@@ -128,20 +131,20 @@ export const executeTSFile = (testPath, compiler = 'tsc') => {
     this.result = { received, expected };
 
     expect(received).toEqual(expected);
-  })
-  // debugging inner errors
-  .catch((error) => {
-    let message;
-    //console.log('>> err: ', error);
-    if (typeof error === 'string') {
-      message = '\n' + error;
-    } else if('stdout' in error && 'stderr' in error) {
-      message = error.stdout + '\n' + error.stderr;
-    } else {
-      message = '\n' + error.toString();
-    }
-
-    expect.fail(testPath + message);
   });
+  // debugging inner errors
+  // .catch((error) => {
+  //   let message;
+  //   //console.log('>> err: ', error);
+  //   if (typeof error === 'string') {
+  //     message = '\n' + error;
+  //   } else if('stdout' in error && 'stderr' in error) {
+  //     message = error.stdout + '\n' + error.stderr;
+  //   } else {
+  //     message = '\n' + error.toString();
+  //   }
+  //
+  //   expect.fail(testPath + message);
+  // });
 
 };

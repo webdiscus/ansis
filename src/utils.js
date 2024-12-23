@@ -1,4 +1,4 @@
-const { round, floor, max } = Math;
+let { round, floor, max } = Math;
 
 /**
  * Convert hex color string to RGB values.
@@ -14,7 +14,7 @@ const { round, floor, max } = Math;
  * @param {string} value A string that contains the hexadecimal RGB color representation.
  * @return {[number, number, number]} The red, green, blue values in range [0, 255] .
  */
-export const hexToRgb = (value) => {
+export let hexToRgb = (value) => {
   let [, color] = /([a-f\d]{3,6})/i.exec(value) || [];
   let len = color ? color.length : 0;
 
@@ -38,7 +38,7 @@ export const hexToRgb = (value) => {
  * @param {number} b
  * @return {number}
  */
-export const rgbToAnsi256 = (r, g, b) => {
+export let rgbToAnsi256 = (r, g, b) => {
   // greyscale
   if (r === g && g === b) {
     if (r < 8) return 16;
@@ -59,8 +59,8 @@ export const rgbToAnsi256 = (r, g, b) => {
  * @param {number} code
  * @return {number}
  */
-export const ansi256To16 = (code) => {
-  let r, g, b, value, code16, remainder;
+export let ansi256To16 = (code) => {
+  let r, g, b, value, remainder;
 
   if (code < 8) return 30 + code;
   if (code < 16) return 90 + (code - 8);
@@ -79,11 +79,9 @@ export const ansi256To16 = (code) => {
 
   value = max(r, g, b) * 2;
 
-  if (value === 0) return 30;
-
-  code16 = 30 + ((round(b) << 2) | (round(g) << 1) | round(r));
-
-  return value === 2 ? code16 + 60 : code16;
+  return value
+    ? 30 + (round(b) << 2 | round(g) << 1 | round(r)) + (value === 2 ? 60 : 0)
+    : 30;
 };
 
-export const rgbToAnsi16 = (r, g, b) => ansi256To16(rgbToAnsi256(r, g, b));
+export let rgbToAnsi16 = (r, g, b) => ansi256To16(rgbToAnsi256(r, g, b));

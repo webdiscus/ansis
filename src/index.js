@@ -1,4 +1,4 @@
-import { styleData, fnRgb, isSupported } from './ansi-codes.js';
+import { isSupported, styleData, fnRgb } from './ansi-codes.js';
 import { hexToRgb } from './utils.js';
 
 /**
@@ -10,12 +10,14 @@ import { hexToRgb } from './utils.js';
  * @property {null | AnsisProps} _p The props.
  */
 
-const { defineProperty, defineProperties, setPrototypeOf } = Object;
-const stripANSIRegEx = /[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
-const regexLFCR = /(\r?\n)/g;
-const ESC = '';
-const LF = '\n';
-const styles = {};
+let { defineProperty, defineProperties, setPrototypeOf } = Object;
+let stripANSIRegEx = /[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+let regexLFCR = /(\r?\n)/g;
+let ESC = '';
+let LF = '\n';
+let styles = {};
+// note: place it here to allow the compiler to group all variables
+let stylePrototype;
 
 /**
  * @param {Object} self
@@ -25,14 +27,14 @@ const styles = {};
  * @param {string} codes.close
  * @returns {Ansis}
  */
-const createStyle = ({ _p: props }, { open, close }) => {
+let createStyle = ({ _p: props }, { open, close }) => {
   /**
    * Wrap the string with ANSI codes.
    * @param {string} strings The normal or template string.
    * @param {array} values The values of the template string.
    * @return {string}
    */
-  const style = (strings, ...values) => {
+  let style = (strings, ...values) => {
     if (!strings) return '';
 
     let props = style._p;
@@ -97,7 +99,7 @@ const createStyle = ({ _p: props }, { open, close }) => {
 };
 
 const Ansis = function() {
-  const self = (str) => '' + str;
+  let self = (str) => '' + str;
 
   /**
    * Whether the output supports ANSI color and styles.
@@ -128,13 +130,15 @@ const Ansis = function() {
   self.extend = (colors) => {
     for (let name in colors) {
       let color = colors[name];
-      let type = typeof color;
+      // can be: f - function, s - string, o - object
+      let type = (typeof color)[0];
 
-      // detect whether the value is style property Object {open, close}
-      // or a string with hex code of a color, e.g.: '#FF0000'
-      let styleProps = type === 'string' ? fnRgb(...hexToRgb(color)) : color;
+      // detect whether the value is object {open, close} or hex string
+      // type === 'string' by extending a custom color, e.g. ansis.extend({ pink: '#FF75D1' })
+      let styleProps = type === 's' ? fnRgb(...hexToRgb(color)) : color;
 
-      if (type === 'function') {
+      // type === 'function'
+      if (type === 'f') {
         styles[name] = {
           get() {
             return (...args) => createStyle(this, color(...args));
@@ -164,9 +168,6 @@ const Ansis = function() {
 
   return self;
 };
-
-// note: place it here to allow the compiler to group all constants
-let stylePrototype;
 
 const ansis = new Ansis();
 

@@ -5,7 +5,7 @@ import { esc } from './utils/helpers.js';
 import './env/color-space.truecolor.js';
 
 //import ansis, { Ansis, red, yellow, green, bold, hex } from '../src/index.mjs'; // use it for debugging only
-import ansis, { Ansis, red, yellow, green, bold, hex } from 'ansis'; // test build package
+import ansis, { Ansis, red, grey, gray, green, yellow, bold, italic, underline, hex } from 'ansis'; // test build package
 
 describe('support colors', () => {
   test(`ansis.isSupported()`, () => {
@@ -212,6 +212,20 @@ describe('template literals tests', () => {
   test('red`red ${yellow`yellow ${green`green`} yellow`} red`', () => {
     const received = red`red ${yellow`yellow ${green`green`} yellow`} red`;
     const expected = '\x1b[31mred \x1b[33myellow \x1b[32mgreen\x1b[33m yellow\x1b[31m red\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test('nested gray and gray', () => {
+    const received = red`red ${grey.underline`grey ${yellow`yellow ${gray.italic`gray ${green`green`} gray`} yellow`} grey`} red`;
+    const expected = '\x1b[31mred \x1b[90m\x1b[4mgrey \x1b[33myellow \x1b[90m\x1b[3mgray \x1b[32mgreen\x1b[90m gray\x1b[23m\x1b[33m yellow\x1b[90m grey\x1b[24m\x1b[31m red\x1b[39m';
+    console.log(received); // visual control
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test('nested gray and gray 2', () => {
+    const received = red`red ${underline.grey`grey ${yellow`yellow ${italic.gray`gray ${green`green`} gray`} yellow`} grey`} red`;
+    const expected = '\x1b[31mred \x1b[4m\x1b[90mgrey \x1b[33myellow \x1b[3m\x1b[90mgray \x1b[32mgreen\x1b[90m gray\x1b[33m\x1b[23m yellow\x1b[90m grey\x1b[31m\x1b[24m red\x1b[39m';
+    console.log(received); // visual control
     expect(esc(received)).toEqual(esc(expected));
   });
 });

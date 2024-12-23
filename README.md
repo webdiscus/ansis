@@ -1,7 +1,7 @@
 <a id="top" name="top"></a>
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
-    <img width="323" src="docs/img/logo.png" alt="ansis">
+    <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/logo.png" alt="ansis">
   </a>
   <h1 align="center">ANSI Styles</h1>
 </div>
@@ -13,79 +13,14 @@
 [![downloads](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/ansis)](https://bundlephobia.com/package/ansis)
 
-ANSI colors and styles in terminal output for Node.js.
+
+A [small](#compare-size) and [fast](#benchmark) Node.js library for applying ANSI colors and styles in terminal output.\
+Ansis provides all the [features](#features) you need, you can compare with [similar libraries](#compare).\
+Ansis is [faster](#benchmark) than **Chalk** and **Picocolors** (in some use cases), see [benchmarks](#benchmark).
 
 
-🚀 [Install and Quick Start](#install)
+### 🚀 [Install and Quick Start](#install) 🔄 [Why switch to Ansis](#why-switch-to-ansis)
 
-## Usage
-
-```js
-import ansis, { red, green, cyan, black, ansi256, hex } from 'ansis';
-
-ansis.blueBright('file.txt')
-green`Succeful!`
-red`Error: ${cyan(file)} not found!`
-black.bgYellow`Warning!`
-ansi256(214)`Orange`
-hex('#E0115F').bold.underline('TrueColor!')
-```
-
-## 👀 Why use Ansis?
-
-- Quality is first, test coverage 100%. Long term support.
-- Ansis is **small**, [3.4 kB](https://bundlephobia.com/package/ansis@3.4.0) minified and only [2 kB](https://bundlephobia.com/package/ansis@3.4.0) minzipped.
-- Ansis is [faster](#benchmark) than **Chalk** and **Picocolors** (in some use cases), see [benchmarks](#benchmark).
-- Ansis has [all features](#features) that you need, compare with [similar libraries](#compare).
-- Detects color support across a wide range of [environments](#color-support).
-
-## 🌍 Used by
-
-[NestJS](https://github.com/nestjs/nest), [Facebook/StyleX](https://github.com/facebook/stylex), [Sequelize](https://github.com/sequelize/sequelize), [Salesforce](https://github.com/salesforcecli/cli), [WebpackBar](https://github.com/unjs/webpackbar)
-
-## ⚖️ Similar packages
-
-The most popular similar libraries for Node.js:
-
-[chalk][chalk], [kleur][kleur], [ansi-colors][ansi-colors], [kolorist][kolorist], [colorette][colorette], [picocolors][picocolors], [cli-color][cli-color], [colors-cli][colors-cli], [colors.js][colors.js]
-
-- ✅ [Compare features](#compare)
-- 💾 [Compare package sizes](#compare-size)
-- 📊 [Benchmarks](#benchmark)
-
-## 🔄 [Switch to Ansis](#switch-to-ansis)
-
-Today, the two [smallest](#compare-size) and [fastest](#benchmark) libraries are  `ansis` and `picocolors`.\
-Both are recommended by the [ES Tooling](https://github.com/es-tooling) community as the best replacements for other alternatives.
-
-- If you only use a single style, such as `red('foo')`, the best solution is `picocolors`.
-
-- However, if you need more, like combining multiple styles (e.g., `red` + `bold` + `bgWhite`), [ANSI256 colors](#256-colors) or [Truecolor](#truecolor) then `ansis` is the better choice.
-
-
-> [!TIP]
->
-> Use the chained syntax provided by libraries like `ansis` and `chalk`.\
-> Avoid using nested calls, as they are [much slower](#bench-3-styles) and less readable than the chained syntax.\
-> _**Keep your code clean and readable!**_
-> ```js
-> red.bold.bgWhite`Error`                    ✅ ansis: faster, shorter, readable
-> pico.red(pico.bold(pico.bgWhite('Error'))) ❌ picocolor: slower, longer, unreadable
->
-> red`Error: ${cyan.underline(file)} not found!`                   ✅ ansis 😊
-> pico.red(`Error: ${pico.cyan(pico.underline(file))} not found!`) ❌ picocolor 🥴
-> ```
-
-- [Replacing `chalk`](#replacing-chalk)
-- [Replacing `colorette`](#replacing-colorette) last updated [2 years ago](https://www.npmjs.com/package/colorette)
-- [Replacing `picocolors`](#replacing-picocolors) last updated a [few months ago](https://www.npmjs.com/package/picocolors)
-- [Replacing `ansi-colors`](#replacing-ansi-colors) last updated [3 years ago](https://www.npmjs.com/package/ansi-colors)
-- [Replacing `kleur`](#replacing-kleur) last updated [2 years ago](https://www.npmjs.com/package/kleur)
-- [Replacing `cli-color`](#replacing-cli-color) last updated [~1 year ago](https://www.npmjs.com/package/cli-color)
-
-<a id="features" name="features"></a>
-
-## 💡 Highlights
 
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
@@ -95,33 +30,63 @@ Both are recommended by the [ES Tooling](https://github.com/es-tooling) communit
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/stackblitz-starters-gs2gve?file=index.js)
 
-- Supports both **ESM** and **CommonJS**
-- Supports **TypeScript**
+## 🛠️ Usage
+
+```js
+import ansis, { red, green, cyan, black, ansi256, hex } from 'ansis';
+
+ansis.blueBright('file.txt')
+green`Succeful!`
+red`Error: ${cyan(file)} not found!`
+black.bgYellow`Warning!`
+ansi256(214)`Orange`
+hex('#E0115F').bold.underline('Truecolor!')
+```
+
+## ⚖️ Similar libraries
+
+The most popular Node.js libraries similar to Ansis:
+
+[chalk][chalk], [picocolors][picocolors], [colorette][colorette], [kleur][kleur], [ansi-colors][ansi-colors], [kolorist][kolorist], [cli-color][cli-color], [colors-cli][colors-cli], [colors.js][colors.js]
+
+✅ [Compare features](#compare) 📦 [Compare package sizes](#compare-size) 📊 [Benchmarks](#benchmark)
+
+<a id="features" name="features"></a>
+
+## 💡 Highlights
+
+- Supports **ESM**, **CommonJS**, **TypeScript**
 - Supports **Bun**, **Deno**, **Next.JS** runtimes
-- [Standard API](#base-colors)
-- Drop-in replacement for [`chalk`](#replacing-chalk) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) [`ansi-colors`](#replacing-ansi-colors)
+- Drop-in [replacement](#why-switch-to-ansis) for [`chalk`](#replacing-chalk) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) [`ansi-colors`](#replacing-ansi-colors)
 - Default and [named import](#named-import) `import ansis, { red, bold, ansi256, hex } from 'ansis'`
 - [Chained syntax](#chained-syntax) `red.bold.underline('text')`
 - [Nested **template strings**](#nested-syntax) ``` red`Error: ${blue`file.js`} not found!` ```
 - [ANSI styles](#base-colors) `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>
 - [ANSI 16 colors](#base-colors) ``` red`Error!` ``` ``` redBright`Error!` ``` ``` bgRed`Error!` ``` ``` bgRedBright`Error!` ```
 - [ANSI 256 colors](#256-colors) ``` fg(56)`violet` ``` ``` bg(208)`orange` ```
-- [TrueColor](#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ``` ``` hex('#96C')`Amethyst` ```
-- [Fallback](#fallback) to supported [color space](#color-support): TrueColor → 256 colors → 16 colors → no colors
-- [Extending of base colors](#extend-colors) with named **True Colors**
+- [Truecolor](#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ``` ``` hex('#96C')`Amethyst` ```
+- [Fallback](#fallback) to supported [color space](#color-support): Truecolor → 256 colors → 16 colors → no colors
+- [Extending of base colors](#extend-colors) with named **Truecolor**
 - [Raw ANSI codes](#escape-codes) as `open` and `close` properties ``` `foo ${red.open}red{red.close} bar` ```
 - [Strip ANSI codes](#strip) method `ansis.strip()`
-- Detect [color support](#color-support) using `ansis.isSupported()` method
-- Supports [environment variables](#cli-vars) `NO_COLOR` `FORCE_COLOR` and flags `--no-color` `--color`
+- Automatically detects [color support](#color-support) across a wide range of [environments](#color-support)
+- Supports [environment variables](#cli-vars) `NO_COLOR` `FORCE_COLOR` and [flags](#cli-flags) `--no-color` `--color`
+- Set [COLORTERM](#using-env-colorterm) variable to test applications with 16, 256, or true-color
 - [Correct style break](#new-line) at the `end of line` when used `\n` in string
 - Doesn't extend `String.prototype`
 - Zero dependencies
+- Test coverage 100%. Long term maintenance.
+
+## 🌍 Used by
+
+[NestJS](https://github.com/nestjs/nest), [Facebook/StyleX](https://github.com/facebook/stylex), [Sequelize](https://github.com/sequelize/sequelize), [Salesforce](https://github.com/salesforcecli/cli), [Oclif](https://github.com/oclif/core), [WebpackBar](https://github.com/unjs/webpackbar)
+
 
 <!--
 ## 🔆 What's New in v3
 
-- **NEW** added detection of supported color space: TrueColor, 256 colors, 16 colors, no colors (black & white)
-- **NEW** added fallback to supported color space: TrueColor —> 256 colors —> 16 colors —> no colors
+- **NEW** added detection of supported color space: Truecolor, 256 colors, 16 colors, no colors (black & white)
+- **NEW** added fallback to supported color space: Truecolor —> 256 colors —> 16 colors —> no colors
 
 > #### ⚠️ Warning
 >
@@ -133,6 +98,75 @@ Both are recommended by the [ES Tooling](https://github.com/es-tooling) communit
 
 If you have discovered a bug or have a feature suggestion, feel free to create
 an [issue](https://github.com/webdiscus/ansis/issues) on GitHub.
+
+
+<a id="why-switch-to-ansis" name="why-switch-to-ansis"></a>
+
+## 🔄 [Why switch to Ansis](#switch-to-ansis)
+
+Today, the two [smallest](#compare-size) and [fastest](#benchmark) libraries are  `ansis` and `picocolors`.
+Both are recommended by the [ES Tooling](https://github.com/es-tooling) community as the best replacements for older, bulkier libraries.
+
+### 📦 Unpacked size
+- `picocolors`: [6.4 kB][npm-picocolors] - A micro library with only basic features.
+- `аnsis`: [7.4 kB][npm-ansis] - A powerful library containing all the features you need.
+- `chalk`:  [44.2 kB][npm-chalk] - Provides similar functionality to Ansis but is larger.
+
+### ⚡ Performance
+
+- `picocolors`: The fastest when applying a single style (e.g., `red` only).
+- `аnsis`: The fastest when applying two or more styles (e.g., `red` + `bgWhite`).
+- `chalk`: Slower than both **Ansis** and **Picocolors** in all use cases.
+
+### 🔧 Maintenance
+
+Only `ansis`, `chalk`, and `picocolors` are actively maintained, unlike many other libraries:
+
+- `colorette`: Last updated [2 years ago][npm-colorette]
+- `ansi-colors`: Last updated [3 years ago][npm-ansi-colors]
+- `kleur`: Last updated [2 years ago][npm-kleur]
+- `cli-color`: Last updated [~1 year ago][npm-cli-color]
+- `colors-cli`: Last updated [1 year ago][npm-colors-cli]
+- `colors.js`: Last updated [5 year ago][npm-colors.js]
+
+
+### 🤔 Which One Should You Use?
+
+- If you only use a single style, such as `red('foo')`, **Picocolors** is the best solution.
+
+- However, if you need more, like combining multiple styles (e.g., `red` + `bold` + `bgWhite`),\
+  [ANSI256 colors](#256-colors), [Truecolor](#truecolor),
+  or support for a wide range of [environments](#color-support),
+  then **Ansis** is the better choice.
+
+
+Explore the list of [features](#compare), [package sizes](#compare-size), and [benchmarks](#benchmark) compared to similar libraries.
+
+> [!TIP]
+>
+> Use the chained syntax provided by libraries like `ansis` and `chalk`.\
+> Avoid nested calls, as they are [much slower](#bench-3-styles) and less readable than the chained syntax.\
+> _**Keep your code clean and readable!**_
+> ```js
+> red.bold.bgWhite`Error`                    ✅ ansis: faster, shorter, readable
+> pico.red(pico.bold(pico.bgWhite('Error'))) ❌ picocolor: slower, longer, unreadable
+>
+> red`Error: ${cyan.underline(file)} not found!`                   ✅ ansis 😊
+> pico.red(`Error: ${pico.cyan(pico.underline(file))} not found!`) ❌ picocolor 🥴
+> ```
+
+## [How to switch to Ansis](#switch-to-ansis)
+
+- [Replacing `chalk`](#replacing-chalk)
+- [Replacing `colorette`](#replacing-colorette)
+- [Replacing `picocolors`](#replacing-picocolors)
+- [Replacing `ansi-colors`](#replacing-ansi-colors)
+- [Replacing `kleur`](#replacing-kleur)
+- [Replacing `cli-color`](#replacing-cli-color)
+
+---
+
+#### [↑ top](#top)
 
 <a id="install" name="install"></a>
 
@@ -259,6 +293,8 @@ bold.bgHex('#FF75D1').cyan`text`;
 italic.bold.yellow.bgMagentaBright`text`;
 ```
 
+#### [↑ top](#top)
+
 <a id="nested-syntax" name="nested-syntax"></a>
 
 ## Nested syntax
@@ -301,7 +337,7 @@ Multiline nested template strings:
 ```js
 import { red, green, hex, visible, inverse } from 'ansis';
 
-// defined a TrueColor as the constant
+// defined a Truecolor as the constant
 const orange = hex('#FFAB40');
 
 let cpu = 33;
@@ -359,7 +395,7 @@ as [chalk], [colorette], [picocolors], [kleur].
 ## Extend base colors
 
 Defaults, the imported `ansis` instance contains [base styles and colors](#base-colors).
-To extend base colors with custom color names for TrueColor use the `ansis.extend()` method.
+To extend base colors with custom color names for Truecolor use the `ansis.extend()` method.
 
 ```js
 import ansis from 'ansis';
@@ -460,7 +496,7 @@ bg(105).fg(96)`cyan text on magenta background`
 
 <a id="truecolor" name="truecolor"></a>
 
-## TrueColor
+## Truecolor
 
 You can use the `hex` or `rgb` format.
 
@@ -493,10 +529,10 @@ bold.hex('#E0115F').bgHex('#96C')`ruby bold text on amethyst background`
 The `ansis` supports fallback to supported color space.
 
 ```
-TrueColor —> 256 colors —> 16 colors —> no colors (black & white)
+Truecolor —> 256 colors —> 16 colors —> no colors (black & white)
 ```
 
-If you use the `hex()`, `rgb()` or `ansis256()` functions in a terminal not supported TrueColor or 256 colors, then colors will be interpolated.
+If you use the `hex()`, `rgb()` or `ansis256()` functions in a terminal not supported Truecolor or 256 colors, then colors will be interpolated.
 
 ![output](https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-fallback.png?raw=true "Fallback to ANSI colors")
 
@@ -536,6 +572,8 @@ const string = ansis.strip(ansiString);
 
 The variable `string` will contain the pure string without ANSI codes.
 
+#### [↑ top](#top)
+
 <a id="new-line" name="new-line"></a>
 
 ## New lines
@@ -572,15 +610,15 @@ theme.error('error');
 theme.ruby('Ruby color');
 ```
 
+---
+
 #### [↑ top](#top)
 
 <a id="cli-vars" name="cli-vars"></a>
 
-## CLI
+## CLI environment variables
 
 Defaults, the output in terminal console is colored and output in a file is uncolored.
-
-### Environment variables
 
 To force disable or enable colored output use environment variables `NO_COLOR` and `FORCE_COLOR`.
 
@@ -612,43 +650,91 @@ $ FORCE_COLOR=0 node app.js           # force disable colors, non colored output
 $ FORCE_COLOR=1 node app.js > log.txt # force enable colors, output in file with ANSI codes
 ```
 
-#### How to force enable 256 colors
+<a id="using-env-colorterm" name="using-env-colorterm"></a>
 
-If your environment supports 256 colors, but `ansis` detects only 16 or mono,
-you can manually set the `TERM` variable with standard values: `screen-256color` or `xterm-256color`.
+#### Using `COLORTERM`
 
-You can set the variable in CLI:
+The `COLORTERM` environment variable is used by terminal emulators to indicate support for colors.
+Its value can vary depending on the terminal emulator and the level of color support provided.
 
-```
-TERM=screen-256color node script.js
-```
+The commonly used values supported by `ansis`:
 
-or directly in your script:
+- `truecolor` or `24bit` - 16 million colors
+- `ansi256` - ANSI 256 colors
+- `ansi` - basic ANSI 16 colors
 
-```js
-process.env.TERM = 'screen-256color';
-```
-
-#### How to force enable truecolor
-
-If your environment supports truecolor, but `ansis` detects only 256, 16 or mono,
-you can manually set the `COLORTERM` variable with standard values: `truecolor` or `24bit`.
-
-You can set the variable in CLI:
+You can set the variable in cmd before running the Node script:
 
 ```
-COLORTERM=truecolor node script.js
+COLORTERM=truecolor node script.js # force use truecolor
+COLORTERM=ansi256 node script.js   # force use 256 colors
+COLORTERM=ansi node script.js      # force use 16 olors
 ```
 
-or directly in your script:
+To set the color level in a script, create a JS file in which you define the `COLORTERM` environment variable with the needed value,
+and import this file before `ansis`.
+
+This can be useful, for example, for testing your cli application to ensure that the test results will be the same
+regardless of the supported color level in different environments and terminals.
+
+#### Force use truecolor
+
+_level-truecolor.js_
 
 ```js
 process.env.COLORTERM = 'truecolor';
 ```
+your script file:
+```js
+import './level-truecolor'; // <= force use truecolor
+import { red, ansi256, hex } from 'ansis';
+
+console.log(hex('#FFAB40')('orange')); // native ANSI RGB color value
+console.log(ansi256(200)('pink'));     // native ANSI 256 color value
+console.log(red('red'));               // native ANSI 16 color value
+```
+
+#### Force use 256 colors
+
+_level-256colors.js_
+
+```js
+process.env.COLORTERM = 'ansi256';
+```
+your script file:
+```js
+import './level-256colors'; // <= force use 256 colors
+import { red, ansi256, hex } from 'ansis';
+
+console.log(hex('#FFAB40')('orange')); // fallback to ANSI 256 color value
+console.log(ansi256(200)('pink'));     // native ANSI 256 color value
+console.log(red('red'));               // native ANSI 16 color value
+```
+
+#### Force use base 16 colors
+
+_level-16colors.js_
+
+```js
+process.env.COLORTERM = 'ansi';
+```
+your script file:
+```js
+import './level-16colors'; // <= force use 16 olors
+import { red, ansi256, hex } from 'ansis';
+
+console.log(hex('#FFAB40')('orange')); // fallback to ANSI 16 color value - `bright red`
+console.log(ansi256(200)('pink'));     // fallback to ANSI 16 color value - `bright magenta`
+console.log(red('red'));               // native ANSI 16 color value
+```
+
+#### [↑ top](#top)
+
+<a id="cli-flags" name="cli-flags"></a>
 
 ### CLI arguments
 
-Use arguments `--no-color` or `--color=false` to disable colors and `--color` to enable ones.
+Use cmd arguments `--no-color` or `--color=false` to disable colors and `--color` to enable ones.
 
 For example, an executable script _app.js_:
 
@@ -675,6 +761,8 @@ $ ./app.js --color=true > log.txt # output in file with ANSI codes
 >
 > The command line arguments have a higher priority than environment variable.
 
+---
+
 #### [↑ top](#top)
 
 <a id="color-support" name="color-support"></a>
@@ -683,7 +771,7 @@ $ ./app.js --color=true > log.txt # output in file with ANSI codes
 
 Ansis automatically detects the supported color space:
 
-- TrueColor
+- Truecolor
 - ANSI 256 colors
 - ANSI 16 colors
 - black & white (no colors)
@@ -701,30 +789,33 @@ The most common way to detect color support is to check the `TERM` and `COLORTER
 CI systems can be detected by checking for the existence of the `CI` and other specifically environment variables.
 Combine that with the knowledge about which operating system the program is running on, and we have a decent enough way to detect colors.
 
-| Terminal                         | ANSI 16<br>colors | ANSI 256<br>colors | True<br>Color |  env.<br>TERM  | env.<br>COLORTERM | Specifically ENV variables             |
-|:---------------------------------|-------------------|:-------------------|:--------------|:--------------:|:-----------------:|:---------------------------------------|
-| Azure CI                         | ✅                 | ❌                  | ❌             |      dumb      |                   | TF_BUILD<br>AGENT_NAME                 |
-| GitHub CI                        | ✅                 | ✅                  | ✅             |      dumb      |                   | CI<br>GITHUB_ACTIONS                   |
-| GitTea CI                        | ✅                 | ✅                  | ✅             |      dumb      |                   | CI<br>GITEA_ACTIONS                    |
-| GitLab CI                        | ✅                 | ❌                  | ❌             |      dumb      |                   | CI<br>GITLAB_CI                        |
-| Travis CI                        | ✅                 | ❌                  | ❌             |      dumb      |                   | TRAVIS                                 |
-| PM2<br>not isTTY                 | ✅[^1]             | ✅[^1]              | ✅[^1]         |      dumb      |                   | PM2_HOME<br>pm_id                      |
-| JetBrains TeamCity<br>>=2020.1.1 | ✅                 | ✅                  | ❌             |                |                   | TEAMCITY_VERSION                       |
-| JetBrains IDEA                   | ✅                 | ✅                  | ✅             | xterm-256color |                   | TERMINAL_EMULATOR='JetBrains-JediTerm' |
-| VS Code                          | ✅                 | ✅                  | ✅             | xterm-256color |     truecolor     |                                        |
-| Windows<br>Terminal              | ✅                 | ✅                  | ✅[^2]         |                |                   |                                        |
-| Windows<br>PowerShell            | ✅                 | ✅                  | ✅[^2]         |                |                   |                                        |
-| macOS Terminal                   | ✅                 | ✅                  | ❌             | xterm-256color |                   |                                        |
-| iTerm                            | ✅                 | ✅                  | ✅             | xterm-256color |     truecolor     |                                        |
-| Terminal emulator Kitty          | ✅                 | ✅                  | ✅             |  xterm-kitty   |                   |                                        |
+| Terminal                          | ANSI 16<br>colors | ANSI 256<br>colors | True<br>Color |  env.<br>TERM  | env.<br>COLORTERM | Specifically ENV variables             |
+|:----------------------------------|-------------------|:-------------------|:--------------|:--------------:|:-----------------:|:---------------------------------------|
+| Azure CI                          | ✅                 | ❌                  | ❌             |      dumb      |                   | TF_BUILD<br>AGENT_NAME                 |
+| GitHub CI                         | ✅                 | ✅                  | ✅             |      dumb      |                   | CI, GITHUB_ACTIONS                     |
+| GitTea CI                         | ✅                 | ✅                  | ✅             |      dumb      |                   | CI, GITEA_ACTIONS                      |
+| GitLab CI                         | ✅                 | ❌                  | ❌             |      dumb      |                   | CI, GITLAB_CI                          |
+| Travis CI                         | ✅                 | ❌                  | ❌             |      dumb      |                   | TRAVIS                                 |
+| PM2<br>not isTTY                  | ✅[^1]             | ✅[^1]              | ✅[^1]         |      dumb      |                   | PM2_HOME<br>pm_id                      |
+| JetBrains TeamCity<br>>=2020.1.1  | ✅                 | ✅                  | ❌             |                |                   | TEAMCITY_VERSION                       |
+| JetBrains IDEA                    | ✅                 | ✅                  | ✅             | xterm-256color |                   | TERMINAL_EMULATOR='JetBrains-JediTerm' |
+| VS Code                           | ✅                 | ✅                  | ✅             | xterm-256color |     truecolor     |                                        |
+| Windows<br>Terminal               | ✅                 | ✅                  | ✅[^2]         |                |                   |                                        |
+| Windows<br>PowerShell             | ✅                 | ✅                  | ✅[^2]         |                |                   |                                        |
+| macOS Terminal                    | ✅                 | ✅                  | ❌             | xterm-256color |                   |                                        |
+| iTerm                             | ✅                 | ✅                  | ✅             | xterm-256color |     truecolor     |                                        |
+| Terminal emulator Kitty           | ✅                 | ✅                  | ✅             |  xterm-kitty   |                   |                                        |
+| Terminal emulator KDE Konsole     | ✅                 | ✅                  | ✅             |  xterm-direct  |                   |                                        |
 
-[^1]: Colors supported depends on actual terminal.
+[^1]: Colors supported depends on actual terminal.\
 [^2]: The Windows terminal supports true color since Windows 10 revision 14931 (2016-09-21).
 
 See also:
 
 - [Truecolor Support in Output Devices](https://github.com/termstandard/colors#truecolor-support-in-output-devices).
 - [So you want to render colors in your terminal](https://marvinh.dev/blog/terminal-colors/).
+
+---
 
 #### [↑ top](#top)
 
@@ -773,7 +864,7 @@ npm run compare
 >  - [`chalk`][chalk]: `ansi256(n)` `bgAnsi256(n)`
 >  - [`ansis`][ansis]: `ansi256(n)` `bgAnsi256(n)` `fg(n)` `bg(n)`
 >
-> **TrueColor**
+> **Truecolor**
 >
 > The method names:
 >  - [`chalk`][chalk]: `hex()` `rgb()`
@@ -801,7 +892,7 @@ npm run compare
 | Npm package                  |                                                 Download tarball size |                  Unpacked Size | Code size |
 |:-----------------------------|----------------------------------------------------------------------:|-------------------------------:|----------:|
 | [`picocolors`][picocolors]   |       [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |       [6.4 kB][npm-picocolors] |    2.6 kB
-| [`ansis`][ansis]             |            [4.0 kB](https://arve0.github.io/npm-download-size/#ansis) |            [7.5 kB][npm-ansis] |    3.4 kB
+| [`ansis`][ansis]             |            [3.8 kB](https://arve0.github.io/npm-download-size/#ansis) |            [7.4 kB][npm-ansis] |    3.4 kB
 | [`colorette`][colorette]     |        [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |       [17.0 kB][npm-colorette] |    3.4 kB
 | [`kleur`][kleur]             |            [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |           [20.3 kB][npm-kleur] |    2.7 kB
 | [`ansi-colors`][ansi-colors] |      [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |     [26.1 kB][npm-ansi-colors] |    5.8 kB
@@ -821,6 +912,8 @@ See also:
 - [packagephobia](https://packagephobia.com) - show total install size, incl. dependencies
 - [npm download size](https://arve0.github.io/npm-download-size) - show tarball and total download size
 - [bundlephobia](https://bundlephobia.com) - useless, doesn't show real tarball size of the downloaded npm package
+
+---
 
 #### [↑ top](#top)
 
@@ -867,7 +960,7 @@ npm run bench
 > MacBook Pro 16" M1 Max 64GB\
 > macOS Sequoia 15.1\
 > Node.js v22.11.0\
-> Terminal `iTerm2`
+> Terminal `iTerm2` v3.5.0
 
 ---
 
@@ -875,7 +968,7 @@ npm run bench
 >
 > In the tests, each library uses the **fastest** styling method available to compare the **absolute performance** of each library.
 >
-> In real practice, no one would use the **slowest** method (such as nested calls) to style a string when the library offers a **faster** and more concise chained method.
+> In real practice, no one would use the **slowest** method (such as nested calls) to style a string when the library provides a **faster** and a **shorter** chained method.
 >
 > For example:
 >
@@ -898,16 +991,16 @@ picocolors.red('foo')
 ```
 
 ```diff
-+  colorette@2.0.20    109.829.822 ops/sec
--  picocolors@1.1.1    108.598.201 ops/sec
-   kleur@4.1.5          85.231.268 ops/sec
--> ansis@3.3.3          59.923.848 ops/sec  -45.4% (~2x slower than 1st place)
--  chalk@5.3.0          55.828.562 ops/sec  -49.2%
-   kolorist@1.8.0       37.159.398 ops/sec
-   ansi-colors@4.1.3    14.202.622 ops/sec
-   colors@1.4.0          6.999.011 ops/sec
-   cli-color@2.0.4       2.742.775 ops/sec
-   colors-cli@1.0.33       913.542 ops/sec
++  picocolors@1.1.1    109.212.939 ops/sec
+   colorette@2.0.20    108.044.800 ops/sec
+   kleur@4.1.5          87.800.739 ops/sec
+-> ansis@3.5.0          60.606.043 ops/sec  -44.5%
+-  chalk@5.3.0          55.702.479 ops/sec  -48.9%
+   kolorist@1.8.0       37.069.069 ops/sec
+   ansi-colors@4.1.3    14.364.378 ops/sec
+   colors@1.4.0          7.060.583 ops/sec
+   cli-color@2.0.4       2.753.751 ops/sec
+   colors-cli@1.0.33       897.746 ops/sec
 ```
 
 <a id="bench-2-styles" name="bench-2-styles"></a>
@@ -923,16 +1016,16 @@ picocolors.red(picocolors.bold('foo')) // chained syntax is not supported
 ```
 
 ```diff
-+  ansis@3.3.3          59.838.727 ops/sec
--  picocolors@1.1.1     58.180.994 ops/sec   -2.8%
--  chalk@5.3.0          48.213.743 ops/sec  -19.4%
-   colorette@2.0.20     33.308.706 ops/sec
-   kolorist@1.8.0       13.320.722 ops/sec
-   kleur@4.1.5           5.977.286 ops/sec
-   ansi-colors@4.1.3     4.123.687 ops/sec
-   colors@1.4.0          2.986.743 ops/sec
-   cli-color@2.0.4       1.783.370 ops/sec
-   colors-cli@1.0.33       690.808 ops/sec
++  ansis@3.5.0          60.468.181 ops/sec
+-  picocolors@1.1.1     58.777.183 ops/sec    -2.8%
+-  chalk@5.3.0          47.789.020 ops/sec   -21.5%
+   colorette@2.0.20     33.387.988 ops/sec
+   kolorist@1.8.0       13.420.047 ops/sec
+   kleur@4.1.5           5.972.681 ops/sec
+   ansi-colors@4.1.3     4.086.412 ops/sec
+   colors@1.4.0          3.018.244 ops/sec
+   cli-color@2.0.4       1.817.039 ops/sec
+   colors-cli@1.0.33       695.601 ops/sec
 ```
 
 <a id="bench-3-styles" name="bench-3-styles"></a>
@@ -948,16 +1041,16 @@ picocolors.red(picocolors.bold(picocolors.bgWhite('foo'))) // chained syntax is 
 ```
 
 ```diff
-+  ansis@3.3.3          59.602.490 ops/sec
--  chalk@5.3.0          42.015.098 ops/sec  -29.5%
--  picocolors@1.1.1     31.657.041 ops/sec  -46.9% (~2x slower than Ansis)
-   colorette@2.0.20     14.499.195 ops/sec
-   kolorist@1.8.0        6.902.305 ops/sec
-   kleur@4.1.5           5.316.469 ops/sec
-   ansi-colors@4.1.3     2.231.060 ops/sec
-   colors@1.4.0          1.772.706 ops/sec
-   cli-color@2.0.4       1.461.792 ops/sec
-   colors-cli@1.0.33       555.396 ops/sec
++  ansis@3.5.0          59.463.640 ops/sec
+-  chalk@5.3.0          42.166.783 ops/sec  -29.0%
+-  picocolors@1.1.1     32.434.017 ops/sec  -45.5% (~2x slower than Ansis)
+   colorette@2.0.20     13.008.117 ops/sec
+   kolorist@1.8.0        5.608.244 ops/sec
+   kleur@4.1.5           5.268.630 ops/sec
+   ansi-colors@4.1.3     2.145.517 ops/sec
+   colors@1.4.0          1.686.728 ops/sec
+   cli-color@2.0.4       1.453.611 ops/sec
+   colors-cli@1.0.33       590.467 ops/sec
 ```
 
 ### Using 4 styles
@@ -972,21 +1065,21 @@ picocolors.red(picocolors.bold(picocolors.underline(picocolors.bgWhite('foo'))))
 ```
 
 ```diff
-+  ansis@3.3.3          58.094.313 ops/sec
--  chalk@5.3.0          36.304.684 ops/sec  -37.5%
--  picocolors@1.1.1     17.335.630 ops/sec  -70.2% (~3.4x slower than Ansis)
-   colorette@2.0.20      8.705.424 ops/sec
-   kleur@4.1.5           4.801.696 ops/sec
-   kolorist@1.8.0        4.324.112 ops/sec
-   ansi-colors@4.1.3     1.524.480 ops/sec
-   colors@1.4.0          1.263.322 ops/sec
-   cli-color@2.0.4       1.210.104 ops/sec
-   colors-cli@1.0.33       484.108 ops/sec
++  ansis@3.5.0          59.104.535 ops/sec
+-  chalk@5.3.0          36.147.547 ops/sec  -38.8%
+-  picocolors@1.1.1     17.581.709 ops/sec  -70.2% (~3x slower than Ansis)
+   colorette@2.0.20      7.981.171 ops/sec
+   kleur@4.1.5           4.825.665 ops/sec
+   kolorist@1.8.0        3.729.880 ops/sec
+   ansi-colors@4.1.3     1.514.053 ops/sec
+   colors@1.4.0          1.229.999 ops/sec
+   cli-color@2.0.4       1.210.931 ops/sec
+   colors-cli@1.0.33       481.073 ops/sec
 ```
 
 ### Deeply nested styles
 
-The complex test with deeply nested styles.
+The complex test with deeply nested single styles.
 
 ```js
 c.green(
@@ -1003,43 +1096,43 @@ c.green(
 ```
 
 ```diff
-+  colorette@2.0.20      1.101.447 ops/sec
--  picocolors@1.1.1      1.058.215 ops/sec
--> ansis@3.3.3             852.390 ops/sec  -22.6%
-   kolorist@1.8.0          837.577 ops/sec
--  chalk@5.3.0             571.903 ops/sec  -48.0%
-   kleur@4.1.5             466.172 ops/sec
-   colors@1.4.0            452.397 ops/sec
-   ansi-colors@4.1.3       380.633 ops/sec
-   cli-color@2.0.4         215.335 ops/sec
-   colors-cli@1.0.33        41.589 ops/sec
++  colorette@2.0.20      1.110.056 ops/sec
+-  picocolors@1.1.1      1.073.299 ops/sec
+-> ansis@3.5.0             847.246 ops/sec  -23.7%
+   kolorist@1.8.0          847.110 ops/sec
+-  chalk@5.3.0             573.942 ops/sec  -48.3%
+   kleur@4.1.5             471.285 ops/sec
+   colors@1.4.0            439.588 ops/sec
+   ansi-colors@4.1.3       382.862 ops/sec
+   cli-color@2.0.4         213.351 ops/sec
+   colors-cli@1.0.33        41.097 ops/sec
 ```
 
 ### Colorette bench
 
-The benchmark used in [`colorette`](https://github.com/jorgebucaran/colorette/blob/main/bench/index.js).
+The benchmark used in [`colorette`](https://github.com/jorgebucaran/colorette/blob/main/bench/index.js) for single styles.
 
 ```js
 c.red(`${c.bold(`${c.cyan(`${c.yellow('yellow')}cyan`)}`)}red`)
 ```
 
 ```diff
-+  picocolors@1.1.1      3.911.687 ops/sec
-   colorette@2.0.20      3.901.652 ops/sec
--> ansis@3.3.3           2.992.624 ops/sec  -23.5%
-   kolorist@1.8.0        2.555.819 ops/sec
--  chalk@5.3.0           2.544.110 ops/sec  -35.0%
-   kleur@4.1.5           2.258.746 ops/sec
-   ansi-colors@4.1.3     1.457.300 ops/sec
-   colors@1.4.0          1.121.523 ops/sec
-   cli-color@2.0.4         481.131 ops/sec
-   colors-cli@1.0.33       115.755 ops/sec
++  picocolors@1.1.1      3.861.384 ops/sec
+   colorette@2.0.20      3.815.039 ops/sec
+-> ansis@3.5.0           2.918.269 ops/sec  -24.4%
+   kolorist@1.8.0        2.548.564 ops/sec
+-  chalk@5.3.0           2.502.850 ops/sec  -35.2%
+   kleur@4.1.5           2.229.023 ops/sec
+   ansi-colors@4.1.3     1.426.279 ops/sec
+   colors@1.4.0          1.123.139 ops/sec
+   cli-color@2.0.4         481.708 ops/sec
+   colors-cli@1.0.33       114.570 ops/sec
 ```
 
 ### Picocolors complex bench
 
 The [`picocolors`](https://github.com/alexeyraspopov/picocolors/blob/main/benchmarks/complex.mjs) benchmark, slightly modified.
-Added a bit more complexity by applying 2 styles to the colorized word instead of one.
+Added a bit more complexity by applying two styles to the colored word instead of one.
 
 ```js
 let index = 1e8;
@@ -1051,16 +1144,16 @@ c.red('Add plugin ' + c.cyan.underline('name') + ' to use time limit with ' + c.
 ```
 
 ```diff
-+  picocolors@1.1.1      2,552,271 ops/sec
--> ansis@3.3.3           2,449,720 ops/sec  -4.0%
--  chalk@5.3.0           2,320,215 ops/sec  -9.0%
-   colorette@2.0.20      2,279,859 ops/sec
-   kleur@4.1.5           1,729,928 ops/sec
-   kolorist@1.8.0        1,651,713 ops/sec
-   ansi-colors@4.1.3       807,154 ops/sec
-   colors@1.4.0            530,762 ops/sec
-   cli-color@2.0.4         289,246 ops/sec
-   colors-cli@1.0.33        96,758 ops/sec
++  picocolors@1.1.1      2.601.559 ops/sec
+-> ansis@3.5.0           2.501.227 ops/sec   -3.8%
+   colorette@2.0.20      2.326.491 ops/sec
+-  chalk@5.3.0           2.129.106 ops/sec  -18.1%
+   kleur@4.1.5           1.780.496 ops/sec
+   kolorist@1.8.0        1.685.703 ops/sec
+   ansi-colors@4.1.3       838.542 ops/sec
+   colors@1.4.0            533.362 ops/sec
+   cli-color@2.0.4         287.558 ops/sec
+   colors-cli@1.0.33        97.463 ops/sec
 ```
 
 > [!NOTE]
@@ -1077,7 +1170,7 @@ c.red('Add plugin ' + c.cyan.underline('name') + ' to use time limit with ' + c.
 
 <a id="switch-to-ansis" name="switch-to-ansis"></a>
 
-## How to switch to `ansis`
+## How to switch to Ansis
 
 Ansis is a powerful, small, and fast replacement that requires **no code migration** for many similar libraries.\
 Just replace your `import ... from ...` or `require(...)` to `ansis`.
@@ -1145,6 +1238,8 @@ bgHex('#E0115F')`Ruby`;
 bgHex('#96C')`Amethyst`;
 ```
 
+#### [↑ top](#top)
+
 <a id="replacing-colorette" name="replacing-colorette"></a>
 
 ### Drop-in replacement for [colorette], no migration required
@@ -1168,6 +1263,8 @@ Optionally, you can rewrite the same code to make it even shorter and cleaner:
 red.bold`Error!`;
 bold`I'm ${red`da ba ${underline`dee`} da ba`} daa`;
 ```
+
+#### [↑ top](#top)
 
 <a id="replacing-picocolors" name="replacing-picocolors"></a>
 
@@ -1201,6 +1298,8 @@ red.bold(variable);
 red`Error: ${cyan.bold`file`} not found!`
 ```
 
+#### [↑ top](#top)
+
 <a id="replacing-ansi-colors" name="replacing-ansi-colors"></a>
 
 ### Drop-in replacement for [ansi-colors], no migration required
@@ -1232,6 +1331,8 @@ red.bold`Error!`;   // using template string
 red`Error: ${cyan.bold`file`} not found!`;
 ```
 
+#### [↑ top](#top)
+
 <a id="replacing-kleur" name="replacing-kleur"></a>
 
 ### Migration from [kleur]
@@ -1262,6 +1363,8 @@ Optionally, you can rewrite the same code to make it even shorter and cleaner:
 ```js
 yellow`foo ${red.bold`red`} bar ${cyan`cyan`} baz`;
 ```
+
+#### [↑ top](#top)
 
 <a id="replacing-cli-color" name="replacing-cli-color"></a>
 

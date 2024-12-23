@@ -1,8 +1,38 @@
 # Change log
 
+## 3.5.0 (2024-12-26)
+
+- release: v3.5.0
+
+## 3.5.0-beta.6 (2024-12-25)
+
+- refactor: optimise npm package to reduce the size
+- chore: update benchmarks with newest version
+- test: add more use cases
+
+## 3.5.0-beta.5 (2024-12-24)
+
+- feat: detect `xterm-direct` terminal as supported the truecolor
+- feat: add support the `COLORTERM` variable for values: `truecolor`, `24bit`, `ansi256`, `ansi` (16 colors)
+- docs: update readme for using `COLORTERM` with examples
+
+## 3.5.0-beta.4 (2024-12-23)
+
+- docs: remove badges in readme for npm package to reduce package size
+
+## 3.5.0-beta.3 (2024-12-23)
+
+- docs: fix badge urls in readme for npm package
+
+## 3.5.0-beta.2 (2024-12-23)
+
+- refactor: optimise npm package to reduce the size by ~0.5 kB, from 8.0 kB to 7.5 kB
+- test: fix swc configuration for compiling into CJS
+- test: fix handling line endings on windows
+
 ## 3.5.0-beta.1 (2024-12-23)
 
-- refactor: optimise npm package to reduce the size by ~1.5 kB, from 8.9 kB to 7.5 kB
+- refactor: optimise npm package to reduce the size by ~1 kB, from 8.9 kB to 8.0 kB
 
 ## 3.5.0-beta.0 (2024-12-21)
 

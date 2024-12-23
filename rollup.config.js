@@ -4,7 +4,26 @@ import copy from 'rollup-plugin-copy';
 import { minify } from 'terser';
 
 // last ECMA version compatible with node.js 12
-const ecma = 2019;
+//const ecma = 2019;
+const ecma = 2021;
+
+const terserOptions = {
+  ecma,
+  // https://github.com/terser/terser#compress-options
+  compress: {
+    ecma,
+    passes: 2,
+    //module: true, // omit 'use strict'
+  },
+  toplevel: true,
+}
+
+// use this options only for debugging
+const debugTerserOptions = {
+  ecma,
+  compress: false,
+  keep_fnames: true,
+}
 
 function removeComments(string){
   //Takes a string of code, not an actual function.
@@ -32,14 +51,7 @@ export default [
         // `ansis.default = ansis` is needed for tsc using default import, e.g. `import ansis from 'ansis'`
         'exports.default = ansis': 'module.exports.Ansis = Ansis, ansis.default = ansis',
       }),
-      terser({
-        ecma,
-        compress: {
-          ecma,
-          passes: 2,
-        },
-        toplevel: true,
-      }),
+      terser(terserOptions),
       copy({
         targets: [
           {

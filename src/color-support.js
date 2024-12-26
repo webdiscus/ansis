@@ -35,14 +35,14 @@ let detectColorSpace = (env, isTTY, isWin) => {
 
   // Azure DevOps CI
   // https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml
-  if ('TF_BUILD' in env) return SPACE_16COLORS;
+  if (!!env.TF_BUILD) return SPACE_16COLORS;
 
   // JetBrains TeamCity support 256 colors since 2020.1.1 (2020-06-23)
-  if ('TEAMCITY_VERSION' in env) return SPACE_256COLORS;
+  if (!!env.TEAMCITY_VERSION) return SPACE_256COLORS;
 
   // CI tools
   // https://github.com/watson/ci-info/blob/master/vendors.json
-  if ('CI' in env) {
+  if (!!env.CI) {
     // CI supports true colors
     if (someEnv(['GITHUB_ACTIONS', 'GITEA_ACTIONS'])) return SPACE_TRUECOLOR;
 
@@ -59,7 +59,7 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // truecolor support starts from Windows 10 build 14931 (2016-09-21), in 2024 we assume modern Windows is used
   if (isWin) return SPACE_TRUECOLOR;
 
-  // kitty is GPU based terminal emulator, xterm-direct indicates truecolor support
+  // kitty or KDE terminal emulator indicates truecolor support
   if (/^xterm-(kitty|direct)$/i.test(term)) return SPACE_TRUECOLOR;
 
   // JetBrains IDEA: JetBrains-JediTerm
@@ -123,7 +123,7 @@ export const getColorSpace = (mockThis) => {
   let forceColorNum = parseInt(forceColorValue);
   let forceColor = forceColorValue === 'false' ? SPACE_MONO : isNaN(forceColorNum) ? SPACE_TRUECOLOR : forceColorNum;
 
-  let isForceDisabled = 'NO_COLOR' in env
+  let isForceDisabled = !!env.NO_COLOR
     || forceColor === SPACE_MONO
     // --no-color --color=false --color=never
     || hasFlag(/^-{1,2}(no-color|color=(false|never))$/);
@@ -133,16 +133,13 @@ export const getColorSpace = (mockThis) => {
 
   // when Next.JS runtime is `edge`, process.stdout is undefined, but colors output is supported
   // runtime values supported colors: `nodejs`, `edge`, `experimental-edge`
-  let isNextJS = (env.NEXT_RUNTIME || '').indexOf('edge') > -1;
+  let isNextJS = (env.NEXT_RUNTIME || '').includes('edge');
 
   // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
-  let isPM2 = 'PM2_HOME' in env && 'pm_id' in env;
-
-  // is used in any shell if GPG is installed
-  let isGPG_TTY = 'GPG_TTY' in env;
+  let isPM2 = !!env.PM2_HOME && !!env.pm_id;
 
   // whether the output is supported
-  let isTTY = isGPG_TTY || isPM2 || isNextJS || (isDeno ? Deno.isatty(1) : stdout && 'isTTY' in stdout);
+  let isTTY = isPM2 || isNextJS || (isDeno ? Deno.isatty(1) : stdout && !!stdout.isTTY);
 
   // optimisation: placed here to reduce the size of the compiled bundle
   if (isForceDisabled) return SPACE_MONO;

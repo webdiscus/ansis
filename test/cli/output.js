@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { red, rgb, bgRgb, hex, bgHex } from '../../src/index.mjs';
+//import { red, rgb, bgRgb, hex, bgHex } from '../../src/index.mjs'; // for debugging only
+import { red, rgb, bgRgb, hex, bgHex } from 'ansis';
 
 // test output into terminal, depends on flags (--no-color, --color) and environment variables (NO_COLOR, FORCE_COLOR)
 

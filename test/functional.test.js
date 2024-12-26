@@ -4,8 +4,8 @@ import { esc } from './utils/helpers.js';
 // import env variables to simulate truecolor color space in CLI
 import './env/color-space.truecolor.js';
 
-//import ansis, { Ansis, red, yellow, green, bold, hex } from '../src/index.mjs'; // use it for debugging only
-import ansis, { Ansis, red, grey, gray, green, yellow, bold, italic, underline, hex } from 'ansis'; // test build package
+//import ansis, { Ansis, red, yellow, green, bold, hex } from '../src/index.mjs'; //  // for debugging only
+import ansis, { Ansis, red, grey, gray, green, yellow, bold, italic, underline, hex } from 'ansis'; // test npm package
 
 describe('support colors', () => {
   test(`ansis.isSupported()`, () => {

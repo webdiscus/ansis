@@ -1,8 +1,16 @@
 # Change log
 
+## 3.5.1 (2024-12-26)
+
+- refactor: invisible code optimisation
+
 ## 3.5.0 (2024-12-26)
 
-- release: v3.5.0
+- refactor: optimise npm package to reduce size by 3 kB, from 10.3 kB to 7.3 kB
+- feat: add support the `COLORTERM` variable for values: `truecolor`, `24bit`, `ansi256`, `ansi` (16 colors)
+- feat: add support the `xterm-direct` terminal to detect the truecolor
+- fix: default import in TypeScript, compiled with `tsc`:
+  `import ansis from 'ansis'` now works so well as `import * as ansis from 'ansis'`
 
 ## 3.5.0-beta.6 (2024-12-25)
 
@@ -36,8 +44,8 @@
 
 ## 3.5.0-beta.0 (2024-12-21)
 
-- feat: add support for terminals where the GPG is installed.
-  If GPG is installed, `GPG_TTY` will be set to `ENV` instead of `isTTY`.
+- feat: add support environment variable `GPG_TTY` to detect it as `isTTY`.
+  NOTE: in release v3.5.1 was removed as needles.
 - fix: default import in TypeScript, compiled with `tsc`:
   `import ansis from 'ansis'` now works so well as `import * as ansis from 'ansis'`
 - refactor: optimise npm package to reduce size by ~1.3 kB, from 10.3 kB to 8.9 kB

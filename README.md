@@ -109,7 +109,7 @@ Both are recommended by the [ES Tooling](https://github.com/es-tooling) communit
 
 ### 📦 Unpacked size
 - `picocolors`: [6.4 kB][npm-picocolors] - A micro library with only basic features.
-- `аnsis`: [7.4 kB][npm-ansis] - A powerful library containing all the features you need.
+- `аnsis`: [7.0 kB][npm-ansis] - A powerful library containing all the features you need.
 - `chalk`:  [44.2 kB][npm-chalk] - Provides similar functionality to Ansis but is larger.
 
 ### ⚡ Performance
@@ -892,7 +892,7 @@ npm run compare
 | Npm package                  |                                                 Download tarball size |                  Unpacked Size | Code size |
 |:-----------------------------|----------------------------------------------------------------------:|-------------------------------:|----------:|
 | [`picocolors`][picocolors]   |       [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |       [6.4 kB][npm-picocolors] |    2.6 kB
-| [`ansis`][ansis]             |            [3.8 kB](https://arve0.github.io/npm-download-size/#ansis) |            [7.4 kB][npm-ansis] |    3.4 kB
+| [`ansis`][ansis]             |            [3.8 kB](https://arve0.github.io/npm-download-size/#ansis) |            [7.0 kB][npm-ansis] |    3.4 kB
 | [`colorette`][colorette]     |        [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |       [17.0 kB][npm-colorette] |    3.4 kB
 | [`kleur`][kleur]             |            [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |           [20.3 kB][npm-kleur] |    2.7 kB
 | [`ansi-colors`][ansi-colors] |      [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |     [26.1 kB][npm-ansi-colors] |    5.8 kB

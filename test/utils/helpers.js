@@ -108,16 +108,17 @@ export const getCompareFileContents = function(
  *
  * @param {string} testPath The path to test directory relative to `test/` folder.
  * @param {'tsc'|'swc'|'esbuild'} compiler  The compiler, defaults `tsc`.
+ * @param {string|null?} script
  * @return {Promise<void>}
  */
-export const executeTSFile = (testPath, compiler = 'tsc') => {
+export const executeTSFile = (testPath, compiler = 'tsc', script = null) => {
   const compilers = {
     tsc: 'build',
     swc: 'build:swc',
     esbuild: 'build:esbuild',
   };
 
-  const buildCompiler = compilers[compiler] || 'build';
+  const buildCompiler = script ? script : compilers[compiler] || 'build';
 
   const cmd = `cd ./test/${testPath} && npm run ${buildCompiler}`;
   return execPromise(cmd).then((result) => {

@@ -1,4 +1,3 @@
-// NEW named import, >= v1.6.0
 import ansis, { Ansis, AnsiColorsExtend, red, green, blue, yellow, magenta } from 'ansis';
 
 const log = console.log;

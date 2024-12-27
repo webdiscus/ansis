@@ -1,5 +1,10 @@
 # Change log
 
+## 3.5.2 (2024-12-28)
+
+- fix: TS2339: Property 'strip' does not exist on type when the TS compiler option `module` is `node16`
+- refactor: optimize index.d.ts to reduce package size from 7.3 kB to 7.0 kB
+
 ## 3.5.1 (2024-12-26)
 
 - refactor: invisible code optimisation

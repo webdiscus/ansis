@@ -18,7 +18,7 @@ type AnsiStyles =
   | 'strike' /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) Alias for `strikethrough`. */;
 
 // BasicColors
-type BC = 'black' | 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white' | 'gray' | 'grey';
+type BC = 'black' | 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
 
 // BrightColors
 type BBC = `${BC}Bright`;
@@ -39,9 +39,11 @@ type BBC = `${BC}Bright`;
  */
 type AnsiColors =
   | BC
+  | 'gray' | 'grey'
   | BBC
   | `bg${Capitalize<BC>}`
-  | `bg${Capitalize<BBC>}`;
+  | `bg${Capitalize<BBC>}`
+  | 'bgGray' | 'bgGrey';
 
 // Short alias for Ansis
 type AC = AnsiColors;
@@ -55,19 +57,7 @@ type DP = {
 
 // Static properties and methods (StaticMethods)
 type SP = {
-  /**
-   * Whether the output supports ANSI color and styles.
-   *
-   * @return {boolean}
-   */
-  isSupported(): boolean;
-
-  /**
-   * Return styled string.
-   *
-   * @param {string | TemplateStringsArray} string
-   */
-  (string: string): string;
+  (value: unknown): string;
 
   (strings: TemplateStringsArray, ...values: any[]): string;
 
@@ -189,6 +179,13 @@ type SP = {
    */
   extend<U extends string>(colors: Record<U, string | { open: string; close: string }>): asserts this is InstanceType<typeof Ansis> & Record<U, A>;
 
+  /**
+   * Whether the output supports ANSI color and styles.
+   *
+   * @return {boolean}
+   */
+  isSupported(): boolean;
+
   /** The ANSI escape sequences for starting the current style. */
   open: string;
 
@@ -201,69 +198,19 @@ type Ansis = SP & DP;
 // Short alias for Ansis
 type A = Ansis;
 
+// Note: define constants with only unique declarations,
+// E.g. the methods rgb and bgRgb have the same arguments and return, therefore we need it only once.
 declare const Ansis: new () => A,
-  ansi256: (code: number) => A,
-  bgAnsi256: (code: number) => A,
-  fg: (code: number) => A,
-  bg: (code: number) => A,
-  rgb: (r: number, g: number, b: number) => A,
-  bgRgb: (r: number, g: number, b: number) => A,
-  hex: (code: string) => A,
-  bgHex: (code: string) => A,
+  isSupported: () => boolean,
+  strip: SP["strip"],
+  extend: SP["extend"],
 
-  ansis: A,
+  fg: SP["fg"],
+  rgb: SP["rgb"],
+  hex: SP["hex"],
 
-  // Base styles
-  reset: A,
-  inverse: A,
-  hidden: A,
-  visible: A,
-
-  // Text styles
-  bold: A,
-  dim: A,
-  italic: A,
-  underline: A,
-  strikethrough: A,
-  strike: A,
-
-  // Foreground colors
-  black: A,
-  red: A,
-  green: A,
-  yellow: A,
-  blue: A,
-  magenta: A,
-  cyan: A,
-  white: A,
-  gray: A,
-  grey: A,
-  blackBright: A,
-  redBright: A,
-  greenBright: A,
-  yellowBright: A,
-  blueBright: A,
-  magentaBright: A,
-  cyanBright: A,
-  whiteBright: A,
-
-  // Background colors
-  bgBlack: A,
-  bgRed: A,
-  bgGreen: A,
-  bgYellow: A,
-  bgBlue: A,
-  bgMagenta: A,
-  bgCyan: A,
-  bgWhite: A,
-  bgBlackBright: A,
-  bgRedBright: A,
-  bgGreenBright: A,
-  bgYellowBright: A,
-  bgBlueBright: A,
-  bgMagentaBright: A,
-  bgCyanBright: A,
-  bgWhiteBright: A;
+  // declare all styles and colors of type Ansis
+  a: A;
 
 // Named exports
 export {
@@ -271,58 +218,75 @@ export {
   type AnsiColors,
   type AnsiStyles,
   type AnsiColorsExtend,
-  ansis as default,
+  a as default,
   Ansis,
-  ansi256,
+
+  // exporting these methods is required if the `module` compiler option is `node16,
+  // otherwise the TS compiler can't find they in default import:
+  // import ansis from 'ansis';
+  // ansis.strip(text); // <= TS2339: Property strip does not exist on type
+  isSupported,
+  strip,
+  extend,
+
   fg,
-  bgAnsi256,
-  bg,
+  fg as bg,
+  fg as ansi256,
+  fg as bgAnsi256,
   rgb,
-  bgRgb,
+  rgb as bgRgb,
   hex,
-  bgHex,
-  reset,
-  inverse,
-  hidden,
-  visible,
-  bold,
-  dim,
-  italic,
-  underline,
-  strikethrough,
-  strike,
-  black,
-  red,
-  green,
-  yellow,
-  blue,
-  magenta,
-  cyan,
-  white,
-  gray,
-  grey,
-  blackBright,
-  redBright,
-  greenBright,
-  yellowBright,
-  blueBright,
-  magentaBright,
-  cyanBright,
-  whiteBright,
-  bgBlack,
-  bgRed,
-  bgGreen,
-  bgYellow,
-  bgBlue,
-  bgMagenta,
-  bgCyan,
-  bgWhite,
-  bgBlackBright,
-  bgRedBright,
-  bgGreenBright,
-  bgYellowBright,
-  bgBlueBright,
-  bgMagentaBright,
-  bgCyanBright,
-  bgWhiteBright,
+  hex as bgHex,
+
+  // Base styles
+  a as reset,
+  a as inverse,
+  a as hidden,
+  a as visible,
+  a as bold,
+  a as dim,
+  a as italic,
+  a as underline,
+  a as strikethrough,
+  a as strike,
+
+  // Foreground colors
+  a as black,
+  a as red,
+  a as green,
+  a as yellow,
+  a as blue,
+  a as magenta,
+  a as cyan,
+  a as white,
+  a as gray,
+  a as grey,
+  a as blackBright,
+  a as redBright,
+  a as greenBright,
+  a as yellowBright,
+  a as blueBright,
+  a as magentaBright,
+  a as cyanBright,
+  a as whiteBright,
+
+  // Background colors
+  a as bgBlack,
+  a as bgGray,
+  a as bgGrey,
+  a as bgRed,
+  a as bgGreen,
+  a as bgYellow,
+  a as bgBlue,
+  a as bgMagenta,
+  a as bgCyan,
+  a as bgWhite,
+  a as bgBlackBright,
+  a as bgRedBright,
+  a as bgGreenBright,
+  a as bgYellowBright,
+  a as bgBlueBright,
+  a as bgMagentaBright,
+  a as bgCyanBright,
+  a as bgWhiteBright,
 };

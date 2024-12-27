@@ -28,4 +28,10 @@ describe('imports', () => {
   test('extend colors; tsc', () => executeTSFile('ts/extend-colors', 'tsc'));
   test('extend colors; swc', () => executeTSFile('ts/extend-colors', 'swc'));
   test('extend colors; esbuild', () => executeTSFile('ts/extend-colors', 'esbuild'));
+
+});
+
+describe('imports from package with type module', () => {
+  test('module ESNext', () => executeTSFile('ts/module-import-esnext', 'tsc'));
+  test('module Node16', () => executeTSFile('ts/module-import-node16', 'tsc'));
 });

@@ -10,8 +10,8 @@ import colorCli from 'colors-cli/safe.js';
 import kleur from 'kleur';
 import * as kleurColors from 'kleur/colors';
 import * as kolorist from 'kolorist';
-import picocolors from 'picocolors';
-import ansis, { greenBright, redBright, bgRed, bgBlueBright, black, yellow, hex } from 'ansis';
+import pico from 'picocolors';
+import ansis, { greenBright, redBright, bgRed, bgBlueBright, green, blue, black, yellow, hex } from 'ansis';
 
 import { hexToRgb } from '../src/utils.js';
 import spectrum from './spectrum.js';
@@ -60,7 +60,7 @@ function showSupportOfDeepNestedStyling() {
   logWithLabel(greenBright.inverse`  OK  `, 'kolorist: ', deepNestedFixture(kolorist));
   logWithLabel(greenBright.inverse`  OK  `, 'colors.js: ', deepNestedFixture(colorsJs));
   logWithLabel(greenBright.inverse`  OK  `, 'colorette: ', deepNestedFixture(colorette));
-  logWithLabel(greenBright.inverse`  OK  `, 'picocolors: ', deepNestedFixture(picocolors));
+  logWithLabel(greenBright.inverse`  OK  `, 'picocolors: ', deepNestedFixture(pico));
   logWithLabel(greenBright.inverse`  OK  `, 'cli-color: ', deepNestedFixture(cliColor));
   logWithLabel(black.bgYellow` BUG  `, 'colors-cli: ', deepNestedFixture(colorCli));
   logWithLabel(greenBright.inverse`  OK  `, 'ansi-colors: ', deepNestedFixture(ansiColors));
@@ -91,7 +91,7 @@ function showSupportOfNestedTemplateStrings() {
   logWithLabel(bgRed` FAIL `, 'kolorist: ', nestedTemplateStringFixture(kolorist));
   logWithLabel(bgRed` FAIL `, 'colors.js: ', nestedTemplateStringFixture(colorsJs));
   logWithLabel(bgRed` FAIL `, 'colorette: ', nestedTemplateStringFixture(colorette));
-  logWithLabel(bgRed` FAIL `, 'picocolors: ', nestedTemplateStringFixture(picocolors));
+  logWithLabel(bgRed` FAIL `, 'picocolors: ', nestedTemplateStringFixture(pico));
   logWithLabel(bgRed` FAIL `, 'cli-color: ', nestedTemplateStringFixture(cliColor));
   logWithLabel(bgRed` FAIL `, 'colors-cli: ', nestedTemplateStringFixture(colorCli));
   logWithLabel(bgRed` FAIL `, 'ansi-colors: ', nestedTemplateStringFixture(ansiColors));
@@ -106,7 +106,7 @@ function showSupportOfBreakStyleAtNewLine() {
   logWithLabel(bgRed` FAIL `, 'kolorist: ', kolorist.bgCyan(breakStyleAtNewLineFixture));
   logWithLabel(greenBright.inverse`  OK  `, 'colors.js: ', colorsJs.bgCyan(breakStyleAtNewLineFixture));
   logWithLabel(bgRed` FAIL `, 'colorette: ', colorette.bgCyan(breakStyleAtNewLineFixture));
-  logWithLabel(bgRed` FAIL `, 'picocolors: ', picocolors.bgCyan(breakStyleAtNewLineFixture));
+  logWithLabel(bgRed` FAIL `, 'picocolors: ', pico.bgCyan(breakStyleAtNewLineFixture));
   logWithLabel(bgRed` FAIL `, 'cli-color: ', cliColor.bgCyan(breakStyleAtNewLineFixture));
   logWithLabel(bgRed` FAIL `, 'colors-cli: ', colorCli.cyan_b(breakStyleAtNewLineFixture));
   logWithLabel(greenBright.inverse`  OK  `, 'ansi-colors: ', ansiColors.bgCyan(breakStyleAtNewLineFixture));
@@ -137,3 +137,13 @@ showSupportOfDeepNestedChainedStyling();
 showSupportOfNestedTemplateStrings();
 showSupportOfBreakStyleAtNewLine();
 showFallbackToSupportedColorSpace();
+
+console.log(green`New ${blue.bold`React`} app is created!`);
+console.log(chalk.green`New ${chalk.blue.bold('React')} app is created!`);
+console.log(chalk.green(`New ${chalk.blue.bold('React')} app is created!`));
+console.log(chalk.green(`New ${chalk.blue.bold`React`} app is created!`));
+
+console.log(pico.green(`Create ${pico.blue(pico.bold('React'))} app!`));
+console.log(pico.green`Create ${pico.blue(pico.bold`React`)} app!`);
+
+console.log(pico.green(`Create ${pico.blue(pico.bold`React`)} app!`));

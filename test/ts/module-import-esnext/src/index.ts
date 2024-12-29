@@ -1,5 +1,5 @@
 // TS1484: AnsiColorsExtend is a type and must be imported using a type-only import when `verbatimModuleSyntax` is enabled.
-import ansis, { type AnsiColorsExtend, bgAnsi256, bgGray, bgCyanBright } from 'ansis';
+import ansis, { Ansis, type AnsiColorsExtend, greenBright, bgAnsi256, bgGray, bgCyanBright } from 'ansis';
 
 const log = console.log;
 
@@ -39,12 +39,19 @@ const myLog = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) =
   log((ansis as Record<string, any>)[style](message));
 };
 
+// OK
+const formatValue = (value: any, colorFn: Ansis) => {
+  return colorFn(`${value} ${greenBright(`[${typeof value}]`)}`);
+};
+
 myLog('red', 'default: red'); // default style, OK
 myLog('cyanBright', 'default: cyanBright'); // default style, OK
 myLog('pink', 'extended: pink'); // extended style, OK
 myLog('orange', 'extended: orange'); // extended style, OK
 //myLog('apple', 'extended: apple'); // OK
 //myLog('unknown', 'message'); // TS Error, OK
+
+log(formatValue('formatValue', ansis.red));
 
 log(ansis.apple.italic`extended color: apple italic`);
 log(red`destructured default color: red`);

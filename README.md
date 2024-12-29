@@ -105,16 +105,19 @@ an [issue](https://github.com/webdiscus/ansis/issues) on GitHub.
 ## 🔄 [Why switch to Ansis](#switch-to-ansis)
 
 Today, the two [smallest](#compare-size) and [fastest](#benchmark) libraries are  `ansis` and `picocolors`.
-Both are recommended by the [ES Tooling](https://github.com/es-tooling) community as the best replacements for older, bulkier libraries.
+Both are [recommended](https://github.com/es-tooling/module-replacements/blob/main/docs/modules/chalk.md) by the [ES Tooling](https://github.com/es-tooling) community as replacements for older, bulkier libraries.
 
 ### 📦 Unpacked size
+
+The package size in `node_modules` directory:
+
 - `picocolors`: [6.4 kB][npm-picocolors] - A micro library with only basic features.
 - `аnsis`: [7.0 kB][npm-ansis] - A powerful library containing all the features you need.
-- `chalk`:  [44.2 kB][npm-chalk] - Provides similar functionality to Ansis but is larger.
+- `chalk`:  [44.2 kB][npm-chalk] - Provides similar functionality to Ansis.
 
 ### ⚡ Performance
 
-- `picocolors`: The fastest when applying a single style (e.g., `red` only).
+- `picocolors`: The fastest when applying a single style (e.g., `red`) only.
 - `аnsis`: The fastest when applying two or more styles (e.g., `red` + `bgWhite`).
 - `chalk`: Slower than both **Ansis** and **Picocolors** in all use cases.
 
@@ -132,10 +135,10 @@ Only `ansis`, `chalk`, and `picocolors` are actively maintained, unlike many oth
 
 ### 🤔 Which One Should You Use?
 
-- If you only use a single style, such as `red('foo')`, **Picocolors** is the best solution.
+- If you only use a single style, e.g., `red('foo')`, **Picocolors** is the best solution.
 
 - However, if you need more, like combining multiple styles (e.g., `red` + `bold` + `bgWhite`),\
-  [ANSI256 colors](#256-colors), [Truecolor](#truecolor),
+  [256 colors](#256-colors), [Truecolor](#truecolor),
   or support for a wide range of [environments](#color-support),
   then **Ansis** is the better choice.
 
@@ -147,13 +150,28 @@ Explore the list of [features](#compare), [package sizes](#compare-size), and [b
 > Use the chained syntax provided by libraries like `ansis` and `chalk`.\
 > Avoid nested calls, as they are [much slower](#bench-3-styles) and less readable than the chained syntax.\
 > _**Keep your code clean and readable!**_
-> ```js
-> red.bold.bgWhite`Error`                    ✅ ansis: faster, shorter, readable
-> pico.red(pico.bold(pico.bgWhite('Error'))) ❌ picocolor: slower, longer, unreadable
->
-> red`Error: ${cyan.underline(file)} not found!`                   ✅ ansis 😊
-> pico.red(`Error: ${pico.cyan(pico.underline(file))} not found!`) ❌ picocolor 🥴
-> ```
+
+#### Usage examples
+```js
+import ansis, { red, green, cyan } from 'ansis' // ✅✅ supports both default and named imports
+import chalk from 'chalk'                       // ✅❌ doesn't support named import
+import pico from 'picocolors'                   // ✅❌ doesn't support named import
+
+ansis.red('Error')                         //      ansis ❌ slower than picocolors
+chalk.red('Error')                         //      chalk ❌ slower than ansis
+pico.red('Error')                          // picocolors ✅ fastest
+
+red.bold.bgWhite`Error`                    //      ansis ✅✅✅ fastest, short, readable
+chalk.red.bold.bgWhite('Error')            //      chalk ❌☑️✅ slower, short, readable
+pico.red(pico.bold(pico.bgWhite('Error'))) // picocolors ❌❌❌ slowest, long, unreadable
+
+green`Create ${blue.bold`React`} app.`                     //      ansis ✅ usability 😊
+chalk.green(`Create ${chalk.blue.bold('React')} app.`)     //      chalk ☑️ usability 🙂
+pico.green(`Create ${pico.blue(pico.bold('React'))} app.`) // picocolors ❌ usability 🥴
+```
+
+> [!TIP]
+> Ansis supports **nested template strings**, so you can colorize text without using parentheses.
 
 ## [How to switch to Ansis](#switch-to-ansis)
 

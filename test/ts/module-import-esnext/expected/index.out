@@ -8,6 +8,7 @@ Hello World!
 [96mdefault: cyanBright[39m
 [38;2;255;117;209mextended: pink[39m
 [38;2;255;171;64mextended: orange[39m
+[31mformatValue [92m[string][31m[39m
 [38;2;79;168;61m[3mextended color: apple italic[23m[39m
 [31mdestructured default color: red[39m
 [38;2;255;117;209mdestructured extended color: pink[39m

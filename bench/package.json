@@ -9,6 +9,7 @@
     "bench:ansis": "node ./ansis.js"
   },
   "dependencies": {
+    "@colors/colors": "1.6.0",
     "ansi-colors": "4.1.3",
     "ansis": "file:../dist",
     "benchmark": "2.1.4",

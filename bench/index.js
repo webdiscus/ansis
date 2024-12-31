@@ -29,7 +29,7 @@ import Bench from './lib/bench.js';
 
 // vendor libraries
 import chalk from 'chalk';
-import colorsJs from 'colors';
+import colorsJs from '@colors/colors';
 import * as colorette from 'colorette';
 import ansiColors from 'ansi-colors';
 import cliColor from 'cli-color';
@@ -81,7 +81,7 @@ bench('Simple, using 1 style').
   add(packages['kolorist'], () => kolorist.red('foo')).
   add(packages['cli-color'], () => cliColor.red('foo')).
   add(packages['colors-cli'], () => colorCli.red('foo')).
-  add(packages['colors'], () => colorsJs.red('foo')).
+  add(packages['@colors/colors'], () => colorsJs.red('foo')).
   run();
 
 // Fastest way for 2 styles
@@ -95,7 +95,7 @@ bench(`Use 2 styles`).
   add(packages['kolorist'], () => kolorist.red(kolorist.bold('foo'))).
   add(packages['cli-color'], () => cliColor.red.bold('foo')).
   add(packages['colors-cli'], () => colorCli.red.bold('foo')).
-  add(packages['colors'], () => colorsJs.red.bold('foo')).
+  add(packages['@colors/colors'], () => colorsJs.red.bold('foo')).
   run();
 
 // Fastest way for 3 styles
@@ -109,7 +109,7 @@ bench('Use 3 styles').
   add(packages['kolorist'], () => kolorist.red(kolorist.bold(kolorist.bgWhite('foo')))).
   add(packages['cli-color'], () => cliColor.red.bold.bgWhite('foo')).
   add(packages['colors-cli'], () => colorCli.red.bold.white_bt('foo')).
-  add(packages['colors'], () => colorsJs.red.bold.bgWhite('foo')).
+  add(packages['@colors/colors'], () => colorsJs.red.bold.bgWhite('foo')).
   run();
 
 // Fastest way for 4 styles
@@ -123,7 +123,7 @@ bench('Use 4 styles').
   add(packages['kolorist'], () => kolorist.red(kolorist.bold(kolorist.underline(kolorist.bgWhite('foo'))))).
   add(packages['cli-color'], () => cliColor.red.bold.underline.bgWhite('foo')).
   add(packages['colors-cli'], () => colorCli.red.bold.underline.white_bt('foo')).
-  add(packages['colors'], () => colorsJs.red.bold.underline.bgWhite('foo')).
+  add(packages['@colors/colors'], () => colorsJs.red.bold.underline.bgWhite('foo')).
   run();
 
 // Chained syntax
@@ -134,7 +134,7 @@ bench('Chained syntax').
   add(packages['ansi-colors'], () => ansiColors.red.bold.underline.bgWhite('foo')).
   add(packages['cli-color'], () => cliColor.red.bold.underline.bgWhite('foo')).
   add(packages['colors-cli'], () => colorCli.red.bold.underline.white_bt('foo')).
-  add(packages['colors'], () => colorsJs.red.bold.underline.bgWhite('foo')).
+  add(packages['@colors/colors'], () => colorsJs.red.bold.underline.bgWhite('foo')).
   // colorette - (not supported)
   // picocolors - (not supported)
   // kolorist - (not supported)
@@ -151,7 +151,7 @@ bench('Nested styles').
   add(packages['kolorist'], () => kolorist.red(kolorist.bold(kolorist.underline(kolorist.bgWhite('foo'))))).
   add(packages['cli-color'], () => cliColor.red(cliColor.bold(cliColor.underline(cliColor.bgWhite('foo'))))).
   add(packages['colors-cli'], () => colorCli.red(colorCli.bold(colorCli.underline(colorCli.white_bt('foo'))))).
-  add(packages['colors'], () => colorsJs.red(colorsJs.bold(colorsJs.underline(colorsJs.bgWhite('foo'))))).
+  add(packages['@colors/colors'], () => colorsJs.red(colorsJs.bold(colorsJs.underline(colorsJs.bgWhite('foo'))))).
   run();
 
 // Deep nested styles
@@ -177,7 +177,7 @@ bench('Deep nested styles').
   add(packages['kolorist'], () => deepNestedBench(kolorist)).
   add(packages['cli-color'], () => deepNestedBench(cliColor)).
   add(packages['colors-cli'], () => deepNestedBench(colorCli)).
-  add(packages['colors'], () => deepNestedBench(colorsJs)).
+  add(packages['@colors/colors'], () => deepNestedBench(colorsJs)).
   run();
 
 // Colorette bench
@@ -194,7 +194,7 @@ bench('Colorette bench').
   add(packages['kolorist'], () => coloretteBanch(kolorist)).
   add(packages['cli-color'], () => coloretteBanch(cliColor)).
   add(packages['colors-cli'], () => coloretteBanch(colorCli)).
-  add(packages['colors'], () => coloretteBanch(colorsJs)).
+  add(packages['@colors/colors'], () => coloretteBanch(colorsJs)).
   run();
 
 // Picocolors complex bench, slightly modified
@@ -223,7 +223,7 @@ bench('Picocolors complex bench').
   add(packages['ansi-colors'], () => ansisComplex(ansiColors)).
   add(packages['cli-color'], () => ansisComplex(cliColor)).
   add(packages['colors-cli'], () => ansisComplex(colorCli)).
-  add(packages['colors'], () => ansisComplex(colorsJs)).
+  add(packages['@colors/colors'], () => ansisComplex(colorsJs)).
   run();
 
 // Check support of correct break style at new line

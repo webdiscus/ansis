@@ -75,7 +75,7 @@ The most popular Node.js libraries similar to Ansis:
 - [Correct style break](#new-line) at the `end of line` when used `\n` in string
 - Doesn't extend `String.prototype`
 - Zero dependencies
-- Test coverage 100%. Long term maintenance.
+- Test coverage 100%. Long term support.
 
 ## 🌍 Used by
 
@@ -130,7 +130,7 @@ Only `ansis`, `chalk`, and `picocolors` are actively maintained, unlike many oth
 - `kleur`: Last updated [2 years ago][npm-kleur]
 - `cli-color`: Last updated [~1 year ago][npm-cli-color]
 - `colors-cli`: Last updated [1 year ago][npm-colors-cli]
-- `colors.js`: Last updated [5 year ago][npm-colors.js]
+- `colors.js`: Last updated [1 year ago][npm-colors.js]
 
 
 ### 🤔 Which One Should You Use?
@@ -907,18 +907,18 @@ npm run compare
 
 ## Compare the size of most popular packages
 
-| Npm package                  |                                                 Download tarball size |                  Unpacked Size | Code size |
-|:-----------------------------|----------------------------------------------------------------------:|-------------------------------:|----------:|
-| [`picocolors`][picocolors]   |       [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |       [6.4 kB][npm-picocolors] |    2.6 kB
-| [`ansis`][ansis]             |            [3.8 kB](https://arve0.github.io/npm-download-size/#ansis) |            [7.0 kB][npm-ansis] |    3.4 kB
-| [`colorette`][colorette]     |        [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |       [17.0 kB][npm-colorette] |    3.4 kB
-| [`kleur`][kleur]             |            [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |           [20.3 kB][npm-kleur] |    2.7 kB
-| [`ansi-colors`][ansi-colors] |      [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |     [26.1 kB][npm-ansi-colors] |    5.8 kB
-| [`kolorist`][kolorist]       |         [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |        [51.0 kB][npm-kolorist] |    6.8 kB
-| [`colors.js`][colors.js]     |          [11.0 kB](https://arve0.github.io/npm-download-size/#colors) |       [39.5 kB][npm-colors.js] |   18.1 kB
-| [`chalk`][chalk]             |           [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |           [43.7 kB][npm-chalk] |   16.4 kB
-| [`cli-color`][cli-color]     | [13.8 (216 kB)](https://arve0.github.io/npm-download-size/#cli-color) | [39.6 (754 kB)][npm-cli-color] |   12.1 kB
-| [`colors-cli`][colors-cli]   |     [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |     [511.0 kB][npm-colors-cli] |    8.7 kB
+| Npm package                  |                                                  Download tarball size |                  Unpacked Size | Code size |
+|:-----------------------------|-----------------------------------------------------------------------:|-------------------------------:|----------:|
+| [`picocolors`][picocolors]   |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |       [6.4 kB][npm-picocolors] |    2.6 kB
+| [`ansis`][ansis]             |             [3.8 kB](https://arve0.github.io/npm-download-size/#ansis) |            [7.0 kB][npm-ansis] |    3.4 kB
+| [`colorette`][colorette]     |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |       [17.0 kB][npm-colorette] |    3.4 kB
+| [`kleur`][kleur]             |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |           [20.3 kB][npm-kleur] |    2.7 kB
+| [`ansi-colors`][ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |     [26.1 kB][npm-ansi-colors] |    5.8 kB
+| [`kolorist`][kolorist]       |          [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |        [51.0 kB][npm-kolorist] |    6.8 kB
+| [`colors.js`][colors.js]     | [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |       [41.5 kB][npm-colors.js] |   18.1 kB
+| [`chalk`][chalk]             |            [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |           [43.7 kB][npm-chalk] |   16.4 kB
+| [`cli-color`][cli-color]     |  [13.8 (216 kB)](https://arve0.github.io/npm-download-size/#cli-color) | [39.6 (754 kB)][npm-cli-color] |   12.1 kB
+| [`colors-cli`][colors-cli]   |      [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |     [511.0 kB][npm-colors-cli] |    8.7 kB
 
 **Download size:** The gzipped size of the npm package.\
 **Unpacked Size:** The size of the npm package in the `node_modules/` directory, `(incl. dependencies)`.\
@@ -1449,7 +1449,7 @@ fg(202).bg(236)`Orange text on dark gray background`;
 
 [ISC](https://github.com/webdiscus/ansis/blob/master/LICENSE)
 
-[colors.js]: https://github.com/Marak/colors.js
+[colors.js]: https://github.com/DABH/colors.js
 
 [colorette]: https://github.com/jorgebucaran/colorette
 
@@ -1469,7 +1469,7 @@ fg(202).bg(236)`Orange text on dark gray background`;
 
 [ansis]: https://github.com/webdiscus/ansis
 
-[npm-colors.js]: https://www.npmjs.com/package/colors
+[npm-colors.js]: https://www.npmjs.com/package/@colors/colors
 
 [npm-colorette]: https://www.npmjs.com/package/colorette
 

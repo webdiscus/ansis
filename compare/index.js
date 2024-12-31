@@ -2,7 +2,7 @@
 
 // vendor libraries
 import chalk from 'chalk';
-import colorsJs from 'colors';
+import colorsJs from '@colors/colors';
 import * as colorette from 'colorette';
 import ansiColors from 'ansi-colors';
 import cliColor from 'cli-color';

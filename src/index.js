@@ -10,7 +10,7 @@ import { hexToRgb } from './utils.js';
  * @property {null | AnsisProps} _p The props.
  */
 
-let { defineProperty, defineProperties, setPrototypeOf } = Object;
+let { create, defineProperty, setPrototypeOf } = Object;
 let stripANSIRegEx = /[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 let regexLFCR = /(\r?\n)/g;
 let ESC = '';
@@ -29,15 +29,15 @@ let stylePrototype;
  */
 let createStyle = ({ _p: props }, { open, close }) => {
   /**
-   * Wrap the string with ANSI codes.
+   * Decorate the string with ANSI codes.
    * @param {string} strings The normal or template string.
    * @param {array} values The values of the template string.
    * @return {string}
    */
-  let style = (strings, ...values) => {
+  let styleFn = (strings, ...values) => {
     if (!strings) return '';
 
-    let props = style._p;
+    let props = styleFn._p;
     let { _a: openStack, _b: closeStack } = props;
 
     let str = strings.raw
@@ -46,13 +46,13 @@ let createStyle = ({ _p: props }, { open, close }) => {
       // convert the number to the string
       : '' + strings;
 
-    // --> detect nested styles
+    // -> detect nested styles
     // on node.js, the performance of `includes()` and `~indexOf()` is the same, no difference
     if (str.includes(ESC)) {
       while (props) {
         // this implementation is over 30% faster than native String.replaceAll()
         //str = str.replaceAll(props.close, props.open);
-        // -- begin replaceAll
+        // -- begin replaceAll, inline the function here to optimize the bundle size
         let search = props.close;
         let replacement = props.open;
         let searchLength = search.length;
@@ -74,7 +74,7 @@ let createStyle = ({ _p: props }, { open, close }) => {
       }
     }
 
-    // --> detect new line
+    // -> detect new line
     if (str.includes(LF)) {
       str = str.replace(regexLFCR, closeStack + '$1' + openStack);
     }
@@ -90,83 +90,79 @@ let createStyle = ({ _p: props }, { open, close }) => {
     closeStack = close + props._b;
   }
 
-  setPrototypeOf(style, stylePrototype);
-  style._p = { open, close, _a: openStack, _b: closeStack, _p: props };
-  style.open = openStack;
-  style.close = closeStack;
+  setPrototypeOf(styleFn, stylePrototype);
 
-  return style;
+  styleFn._p = { open, close, _a: openStack, _b: closeStack, _p: props };
+  styleFn.open = openStack;
+  styleFn.close = closeStack;
+
+  return styleFn;
 };
 
 const Ansis = function() {
-  let self = (str) => '' + str;
+  let self = {
+    /**
+     * Whether the output supports ANSI color and styles.
+     *
+     * @return {boolean}
+     */
+    isSupported: () => isSupported,
 
-  /**
-   * Whether the output supports ANSI color and styles.
-   *
-   * @return {boolean}
-   */
-  self.isSupported = () => isSupported;
+    /**
+     * Remove ANSI styling codes.
+     * @param {string} str
+     * @return {string}
+     */
+    strip: (str) => str.replace(stripANSIRegEx, ''),
 
-  /**
-   * Remove ANSI styling codes.
-   * @param {string} str
-   * @return {string}
-   */
-  self.strip = (str) => str.replace(stripANSIRegEx, '');
+    /**
+     * Extend base colors with custom ones.
+     *
+     * @param {Object.<name:string, value:string|{open:string, close:string}>} colors The object with key as color name
+     *  and value as hex code of custom color or the object with 'open' and 'close' codes.
+     * @return {Ansis}
+     */
+    extend(colors) {
+      for (let name in colors) {
+        let color = colors[name];
+        // can be: f - function, s - string, o - object
+        let type = (typeof color)[0];
 
-  /**
-   * @callback getStyleCodes
-   * @param {string} value
-   */
+        // detect whether the value is object {open, close} or hex string
+        // type === 'string' by extending a custom color, e.g. ansis.extend({ pink: '#FF75D1' })
+        let styleProps = type === 's' ? fnRgb(...hexToRgb(color)) : color;
 
-  /**
-   * Extend base colors with custom ones.
-   *
-   * @param {Object.<name:string, value:string|{open:string, close:string}>} colors The object with key as color name
-   *  and value as hex code of custom color or the object with 'open' and 'close' codes.
-   * @return {(function(*): string)|Ansis|(function(...[*]): Ansis)}
-   */
-  self.extend = (colors) => {
-    for (let name in colors) {
-      let color = colors[name];
-      // can be: f - function, s - string, o - object
-      let type = (typeof color)[0];
+        // type === 'function'
+        if (type === 'f') {
+          styles[name] = {
+            get() {
+              return (...args) => createStyle(this, color(...args));
+            },
+          };
+        } else {
+          styles[name] = {
+            get() {
+              let style = createStyle(this, styleProps);
+              // performance impact: up to 5x faster;
+              // V8 optimizes access to properties defined via `defineProperty`,
+              // the `style` becomes a cached value on the object with direct access, w/o lookup for prototype chain
+              defineProperty(this, name, { value: style });
 
-      // detect whether the value is object {open, close} or hex string
-      // type === 'string' by extending a custom color, e.g. ansis.extend({ pink: '#FF75D1' })
-      let styleProps = type === 's' ? fnRgb(...hexToRgb(color)) : color;
-
-      // type === 'function'
-      if (type === 'f') {
-        styles[name] = {
-          get() {
-            return (...args) => createStyle(this, color(...args));
-          },
-        };
-      } else {
-        styles[name] = {
-          get() {
-            let style = createStyle(this, styleProps);
-            defineProperty(this, name, { value: style });
-
-            return style;
-          },
-        };
+              return style;
+            },
+          };
+        }
       }
+
+      stylePrototype = create({}, styles);
+      setPrototypeOf(self, stylePrototype);
+
+      return self;
     }
-
-    stylePrototype = defineProperties({}, styles);
-    setPrototypeOf(self, stylePrototype);
-
-    // return is required for TypeScript to access extended colors
-    return self;
   };
 
   // define functions, colors and styles
-  self.extend(styleData);
-
-  return self;
+  return self.extend(styleData);
 };
 
 const ansis = new Ansis();

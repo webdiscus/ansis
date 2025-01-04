@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "3.5.2",
+  "version": "3.6.0",
   "description": "A small and fast Node.js library for applying ANSI colors and styles in terminal output",
   "keywords": [
     "ansi",
@@ -36,10 +36,6 @@
   "maintainers": [
     "webdiscus (https://github.com/webdiscus)"
   ],
-  "funding": {
-    "type": "patreon",
-    "url": "https://patreon.com/biodiscus"
-  },
   "homepage": "https://github.com/webdiscus/ansis",
   "bugs": {
     "url": "https://github.com/webdiscus/ansis/issues"

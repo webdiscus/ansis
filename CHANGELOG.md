@@ -1,5 +1,22 @@
 # Change log
 
+## 3.6.0 (2025-01-04)
+
+- feat: remove **undocumented** pointless dummy function `ansis(any)`
+  > [!WARNING]
+  > This is not a BREAKING CHANGE because it was never officially documented!
+  > ```
+  > import ansis from 'ansis';
+  > ansis('text'); <= now will occur the ERROR TS2349: This expression is not callable.
+  > ```
+  > This warning applies only to projects where Chalk was replaced with Ansis and something like `chalk('text')` was used.
+  >
+  > Just replace `ansis('text')` with `'text'`.
+  >
+  > The `ansis('text')` function was a dummy and did nothing except return the same input string.
+
+- chore: update license to current date
+
 ## 3.5.2 (2024-12-28)
 
 - fix: TS2339: Property 'strip' does not exist on type when the TS compiler option `module` is `node16`
@@ -9,11 +26,12 @@
 
 - refactor: invisible code optimisation
 
-## 3.5.0 (2024-12-26)
+## 3.5.0 (2024-12-26) release
 
 - refactor: optimise npm package to reduce size by 3 kB, from 10.3 kB to 7.3 kB
 - feat: add support the `COLORTERM` variable for values: `truecolor`, `24bit`, `ansi256`, `ansi` (16 colors)
 - feat: add support the `xterm-direct` terminal to detect the truecolor
+- fix: remove detection environment variable `GPG_TTY` introduced in `3.5.0-beta.0` version, because it make no sense
 - fix: default import in TypeScript, compiled with `tsc`:
   `import ansis from 'ansis'` now works so well as `import * as ansis from 'ansis'`
 

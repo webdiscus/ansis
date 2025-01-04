@@ -60,12 +60,12 @@ let styleData = {
 };
 
 // generate ANSI 16 colors dynamically to reduce the code
-let styles = 'black,red,green,yellow,blue,magenta,cyan,white'.split(',');
+let styleNames = 'black,red,green,yellow,blue,magenta,cyan,white'.split(',');
 let bright = 'Bright';
 let code = 30;
 let name, bgName;
 
-for (name of styles) {
+for (name of styleNames) {
   bgName = 'bg' + name[0].toUpperCase() + name.slice(1);
 
   styleData[name] = esc(code, closeCode);

@@ -127,7 +127,7 @@ Only `ansis`, `chalk`, and `picocolors` are actively maintained, unlike many oth
 
 - `colorette`: Last updated [2 years ago][npm-colorette]
 - `ansi-colors`: Last updated [3 years ago][npm-ansi-colors]
-- `kleur`: Last updated [2 years ago][npm-kleur]
+- `kleur`: Last updated [3 years ago][npm-kleur]
 - `cli-color`: Last updated [~1 year ago][npm-cli-color]
 - `colors-cli`: Last updated [1 year ago][npm-colors-cli]
 - `colors.js`: Last updated [1 year ago][npm-colors.js]

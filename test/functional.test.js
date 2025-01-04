@@ -107,12 +107,6 @@ describe('style tests', () => {
 });
 
 describe('advanced features tests', () => {
-  test(`ansis('OK')`, () => {
-    const received = ansis('OK');
-    const expected = 'OK';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
   test(`nested styles`, () => {
     const received = ansis.red('foo' + ansis.underline.bgBlue('bar') + '!');
     const expected = '\x1b[31mfoo\x1b[4m\x1b[44mbar\x1b[49m\x1b[24m!\x1b[39m';
@@ -254,13 +248,6 @@ describe('extend base colors tests', () => {
 });
 
 describe('handling numbers', () => {
-  test(`ansis(123)`, () => {
-    const num = 123;
-    const received = ansis(num);
-    const expected = '123';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
   test(`ansis.bold(123)`, () => {
     const num = 123;
     const received = ansis.bold(num);

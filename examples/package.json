@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "demo": "node ./"
+    "demo": "node ./",
+    "spectrum": "node ./spectrum.js",
+    "stylex": "node ./StyleX.js"
   }
 }

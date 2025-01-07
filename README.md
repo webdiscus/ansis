@@ -16,7 +16,7 @@
 
 A [small](#compare-size) and [fast](#benchmark) Node.js library for applying ANSI colors and styles in terminal output.\
 Ansis provides all the [features](#features) you need, you can compare with [similar libraries](#compare).\
-Ansis is [faster](#benchmark) than **Chalk** and **Picocolors** (in some use cases), see [benchmarks](#benchmark).
+Ansis is as [small](#compare-size) as **Picocolors** but has the [functionality](#compare) of **Chalk**.
 
 
 ### 🚀 [Install and Quick Start](#install) 🔄 [Why switch to Ansis](#why-switch-to-ansis)

@@ -35,15 +35,14 @@ let createStyle = ({ _p: props }, { open, close }) => {
    * @return {string}
    */
   let styleFn = (strings, ...values) => {
-    if (!strings) return '';
-
     let props = styleFn._p;
     let { _a: openStack, _b: closeStack } = props;
 
-    let str = strings.raw
+    // optional chaining operator `?.` available since node >= 14
+    let str = strings?.raw
       // render template strings
       ? String.raw(strings, ...values)
-      // convert the number to the string
+      // convert the value to a string
       : '' + strings;
 
     // -> detect nested styles

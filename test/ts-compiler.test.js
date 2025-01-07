@@ -2,7 +2,7 @@ import { describe, test } from 'vitest';
 import { executeTSFile } from './utils/helpers.js';
 
 // import env variables to simulate truecolor color space in CLI
-import './env/color-space.truecolor.js';
+import './env/truecolor.js';
 
 // integration tests: compile TS into JS, execute compiled JS and compare the output with expected string
 describe('imports', () => {

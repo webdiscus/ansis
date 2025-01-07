@@ -140,8 +140,8 @@ bench('Chained syntax').
   // kolorist - (not supported)
   run();
 
-// Nested styles, like picocolors recursion
-bench('Nested styles').
+// Nested calls, like colorette recursion
+bench('Nested calls').
   add(packages['chalk'], () => chalk.red(chalk.bold(chalk.underline(chalk.bgWhite('foo'))))).
   add(packages['ansis'], () => ansis.red(ansis.bold(ansis.underline(ansis.bgWhite('foo'))))).
   add(packages['picocolors'], () => picocolors.red(picocolors.bold(picocolors.underline(picocolors.bgWhite('foo'))))).

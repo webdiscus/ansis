@@ -2,7 +2,7 @@ import { describe, test, expect } from 'vitest';
 import { esc } from './utils/helpers.js';
 
 // import env variables to simulate truecolor color space in CLI
-import './env/color-space.truecolor.js';
+import './env/truecolor.js';
 
 //import ansis, { Ansis, red, yellow, green, bold, hex } from '../src/index.mjs'; //  // for debugging only
 import ansis, { Ansis, red, grey, gray, green, yellow, bold, italic, underline, hex } from 'ansis'; // test npm package
@@ -12,6 +12,182 @@ describe('support colors', () => {
     const received = ansis.isSupported();
     const expected = true;
     expect(received).toEqual(expected);
+  });
+});
+
+describe('convert function argument to string', () => {
+  test(`no argument`, () => {
+    // if no argument is provided, an empty string w/o escape codes should be returned,
+    // but this is such an incredible case that we won't check it,
+    // we cast no argument as `undefined`,
+    // picocolors doesn't check this edge case either
+    const received = ansis.green();
+    const expected = '\x1b[32mundefined\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`empty string`, () => {
+    // if argument is empty string, an empty string w/o escape codes should be returned,
+    // but this is such an incredible case that we won't check it,
+    // picocolors doesn't check this edge case either
+    const received = ansis.green('');
+    const expected = '\x1b[32m\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`string`, () => {
+    const received = ansis.green('green');
+    const expected = '\x1b[32mgreen\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`number`, () => {
+    const received = ansis.green(1974);
+    const expected = '\x1b[32m1974\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`number with separator`, () => {
+    const received = ansis.green(999_55);
+    const expected = '\x1b[32m99955\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`float`, () => {
+    const received = ansis.green(999.55);
+    const expected = '\x1b[32m999.55\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`true`, () => {
+    const received = ansis.green(true);
+    const expected = '\x1b[32mtrue\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  // fixed in v3.7.0
+  test(`false`, () => {
+    const received = ansis.green(false);
+    const expected = '\x1b[32mfalse\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  // fixed in v3.7.0
+  test(`falsy value 0`, () => {
+    const received = ansis.green(0);
+    const expected = '\x1b[32m0\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  // fixed in v3.7.0
+  test(`null`, () => {
+    const received = ansis.green(null);
+    const expected = '\x1b[32mnull\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  // fixed in v3.7.0
+  test(`undefined`, () => {
+    const received = ansis.green(undefined);
+    const expected = '\x1b[32mundefined\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  // fixed in v3.7.0
+  test(`NaN`, () => {
+    const received = ansis.green(NaN);
+    const expected = '\x1b[32mNaN\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`Infinity`, () => {
+    const received = ansis.green(Infinity);
+    const expected = '\x1b[32mInfinity\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`Array<number>`, () => {
+    const received = ansis.green([999, 55]);
+    const expected = '\x1b[32m999,55\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`Array<string>`, () => {
+    const received = ansis.green(['Hello', 'world']);
+    const expected = '\x1b[32mHello,world\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`Set<string>`, () => {
+    const set = new Set(['Hello', 'world']);
+    const received = ansis.green([...set]);
+    const expected = '\x1b[32mHello,world\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+});
+
+describe('arguments in template string', () => {
+  test(`falsy value 0 in template`, () => {
+    const received = ansis.green(`zero ${0} value`);
+    const expected = '\x1b[32mzero 0 value\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`null in template`, () => {
+    const received = ansis.green(`${null} value`);
+    const expected = '\x1b[32mnull value\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+});
+
+describe('handling numbers', () => {
+  test(`ansis.bold(123)`, () => {
+    const num = 123;
+    const received = ansis.bold(num);
+    const expected = '\x1b[1m123\x1b[22m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`ansis.red(123)`, () => {
+    const num = 123;
+    const received = ansis.red(num);
+    const expected = '\x1b[31m123\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`red(123)`, () => {
+    const num = 123;
+    const received = red(num);
+    const expected = '\x1b[31m123\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`bold(123)`, () => {
+    const num = 123;
+    const received = bold(num);
+    const expected = '\x1b[1m123\x1b[22m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`red.bold(123)`, () => {
+    const num = 123;
+    const received = red.bold(num);
+    const expected = '\x1b[31m\x1b[1m123\x1b[22m\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`hex('#A00')(123)`, () => {
+    const num = 123;
+    const received = hex('#A00')(num);
+    const expected = '\x1b[38;2;170;0;0m123\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test('red`size: ${123}px`', () => {
+    const num = 123;
+    const received = red`size: ${num}px`;
+    const expected = '\x1b[31msize: 123px\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
   });
 });
 
@@ -25,12 +201,6 @@ describe('style tests', () => {
   test(`visible with template literal`, () => {
     const received = ansis.visible`foo ${green`bar`}`;
     const expected = 'foo \x1b[32mbar\x1b[39m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`ansis.green('')`, () => {
-    const received = ansis.green('');
-    const expected = '';
     expect(esc(received)).toEqual(esc(expected));
   });
 
@@ -88,22 +258,43 @@ describe('style tests', () => {
     expect(esc(received)).toEqual(esc(expected));
   });
 
-  test(`ansis.green('\nHello\nNew line\nNext new line.\n')`, () => {
-    const received = ansis.green('\nHello\nNew line\nNext new line.\n');
-    const expected = `\x1b[32m\x1b[39m
-\x1b[32mHello\x1b[39m
-\x1b[32mNew line\x1b[39m
-\x1b[32mNext new line.\x1b[39m
-\x1b[32m\x1b[39m`;
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
   // experimental link: not widely supported
   // test(`ansis.link('foo')`, () => {
   //   const received = ansis.link('https://github.com/webdiscus/ansis')('foo');
   //   const expected = '\x1b]8;;https://github.com/webdiscus/ansis\x07foo\x1b]8;;\x07';
   //   expect(esc(received)).toEqual(esc(expected));
   // });
+});
+
+describe('style new line', () => {
+  test(`linux new line LF`, () => {
+    const received = ansis.green('Hello\nWorld');
+    const expected = '\x1b[32mHello\x1b[39m\n\x1b[32mWorld\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`windows new line CRLF`, () => {
+    const received = ansis.green('Hello\r\nWorld');
+    const expected = '\x1b[32mHello\x1b[39m\r\n\x1b[32mWorld\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`linux new line LF, background`, () => {
+    const received = ansis.bgGreen(' Hello \n World ');
+    const expected = '\x1b[42m Hello \x1b[49m\n\x1b[42m World \x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`multiple new line`, () => {
+    const received = ansis.bgGreen('\nHello\nNew line\nNext new line.\n');
+    const expected = `\x1b[42m\x1b[49m
+\x1b[42mHello\x1b[49m
+\x1b[42mNew line\x1b[49m
+\x1b[42mNext new line.\x1b[49m
+\x1b[42m\x1b[49m`;
+    console.log(received);
+    expect(esc(received)).toEqual(esc(expected));
+  });
 });
 
 describe('advanced features tests', () => {
@@ -194,6 +385,16 @@ describe('alias tests', () => {
     const expected = '\x1b[38;5;96m\x1b[38;5;96mfoo\x1b[39m\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
+
+  test(`caching of aliases`, () => {
+    const {gray, grey} = ansis.gray;
+    const grayBold = gray.bold.italic;
+    const greyBold = grey.bold.underline;
+
+    expect(gray('foo')).toBe(grey('foo'));
+    expect(grayBold('bar')).not.toBe(greyBold('bar'));
+    expect(grey('baz')).not.toBe(greyBold('baz'));
+  });
 });
 
 describe('template literals tests', () => {
@@ -243,57 +444,6 @@ describe('extend base colors tests', () => {
     // test the order bold > orange
     const received = ansis.bold.orange('text');
     const expected = '\x1b[1m\x1b[38;2;255;171;64mtext\x1b[39m\x1b[22m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-});
-
-describe('handling numbers', () => {
-  test(`ansis.bold(123)`, () => {
-    const num = 123;
-    const received = ansis.bold(num);
-    const expected = '\x1b[1m123\x1b[22m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`ansis.red(123)`, () => {
-    const num = 123;
-    const received = ansis.red(num);
-    const expected = '\x1b[31m123\x1b[39m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`red(123)`, () => {
-    const num = 123;
-    const received = red(num);
-    const expected = '\x1b[31m123\x1b[39m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`bold(123)`, () => {
-    const num = 123;
-    const received = bold(num);
-    const expected = '\x1b[1m123\x1b[22m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`red.bold(123)`, () => {
-    const num = 123;
-    const received = red.bold(num);
-    const expected = '\x1b[31m\x1b[1m123\x1b[22m\x1b[39m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`hex('#A00')(123)`, () => {
-    const num = 123;
-    const received = hex('#A00')(num);
-    const expected = '\x1b[38;2;170;0;0m123\x1b[39m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test('red`size: ${123}px`', () => {
-    const num = 123;
-    const received = red`size: ${num}px`;
-    const expected = '\x1b[31msize: 123px\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
 });

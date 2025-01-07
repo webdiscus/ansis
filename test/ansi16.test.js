@@ -2,7 +2,7 @@ import { expect, describe, test } from 'vitest';
 import { esc } from './utils/helpers.js';
 
 // import env variables to simulate ANSI 16 color space
-import './env/color-space.ansi16.js';
+import './env/ansi16-colors.js';
 
 //import { hex, green } from '../src/index.mjs'; // for debugging only
 import { hex, green } from 'ansis';

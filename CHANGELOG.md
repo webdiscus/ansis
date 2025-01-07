@@ -1,5 +1,12 @@
 # Change log
 
+## 3.7.0 (2025-01-07)
+
+- fix: cast falsy values `false`, `null`, `undefined`, `NaN` to a string.
+  In previous versions, the empty string `''` was returned for falsy values.
+- fix: functions with argument `0` , e.g. `ansis.red(0)`, returning empty string `''`, now return colored value `'0'`
+- test: add tests for function arguments with various types
+
 ## 3.6.0 (2025-01-04)
 
 - feat: remove **undocumented** pointless dummy function `ansis(any)`

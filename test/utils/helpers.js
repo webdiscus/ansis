@@ -45,53 +45,29 @@ export const readTextFileSync = (file) => {
  *
  * @param {string} file The file path to execute.
  * @param {Array<string>} flags The CLI flags.
- * @param {Array<string>} env The environment variables.
+ * @param {Object} env The environment variables.
  * @return {string} CLI output as result of execution.
  */
-export const execScriptSync = (file, flags = [], env = []) => {
-  let envVars = env.length ? '' + env.join(' ') + ' ' : '';
+export const execScriptSync = (file, flags = [], env = {}) => {
+  let output = '';
 
-  // set ENV variables on Windows, e.g.: `set FORCE_COLOR=true | node app.js`
-  if (isWin) {
-    envVars = [];
-    env.forEach((expression) => {
-      envVars.push(`set ${expression} | `);
+  try {
+    output = execSync(`node ${file} ${flags.join(' ')}`, {
+      env: {
+        ...process.env, // preserve existing environment variables
+        ...env,
+      },
+      args: flags,
+      //stdio: 'inherit', // pass stdout/stderr directly to the console
     });
+
+  } catch (error) {
+    console.error('Error executing command:', error.message);
   }
 
-  const cmd = envVars + 'node ' + file + ' ' + flags.join(' ');
-  const result = execSync(cmd);
-
   // replace last newline in result
-  return result.toString().replace(/\n$/, '');
+  return output.toString().replace(/\n$/, '');
 };
-
-// TODO: get colorized output in process.stdout using child_process.execSync
-// export const execScriptOutSync = (file, flags = [], env = []) => {
-//   const envVars = env.length ? '' + env.join(' ') + ' ' : '';
-//   const cmd = envVars + 'node ' + file + ' ' + flags.join(' ');
-//
-//   //const stdout = jest.spyOn(process.stdout, 'write').mockImplementation(() => {});
-//   const stdout = jest.spyOn(process.stdout, 'write').mockImplementation(() => {});
-//
-//   const result = execSync(
-//     cmd,
-//     // reset stdio to enable isTTY for colorized output
-//     { stdio: 'inherit' },
-//     //{ stdio: [0, process.stdout, process.stderr] },
-//     //{ stdio: [1] },
-//   );
-//
-//   const { calls } = stdout.mock;
-//   let output = calls.length > 0 ? calls[0][0] : '';
-//
-//   stdout.mockClear();
-//   stdout.mockRestore();
-//   console.log('--> ', { cmd, output, calls, stdout: stdout.mock }, stdout);
-//   //console.log('--> ', result.toString());
-//
-//   return output;
-// };
 
 export const getCompareFileContents = function(
   receivedFile,

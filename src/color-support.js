@@ -118,7 +118,6 @@ export const getColorSpace = (mockThis) => {
   // runtime values supported colors: `nodejs`, `edge`, `experimental-edge`
 
   // whether the output is supported
-  /*@__INLINE__*/
   let isTTY = isPM2 || env.NEXT_RUNTIME?.includes('edge') || (isDeno ? Deno.isatty(1) : !!proc.stdout?.isTTY);
 
   // enforce a specific color support:

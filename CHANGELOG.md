@@ -1,4 +1,20 @@
-# Change log
+# Changelog
+
+## 3.8.0 (2025-01-09)
+
+- feat: enforce a specific color support by a `FORCE_COLOR` value:
+        false - Disables colors
+            0 - Disables colors
+        true (or unset) - Auto detects the supported colors (if no color detected, enforce truecolor)
+            1 - Enables 16 colors
+            2 - Enables 256 colors
+            3 - Enables truecolor
+
+- fix: if the function argument is an empty string should be returned an empty string w/o escape codes:
+  ```
+  ansis.red('') => '', w/o escape codes
+  ```
+- refactor: optimize code by size
 
 ## 3.7.0 (2025-01-07)
 

@@ -3,15 +3,17 @@ import { getColorSpace } from './color-support.js';
 import { SPACE_MONO, SPACE_16COLORS, SPACE_256COLORS } from './color-spaces.js';
 
 let colorSpace = getColorSpace();
-let isSupported = colorSpace > SPACE_MONO;
+let hasColors = colorSpace > SPACE_MONO;
 let mono = { open: '', close: '' };
 let monoFn = () => mono;
-let esc = isSupported ? (open, close) => ({ open: `\x1b[${open}m`, close: `\x1b[${close}m` }) : monoFn;
+let esc = hasColors ? (open, close) => ({ open: `\x1b[${open}m`, close: `\x1b[${close}m` }) : monoFn;
 let closeCode = 39;
 let bgCloseCode = 49;
 let bgOffset = 10;
 
-let createRgbFn = (fn) => (r, g, b) => fn(rgbToAnsi256(r, g, b));
+let createRgb16Fn = (offset, closeCode) => (r, g, b) => esc(rgbToAnsi16(r, g, b) + offset, closeCode);
+
+let createRgb256Fn = (fn) => (r, g, b) => fn(rgbToAnsi256(r, g, b));
 
 let createHexFn = (fn) => (hex) => {
   // note: the `...` operator is too slow
@@ -26,15 +28,13 @@ let fnRgb = (r, g, b) => esc(`38;2;${r};${g};${b}`, closeCode);
 let fnBgRgb = (r, g, b) => esc(`48;2;${r};${g};${b}`, bgCloseCode);
 
 if (colorSpace === SPACE_16COLORS) {
-  // ANSI 16 colors
   fnAnsi256 = (code) => esc(ansi256To16(code), closeCode);
   fnBgAnsi256 = (code) => esc(ansi256To16(code) + bgOffset, bgCloseCode);
-  fnRgb = (r, g, b) => esc(rgbToAnsi16(r, g, b), closeCode);
-  fnBgRgb = (r, g, b) => esc(rgbToAnsi16(r, g, b) + bgOffset, bgCloseCode);
+  fnRgb = createRgb16Fn(0, closeCode);
+  fnBgRgb = createRgb16Fn(bgOffset, bgCloseCode);
 } else if (colorSpace === SPACE_256COLORS) {
-  // ANSI 256 colors
-  fnRgb = createRgbFn(fnAnsi256);
-  fnBgRgb = createRgbFn(fnBgAnsi256);
+  fnRgb = createRgb256Fn(fnAnsi256);
+  fnBgRgb = createRgb256Fn(fnBgAnsi256);
 }
 
 let styleData = {
@@ -86,7 +86,7 @@ styleData.bgGrey = styleData.bgGray = esc(100, bgCloseCode);
 styleData.strikethrough = styleData.strike = esc(9, 29);
 
 export {
-  isSupported,
+  hasColors,
   styleData,
   fnRgb,
 }

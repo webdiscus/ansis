@@ -26,36 +26,20 @@ describe('convert function argument to string', () => {
     expect(received).toEqual(expected);
   });
 
+  // fixed in v3.7.0
+  test(`undefined`, () => {
+    const received = ansis.green(undefined);
+    const expected = '\x1b[32mundefined\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  // fixed in v3.7.1
   test(`empty string`, () => {
-    // if argument is empty string, an empty string w/o escape codes should be returned,
-    // but this is such an incredible case that we won't check it,
-    // picocolors doesn't check this edge case either
+    // if the argument is an empty string, an empty string w/o escape codes should be returned,
+    // chalk check this edge case too,
+    // picocolors doesn't check this edge case
     const received = ansis.green('');
-    const expected = '\x1b[32m\x1b[39m';
-    expect(received).toEqual(expected);
-  });
-
-  test(`string`, () => {
-    const received = ansis.green('green');
-    const expected = '\x1b[32mgreen\x1b[39m';
-    expect(received).toEqual(expected);
-  });
-
-  test(`number`, () => {
-    const received = ansis.green(1974);
-    const expected = '\x1b[32m1974\x1b[39m';
-    expect(received).toEqual(expected);
-  });
-
-  test(`number with separator`, () => {
-    const received = ansis.green(999_55);
-    const expected = '\x1b[32m99955\x1b[39m';
-    expect(received).toEqual(expected);
-  });
-
-  test(`float`, () => {
-    const received = ansis.green(999.55);
-    const expected = '\x1b[32m999.55\x1b[39m';
+    const expected = '';
     expect(received).toEqual(expected);
   });
 
@@ -87,13 +71,6 @@ describe('convert function argument to string', () => {
   });
 
   // fixed in v3.7.0
-  test(`undefined`, () => {
-    const received = ansis.green(undefined);
-    const expected = '\x1b[32mundefined\x1b[39m';
-    expect(received).toEqual(expected);
-  });
-
-  // fixed in v3.7.0
   test(`NaN`, () => {
     const received = ansis.green(NaN);
     const expected = '\x1b[32mNaN\x1b[39m';
@@ -103,6 +80,39 @@ describe('convert function argument to string', () => {
   test(`Infinity`, () => {
     const received = ansis.green(Infinity);
     const expected = '\x1b[32mInfinity\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`one space`, () => {
+    // why we don't compare with empty string using trim()?
+    // because can be used background color for the space
+    const received = ansis.bgGreen(' ');
+    const expected = '\x1b[42m \x1b[49m';
+    console.log(received);
+    expect(received).toEqual(expected);
+  });
+
+  test(`string`, () => {
+    const received = ansis.green('green');
+    const expected = '\x1b[32mgreen\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`number`, () => {
+    const received = ansis.green(1974);
+    const expected = '\x1b[32m1974\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`number with separator`, () => {
+    const received = ansis.green(999_55);
+    const expected = '\x1b[32m99955\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`float`, () => {
+    const received = ansis.green(999.55);
+    const expected = '\x1b[32m999.55\x1b[39m';
     expect(received).toEqual(expected);
   });
 

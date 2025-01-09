@@ -241,7 +241,7 @@ describe('CI tools', () => {
 });
 
 describe('flags and options', () => {
-  test(`enable colors via --color`, () => {
+  test(`--color`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
@@ -254,7 +254,7 @@ describe('flags and options', () => {
     expect(received).toEqual(expected);
   });
 
-  test(`enable colors via -color`, () => {
+  test(`-color`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
@@ -267,7 +267,7 @@ describe('flags and options', () => {
     expect(received).toEqual(expected);
   });
 
-  test(`enable colors via --color=true`, () => {
+  test(`--color=true`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
@@ -282,7 +282,7 @@ describe('flags and options', () => {
     expect(received).toEqual(expected);
   });
 
-  test(`enable colors via -color=true`, () => {
+  test(`-color=true`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
@@ -297,7 +297,7 @@ describe('flags and options', () => {
     expect(received).toEqual(expected);
   });
 
-  test(`disable colors via --color=false`, () => {
+  test(`--color=false`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
@@ -312,7 +312,7 @@ describe('flags and options', () => {
     expect(received).toEqual(expected);
   });
 
-  test(`disable colors via --color=never`, () => {
+  test(`--color=never`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
@@ -327,7 +327,7 @@ describe('flags and options', () => {
     expect(received).toEqual(expected);
   });
 
-  test(`disable colors via NO_COLOR=1`, () => {
+  test(`NO_COLOR=1`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
@@ -341,7 +341,10 @@ describe('flags and options', () => {
     const expected = SPACE_MONO;
     expect(received).toEqual(expected);
   });
+});
 
+// FORCE_COLOR
+describe('FORCE_COLOR', () => {
   test(`not exists FORCE_COLOR`, () => {
     const received = colorSpace({
       process: {
@@ -349,13 +352,12 @@ describe('flags and options', () => {
         env: {},
         argv: [],
       },
-
     });
     const expected = SPACE_MONO;
     expect(received).toEqual(expected);
   });
 
-  test(`disable colors via FORCE_COLOR=false`, () => {
+  test(`FORCE_COLOR=false`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
@@ -364,13 +366,12 @@ describe('flags and options', () => {
         stdout: { isTTY: true },
         stderr: { isTTY: true },
       },
-
     });
     const expected = SPACE_MONO;
     expect(received).toEqual(expected);
   });
 
-  test(`disable colors via FORCE_COLOR=0`, () => {
+  test(`FORCE_COLOR=0`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
@@ -379,48 +380,183 @@ describe('flags and options', () => {
         stdout: { isTTY: true },
         stderr: { isTTY: true },
       },
-
     });
     const expected = SPACE_MONO;
     expect(received).toEqual(expected);
   });
 
-  test(`enable colors via FORCE_COLOR=true`, () => {
+  test(`FORCE_COLOR unset, no isTTY`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: '' },
+        argv: [],
+      },
+    });
+    const expected = SPACE_TRUECOLOR;
+    expect(received).toEqual(expected);
+  });
+
+  test(`FORCE_COLOR unset, TERM=xterm-256color, no isTTY`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: '', TERM: 'xterm-256color' },
+        argv: [],
+      },
+    });
+    const expected = SPACE_TRUECOLOR;
+    expect(received).toEqual(expected);
+  });
+
+  test(`FORCE_COLOR unset, TERM=xterm-256color, isTTY`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: '', TERM: 'xterm-256color' },
+        argv: [],
+        stdout: { isTTY: true },
+      },
+    });
+    const expected = SPACE_256COLORS;
+    expect(received).toEqual(expected);
+  });
+
+  test(`FORCE_COLOR=true`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: 'true' },
         argv: [],
       },
-
     });
     const expected = SPACE_TRUECOLOR;
     expect(received).toEqual(expected);
   });
 
-  test(`enable colors via FORCE_COLOR=1`, () => {
+  test(`FORCE_COLOR=true, TERM=dumb`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'dumb', FORCE_COLOR: 'true' },
+        argv: [],
+      },
+    });
+    const expected = SPACE_TRUECOLOR;
+    expect(received).toEqual(expected);
+  });
+
+  test(`FORCE_COLOR=true, COLORTERM=truecolor`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: 'true', COLORTERM: 'truecolor' },
+        argv: [],
+      },
+    });
+    const expected = SPACE_TRUECOLOR;
+    expect(received).toEqual(expected);
+  });
+
+  test(`FORCE_COLOR=true, COLORTERM=ansi256`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: 'true', COLORTERM: 'ansi256' },
+        argv: [],
+      },
+    });
+    const expected = SPACE_256COLORS;
+    expect(received).toEqual(expected);
+  });
+
+  test(`FORCE_COLOR=true, COLORTERM=ansi`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: 'true', COLORTERM: 'ansi' },
+        argv: [],
+      },
+    });
+    const expected = SPACE_16COLORS;
+    expect(received).toEqual(expected);
+  });
+
+  test(`FORCE_COLOR=1`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: '1' },
         argv: [],
       },
+    });
+    const expected = SPACE_16COLORS;
+    expect(received).toEqual(expected);
+  });
 
+  test(`FORCE_COLOR=2`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: '2' },
+        argv: [],
+      },
+    });
+    const expected = SPACE_256COLORS;
+    expect(received).toEqual(expected);
+  });
+
+  test(`FORCE_COLOR=3`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: '3' },
+        argv: [],
+      },
     });
     const expected = SPACE_TRUECOLOR;
     expect(received).toEqual(expected);
   });
 
-  test(`enable colors via FORCE_COLOR=something`, () => {
+  // disable the test for unsupported value, whoever uses it has only himself to blame
+  // test(`FORCE_COLOR=5`, () => {
+  //   const received = colorSpace({
+  //     process: {
+  //       platform: 'linux',
+  //       env: { FORCE_COLOR: '5' },
+  //       argv: [],
+  //     },
+  //   });
+  //   const expected = SPACE_TRUECOLOR;
+  //   expect(received).toEqual(expected);
+  // });
+
+  test(`FORCE_COLOR=something`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: 'something' },
         argv: [],
       },
-
     });
     const expected = SPACE_TRUECOLOR;
+    expect(received).toEqual(expected);
+  });
+
+  test(`isTTY false, FORCE_COLOR=1`, () => {
+    const received = colorSpace({
+      Deno: {
+        env: {
+          toObject: () => ({ FORCE_COLOR: 1 }),
+        },
+        args: [],
+        build: {
+          os: 'linux',
+        },
+        isatty: (rid) => false, // analog to process.stdout.isTTY in node
+      },
+    });
+    const expected = SPACE_16COLORS;
     expect(received).toEqual(expected);
   });
 });
@@ -849,23 +985,7 @@ describe('Deno support', () => {
     expect(received).toEqual(expected);
   });
 
-  test(`FORCE_COLOR`, () => {
-    const received = colorSpace({
-      Deno: {
-        env: {
-          toObject: () => ({ FORCE_COLOR: 1 }),
-        },
-        args: [],
-        build: {
-          os: 'linux',
-        },
-        isatty: (rid) => false, // analog to process.stdout.isTTY in node
-      },
 
-    });
-    const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
-  });
 
   test(`flag '--color'`, () => {
     const received = colorSpace({

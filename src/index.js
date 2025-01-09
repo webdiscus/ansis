@@ -1,4 +1,4 @@
-import { isSupported, styleData, fnRgb } from './ansi-codes.js';
+import { hasColors, styleData, fnRgb } from './ansi-codes.js';
 import { hexToRgb } from './utils.js';
 
 /**
@@ -11,10 +11,6 @@ import { hexToRgb } from './utils.js';
  */
 
 let { create, defineProperty, setPrototypeOf } = Object;
-let stripANSIRegEx = /[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
-let regexLFCR = /(\r?\n)/g;
-let ESC = '';
-let LF = '\n';
 let styles = {};
 // note: place it here to allow the compiler to group all variables
 let stylePrototype;
@@ -35,19 +31,22 @@ let createStyle = ({ _p: props }, { open, close }) => {
    * @return {string}
    */
   let styleFn = (strings, ...values) => {
+    // if the argument is an empty string, an empty string w/o escape codes should be returned
+    if (strings === '') return strings;
+
     let props = styleFn._p;
     let { _a: openStack, _b: closeStack } = props;
 
-    // optional chaining operator `?.` available since node >= 14
+    // resolve the input string
     let str = strings?.raw
-      // render template strings
+      // render template string
       ? String.raw(strings, ...values)
-      // convert the value to a string
+      // convert to string
       : '' + strings;
 
     // -> detect nested styles
     // on node.js, the performance of `includes()` and `~indexOf()` is the same, no difference
-    if (str.includes(ESC)) {
+    if (str.includes('')) {
       while (props) {
         // this implementation is over 30% faster than native String.replaceAll()
         //str = str.replaceAll(props.close, props.open);
@@ -74,8 +73,10 @@ let createStyle = ({ _p: props }, { open, close }) => {
     }
 
     // -> detect new line
-    if (str.includes(LF)) {
-      str = str.replace(regexLFCR, closeStack + '$1' + openStack);
+    //if (str.includes('\n')) {
+    // size optimisation: using ~indexOf instead of includes, the compiled bundle is smaller by 1 byte
+    if (~str.indexOf('\n')) {
+      str = str.replace(/(\r?\n)/g, closeStack + '$1' + openStack);
     }
 
     return openStack + str + closeStack;
@@ -101,18 +102,18 @@ let createStyle = ({ _p: props }, { open, close }) => {
 const Ansis = function() {
   let self = {
     /**
-     * Whether the output supports ANSI color and styles.
+     * Whether the output supports ANSI colors.
      *
      * @return {boolean}
      */
-    isSupported: () => isSupported,
+    isSupported: () => hasColors,
 
     /**
      * Remove ANSI styling codes.
      * @param {string} str
      * @return {string}
      */
-    strip: (str) => str.replace(stripANSIRegEx, ''),
+    strip: (str) => str.replace(/[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, ''),
 
     /**
      * Extend base colors with custom ones.

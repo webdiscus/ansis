@@ -13,6 +13,7 @@ const terserOptions = {
   compress: {
     ecma,
     passes: 2,
+    inline: true,
     //module: true, // omit 'use strict'
   },
   toplevel: true,

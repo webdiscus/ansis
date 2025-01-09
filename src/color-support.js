@@ -1,4 +1,4 @@
-import { SPACE_MONO, SPACE_16COLORS, SPACE_256COLORS, SPACE_TRUECOLOR } from './color-spaces.js';
+import { SPACE_UNDEFINED, SPACE_MONO, SPACE_16COLORS, SPACE_256COLORS, SPACE_TRUECOLOR } from './color-spaces.js';
 
 /**
  * Detect color space.
@@ -43,7 +43,7 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // CI tools
   // https://github.com/watson/ci-info/blob/master/vendors.json
   if (!!env.CI) {
-    // CI supports true colors
+    // CI supports truecolor
     if (someEnv(['GITHUB_ACTIONS', 'GITEA_ACTIONS'])) return SPACE_TRUECOLOR;
 
     // others CI supports only 16 colors
@@ -89,20 +89,17 @@ export const getColorSpace = (mockThis) => {
    * @param {RegExp} regex The RegEx to match all possible flags.
    * @return {boolean}
    */
-  let hasFlag = (regex) => !!argv.find((value) => regex.test(value));
+  let hasFlag = (regex) => argv.some((value) => regex.test(value));
 
   let _this = mockThis || globalThis;
   let Deno = _this.Deno;
-  let isDeno = Deno != null;
+  let isDeno = !!Deno;
   let proc = _this.process || Deno || {};
-  let stdout = proc.stdout;
-  let platform = isDeno ? Deno.build.os : proc.platform;
-  let isWin = platform === 'win32';
 
   // Node -> `argv`, Deno -> `args`
   let argv = proc.argv || proc.args || [];
   let env = proc.env || {};
-  let colorSpace = -1;
+  let colorSpace = SPACE_UNDEFINED;
 
   if (isDeno) {
     try {
@@ -114,39 +111,50 @@ export const getColorSpace = (mockThis) => {
     }
   }
 
-  // When FORCE_COLOR is present and not an empty string (regardless of its value, except `false` or `0`),
-  // it should force the addition of ANSI color.
-  // See https://force-color.org
+  // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
+  let isPM2 = !!env.PM2_HOME && !!env.pm_id;
+
+  // when Next.JS runtime is `edge`, process.stdout is undefined, but colors output is supported
+  // runtime values supported colors: `nodejs`, `edge`, `experimental-edge`
+
+  // whether the output is supported
+  /*@__INLINE__*/
+  let isTTY = isPM2 || env.NEXT_RUNTIME?.includes('edge') || (isDeno ? Deno.isatty(1) : !!proc.stdout?.isTTY);
+
+  // enforce a specific color support:
+  // FORCE_COLOR=false   // 2 colors (no color)
+  // FORCE_COLOR=0       // 2 colors (no color)
+  // FORCE_COLOR=true    // auto detects the supported colors (if no color detected, enforce truecolor)
+  // FORCE_COLOR=(unset) // auto detects the supported colors (if no color detected, enforce truecolor)
+  // FORCE_COLOR=1       // 16 colors
+  // FORCE_COLOR=2       // 256 colors
+  // FORCE_COLOR=3       // truecolor
+  // See:
+  //  - https://force-color.org
+  //  - https://nodejs.org/api/tty.html#writestreamhascolorscount-env
+  //  - https://nodejs.org/api/cli.html#force_color1-2-3
 
   let FORCE_COLOR = 'FORCE_COLOR';
   let forceColorValue = env[FORCE_COLOR];
   let forceColorNum = parseInt(forceColorValue);
-  let forceColor = forceColorValue === 'false' ? SPACE_MONO : isNaN(forceColorNum) ? SPACE_TRUECOLOR : forceColorNum;
+  let forceColor = isNaN(forceColorNum) ? forceColorValue === 'false' ? 0 : SPACE_UNDEFINED : forceColorNum;
 
-  let isForceDisabled = !!env.NO_COLOR
-    || forceColor === SPACE_MONO
-    // --no-color --color=false --color=never
-    || hasFlag(/^-{1,2}(no-color|color=(false|never))$/);
-
-  // --color --color=true --color=always
+  // if FORCE_COLOR is present and is neither 'false' nor '0', OR has one of the flags: --color --color=true --color=always
   let isForceEnabled = (FORCE_COLOR in env && forceColor) || hasFlag(/^-{1,2}color=?(true|always)?$/);
 
-  // when Next.JS runtime is `edge`, process.stdout is undefined, but colors output is supported
-  // runtime values supported colors: `nodejs`, `edge`, `experimental-edge`
-  let isNextJS = (env.NEXT_RUNTIME || '').includes('edge');
+  // DON'T handle edge case for unsupported value, e.g. if value > 3
+  // if (isForceEnabled) colorSpace = forceColor > SPACE_TRUECOLOR ? SPACE_TRUECOLOR : forceColor;
+  if (isForceEnabled) colorSpace = forceColor;
 
-  // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
-  let isPM2 = !!env.PM2_HOME && !!env.pm_id;
+  // if color space is undefined attempt to detect one with additional method, returns 0, 1, 2 or 3
+  // size optimisation: place the `isWin` variable as expression directly in function argument
+  if (colorSpace < SPACE_MONO) colorSpace = detectColorSpace(env, isTTY, (isDeno ? Deno.build.os : proc.platform) === 'win32');
 
-  // whether the output is supported
-  let isTTY = isPM2 || isNextJS || (isDeno ? Deno.isatty(1) : stdout && !!stdout.isTTY);
-
-  // optimisation: placed here to reduce the size of the compiled bundle
-  if (isForceDisabled) return SPACE_MONO;
-
-  if (colorSpace < 0) {
-    colorSpace = detectColorSpace(env, isTTY, isWin);
-  }
+  // if force disabled
+  if (!forceColor
+    || !!env.NO_COLOR
+    // --no-color --color=false --color=never
+    || hasFlag(/^-{1,2}(no-color|color=(false|never))$/)) return SPACE_MONO;
 
   return isForceEnabled && colorSpace === SPACE_MONO ? SPACE_TRUECOLOR : colorSpace;
 };

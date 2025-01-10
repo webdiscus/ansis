@@ -1,7 +1,7 @@
-<h1 align="center"><img src="docs/img/logo.png"></h1>
+# Ansis
 
-Colorize terminal with ANSI colors & styles.
+Enable ANSI colors in terminal output. [Docs on GitHub](https://github.com/webdiscus/ansis).
 
-## 📖 [Docs on GitHub](https://github.com/webdiscus/ansis)
+#
 
-![](docs/img/npm.png)
+![](docs/npm.png)

@@ -33,12 +33,11 @@ Ansis is as [small](#compare-size) as **Picocolors** but has the [functionality]
 ## 🛠️ Usage
 
 ```js
-import ansis, { red, green, cyan, black, ansi256, hex } from 'ansis';
+import ansis, { red, cyan, ansi256, hex } from 'ansis';
 
 ansis.blueBright('file.txt')
-green`Succeful!`
 red`Error: ${cyan(file)} not found!`
-black.bgYellow`Warning!`
+red.bgWhite`ERROR`
 ansi256(214)`Orange`
 hex('#E0115F').bold.underline('Truecolor!')
 ```
@@ -112,7 +111,7 @@ Both are [recommended](https://github.com/es-tooling/module-replacements/blob/ma
 The package size in `node_modules` directory:
 
 - `picocolors`: [6.4 kB][npm-picocolors] - A micro library with only basic features.
-- `аnsis`: [7.0 kB][npm-ansis] - A powerful library containing all the features you need.
+- `аnsis`: [6.7 kB][npm-ansis] - A powerful library containing all the features you need.
 - `chalk`:  [44.2 kB][npm-chalk] - Provides similar functionality to Ansis.
 
 ### ⚡ Performance
@@ -946,7 +945,7 @@ npm run compare
 | Npm package                  |                                                  Download tarball size |                  Unpacked Size | Code size |
 |:-----------------------------|-----------------------------------------------------------------------:|-------------------------------:|----------:|
 | [`picocolors`][picocolors]   |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |       [6.4 kB][npm-picocolors] |    2.6 kB
-| [`ansis`][ansis]             |             [3.8 kB](https://arve0.github.io/npm-download-size/#ansis) |            [7.0 kB][npm-ansis] |    3.4 kB
+| [`ansis`][ansis]             |             [3.8 kB](https://arve0.github.io/npm-download-size/#ansis) |            [6.7 kB][npm-ansis] |    3.4 kB
 | [`colorette`][colorette]     |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |       [17.0 kB][npm-colorette] |    3.4 kB
 | [`kleur`][kleur]             |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |           [20.3 kB][npm-kleur] |    2.7 kB
 | [`ansi-colors`][ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |     [26.1 kB][npm-ansi-colors] |    5.8 kB

@@ -1,31 +1,21 @@
 {
-  "name": "ansis",
-  "version": "3.8.0",
-  "description": "ANSI colors and styles in terminal output",
-  "keywords": [
-    "ansi",
-    "color",
-    "console",
-    "terminal",
-    "cli"
-  ],
-  "license": "ISC",
-  "author": "webdiscus",
-  "repository": "webdiscus/ansis",
-  "main": "./index.js",
-  "types": "./index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./index.d.ts",
-      "require": "./index.js",
-      "import": "./index.mjs"
-    }
-  },
-  "sideEffects": false,
-  "engines": {
-    "node": ">=16"
-  },
-  "files": [
-    "index.*"
-  ]
+"name":"ansis",
+"version":"3.8.1",
+"description":"ANSI colors in terminal output",
+"keywords":["ansi","color","style","terminal","cli"],
+"license":"ISC",
+"author":"webdiscus",
+"repository":"webdiscus/ansis",
+"main":"./index.js",
+"types":"./index.d.ts",
+"exports":{
+ ".":{
+  "types":"./index.d.ts",
+  "require":"./index.js",
+  "import":"./index.mjs"
+ }
+},
+"sideEffects":false,
+"engines":{"node":">=16"},
+"files":["index.*"]
 }

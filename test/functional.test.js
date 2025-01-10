@@ -209,8 +209,8 @@ describe('style tests', () => {
   });
 
   test(`visible with template literal`, () => {
-    const received = ansis.visible`foo ${green`bar`}`;
-    const expected = 'foo \x1b[32mbar\x1b[39m';
+    const received = ansis.visible`foo ${green`bar ${red`baz`} bar`} foo`;
+    const expected = 'foo \x1b[32mbar \x1b[31mbaz\x1b[32m bar\x1b[39m foo';
     expect(esc(received)).toEqual(esc(expected));
   });
 

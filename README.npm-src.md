@@ -1,36 +1,26 @@
+# Ansis
+
+Enable ANSI colors in terminal output. [Docs on GitHub](https://github.com/webdiscus/ansis).
+
+#
+
 <p align="center">
   <a href="https://github.com/webdiscus/ansis">
-    <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-logo.png"><br>
-    ANSI Styling
+    <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/logo.png"><br>
   </a>
 </p>
 
----
-[![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
-[![node](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
-[![size](https://img.shields.io/bundlephobia/minzip/ansis)](https://bundlephobia.com/package/ansis)
-
-Colorize terminal with ANSI colors & styles, smaller and faster alternative to Chalk.
-
-🚀 [Install and Quick Start](https://github.com/webdiscus/ansis#install)
-
-✅ [Compare features](https://github.com/webdiscus/ansis#compare) with similar packages
-
-📊 [Benchmarks](https://github.com/webdiscus/ansis#benchmark)
-
-📖 [Read full docs on GitHub](https://github.com/webdiscus/ansis)
 
 ## Usage
 
 ```js
-import ansis, { red, green, black, ansi256, hex } from 'ansis';
+import ansis, { red, cyan, ansi256, hex } from 'ansis';
 
-ansis.cyan('file')
-green('Ok')
-red`Error`
-black.bgYellow`Warning`
+ansis.blueBright('file.txt')
+red`Error: ${cyan(file)} not found!`
+red.bgWhite`ERROR`
 ansi256(214)`Orange`
-hex('#E0115F').bold('TrueColor')
+hex('#E0115F').bold.underline('Truecolor!')
 ```
 
 ## Highlights

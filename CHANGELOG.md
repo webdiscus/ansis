@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.8.1 (2025-01-10)
+
+- refactor: optimize package size
+
 ## 3.8.0 (2025-01-09)
 
 - feat: enforce a specific color support by a `FORCE_COLOR` value:

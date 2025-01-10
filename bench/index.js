@@ -70,6 +70,8 @@ const bench = new Bench({
 
 log(hex('#F88').inverse.bold` -= Benchmark =- `);
 
+bench('Simple, ansis').add(packages['ansis'], () => ansis.red('foo')).run();
+
 // Simple bench
 bench('Simple, using 1 style').
   add(packages['chalk'], () => chalk.red('foo')).

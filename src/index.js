@@ -26,45 +26,43 @@ let stylePrototype;
 let createStyle = ({ _p: props }, { open, close }) => {
   /**
    * Decorate the string with ANSI codes.
-   * @param {string} strings The normal or template string.
+   * @param {string} input The input value, can be any or a template string.
    * @param {array} values The values of the template string.
    * @return {string}
    */
-  let styleFn = (strings, ...values) => {
+  let styleFn = (input, ...values) => {
     // if the argument is an empty string, an empty string w/o escape codes should be returned
-    if (strings === '') return strings;
+    if (input === '') return input;
 
     let props = styleFn._p;
     let { _a: openStack, _b: closeStack } = props;
 
     // resolve the input string
-    let str = strings?.raw
+    let output = input?.raw
       // render template string
-      ? String.raw(strings, ...values)
+      ? String.raw(input, ...values)
       // convert to string
-      : '' + strings;
+      : '' + input;
 
     // -> detect nested styles
-    // on node.js, the performance of `includes()` and `~indexOf()` is the same, no difference
-    if (str.includes('')) {
+    if (~output.indexOf('')) {
       while (props) {
         // this implementation is over 30% faster than native String.replaceAll()
-        //str = str.replaceAll(props.close, props.open);
-        // -- begin replaceAll, inline the function here to optimize the bundle size
+        //output = output.replaceAll(props.close, props.open);
+        // -- begin replaceAll, inline the function here to reduce the bundle size
         let search = props.close;
         let replacement = props.open;
         let searchLength = search.length;
         let result = '';
-        let lastPos;
+        let lastPos = 0;
         let pos;
 
-        // the `visible` style has empty open/close props
+        // the `visible` style has empty open/close properties
         if (searchLength) {
-          for (lastPos = 0; ~(pos = str.indexOf(search, lastPos)); lastPos = pos + searchLength) {
-            result += str.slice(lastPos, pos) + replacement;
+          for (; ~(pos = output.indexOf(search, lastPos)); lastPos = pos + searchLength) {
+            result += output.slice(lastPos, pos) + replacement;
           }
-
-          if (lastPos) str = result + str.slice(lastPos);
+          output = result + output.slice(lastPos);
         }
         // -- end replaceAll
 
@@ -73,13 +71,11 @@ let createStyle = ({ _p: props }, { open, close }) => {
     }
 
     // -> detect new line
-    //if (str.includes('\n')) {
-    // size optimisation: using ~indexOf instead of includes, the compiled bundle is smaller by 1 byte
-    if (~str.indexOf('\n')) {
-      str = str.replace(/(\r?\n)/g, closeStack + '$1' + openStack);
+    if (~output.indexOf('\n')) {
+      output = output.replace(/(\r?\n)/g, closeStack + '$1' + openStack);
     }
 
-    return openStack + str + closeStack;
+    return openStack + output + closeStack;
   };
 
   let openStack = open;

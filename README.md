@@ -111,7 +111,7 @@ Both are [recommended](https://github.com/es-tooling/module-replacements/blob/ma
 The package size in `node_modules` directory:
 
 - `picocolors`: [6.4 kB][npm-picocolors] - A micro library with only basic features.
-- `аnsis`: [6.7 kB][npm-ansis] - A powerful library containing all the features you need.
+- `аnsis`: [6.8 kB][npm-ansis] - A powerful library containing all the features you need.
 - `chalk`:  [44.2 kB][npm-chalk] - Provides similar functionality to Ansis.
 
 ### ⚡ Performance
@@ -119,6 +119,64 @@ The package size in `node_modules` directory:
 - `picocolors`: The fastest when applying a single style (e.g., `red`) only.
 - `аnsis`: The fastest when applying two or more styles (e.g., `red` + `bgWhite`).
 - `chalk`: Slower than both **Ansis** and **Picocolors** in all use cases.
+
+> [!CAUTION]
+> **Picocolors** **doesn't handle** important **edge cases**, so it is the fastest and smallest.
+
+### 🧩 Edge cases
+
+
+#### No or `undefined` arguments
+
+**Ansis** and **Picocolors** treat the absence of an input argument as `undefined`, since it is an incredible use case.
+
+```js
+ansis.red()          // ☑️ \x1b[31mundefined\x1b[39m
+chalk.red()          // ✅ ''
+pico.red()           // ☑️ \x1b[31mundefined\x1b[39m
+
+ansis.red(undefined) // ✅ \x1b[31mundefined\x1b[39m
+chalk.red(undefined) // ✅ \x1b[31mundefined\x1b[39m
+pico.red(undefined)  // ✅ \x1b[31mundefined\x1b[39m
+```
+
+#### Empty string
+
+**Ansis** and **Chalk** handle this case and return an empty string without ANSI codes.\
+However, **Picocolors** doesn't handle this case.
+
+```js
+ansis.red('')          // ✅ ''
+chalk.red('')          // ✅ ''
+pico.red('')           // ❌ \x1b[31m\x1b[39m
+```
+
+#### Break style at New Line
+
+**Ansis** and **Chalk** add a style break at each `new line` to correctly display multi-line text.\
+However, **Picocolors** doesn't handle this case.
+
+```js
+ansis.bgRed('\n ERROR \n') + ansis.cyan('The file not found!') // ✅
+chalk.bgRed('\n ERROR \n') + chalk.cyan('The file not found!') // ✅
+pico.bgRed('\n ERROR \n') + pico.cyan('The file not found!')   // ❌
+```
+
+![Break style at New Line](docs/img/break-line-compare.png)
+
+
+#### Nested template strings
+
+Only **Ansis** handles this very useful use case.
+
+```js
+ansis.red`R ${ansis.green`G ${ansis.blue`B`} G`} R` // ✅
+chalk.red`R ${chalk.green`G ${chalk.blue`B`} G`} R` // ❌
+pico.red`R ${pico.green`G ${pico.blue`B`} G`} R`    // ❌
+```
+
+![Nested template strings](docs/img/nested-template-strings-compare.png)
+
 
 ### 🔧 Maintenance
 
@@ -945,7 +1003,7 @@ npm run compare
 | Npm package                  |                                                  Download tarball size |                  Unpacked Size | Code size |
 |:-----------------------------|-----------------------------------------------------------------------:|-------------------------------:|----------:|
 | [`picocolors`][picocolors]   |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |       [6.4 kB][npm-picocolors] |    2.6 kB
-| [`ansis`][ansis]             |             [3.8 kB](https://arve0.github.io/npm-download-size/#ansis) |            [6.7 kB][npm-ansis] |    3.4 kB
+| [`ansis`][ansis]             |             [3.8 kB](https://arve0.github.io/npm-download-size/#ansis) |            [6.8 kB][npm-ansis] |    3.4 kB
 | [`colorette`][colorette]     |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |       [17.0 kB][npm-colorette] |    3.4 kB
 | [`kleur`][kleur]             |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |           [20.3 kB][npm-kleur] |    2.7 kB
 | [`ansi-colors`][ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |     [26.1 kB][npm-ansi-colors] |    5.8 kB

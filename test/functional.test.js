@@ -17,7 +17,7 @@ describe('support colors', () => {
 
 describe('convert function argument to string', () => {
   test(`no argument`, () => {
-    // if no argument is provided, an empty string w/o escape codes should be returned,
+    // if no argument is provided, an empty string w/o ANSI codes should be returned,
     // but this is such an incredible case that we won't check it,
     // we cast no argument as `undefined`,
     // picocolors doesn't check this edge case either
@@ -35,7 +35,7 @@ describe('convert function argument to string', () => {
 
   // fixed in v3.7.1
   test(`empty string`, () => {
-    // if the argument is an empty string, an empty string w/o escape codes should be returned,
+    // if the argument is an empty string, an empty string w/o ANSI codes should be returned,
     // chalk check this edge case too,
     // picocolors doesn't check this edge case
     const received = ansis.green('');

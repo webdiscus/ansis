@@ -96,6 +96,12 @@ function showSupportOfNestedTemplateStrings() {
   logWithLabel(bgRed` FAIL `, 'colors-cli: ', nestedTemplateStringFixture(colorCli));
   logWithLabel(bgRed` FAIL `, 'ansi-colors: ', nestedTemplateStringFixture(ansiColors));
   logWithLabel(bgRed` FAIL `, 'kleur: ', nestedTemplateStringFixture(kleur));
+
+  // examples for screenshot in readme (Edge cases > Nested template strings)
+  console.log();
+  console.log('✅  ansis ', ansis.red`R ${ansis.green`G ${ansis.blueBright`B`} G`} R`);
+  console.log('❌  chalk ', chalk.red`R ${chalk.green`G ${chalk.blueBright`B`} G`} R`);
+  console.log('❌  pico  ', pico.red`R ${pico.green`G ${pico.blueBright`B`} G`} R`);
 }
 
 function showSupportOfBreakStyleAtNewLine() {
@@ -112,6 +118,22 @@ function showSupportOfBreakStyleAtNewLine() {
   logWithLabel(greenBright.inverse`  OK  `, 'ansi-colors: ', ansiColors.bgCyan(breakStyleAtNewLineFixture));
   logWithLabel(bgRed` FAIL `, 'kleur/colors: ', kleurColors.bgCyan(breakStyleAtNewLineFixture));
   logWithLabel(bgRed` FAIL `, 'kleur: ', kleur.bgCyan(breakStyleAtNewLineFixture));
+
+  // examples for screenshot in readme (Edge cases > Break style at New Line)
+  log(bgBlueBright(`\n -= Supports the break style at New Lines: picocolors =- `));
+  console.log('\n ❌  ');
+  console.log(pico.bgRed('\n ERROR \n') + pico.cyan('The file not found!'));
+
+  log(bgBlueBright(`\n -= Supports the break style at New Lines: ansis =- `));
+  console.log('\n ✅  ');
+  console.log(ansis.bgRed('\n ERROR \n') + ansis.cyan('The file not found!'));
+  console.log();
+
+  log(bgBlueBright(`\n -= Supports the break style at New Lines: chalk =- `));
+  console.log('\n ✅  ');
+  console.log(chalk.bgRed('\n ERROR \n') + chalk.cyan('The file not found!'));
+  console.log();
+
 }
 
 function showFallbackToSupportedColorSpace() {

@@ -17,27 +17,46 @@ describe('support colors', () => {
 
 describe('convert function argument to string', () => {
   test(`no argument`, () => {
-    // if no argument is provided, an empty string w/o ANSI codes should be returned,
-    // but this is such an incredible case that we won't check it,
-    // we cast no argument as `undefined`,
-    // picocolors doesn't check this edge case either
     const received = ansis.green();
-    const expected = '\x1b[32mundefined\x1b[39m';
+    //const expected = '\x1b[32mundefined\x1b[39m'; // changed in v3.7.0
+    const expected = ''; // rewert in v3.9.0
     expect(received).toEqual(expected);
   });
 
-  // fixed in v3.7.0
   test(`undefined`, () => {
+    // handling in String constructor:
+    // console.log(String()); // => empty string, OK
+    // console.log(String(null)); // => null
+    // console.log(String(undefined)); // => undefined
+
     const received = ansis.green(undefined);
-    const expected = '\x1b[32mundefined\x1b[39m';
+    //const expected = '\x1b[32mundefined\x1b[39m'; // changed in v3.7.0
+    const expected = ''; // rewert in v3.9.0
+    expect(received).toEqual(expected);
+  });
+
+  test(`null`, () => {
+    const received = ansis.green(null);
+    //const expected = '\x1b[32mnull\x1b[39m'; // changed in v3.7.0
+    const expected = ''; // rewert in v3.9.0
+    expect(received).toEqual(expected);
+  });
+
+  test(`undefined in template`, () => {
+    let foo;
+    // using a template string, `undefined` will be casted into string `undefined`:
+    console.log(`Hello ${foo}!`);
+
+    const received = green`Hello ${red(foo)}!`;
+    console.log(received);
+    //const expected = '\x1b[32mHello \x1b[31mundefined\x1b[32m!\x1b[39m'; // changed in v3.7.0
+    const expected = '\x1b[32mHello !\x1b[39m'; // rewert in v3.9.0
     expect(received).toEqual(expected);
   });
 
   // fixed in v3.7.1
   test(`empty string`, () => {
-    // if the argument is an empty string, an empty string w/o ANSI codes should be returned,
-    // chalk check this edge case too,
-    // picocolors doesn't check this edge case
+    // if the argument is an empty string, an empty string w/o ANSI codes should be returned
     const received = ansis.green('');
     const expected = '';
     expect(received).toEqual(expected);
@@ -49,36 +68,26 @@ describe('convert function argument to string', () => {
     expect(received).toEqual(expected);
   });
 
-  // fixed in v3.7.0
   test(`false`, () => {
     const received = ansis.green(false);
-    const expected = '\x1b[32mfalse\x1b[39m';
+    const expected = '\x1b[32mfalse\x1b[39m'; // fixed in v3.7.0
     expect(received).toEqual(expected);
   });
 
-  // fixed in v3.7.0
   test(`falsy value 0`, () => {
     const received = ansis.green(0);
-    const expected = '\x1b[32m0\x1b[39m';
+    const expected = '\x1b[32m0\x1b[39m'; // fixed in v3.7.0
     expect(received).toEqual(expected);
   });
 
-  // fixed in v3.7.0
-  test(`null`, () => {
-    const received = ansis.green(null);
-    const expected = '\x1b[32mnull\x1b[39m';
-    expect(received).toEqual(expected);
-  });
-
-  // fixed in v3.7.0
   test(`NaN`, () => {
-    const received = ansis.green(NaN);
-    const expected = '\x1b[32mNaN\x1b[39m';
+    const received = ansis.green(100/'5px');
+    const expected = '\x1b[32mNaN\x1b[39m'; // changed in v3.7.0
     expect(received).toEqual(expected);
   });
 
   test(`Infinity`, () => {
-    const received = ansis.green(Infinity);
+    const received = ansis.green(1/0);
     const expected = '\x1b[32mInfinity\x1b[39m';
     expect(received).toEqual(expected);
   });

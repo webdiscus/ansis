@@ -133,7 +133,6 @@ function showSupportOfBreakStyleAtNewLine() {
   console.log('\n ✅  ');
   console.log(chalk.bgRed('\n ERROR \n') + chalk.cyan('The file not found!'));
   console.log();
-
 }
 
 function showFallbackToSupportedColorSpace() {
@@ -167,5 +166,50 @@ console.log(chalk.green(`New ${chalk.blue.bold`React`} app is created!`));
 
 console.log(pico.green(`Create ${pico.blue(pico.bold('React'))} app!`));
 console.log(pico.green`Create ${pico.blue(pico.bold`React`)} app!`);
-
 console.log(pico.green(`Create ${pico.blue(pico.bold`React`)} app!`));
+
+// Handling edge cases by various libraries
+
+console.log(black.bgGreen('\n chalk handling edge cases '));
+console.log(chalk.green());               // => empty string
+console.log(chalk.green(null));      // => null
+console.log(chalk.green(undefined)); // => undefined
+console.log(chalk.green(''));        // => empty string
+console.log(chalk.green(true));      // => true
+console.log(chalk.green(false));     // => false
+console.log(chalk.green(0));         // => 0
+console.log(chalk.green(NaN));           // => NaN
+console.log(chalk.green(1/0));       // => Infinity
+
+console.log(black.bgGreen('\n picocolors handling edge cases '));
+console.log(pico.green());               // => undefined
+console.log(pico.green(null));      // => null
+console.log(pico.green(undefined)); // => undefined
+console.log(pico.green(''));        // => empty string with ANSI codes
+console.log(pico.green(true));      // => true
+console.log(pico.green(false));     // => false
+console.log(pico.green(0));         // => 0
+console.log(pico.green(NaN));            // => NaN
+console.log(pico.green(1/0));       // => Infinity
+
+console.log(black.bgGreen('\n ansi-colors handling edge cases '));
+console.log(ansiColors.green());             // => empty string
+console.log(ansiColors.green(null));      // => empty string
+console.log(ansiColors.green(undefined)); // => empty string
+console.log(ansiColors.green(''));        // => empty string
+console.log(ansiColors.green(true));      // => true
+console.log(ansiColors.green(false));     // => false
+console.log(ansiColors.green(0));         // => 0
+console.log(ansiColors.green(NaN));          // => NaN
+console.log(ansiColors.green(1/0));       // => Infinity
+
+console.log(black.bgGreen('\n ansis handling edge cases '));
+console.log(ansis.green());          // => empty string
+console.log(ansis.green(null));      // => empty string
+console.log(ansis.green(undefined)); // => empty string
+console.log(ansis.green(''));        // => empty string
+console.log(ansis.green(true));      // => true
+console.log(ansis.green(false));     // => false
+console.log(ansis.green(0));         // => 0
+console.log(ansis.green(NaN));       // => NaN
+console.log(ansis.green(1/0));       // => Infinity

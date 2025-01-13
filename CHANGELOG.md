@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9.0 (2025-01-13)
+
+- feat: revert handling of `null` and `undefined` values to empty string as before `v3.7.0`, #25
+
 ## 3.8.1 (2025-01-10)
 
 - refactor: optimize package size

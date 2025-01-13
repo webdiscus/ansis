@@ -3,7 +3,7 @@
   <a href="https://www.npmjs.com/package/ansis">
     <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/logo.png" alt="ansis">
   </a>
-  <h1 align="center">ANSI Styles</h1>
+  <h1 align="center">[ANSI S]tyles</h1>
 </div>
 
 [![npm](https://img.shields.io/npm/v/ansis?logo=npm&color=brightgreen "npm package")](https://www.npmjs.com/package/ansis "download npm package")
@@ -14,12 +14,15 @@
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/ansis)](https://bundlephobia.com/package/ansis)
 
 
-A [small](#compare-size) and [fast](#benchmark) Node.js library for applying ANSI colors and styles in terminal output.\
-Ansis provides all the [features](#features) you need, you can compare with [similar libraries](#compare).\
-Ansis is as [small](#compare-size) as **Picocolors** but has the [functionality](#compare) of **Chalk**.
+A Node.js library for applying ANSI colors in terminal output.\
+**Ansis** is focused on [small size]((#compare-size)) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#edge-cases).
 
+<!--
+**Ansis** is as [small](#compare-size) as **Picocolors** but has the [functionality](#compare) of **Chalk**.
+**Ansis** is a powerful library focused on [small size]((#compare-size)) and [speed](#benchmark) while providing rich [functionality](#compare).
+-->
 
-### 🚀 [Install and Quick Start](#install) 🔄 [Why switch to Ansis](#why-switch-to-ansis)
+### 🚀 [Install and Quick Start](#install)  ✨[Why switch to Ansis](#why-switch-to-ansis)
 
 
 <div align="center">
@@ -48,7 +51,13 @@ The most popular Node.js libraries similar to Ansis:
 
 [chalk][chalk], [picocolors][picocolors], [colorette][colorette], [kleur][kleur], [ansi-colors][ansi-colors], [kolorist][kolorist], [cli-color][cli-color], [colors-cli][colors-cli], [colors.js][colors.js]
 
+> [!IMPORTANT]
+>
+> All libraries claim: `I'm the fastest...`.\
+> But if every library is the fastest, then [which one is the _"fastest of the fastest"_](#benchmark) ? 😂
+
 ✅ [Compare features](#compare) 📦 [Compare package sizes](#compare-size) 📊 [Benchmarks](#benchmark)
+
 
 <a id="features" name="features"></a>
 
@@ -93,18 +102,25 @@ The most popular Node.js libraries similar to Ansis:
 > For details see the [changelog](https://github.com/webdiscus/ansis/blob/master/CHANGELOG.md#v3-0-0).
 -->
 
+<!--
 ## ❓Question / Feature Request / Bug
 
 If you have discovered a bug or have a feature suggestion, feel free to create
 an [issue](https://github.com/webdiscus/ansis/issues) on GitHub.
-
+-->
 
 <a id="why-switch-to-ansis" name="why-switch-to-ansis"></a>
 
-## 🔄 [Why switch to Ansis](#switch-to-ansis)
+## ✨ [Why switch to Ansis](#switch-to-ansis)
 
-Today, the two [smallest](#compare-size) and [fastest](#benchmark) libraries are  `ansis` and `picocolors`.
-Both are [recommended](https://github.com/es-tooling/module-replacements/blob/main/docs/modules/chalk.md) by the [ES Tooling](https://github.com/es-tooling) community as replacements for older, bulkier libraries.
+As of 2025, two of the [smallest](#compare-size) and [fastest](#benchmark) libraries for displaying ANSI colors in the terminal
+are **Ansis** and **Picocolors**.
+Both are [recommended](https://github.com/es-tooling/module-replacements/blob/main/docs/modules/chalk.md) by the [ES Tooling](https://github.com/es-tooling) community as modern replacements for older, larger libraries.
+
+<!--
+**Chalk** has been a trendsetter for many subsequent libraries, inspiring the development of the modern **Ansis** library,
+which focused on small size and speed while providing the similar functionality.
+-->
 
 ### 📦 Unpacked size
 
@@ -123,21 +139,25 @@ The package size in `node_modules` directory:
 > [!CAUTION]
 > **Picocolors** **doesn't handle** important **edge cases**, so it is the fastest and smallest.
 
+<a id="edge-cases" name="edge-cases"></a>
 ### 🧩 Edge cases
 
+#### Absent, `undefined` or `null` arguments
 
-#### No or `undefined` arguments
-
-**Ansis** and **Picocolors** treat the absence of an input argument as `undefined`, since it is an incredible use case.
+**Ansis** handle these cases and return an empty string.
 
 ```js
-ansis.red()          // ☑️ \x1b[31mundefined\x1b[39m
+ansis.red()          // ✅ ''
 chalk.red()          // ✅ ''
-pico.red()           // ☑️ \x1b[31mundefined\x1b[39m
+pico.red()           // ❌ \x1b[31mundefined\x1b[39m
 
-ansis.red(undefined) // ✅ \x1b[31mundefined\x1b[39m
-chalk.red(undefined) // ✅ \x1b[31mundefined\x1b[39m
-pico.red(undefined)  // ✅ \x1b[31mundefined\x1b[39m
+ansis.red(undefined) // ✅ ''
+chalk.red(undefined) // ❌ \x1b[31mundefined\x1b[39m
+pico.red(undefined)  // ❌ \x1b[31mundefined\x1b[39m
+
+ansis.red(null) // ✅ ''
+chalk.red(null) // ❌ \x1b[31mnull\x1b[39m
+pico.red(null)  // ❌ \x1b[31mnull\x1b[39m
 ```
 
 #### Empty string
@@ -180,7 +200,7 @@ pico.red`R ${pico.green`G ${pico.blue`B`} G`} R`    // ❌
 
 ### 🔧 Maintenance
 
-Only `ansis`, `chalk`, and `picocolors` are actively maintained, unlike many other libraries:
+As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintained, unlike many other libraries:
 
 - `colorette`: Last updated [2 years ago][npm-colorette]
 - `ansi-colors`: Last updated [3 years ago][npm-ansi-colors]
@@ -1075,9 +1095,9 @@ npm run bench
 
 ---
 
-> [!NOTE]
+> [!IMPORTANT]
 >
-> In the tests, each library uses the **fastest** styling method available to compare the **absolute performance** of each library.
+> Each library uses the recommended **fastest** styling method to compare the **absolute performance**.
 >
 > In real practice, no one would use the **slowest** method (such as nested calls) to style a string when the library provides a **faster** and a **shorter** chained method.
 >

@@ -10,9 +10,12 @@ import { hexToRgb } from './utils.js';
  * @property {null | AnsisProps} _p The props.
  */
 
+// use the Number.isNaN, because:
+// - Number.isNaN(undefined) is false (expected),
+// - isNaN(undefined) is true (unexpected)
+let { isNaN } = Number;
 let { create, defineProperty, setPrototypeOf } = Object;
 let styles = {};
-// note: place it here to allow the compiler to group all variables
 let stylePrototype;
 
 /**
@@ -26,23 +29,31 @@ let stylePrototype;
 let createStyle = ({ _p: props }, { open, close }) => {
   /**
    * Decorate the string with ANSI codes.
-   * @param {string} input The input value, can be any or a template string.
+   * @param {unknown} arg The input value, can be any or a template string.
    * @param {array} values The values of the template string.
    * @return {string}
    */
-  let styleFn = (input, ...values) => {
-    // if the argument is an empty string, an empty string w/o escape codes should be returned
-    if (input === '') return input;
+  let styleFn = (arg, ...values) => {
+    // DEPRECATED: if the argument is an empty string, then return empty string
+    //if (arg === '') return arg;
+
+    // NEW: if the argument is one of '', undefined or null, then return empty string
+
+    // longer but a tick faster
+    //if (!arg && 0 !== arg && false !== arg && !isNaN(arg)) return '';
+
+    // it's shorter, but a tick slower (0.1%) because it always compares 2 expressions
+    if (null == arg || '' === arg) return '';
 
     let props = styleFn._p;
     let { _a: openStack, _b: closeStack } = props;
 
-    // resolve the input string
-    let output = input?.raw
+    // resolve the arg string
+    let output = arg?.raw
       // render template string
-      ? String.raw(input, ...values)
+      ? String.raw(arg, ...values)
       // convert to string
-      : '' + input;
+      : '' + arg;
 
     // -> detect nested styles
     if (~output.indexOf('')) {
@@ -154,7 +165,7 @@ const Ansis = function() {
       setPrototypeOf(self, stylePrototype);
 
       return self;
-    }
+    },
   };
 
   // define functions, colors and styles

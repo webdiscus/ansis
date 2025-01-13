@@ -70,21 +70,39 @@ const bench = new Bench({
 
 log(hex('#F88').inverse.bold` -= Benchmark =- `);
 
-bench('Simple, ansis').add(packages['ansis'], () => ansis.red('foo')).run();
+const text3 = 'foo';
+const text64 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed doe.';
+
+bench('Simple text 3 bytes, ansis').add(packages['ansis'], () => ansis.red('foo')).run();
+bench('Simple text 64 bytes, ansis').add(packages['ansis'], () => ansis.red(text64)).run();
 
 // Simple bench
-bench('Simple, using 1 style').
-  add(packages['chalk'], () => chalk.red('foo')).
-  add(packages['ansis'], () => ansis.red('foo')).
-  add(packages['picocolors'], () => picocolors.red('foo')).
-  add(packages['colorette'], () => colorette.red('foo')).
-  add(packages['kleur'], () => kleur.red('foo')).
-  add(packages['ansi-colors'], () => ansiColors.red('foo')).
-  add(packages['kolorist'], () => kolorist.red('foo')).
-  add(packages['cli-color'], () => cliColor.red('foo')).
-  add(packages['colors-cli'], () => colorCli.red('foo')).
-  add(packages['@colors/colors'], () => colorsJs.red('foo')).
+bench('Simple text 3 bytes, using 1 style').
+  add(packages['chalk'], () => chalk.red(text3)).
+  add(packages['ansis'], () => ansis.red(text3)).
+  add(packages['picocolors'], () => picocolors.red(text3)).
+  add(packages['colorette'], () => colorette.red(text3)).
+  add(packages['kleur'], () => kleur.red(text3)).
+  add(packages['ansi-colors'], () => ansiColors.red(text3)).
+  add(packages['kolorist'], () => kolorist.red(text3)).
+  add(packages['cli-color'], () => cliColor.red(text3)).
+  add(packages['colors-cli'], () => colorCli.red(text3)).
+  add(packages['@colors/colors'], () => colorsJs.red(text3)).
   run();
+
+bench('Simple text 64 bytes, using 1 style').
+  add(packages['chalk'], () => chalk.red(text64)).
+  add(packages['ansis'], () => ansis.red(text64)).
+  add(packages['picocolors'], () => picocolors.red(text64)).
+  add(packages['colorette'], () => colorette.red(text64)).
+  add(packages['kleur'], () => kleur.red(text64)).
+  add(packages['ansi-colors'], () => ansiColors.red(text64)).
+  add(packages['kolorist'], () => kolorist.red(text64)).
+  add(packages['cli-color'], () => cliColor.red(text64)).
+  add(packages['colors-cli'], () => colorCli.red(text64)).
+  add(packages['@colors/colors'], () => colorsJs.red(text64)).
+  run();
+
 
 // Fastest way for 2 styles
 bench(`Use 2 styles`).

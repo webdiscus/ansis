@@ -87,7 +87,7 @@ export default [
 
           { src: 'package.npm.json', dest: 'dist/', rename: 'package.json' },
           { src: 'README.npm.md', dest: 'dist/', rename: 'README.md' },
-          { src: 'LICENSE.npm', dest: 'dist/', rename: 'LICENSE' },
+          { src: 'LICENSE', dest: 'dist/' },
         ],
       }),
     ],

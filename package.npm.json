@@ -1,6 +1,6 @@
 {
 "name":"ansis",
-"version":"3.8.1",
+"version":"3.9.0",
 "description":"ANSI colors in terminal output",
 "keywords":["ansi","color","style","terminal","cli"],
 "license":"ISC",

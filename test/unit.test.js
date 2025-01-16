@@ -822,12 +822,6 @@ describe('Node.JS different env', () => {
     process = processOriginal;
   });
 
-  // test(`processMock undefined`, () => {
-  //   const received = colorSpace(undefined);
-  //   const expected = SPACE_MONO;
-  //   expect(received).toEqual(expected);
-  // });
-
   test(`processMock {}`, () => {
     const received = colorSpace({});
     const expected = SPACE_MONO;

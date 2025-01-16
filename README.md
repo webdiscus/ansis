@@ -15,7 +15,7 @@
 
 
 A Node.js library for applying ANSI colors in terminal output.\
-**Ansis** is focused on [small size]((#compare-size)) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#edge-cases).
+**Ansis** is focused on [small size]((#compare-size)) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
 <!--
 **Ansis** is as [small](#compare-size) as **Picocolors** but has the [functionality](#compare) of **Chalk**.
@@ -47,7 +47,7 @@ hex('#E0115F').bold.underline('Truecolor!')
 
 ## ⚖️ Similar libraries
 
-The most popular Node.js libraries similar to Ansis:
+The most popular Node.js libraries for styling terminal output using ANSI colors, similar to **Ansis**:
 
 [chalk][chalk], [picocolors][picocolors], [colorette][colorette], [kleur][kleur], [ansi-colors][ansi-colors], [kolorist][kolorist], [cli-color][cli-color], [colors-cli][colors-cli], [colors.js][colors.js]
 
@@ -56,7 +56,7 @@ The most popular Node.js libraries similar to Ansis:
 > All libraries claim: `I'm the fastest...`.\
 > But if every library is the fastest, then [which one is the _"fastest of the fastest"_](#benchmark) ? 😂
 
-✅ [Compare features](#compare) 📦 [Compare package sizes](#compare-size) 📊 [Benchmarks](#benchmark)
+✅ [Compare features](#compare) 🧩 [Handling edge cases](#handling-input-arguments) 📦 [Compare package sizes](#compare-size) 📊 [Benchmarks](#benchmark)
 
 
 <a id="features" name="features"></a>
@@ -132,12 +132,15 @@ The package size in `node_modules` directory:
 
 ### ⚡ Performance
 
-- `picocolors`: The fastest when applying a single style (e.g., `red`) only.
-- `аnsis`: The fastest when applying two or more styles (e.g., `red` + `bgWhite`).
+- `picocolors`: The [fastest](#bench-simple) when applying a single style (e.g., `red`) only.
+- `аnsis`: The [fastest](#bench-2-styles) when applying two or more styles (e.g., `red` + `bgWhite`).
 - `chalk`: Slower than both **Ansis** and **Picocolors** in all use cases.
 
 > [!CAUTION]
-> **Picocolors** **doesn't handle** important **edge cases**, so it is the fastest and smallest.
+> **Picocolors** doesn't handle important **edge cases**, so it is the fastest and smallest.
+>
+> **Picocolors** is faster only in a [simple](#bench-simple) micro-benchmark, which does not reflect real world usage.\
+> In a more complex benchmark, **Ansis** is much [closer](#bench-picocolors-complex) to **Picocolors** results or even [faster](#bench-3-styles).
 
 <a id="edge-cases" name="edge-cases"></a>
 ### 🧩 Edge cases
@@ -160,9 +163,11 @@ chalk.red(null) // ❌ \x1b[31mnull\x1b[39m
 pico.red(null)  // ❌ \x1b[31mnull\x1b[39m
 ```
 
+See more details about [handling input arguments](#handling-input-arguments).
+
 #### Empty string
 
-**Ansis** and **Chalk** handle this case and return an empty string without ANSI codes.\
+**Ansis** and **Chalk** handle this case and return an empty string without ANSI codes as expected.\
 However, **Picocolors** doesn't handle this case.
 
 ```js
@@ -210,6 +215,7 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
 - `colors.js`: Last updated [1 year ago][npm-colors.js]
 
 
+<a id="checklist-lib-choice" name="checklist-lib-choice"></a>
 ### 🤔 Which One Should You Use?
 
 - If you only use a single style, e.g., `red('foo')`, **Picocolors** is the best solution.
@@ -218,6 +224,29 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
   [256 colors](#256-colors), [Truecolor](#truecolor),
   or support for a wide range of [environments](#color-support),
   then **Ansis** is the better choice.
+
+#### Checklist:
+
+- Does it matter if a library performs [~60 million](#bench-simple) or [~100 million](#bench-simple) **ops/sec** when outputting to the terminal?
+  Spoiler: Both Ansis and Picocolors are more than [fast enough](#bench-picocolors-complex).
+  - ✅ Picocolors
+  - ❌ Ansis
+- Does it matter if the unpacked size is [6.4 kB][npm-picocolors] or [6.8 kB][npm-ansis], a difference of  **0.4 kB**?
+  - ✅ Picocolors
+  - ❌ Ansis
+- Does support for [ANSI 256 colors](#256-colors) or [Truecolor](#truecolor) with [fallback](#fallback) matter?
+  - ✅ Ansis
+  - ❌ Picocolors
+- Does handling [edge cases](#handling-input-arguments) matter?
+  - ✅ Ansis
+  - ❌ Picocolors
+- Does supporting a wide range of [environments](#color-support) matter?
+  - ✅ Ansis
+  - ❌ Picocolors
+- Does keeping your code clean and readable matter?\
+  (e.g., using [named import](#named-import), [chained syntax](#chained-syntax), [nested **template strings**](#nested-syntax))
+  - ✅ Ansis
+  - ❌ Picocolors
 
 
 Explore the list of [features](#compare), [package sizes](#compare-size), and [benchmarks](#benchmark) compared to similar libraries.
@@ -354,25 +383,6 @@ const redText = red('text'); // colorized ANSI string
 const text = ansis.strip(redText); // pure string without ANSI codes
 ```
 
-<a id="template-literals" name="template-literals"></a>
-
-## Template literals
-
-The `ansis` supports both the function syntax `red('error')` and template literals ``` red`error` ```.
-
-The `template literals` allow you to make a complex template more readable and shorter.\
-The `function syntax` can be used to colorize a variable.
-
-```js
-import { red } from 'ansis';
-
-let message = 'error';
-
-red(message);
-red`text`;
-red`text ${message} text`;
-```
-
 <a id="chained-syntax" name="chained-syntax"></a>
 
 ## Chained syntax
@@ -390,12 +400,35 @@ italic.bold.yellow.bgMagentaBright`text`;
 
 #### [↑ top](#top)
 
+<a id="template-literals" name="template-literals"></a>
+
+## Template literals
+
+**Ansis** supports both the function syntax `red('error')` and [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) ``` red`error` ```.
+
+Template literals improve readability and brevity for complex templates,
+while the function syntax is ideal for colorizing variables.
+
+```js
+import { red } from 'ansis';
+
+let message = 'error';
+
+red(message);
+red`text`;
+red`text ${message} text`;
+```
+
+> [!TIP]
+> Using [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) you can omit parentheses ``` red(`error`) ``` → ``` red`error` ``` to keep your code clean and readable.
+
+
 <a id="nested-syntax" name="nested-syntax"></a>
 
 ## Nested syntax
 
-You can nest functions and [template strings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) within each other.
-None of the other libraries (chalk, kleur, picocolors, colorette etc.) support nested template strings.
+You can nest color functions and [template strings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) within each other.
+The support for **nested template strings** is unique to Ansis, as none of the other libraries (Chalk, Picocolors, Kleur, Colorette, etc.) handle nested template strings correctly.
 
 Nested template strings:
 
@@ -404,13 +437,13 @@ import { red, green } from 'ansis';
 
 red`red ${green`green`} red`;
 ```
-
 Deep nested chained styles:
 
 ```js
 import { red, green, cyan, magenta, yellow, italic, underline } from 'ansis';
 
-red(`red ${italic(`red italic ${underline(`red italic underline`)}`)} red`);
+// parentheses can be omitted
+red`red ${italic`red italic ${underline`red italic underline`}`} red`;
 
 // deep nested chained styles
 green(
@@ -492,18 +525,31 @@ as [chalk], [colorette], [picocolors], [kleur].
 Defaults, the imported `ansis` instance contains [base styles and colors](#base-colors).
 To extend base colors with custom color names for Truecolor use the `ansis.extend()` method.
 
+> [!TIP]
+> You can find a color name by the hex code on the [Name that Color](https://chir.ag/projects/name-that-color/#FF681F) website.
+
+Define a theme with your custom colors and extends the `ansis` object:
+
 ```js
 import ansis from 'ansis';
 
-// extend base colors
-ansis.extend({
-  pink: '#FF75D1',
+const myTheme = {
+  apple: '#4FA83D',
   orange: '#FFAB40',
-});
+  pink: '#FF75D1',
+};
 
-// the custom colors are available under namespace `ansis`
-ansis.pink('text');
-ansis.orange('text');
+// extend ansis this custom colors
+ansis.extend(myTheme);
+
+// you can destruct extended colors
+const { apple, orange, pink, red } = ansis;
+
+// access to extended colors
+console.log(ansis.pink('pink'));
+console.log(ansis.orange.bold('orange bold'));
+console.log(apple`apple`);
+console.log(orange.italic`orange italic`);
 ```
 
 Usage example with TypeScript:
@@ -511,13 +557,17 @@ Usage example with TypeScript:
 ```ts
 import ansis, { AnsiColorsExtend } from 'ansis';
 
-// extend base colors
-ansis.extend({
-  pink: '#FF75D1',
+const myTheme = {
+  apple: '#4FA83D',
   orange: '#FFAB40',
-});
+  pink: '#FF75D1',
+};
 
-const write = (style: AnsiColorsExtend<'pink' | 'orange'>, message: string) => {
+// extend base colors with your custom theme
+ansis.extend(myTheme);
+
+// your custom logger with the support for extended colors
+const write = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) => {
   console.log(ansis[style](message));
 }
 
@@ -526,6 +576,15 @@ write('pink', 'message'); // extended color OK
 write('orange', 'message'); // extended color OK
 write('unknown', 'message'); // TypeScript Error
 ```
+
+> [!WARNING]
+>
+> The extended color must be used as a first chain item.
+>
+> ```js
+> ansis.orange.bold('orange bold'); // ✅ works fine
+> ansis.bold.orange('bold orange'); // ❌ extended color as a subchain item doesn't work
+> ```
 
 #### [↑ top](#top)
 
@@ -975,44 +1034,84 @@ npm run compare
 | [`picocolors`][picocolors]<br><nobr>`❌ named import`</nobr><br>`✅ standard`    | ✅<br>since v1.1.0 |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
 | [`kleur`][kleur]<br><nobr>`✅ named import`</nobr><br>`✅ standard`              | ❌<br> `8` colors  |         ❌          |       ❌       |         ✅         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`                              |
 
-> **Note**
->
-> **Named import**\
-> ESM\
-> `import { red, green, blue } from 'lib';`\
-> CJS\
-> `const { red, green, blue } = require('lib');`
->
-> **Naming colors**
->  - standard: colors have [standard names](#base-colors-and-styles), e.g.: `red`, `redBright`, `bgRed`, `bgRedBright`
->  - _non-standard_: colors have lib-specific names, e.g.: `brightRed`, `bgBrightRed`, `red_b`, `red_btt`
->
-> **ANSI 256 colors**
->
-> The method names:
->  - [`colors-cli`][colors-cli]: `x<n>`
->  - [`cli-color`][cli-color]: `xterm(n)`
->  - [`chalk`][chalk]: `ansi256(n)` `bgAnsi256(n)`
->  - [`ansis`][ansis]: `ansi256(n)` `bgAnsi256(n)` `fg(n)` `bg(n)`
->
-> **Truecolor**
->
-> The method names:
->  - [`chalk`][chalk]: `hex()` `rgb()`
->  - [`ansis`][ansis]: `hex()` `rgb()`
->
-> **Chained syntax**\
-> `lib.red.bold('text')`
->
-> **Nested template strings**\
-> ``` lib.red`text ${lib.cyan`nested`} text` ```
->
-> **New line**\
-> Correct break styles at `end-of-line`.
-> ```
-> lib.bgGreen(`First Line
-> Next Line`);
-> ```
+### Notes
+
+**Named import**\
+ESM\
+`import { red, green, blue } from 'lib';`\
+CJS\
+`const { red, green, blue } = require('lib');`
+
+**Naming colors**
+ - standard: colors have [standard names](#base-colors-and-styles), e.g.: `red`, `redBright`, `bgRed`, `bgRedBright`
+ - _non-standard_: colors have lib-specific names, e.g.: `brightRed`, `bgBrightRed`, `red_b`, `red_btt`
+
+**ANSI 256 colors**
+
+The method names:
+ - [`colors-cli`][colors-cli]: `x<n>`
+ - [`cli-color`][cli-color]: `xterm(n)`
+ - [`chalk`][chalk]: `ansi256(n)` `bgAnsi256(n)`
+ - [`ansis`][ansis]: `ansi256(n)` `bgAnsi256(n)` `fg(n)` `bg(n)`
+
+**Truecolor**
+
+The method names:
+ - [`chalk`][chalk]: `hex()` `rgb()`
+ - [`ansis`][ansis]: `hex()` `rgb()`
+
+**Chained syntax**\
+`lib.red.bold('text')`
+
+**Nested template strings**\
+``` lib.red`text ${lib.cyan`nested`} text` ```
+
+**New line**\
+Correct break styles at `end-of-line`.
+```
+lib.bgGreen(`First Line
+Next Line`);
+```
+
+<a id="handling-input-arguments" name="handling-input-arguments"></a>
+
+### Edge cases: input arguments
+
+Compare how different libraries handle various input arguments in their color functions.
+
+| Library                      | `lib.red()`         | `lib.red(undefined)`    | `lib.red(null)`       | `lib.red('')` |
+|------------------------------|----------------|----------------|--------------|---------------|
+| [`ansis`][ansis]             | ✅`''`          | ✅`''`          | ✅`''`        | ✅`''`         |
+| [`chalk`][chalk]             | ✅`''`          | ❌`'undefined'` | ❌`'null'`    | ✅`''`         |
+| [`picocolors`][picocolors]   | ❌`'undefined'` | ❌`'undefined'` | ❌`'null'`    | ❌`'ESC'`      |
+| [`colorette`][colorette]     | ✅`''`          | ✅`''`          | ❌`'null'`    | ✅`''`         |
+| [`kleur`][kleur]             | ❌`[object]`    | ❌`[object]`    | ❌`'null'`    | ❌`'ESC'`   |
+| [`ansi-colors`][ansi-colors] | ✅`''`          | ✅`''`          | ✅`''`        | ✅`''`         |
+| [`kolorist`][kolorist]       | ❌`'undefined'` | ❌`'undefined'` | ❌`'null'`    | ❌`'ESC'`   |
+| [`colors.js`][colors.js]     | ✅`''`          | ❌`'undefined'` | ❌`'null'`    | ✅`''`         |
+| [`cli-color`][cli-color]     | ❌`'ESC'`    | ❌`'ESC'`    | ❌`'ESC'`  | ❌`'ESC'`   |
+| [`colors-cli`][colors-cli]   | ❌ `Error`      | ❌`'undefined'` | ❌`'null'`    | ❌`'ESC'`   |
+
+#### Legend:
+
+- ✅`''` - Returns an _empty string_ without ANSI escape codes. This is the correct and expected behavior.
+- ❌`'ESC'` - Returns an _empty string_ **containing** ANSI escape codes, e.g., `\e[31m\e[39m`.
+- ❌`'undefined'` - Returns the string `undefined` styled in red.
+- ❌`'null'` - Returns the string `null` styled in red.
+- ❌`[object]` - Returns an object of the library instance.
+- ❌`Error` - Causes a fatal error.
+
+Other arguments are correctly handled by all libraries:
+```js
+lib.red(0)       // '0' in red
+lib.red(false)   // 'false' in red
+lib.red(true)    // 'true' in red
+lib.red(5/'1px') // 'NaN' in red
+lib.red(1/0)     // 'Infinity' in red
+```
+
+**Ansis** and **ansi-colors** ensure consistent and predictable behavior for edge-case inputs, making it a reliable choice for usage.
+
 
 #### [↑ top](#top)
 
@@ -1057,9 +1156,18 @@ npm i
 npm run demo
 ```
 
-<a id="benchmark" name="#benchmark"></a>
+<a id="benchmark" name="benchmark"></a>
 
 ## Benchmarks
+
+> [!CAUTION]
+> The benchmark results are meaningless numbers intended purely to promote the library and increase its popularity.
+> All libraries are more than fast enough.
+> These results only to show the effectiveness of micro-optimizations in the code, which does not impact on real-world usage.
+>
+> Of course **Picocolors** will be a little bit faster in a micro-benchmark since it has less code and doesn't handles [edge cases](#.handling-input-arguments).
+>
+> _Taken from the [comment](https://github.com/babel/babel/pull/13783#issuecomment-927317201) by the creator of Chalk._
 
 To measure performance is used [benchmark.js](https://github.com/bestiejs/benchmark.js).
 
@@ -1108,6 +1216,7 @@ npm run bench
 > lib.red(lib.bold(lib.bgWhite(' ERROR '))) // ❌ slower, longer, unreadable
 > ```
 
+<a id="bench-simple" name="bench-simple"></a>
 ### Simple bench
 
 The simple test uses only single style.
@@ -1184,6 +1293,7 @@ picocolors.red(picocolors.bold(picocolors.bgWhite('foo'))) // chained syntax is 
    colors-cli@1.0.33       590.467 ops/sec
 ```
 
+<a id="bench-4-styles" name="bench-4-styles"></a>
 ### Using 4 styles
 
 In rare cases, when using 4 styles, picocolors becomes 3.4x slower than ansis.
@@ -1259,6 +1369,7 @@ c.red(`${c.bold(`${c.cyan(`${c.yellow('yellow')}cyan`)}`)}red`)
    cli-color@2.0.4         481.708 ops/sec
    colors-cli@1.0.33       114.570 ops/sec
 ```
+<a id="bench-picocolors-complex" name="bench-picocolors-complex"></a>
 
 ### Picocolors complex bench
 

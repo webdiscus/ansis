@@ -51,6 +51,7 @@ const colorSpace = getColorSpace();
 
 const log = console.log;
 
+
 if (colorSpace < 3) {
   log(red.inverse` WARNING `, yellow`Your terminal don't support TrueColor!`);
   log('The result of some tests can be NOT correct! Choose a modern terminal, e.g. iTerm.\n');
@@ -71,13 +72,13 @@ const bench = new Bench({
 log(hex('#F88').inverse.bold` -= Benchmark =- `);
 
 const text3 = 'foo';
-const text64 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed doe.';
+const text60 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed.';
 
-bench('Simple text 3 bytes, ansis').add(packages['ansis'], () => ansis.red('foo')).run();
-bench('Simple text 64 bytes, ansis').add(packages['ansis'], () => ansis.red(text64)).run();
+bench('Simple short text 3 bytes, ansis').add(packages['ansis'], () => ansis.red(text3)).run();
+bench('Simple long text 60 bytes, ansis').add(packages['ansis'], () => ansis.red(text60)).run();
 
 // Simple bench
-bench('Simple text 3 bytes, using 1 style').
+bench('Simple short text, 3 chars, using 1 style').
   add(packages['chalk'], () => chalk.red(text3)).
   add(packages['ansis'], () => ansis.red(text3)).
   add(packages['picocolors'], () => picocolors.red(text3)).
@@ -90,17 +91,17 @@ bench('Simple text 3 bytes, using 1 style').
   add(packages['@colors/colors'], () => colorsJs.red(text3)).
   run();
 
-bench('Simple text 64 bytes, using 1 style').
-  add(packages['chalk'], () => chalk.red(text64)).
-  add(packages['ansis'], () => ansis.red(text64)).
-  add(packages['picocolors'], () => picocolors.red(text64)).
-  add(packages['colorette'], () => colorette.red(text64)).
-  add(packages['kleur'], () => kleur.red(text64)).
-  add(packages['ansi-colors'], () => ansiColors.red(text64)).
-  add(packages['kolorist'], () => kolorist.red(text64)).
-  add(packages['cli-color'], () => cliColor.red(text64)).
-  add(packages['colors-cli'], () => colorCli.red(text64)).
-  add(packages['@colors/colors'], () => colorsJs.red(text64)).
+bench('Simple long text, 60 chars, using 1 style').
+  add(packages['chalk'], () => chalk.red(text60)).
+  add(packages['ansis'], () => ansis.red(text60)).
+  add(packages['picocolors'], () => picocolors.red(text60)).
+  add(packages['colorette'], () => colorette.red(text60)).
+  add(packages['kleur'], () => kleur.red(text60)).
+  add(packages['ansi-colors'], () => ansiColors.red(text60)).
+  add(packages['kolorist'], () => kolorist.red(text60)).
+  add(packages['cli-color'], () => cliColor.red(text60)).
+  add(packages['colors-cli'], () => colorCli.red(text60)).
+  add(packages['@colors/colors'], () => colorsJs.red(text60)).
   run();
 
 

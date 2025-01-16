@@ -10,10 +10,6 @@ import { hexToRgb } from './utils.js';
  * @property {null | AnsisProps} _p The props.
  */
 
-// use the Number.isNaN, because:
-// - Number.isNaN(undefined) is false (expected),
-// - isNaN(undefined) is true (unexpected)
-let { isNaN } = Number;
 let { create, defineProperty, setPrototypeOf } = Object;
 let styles = {};
 let stylePrototype;
@@ -34,32 +30,34 @@ let createStyle = ({ _p: props }, { open, close }) => {
    * @return {string}
    */
   let styleFn = (arg, ...values) => {
-    // DEPRECATED: if the argument is an empty string, then return empty string
-    //if (arg === '') return arg;
+    // API rule: if the argument is one of '', undefined or null, then return empty string
 
-    // NEW: if the argument is one of '', undefined or null, then return empty string
+    // 1) longer but a tick faster than 2)
+    // if (!arg && 0 !== arg && false !== arg && !Number.isNaN(arg)) return '';
 
-    // longer but a tick faster
-    //if (!arg && 0 !== arg && false !== arg && !isNaN(arg)) return '';
+    // 2) it's shorter, but a tick slower (0.1%) than 1) because it always compares 2 expressions
+    // if (null == arg || '' === arg) return '';
 
-    // it's shorter, but a tick slower (0.1%) because it always compares 2 expressions
-    if (null == arg || '' === arg) return '';
+    // 3) in theory it should be faster than 2), but in real tests it is no different from 2).
+    // As in 1), in most use cases only the first expression will be compared,
+    // because it is high probability to be truthy.
+    if (!arg && (null == arg || '' === arg)) return '';
+
+    let output = arg.raw
+      // render template string
+      ? String.raw(arg, ...values)
+      // stringify the argument
+      : '' + arg;
 
     let props = styleFn._p;
     let { _a: openStack, _b: closeStack } = props;
 
-    // resolve the arg string
-    let output = arg?.raw
-      // render template string
-      ? String.raw(arg, ...values)
-      // convert to string
-      : '' + arg;
-
-    // -> detect nested styles
-    if (~output.indexOf('')) {
+    // feat: detect nested styles
+    // note: on node >= 22, includes is 5x faster than ~indexOf
+    if (output.includes('')) {
       while (props) {
         // this implementation is over 30% faster than native String.replaceAll()
-        //output = output.replaceAll(props.close, props.open);
+        // output = output.replaceAll(props.close, props.open);
         // -- begin replaceAll, inline the function here to reduce the bundle size
         let search = props.close;
         let replacement = props.open;
@@ -81,8 +79,8 @@ let createStyle = ({ _p: props }, { open, close }) => {
       }
     }
 
-    // -> detect new line
-    if (~output.indexOf('\n')) {
+    // feat: detect new line
+    if (output.includes('\n')) {
       output = output.replace(/(\r?\n)/g, closeStack + '$1' + openStack);
     }
 
@@ -136,7 +134,7 @@ const Ansis = function() {
         let type = (typeof color)[0];
 
         // detect whether the value is object {open, close} or hex string
-        // type === 'string' by extending a custom color, e.g. ansis.extend({ pink: '#FF75D1' })
+        // type === 'string' for extend colors, e.g. ansis.extend({ pink: '#FF75D1' })
         let styleProps = type === 's' ? fnRgb(...hexToRgb(color)) : color;
 
         // type === 'function'
@@ -150,6 +148,7 @@ const Ansis = function() {
           styles[name] = {
             get() {
               let style = createStyle(this, styleProps);
+
               // performance impact: up to 5x faster;
               // V8 optimizes access to properties defined via `defineProperty`,
               // the `style` becomes a cached value on the object with direct access, w/o lookup for prototype chain
@@ -168,7 +167,7 @@ const Ansis = function() {
     },
   };
 
-  // define functions, colors and styles
+  // define base functions, colors and styles
   return self.extend(styleData);
 };
 

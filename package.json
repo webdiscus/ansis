@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "3.9.0",
+  "version": "3.9.1",
   "description": "A small and fast Node.js library for applying ANSI colors and styles in terminal output",
   "keywords": [
     "ansi",
@@ -63,6 +63,7 @@
     "test:esm": "node ./test/package/esm/test.mjs",
     "test:tsc": "vitest run ./test/ts-compiler.test.js",
     "test:levels": "vitest run ./test/color-levels.test.js",
+    "test:stackoverflow": "node ./test/rangeErrorTest.js",
     "test:coverage": "vitest run --coverage",
     "publish:public": "(npm run build) && npm publish ./dist --access public",
     "publish:beta": "(npm run build) && npm publish ./dist --tag beta"

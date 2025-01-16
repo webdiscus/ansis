@@ -457,11 +457,11 @@ describe('extend base colors tests', () => {
   });
 
   test('new ansis`', () => {
-    const ansis = new Ansis();
+    const ansis = new Ansis(); // workaround to enable using the extended color as a sub-chain item
     ansis.extend({ orange: '#FFAB40' });
 
     // test the order bold > orange
-    const received = ansis.bold.orange('text');
+    const received = ansis.bold.orange('text'); // <= requires new instance of Ansis
     const expected = '\x1b[1m\x1b[38;2;255;171;64mtext\x1b[39m\x1b[22m';
     expect(esc(received)).toEqual(esc(expected));
   });

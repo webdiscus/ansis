@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.9.1 (2025-01-15)
+
+- refactor: invisible code improvements
+- chore: add benchmark for long text
+- docs: improve readme
+
 ## 3.9.0 (2025-01-13)
 
 - feat: revert handling of `null` and `undefined` values to empty string as before `v3.7.0`, #25

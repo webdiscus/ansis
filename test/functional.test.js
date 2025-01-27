@@ -4,7 +4,7 @@ import { esc } from './utils/helpers.js';
 // import env variables to simulate truecolor color space in CLI
 import './env/truecolor.js';
 
-//import ansis, { Ansis, red, yellow, green, bold, hex } from '../src/index.mjs'; //  // for debugging only
+//import ansis, { Ansis, red, yellow, green, grey, gray, bold, italic, underline, hex } from '../src/index.mjs'; //  // for debugging only
 import ansis, { Ansis, red, grey, gray, green, yellow, bold, italic, underline, hex } from 'ansis'; // test npm package
 
 describe('support colors', () => {
@@ -18,27 +18,19 @@ describe('support colors', () => {
 describe('convert function argument to string', () => {
   test(`no argument`, () => {
     const received = ansis.green();
-    //const expected = '\x1b[32mundefined\x1b[39m'; // changed in v3.7.0
-    const expected = ''; // rewert in v3.9.0
+    const expected = '';
     expect(received).toEqual(expected);
   });
 
   test(`undefined`, () => {
-    // handling in String constructor:
-    // console.log(String()); // => empty string, OK
-    // console.log(String(null)); // => null
-    // console.log(String(undefined)); // => undefined
-
     const received = ansis.green(undefined);
-    //const expected = '\x1b[32mundefined\x1b[39m'; // changed in v3.7.0
-    const expected = ''; // rewert in v3.9.0
+    const expected = '';
     expect(received).toEqual(expected);
   });
 
   test(`null`, () => {
     const received = ansis.green(null);
-    //const expected = '\x1b[32mnull\x1b[39m'; // changed in v3.7.0
-    const expected = ''; // rewert in v3.9.0
+    const expected = '';
     expect(received).toEqual(expected);
   });
 
@@ -47,14 +39,13 @@ describe('convert function argument to string', () => {
     // using a template string, `undefined` will be casted into string `undefined`:
     console.log(`Hello ${foo}!`);
 
+    // but ansis handles the `undefined` as an empty string
     const received = green`Hello ${red(foo)}!`;
     console.log(received);
-    //const expected = '\x1b[32mHello \x1b[31mundefined\x1b[32m!\x1b[39m'; // changed in v3.7.0
-    const expected = '\x1b[32mHello !\x1b[39m'; // rewert in v3.9.0
+    const expected = '\x1b[32mHello !\x1b[39m';
     expect(received).toEqual(expected);
   });
 
-  // fixed in v3.7.1
   test(`empty string`, () => {
     // if the argument is an empty string, an empty string w/o ANSI codes should be returned
     const received = ansis.green('');
@@ -70,19 +61,19 @@ describe('convert function argument to string', () => {
 
   test(`false`, () => {
     const received = ansis.green(false);
-    const expected = '\x1b[32mfalse\x1b[39m'; // fixed in v3.7.0
+    const expected = '\x1b[32mfalse\x1b[39m';
     expect(received).toEqual(expected);
   });
 
   test(`falsy value 0`, () => {
     const received = ansis.green(0);
-    const expected = '\x1b[32m0\x1b[39m'; // fixed in v3.7.0
+    const expected = '\x1b[32m0\x1b[39m';
     expect(received).toEqual(expected);
   });
 
   test(`NaN`, () => {
     const received = ansis.green(100/'5px');
-    const expected = '\x1b[32mNaN\x1b[39m'; // changed in v3.7.0
+    const expected = '\x1b[32mNaN\x1b[39m';
     expect(received).toEqual(expected);
   });
 
@@ -221,6 +212,18 @@ describe('style tests', () => {
     const received = ansis.visible`foo ${green`bar ${red`baz`} bar`} foo`;
     const expected = 'foo \x1b[32mbar \x1b[31mbaz\x1b[32m bar\x1b[39m foo';
     expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`ansis.reset()`, () => {
+    const received = ansis.reset();
+    const expected = '\x1b[0m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`reset in middle`, () => {
+    const received = ansis.red('red ' + ansis.reset.underline('underline') + ' text');
+    const expected = '\x1b[31mred \x1b[0m\x1b[4munderline\x1b[24m\x1b[0m text\x1b[39m';
+    expect(received).toEqual(expected);
   });
 
   test(`ansis.green('foo', 'bar')`, () => {

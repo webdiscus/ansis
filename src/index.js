@@ -1,4 +1,4 @@
-import { hasColors, styleData, fnRgb } from './ansi-codes.js';
+import { hasColors, styleData, fnRgb, EMPTY_STRING } from './ansi-codes.js';
 import { hexToRgb } from './utils.js';
 
 /**
@@ -22,7 +22,7 @@ let stylePrototype;
  * @param {string} codes.close
  * @returns {Ansis}
  */
-let createStyle = ({ _p: props }, { open, close }) => {
+let createStyle = ({ _p: props }, { open, close}) => {
   /**
    * Decorate the string with ANSI codes.
    * @param {unknown} arg The input value, can be any or a template string.
@@ -41,13 +41,19 @@ let createStyle = ({ _p: props }, { open, close }) => {
     // 3) in theory it should be faster than 2), but in real tests it is no different from 2).
     // As in 1), in most use cases only the first expression will be compared,
     // because it is high probability to be truthy.
-    if (!arg && (null == arg || '' === arg)) return '';
+    //if (!arg && (null == arg || '' === arg)) return '';
+
+    // 4) reserved (feature on demand): if called reset() w/o arguments, then return reset code
+    if (!arg) {
+      if (open && open === close) return open;
+      if (null == arg || EMPTY_STRING === arg) return EMPTY_STRING;
+    }
 
     let output = arg.raw
       // render template string
       ? String.raw(arg, ...values)
       // stringify the argument
-      : '' + arg;
+      : EMPTY_STRING + arg;
 
     let props = styleFn._p;
     let { _a: openStack, _b: closeStack } = props;
@@ -62,7 +68,7 @@ let createStyle = ({ _p: props }, { open, close }) => {
         let search = props.close;
         let replacement = props.open;
         let searchLength = search.length;
-        let result = '';
+        let result = EMPTY_STRING;
         let lastPos = 0;
         let pos;
 
@@ -118,7 +124,7 @@ const Ansis = function() {
      * @param {string} str
      * @return {string}
      */
-    strip: (str) => str.replace(/[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, ''),
+    strip: (str) => str.replace(/[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, EMPTY_STRING),
 
     /**
      * Extend base colors with custom ones.

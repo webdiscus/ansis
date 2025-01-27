@@ -2,7 +2,7 @@ import { expect, describe, test } from 'vitest';
 
 import { hexToRgb, rgbToAnsi256, ansi256To16, rgbToAnsi16 } from '../src/utils.js';
 import { getColorSpace } from '../src/color-support.js';
-import { SPACE_MONO, SPACE_16COLORS, SPACE_256COLORS, SPACE_TRUECOLOR } from '../src/color-spaces.js';
+import { SPACE_BW, SPACE_16COLORS, SPACE_256COLORS, SPACE_TRUECOLOR } from '../src/color-spaces.js';
 
 const colorSpace = (mock) => getColorSpace(mock);
 
@@ -308,7 +308,7 @@ describe('flags and options', () => {
       },
 
     });
-    const expected = SPACE_MONO;
+    const expected = SPACE_BW;
     expect(received).toEqual(expected);
   });
 
@@ -323,7 +323,7 @@ describe('flags and options', () => {
       },
 
     });
-    const expected = SPACE_MONO;
+    const expected = SPACE_BW;
     expect(received).toEqual(expected);
   });
 
@@ -338,7 +338,7 @@ describe('flags and options', () => {
       },
 
     });
-    const expected = SPACE_MONO;
+    const expected = SPACE_BW;
     expect(received).toEqual(expected);
   });
 });
@@ -353,7 +353,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_MONO;
+    const expected = SPACE_BW;
     expect(received).toEqual(expected);
   });
 
@@ -367,7 +367,7 @@ describe('FORCE_COLOR', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_MONO;
+    const expected = SPACE_BW;
     expect(received).toEqual(expected);
   });
 
@@ -381,7 +381,7 @@ describe('FORCE_COLOR', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_MONO;
+    const expected = SPACE_BW;
     expect(received).toEqual(expected);
   });
 
@@ -815,7 +815,7 @@ describe('Node.JS different env', () => {
     process = undefined;
 
     const received = colorSpace(undefined);
-    const expected = SPACE_MONO;
+    const expected = SPACE_BW;
     expect(received).toEqual(expected);
 
     // restore original `process` object
@@ -824,7 +824,7 @@ describe('Node.JS different env', () => {
 
   test(`processMock {}`, () => {
     const received = colorSpace({});
-    const expected = SPACE_MONO;
+    const expected = SPACE_BW;
     expect(received).toEqual(expected);
   });
 
@@ -853,7 +853,7 @@ describe('Node.JS different env', () => {
       },
 
     });
-    const expected = SPACE_MONO;
+    const expected = SPACE_BW;
     expect(received).toEqual(expected);
   });
 
@@ -865,7 +865,7 @@ describe('Node.JS different env', () => {
       },
 
     });
-    const expected = SPACE_MONO;
+    const expected = SPACE_BW;
     expect(received).toEqual(expected);
   });
 
@@ -915,7 +915,7 @@ describe('Node.JS different env', () => {
       },
 
     });
-    const expected = SPACE_MONO;
+    const expected = SPACE_BW;
     expect(received).toEqual(expected);
   });
 });
@@ -957,7 +957,7 @@ describe('Deno support', () => {
       },
 
     });
-    const expected = SPACE_MONO;
+    const expected = SPACE_BW;
     expect(received).toEqual(expected);
   });
 

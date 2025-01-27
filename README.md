@@ -22,7 +22,7 @@ A Node.js library for applying ANSI colors in terminal output.\
 **Ansis** is a powerful library focused on [small size]((#compare-size)) and [speed](#benchmark) while providing rich [functionality](#compare).
 -->
 
-### 🚀 [Install and Quick Start](#install)  ✨[Why switch to Ansis](#why-switch-to-ansis)
+### 🚀 [Install and Quick Start](#install)  ✨[Why use Ansis](#why-ansis)
 
 
 <div align="center">
@@ -65,7 +65,7 @@ The most popular Node.js libraries for styling terminal output using ANSI colors
 
 - Supports **ESM**, **CommonJS**, **TypeScript**
 - Supports **Bun**, **Deno**, **Next.JS** runtimes
-- Drop-in [replacement](#why-switch-to-ansis) for [`chalk`](#replacing-chalk) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) [`ansi-colors`](#replacing-ansi-colors)
+- Drop-in [replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) [`ansi-colors`](#replacing-ansi-colors)
 - Default and [named import](#named-import) `import ansis, { red, bold, ansi256, hex } from 'ansis'`
 - [Chained syntax](#chained-syntax) `red.bold.underline('text')`
 - [Nested **template strings**](#nested-syntax) ``` red`Error: ${blue`file.js`} not found!` ```
@@ -75,8 +75,8 @@ The most popular Node.js libraries for styling terminal output using ANSI colors
 - [Truecolor](#truecolor) (**RGB**, **HEX**) ``` rgb(224, 17, 95)`Ruby` ``` ``` hex('#96C')`Amethyst` ```
 - [Fallback](#fallback) to supported [color space](#color-support): Truecolor → 256 colors → 16 colors → no colors
 - [Extending of base colors](#extend-colors) with named **Truecolor**
-- [Raw ANSI codes](#escape-codes) as `open` and `close` properties ``` `foo ${red.open}red{red.close} bar` ```
-- [Strip ANSI codes](#strip) method `ansis.strip()`
+- [Low level ANSI escape codes](#escape-codes) as `open` and `close` properties ``` `foo ${red.open}red{red.close} bar` ```
+- [Remove ANSI escape codes](#strip) method `ansis.strip()`
 - Automatically detects [color support](#color-support) across a wide range of [environments](#color-support)
 - Supports [environment variables](#cli-vars) [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color) and [flags](#cli-flags) `--no-color` `--color`
 - Supports [`COLORTERM`](#using-env-colorterm) variable to test applications with 16, 256, or true-color
@@ -109,9 +109,9 @@ If you have discovered a bug or have a feature suggestion, feel free to create
 an [issue](https://github.com/webdiscus/ansis/issues) on GitHub.
 -->
 
-<a id="why-switch-to-ansis" name="why-switch-to-ansis"></a>
+<a id="why-ansis" name="why-ansis"></a>
 
-## ✨ [Why switch to Ansis](#switch-to-ansis)
+## ✨ [Why use Ansis](#switch-to-ansis)
 
 As of 2025, two of the [smallest](#compare-size) and [fastest](#benchmark) libraries for displaying ANSI colors in the terminal
 are **Ansis** and **Picocolors**.
@@ -147,23 +147,27 @@ The package size in `node_modules` directory:
 
 #### Absent, `undefined` or `null` arguments
 
-**Ansis** handle these cases and return an empty string.
+**Ansis** handles these cases correctly.
 
 ```js
 ansis.red()          // ✅ ''
 chalk.red()          // ✅ ''
-pico.red()           // ❌ \x1b[31mundefined\x1b[39m
+pico.red()           // ❌ \e[31mundefined\e[39m
 
 ansis.red(undefined) // ✅ ''
-chalk.red(undefined) // ❌ \x1b[31mundefined\x1b[39m
-pico.red(undefined)  // ❌ \x1b[31mundefined\x1b[39m
+chalk.red(undefined) // ❌ \e[31mundefined\e[39m
+pico.red(undefined)  // ❌ \e[31mundefined\e[39m
 
-ansis.red(null) // ✅ ''
-chalk.red(null) // ❌ \x1b[31mnull\x1b[39m
-pico.red(null)  // ❌ \x1b[31mnull\x1b[39m
+ansis.red(null)      // ✅ ''
+chalk.red(null)      // ❌ \e[31mnull\e[39m
+pico.red(null)       // ❌ \e[31mnull\e[39m
+
+ansis.reset()        // ✅ \e[0m
+chalk.reset()        // ❌ ''
+pico.reset()         // ❌ \e[0mundefined\e[0m
 ```
 
-See more details about [handling input arguments](#handling-input-arguments).
+See more details about [handling input arguments](#handling-input-arguments) in various libraries.
 
 #### Empty string
 
@@ -173,7 +177,7 @@ However, **Picocolors** doesn't handle this case.
 ```js
 ansis.red('')          // ✅ ''
 chalk.red('')          // ✅ ''
-pico.red('')           // ❌ \x1b[31m\x1b[39m
+pico.red('')           // ❌ \e[31m\e[39m
 ```
 
 #### Break style at New Line
@@ -210,9 +214,9 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
 - `colorette`: Last updated [2 years ago][npm-colorette]
 - `ansi-colors`: Last updated [3 years ago][npm-ansi-colors]
 - `kleur`: Last updated [3 years ago][npm-kleur]
-- `cli-color`: Last updated [~1 year ago][npm-cli-color]
+- `colors.js`: Last updated [2 years ago][npm-colors.js]
+- `cli-color`: Last updated [1 year ago][npm-cli-color]
 - `colors-cli`: Last updated [1 year ago][npm-colors-cli]
-- `colors.js`: Last updated [1 year ago][npm-colors.js]
 
 
 <a id="checklist-lib-choice" name="checklist-lib-choice"></a>
@@ -1077,40 +1081,42 @@ Next Line`);
 
 ### Edge cases: input arguments
 
-Compare how different libraries handle various input arguments in their color functions.
+Compare how different libraries handle various input arguments in their functions.
 
-| Library                      | `lib.red()`         | `lib.red(undefined)`    | `lib.red(null)`       | `lib.red('')` |
-|------------------------------|----------------|----------------|--------------|---------------|
-| [`ansis`][ansis]             | ✅`''`          | ✅`''`          | ✅`''`        | ✅`''`         |
-| [`chalk`][chalk]             | ✅`''`          | ❌`'undefined'` | ❌`'null'`    | ✅`''`         |
-| [`picocolors`][picocolors]   | ❌`'undefined'` | ❌`'undefined'` | ❌`'null'`    | ❌`'ESC'`      |
-| [`colorette`][colorette]     | ✅`''`          | ✅`''`          | ❌`'null'`    | ✅`''`         |
-| [`kleur`][kleur]             | ❌`[object]`    | ❌`[object]`    | ❌`'null'`    | ❌`'ESC'`   |
-| [`ansi-colors`][ansi-colors] | ✅`''`          | ✅`''`          | ✅`''`        | ✅`''`         |
-| [`kolorist`][kolorist]       | ❌`'undefined'` | ❌`'undefined'` | ❌`'null'`    | ❌`'ESC'`   |
-| [`colors.js`][colors.js]     | ✅`''`          | ❌`'undefined'` | ❌`'null'`    | ✅`''`         |
-| [`cli-color`][cli-color]     | ❌`'ESC'`    | ❌`'ESC'`    | ❌`'ESC'`  | ❌`'ESC'`   |
-| [`colors-cli`][colors-cli]   | ❌ `Error`      | ❌`'undefined'` | ❌`'null'`    | ❌`'ESC'`   |
+| Library                      | `c.reset()`  | `c.red()`      | `c.red(undefined)` | `c.red(null)` | `c.red('')` |
+|------------------------------|--------------|----------------|--------------------|---------------|-------------|
+| [`ansis`][ansis]             | ✅`\e[0m`     | ✅`''`          | ✅`''`              | ✅`''`         | ✅`''`       |
+| [`chalk`][chalk]             | ❌`''`        | ✅`''`          | ❌`'undefined'`     | ❌`'null'`     | ✅`''`       |
+| [`picocolors`][picocolors]   | ❌`undefined` | ❌`'undefined'` | ❌`'undefined'`     | ❌`'null'`     | ❌`'ESC'`    |
+| [`colorette`][colorette]     | ❌`''`        | ✅`''`          | ✅`''`              | ❌`'null'`     | ✅`''`       |
+| [`kleur`][kleur]             | ❌`[object]`  | ❌`[object]`    | ❌`[object]`        | ❌`'null'`     | ❌`'ESC'`    |
+| [`ansi-colors`][ansi-colors] | ❌`''`        | ✅`''`          | ✅`''`              | ✅`''`         | ✅`''`       |
+| [`kolorist`][kolorist]       | ❌`undefined` | ❌`'undefined'` | ❌`'undefined'`     | ❌`'null'`     | ❌`'ESC'`    |
+| [`colors.js`][colors.js]     | ❌`''`        | ✅`''`          | ❌`'undefined'`     | ❌`'null'`     | ✅`''`       |
+| [`cli-color`][cli-color]     | ❌`-`         | ❌`'ESC'`       | ❌`'ESC'`           | ❌`'ESC'`      | ❌`'ESC'`    |
+| [`colors-cli`][colors-cli]   | ❌`-`         | ❌ `Error`      | ❌`'undefined'`     | ❌`'null'`     | ❌`'ESC'`    |
 
 #### Legend:
 
 - ✅`''` - Returns an _empty string_ without ANSI escape codes. This is the correct and expected behavior.
+- ✅`\e[0m` - Returns the reset escape code.
 - ❌`'ESC'` - Returns an _empty string_ **containing** ANSI escape codes, e.g., `\e[31m\e[39m`.
-- ❌`'undefined'` - Returns the string `undefined` styled in red.
-- ❌`'null'` - Returns the string `null` styled in red.
+- ❌`'undefined'` - Returns the styled string `undefined`.
+- ❌`'null'` - Returns the styled string `null`.
 - ❌`[object]` - Returns an object of the library instance.
+- ❌`-` - The feature is not supported.
 - ❌`Error` - Causes a fatal error.
 
 Other arguments are correctly handled by all libraries:
 ```js
-lib.red(0)       // '0' in red
-lib.red(false)   // 'false' in red
-lib.red(true)    // 'true' in red
-lib.red(5/'1px') // 'NaN' in red
-lib.red(1/0)     // 'Infinity' in red
+c.red(0)       // '0' in red
+c.red(false)   // 'false' in red
+c.red(true)    // 'true' in red
+c.red(5/'1px') // 'NaN' in red
+c.red(1/0)     // 'Infinity' in red
 ```
 
-**Ansis** and **ansi-colors** ensure consistent and predictable behavior for edge-case inputs, making it a reliable choice for usage.
+**Ansis** ensures consistent and predictable behavior for edge-case inputs, making it a reliable choice for usage.
 
 
 #### [↑ top](#top)
@@ -1119,28 +1125,28 @@ lib.red(1/0)     // 'Infinity' in red
 
 ## Compare the size of most popular packages
 
-| Npm package                  |                                                  Download tarball size |                  Unpacked Size | Code size |
-|:-----------------------------|-----------------------------------------------------------------------:|-------------------------------:|----------:|
-| [`picocolors`][picocolors]   |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |       [6.4 kB][npm-picocolors] |    2.6 kB
-| [`ansis`][ansis]             |             [3.8 kB](https://arve0.github.io/npm-download-size/#ansis) |            [6.8 kB][npm-ansis] |    3.4 kB
-| [`colorette`][colorette]     |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |       [17.0 kB][npm-colorette] |    3.4 kB
-| [`kleur`][kleur]             |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |           [20.3 kB][npm-kleur] |    2.7 kB
-| [`ansi-colors`][ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |     [26.1 kB][npm-ansi-colors] |    5.8 kB
-| [`kolorist`][kolorist]       |          [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |        [51.0 kB][npm-kolorist] |    6.8 kB
-| [`colors.js`][colors.js]     | [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |       [41.5 kB][npm-colors.js] |   18.1 kB
-| [`chalk`][chalk]             |            [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |           [43.7 kB][npm-chalk] |   16.4 kB
-| [`cli-color`][cli-color]     |  [13.8 (216 kB)](https://arve0.github.io/npm-download-size/#cli-color) | [39.6 (754 kB)][npm-cli-color] |   12.1 kB
-| [`colors-cli`][colors-cli]   |      [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |     [511.0 kB][npm-colors-cli] |    8.7 kB
+| Npm package                  |     Dependencies     |                                             Unpacked Size |                                                          Download size | Code size |
+|:-----------------------------|:--------------------:|----------------------------------------------------------:|-----------------------------------------------------------------------:|----------:|
+| [`picocolors`][picocolors]   | [0][npm-picocolors]  |                                  [6.4 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |    2.6 kB |
+| [`ansis`][ansis]             |    [0][npm-ansis]    |                                       [6.8 kB][npm-ansis] |             [3.7 kB](https://arve0.github.io/npm-download-size/#ansis) |    3.3 kB |
+| [`colorette`][colorette]     |  [0][npm-colorette]  |                                  [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |    3.4 kB |
+| [`kleur`][kleur]             |    [0][npm-kleur]    |                                      [20.3 kB][npm-kleur] |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |    2.7 kB |
+| [`ansi-colors`][ansi-colors] | [0][npm-ansi-colors] |                                [26.1 kB][npm-ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |    5.8 kB |
+| [`kolorist`][kolorist]       |  [0][npm-kolorist]   |                                   [51.0 kB][npm-kolorist] |          [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |    6.8 kB |
+| [`colors.js`][colors.js]     |  [0][npm-colors.js]  |                                  [41.5 kB][npm-colors.js] | [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |   18.1 kB |
+| [`chalk`][chalk]             |    [0][npm-chalk]    |                                      [43.7 kB][npm-chalk] |            [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |   16.4 kB |
+| [`cli-color`][cli-color]     | [`5`][npm-cli-color] |  [754.0 kB](https://packagephobia.com/result?p=cli-color) | [216.8 kB](https://arve0.github.io/npm-download-size/#cli-color) |   12.1 kB |
+| [`colors-cli`][colors-cli]   | [0][npm-colors-cli]  |                                [511.0 kB][npm-colors-cli] |      [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |    8.7 kB |
 
-**Download size:** The gzipped size of the npm package.\
-**Unpacked Size:** The size of the npm package in the `node_modules/` directory, `(incl. dependencies)`.\
+**Unpacked Size:** The size of the npm package in the `node_modules/` directory, (incl. dependencies).\
+**Download size:** The size of the downloaded `*.tgz` package file.\
 **Code size**: The size of distributed code that will be loaded via `require` or `import` into your app.
 
 See also:
 
 - [npmjs](https://www.npmjs.com/package) - show install size of the published package, w/o dependencies
 - [packagephobia](https://packagephobia.com) - show total install size, incl. dependencies
-- [npm download size](https://arve0.github.io/npm-download-size) - show tarball and total download size
+- [npm download size](https://arve0.github.io/npm-download-size) - show download size
 - [bundlephobia](https://bundlephobia.com) - useless, doesn't show real tarball size of the downloaded npm package
 
 ---

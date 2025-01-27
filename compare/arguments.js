@@ -12,79 +12,56 @@ import ansis, { black } from 'ansis';
 
 // Handling edge cases by various libraries
 
-const viewOutput = (input) => {
+const viewOutput = (input, label) => {
   let type = typeof input;
   let output = type !== 'object' ? input.replace(/\x1b/g, 'ESC') : String(input);
 
-  console.log(output);
+  let testLabel = (label ? label : '').padEnd(16);
+
+  console.log(ansis.cyanBright(testLabel), output);
 }
 
 const fnArguments = (lib) => {
-  let res;
+  let resNoArg, resReset;
+
   try {
-    res = lib.red()
+    resNoArg = lib.red()
   } catch (error) {
-    res = error.toString()
+    resNoArg = 'ERROR';
   }
 
-  viewOutput(res);
-  viewOutput(lib.red(undefined));
-  viewOutput(lib.red(null));
-  viewOutput(lib.red(''));
-  viewOutput(lib.red(0));
-  viewOutput(lib.red(false));
-  viewOutput(lib.red(true));
-  viewOutput(lib.red(NaN));
-  viewOutput(lib.red(1/0));
+  try {
+    resReset = lib.reset()
+  } catch (error) {
+    resReset = 'ERROR';
+  }
+
+  viewOutput(resNoArg, 'red()');
+  viewOutput(lib.red(undefined), 'red(undefined)');
+  viewOutput(lib.red(null), 'red(null)');
+  viewOutput(lib.red(''), `red('')`);
+  viewOutput(lib.red(0), 'red(0)');
+  viewOutput(lib.red(false), 'red(false)');
+  viewOutput(lib.red(true), 'red(false)');
+  viewOutput(lib.red(NaN), 'red(NaN)');
+  viewOutput(lib.red(1/0), 'red(NaN)');
+  viewOutput(resReset, 'reset()');
 }
 
 console.log(black.bgGreen('\n ansis '));
-viewOutput(ansis.red());          // => empty string
-viewOutput(ansis.red(undefined)); // => empty string
-viewOutput(ansis.red(null));      // => empty string
-viewOutput(ansis.red(''));        // => empty string
-viewOutput(ansis.red(0));         // => 0
-viewOutput(ansis.red(false));     // => false
-viewOutput(ansis.red(true));      // => true
-viewOutput(ansis.red(NaN));       // => NaN
-viewOutput(ansis.red(1/0));       // => Infinity
+fnArguments(ansis);
 
 console.log(black.bgGreen('\n chalk '));
-viewOutput(chalk.red());               // => empty string
-viewOutput(chalk.red(undefined)); // => undefined
-viewOutput(chalk.red(null));      // => null
-viewOutput(chalk.red(''));        // => empty string
-viewOutput(chalk.red(0));         // => 0
-viewOutput(chalk.red(false));     // => false
-viewOutput(chalk.red(true));      // => true
-viewOutput(chalk.red(NaN));           // => NaN
-viewOutput(chalk.red(1/0));       // => Infinity
+fnArguments(chalk);
 
 console.log(black.bgGreen('\n picocolors '));
-viewOutput(pico.red());               // => undefined
-viewOutput(pico.red(undefined)); // => undefined
-viewOutput(pico.red(null));      // => null
-viewOutput(pico.red(''));        // => empty string with ANSI codes
-viewOutput(pico.red(0));         // => 0
-viewOutput(pico.red(false));     // => false
-viewOutput(pico.red(true));      // => true
-viewOutput(pico.red(NaN));            // => NaN
-viewOutput(pico.red(1/0));       // => Infinity
+fnArguments(pico);
 
 console.log(black.bgGreen('\n ansi-colors '));
-viewOutput(ansiColors.red());             // => empty string
-viewOutput(ansiColors.red(undefined)); // => empty string
-viewOutput(ansiColors.red(null));      // => empty string
-viewOutput(ansiColors.red(''));        // => empty string
-viewOutput(ansiColors.red(0));         // => 0
-viewOutput(ansiColors.red(false));     // => false
-viewOutput(ansiColors.red(true));      // => true
-viewOutput(ansiColors.red(NaN));          // => NaN
-viewOutput(ansiColors.red(1/0));       // => Infinity
+fnArguments(ansiColors);
 
 console.log(black.bgGreen('\n colorette '));
 fnArguments(colorette);
-
 
 console.log(black.bgGreen('\n kleur '));
 fnArguments(kleur);
@@ -100,3 +77,17 @@ fnArguments(cliColor);
 
 console.log(black.bgGreen('\n colorCli '));
 fnArguments(colorCli);
+
+console.log(black.bgGreen('\n cliColor '));
+viewOutput(cliColor.reset, 'reset()');
+
+console.log(ansis.cyan(ansis.whiteBright.bgRed('\n ERROR \n') + ansis.reset() + 'File not found!'));
+console.log(ansis.cyan(pico.whiteBright(pico.bgRed('\n ERROR \n')) + pico.reset() + 'File not found!'));
+
+console.log(black.bgGreen('\n Ansis reset() '));
+console.log(ansis.red('red ' + ansis.underline('underline') + ' text'));
+console.log(ansis.red('red ' + ansis.reset.underline('underline') + ' text'));
+console.log(ansis.red('red ' + ansis.reset() + ansis.underline('underline') + ' text'));
+
+//viewOutput(ansis.red('red ' + ansis.reset.underline('underline') + ' text'));
+//viewOutput(ansis.red('red ' + ansis.reset() + ansis.underline('underline') + ' text'));

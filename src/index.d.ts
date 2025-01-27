@@ -136,7 +136,6 @@ type SP = {
 
   /**
    * Extends the current `Ansis` instance with additional colors.
-   * Reserved as working example with return.
    *
    * For example:
    *
@@ -147,24 +146,12 @@ type SP = {
    * const customAnsis = ansis.extend(myTheme);
    * const { apple, pink, red } = customAnsis;
    *
+   * // it works w/o return too:
+   * // ansis.extend(myTheme);
+   * // const { apple, pink, red } = ansis;
+   *
    * @param colors A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
    * @returns An instance of `Ansis` with the extended colors available as properties.
-   */
-  //extend<U extends string>(colors: Record<U, string | { open: string; close: string }>): InstanceType<typeof Ansis> & Record<U, Ansis>;
-
-  /**
-   * Extends the current `Ansis` instance with additional colors.
-   *
-   * For example:
-   *
-   * const myTheme = {
-   *   apple: '#4FA83D',
-   *   pink: '#FF75D1',
-   * };
-   * ansis.extend(myTheme);
-   * const { apple, pink, red } = ansis;
-   *
-   * @param colors A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
    */
   extend<U extends string>(colors: Record<U, string | { open: string; close: string }>): asserts this is InstanceType<typeof Ansis> & Record<U, A>;
 
@@ -203,7 +190,7 @@ declare const Ansis: new () => A,
 
 // Named exports
 export {
-  // note for me in feature: AnsiColors, AnsiStyles and AnsiColorsExtend types used in many project on GitHub, don't remove it!
+  // note: AnsiColors, AnsiStyles and AnsiColorsExtend types used in many project on GitHub, don't remove it!
   type AnsiColors,
   type AnsiStyles,
   type AnsiColorsExtend,

@@ -5,8 +5,8 @@
   "types": "lib/bench.d.ts",
   "scripts": {
     "bench": "node ./index.js",
-    "bench:vi": "vitest bench",
-    "bench:ansis": "node ./ansis.js"
+    "bench:truecolor": "node truecolor.bench.js",
+    "bench:vi": "vitest bench"
   },
   "dependencies": {
     "@colors/colors": "1.6.0",

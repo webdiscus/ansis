@@ -63,8 +63,7 @@ export default [
 
           // minify d.ts file generated after cleanup
           {
-            //src: 'src/index.interface.d.ts', // Ansis instance expressed via interface: 3713 bytes
-            src: 'src/index.type.d.ts', // Ansis instance expressed via type dynamic properties: 3161 bytes
+            src: 'src/index.d.ts',
             rename: 'index.d.ts',
             dest: 'dist/',
             transform: (contents, name) => {

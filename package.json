@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "3.9.1",
+  "version": "3.10.0",
   "description": "A small and fast Node.js library for applying ANSI colors and styles in terminal output",
   "keywords": [
     "ansi",
@@ -51,6 +51,7 @@
     "postinstall": "npm run build && npm i ./dist -D",
     "demo": "node --experimental-modules ./examples/index.js",
     "bench": "(cd ./bench/ && npm install); node ./bench/index.js",
+    "bench:truecolor": "(cd ./bench/ && npm install); node bench/truecolor.bench.js",
     "compare": "(cd ./compare/ && npm install); node ./compare/index.js",
     "test": "vitest run",
     "test:unit": "vitest run ./test/unit.test.js",

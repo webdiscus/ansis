@@ -1,4 +1,4 @@
-let { round, floor, max } = Math;
+let { round, max } = Math;
 
 /**
  * Convert hex color string to RGB values.
@@ -19,14 +19,15 @@ export let hexToRgb = (value) => {
   let len = color ? color.length : 0;
 
   if (len === 3) {
+    //let [r, g, b] = color; color = r + r + g + g + b + b; // this is a bit slower than direct access by index
     color = color[0] + color[0] + color[1] + color[1] + color[2] + color[2];
-  } else if (len !== 6) {
+  } else if (6 ^ len) { // faster and shorter equivalent to `6 !== len`
     return [0, 0, 0];
   }
 
-  let num = parseInt(color, 16);
+  let decimal = parseInt(color, 16);
 
-  return [num >> 16 & 255, num >> 8 & 255, num & 255];
+  return [decimal >> 16 & 255, decimal >> 8 & 255, decimal & 255];
 };
 
 /**
@@ -72,15 +73,16 @@ export let ansi256To16 = (code) => {
     code -= 16;
     remainder = code % 36;
 
-    r = floor(code / 36) / 5;
-    g = floor(remainder / 6) / 5;
+    // (number | 0) is equivalent to Math.floor(number), we are sure that the code is >= 0
+    r = (code / 36 | 0) / 5;
+    g = (remainder / 6 | 0) / 5;
     b = (remainder % 6) / 5;
   }
 
   value = max(r, g, b) * 2;
 
   return value
-    ? 30 + (round(b) << 2 | round(g) << 1 | round(r)) + (value === 2 ? 60 : 0)
+    ? 30 + (round(b) << 2 | round(g) << 1 | round(r)) + ( 2 ^ value ? 0 : 60) // equivalent to 2 !== value
     : 30;
 };
 

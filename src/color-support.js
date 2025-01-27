@@ -1,4 +1,4 @@
-import { SPACE_UNDEFINED, SPACE_MONO, SPACE_16COLORS, SPACE_256COLORS, SPACE_TRUECOLOR } from './color-spaces.js';
+import { SPACE_UNDEFINED, SPACE_BW, SPACE_16COLORS, SPACE_256COLORS, SPACE_TRUECOLOR } from './color-spaces.js';
 
 /**
  * Detect color space.
@@ -54,7 +54,7 @@ let detectColorSpace = (env, isTTY, isWin) => {
   }
 
   // unknown output or colors are not supported
-  if (!isTTY || /-mono|dumb/i.test(term)) return SPACE_MONO;
+  if (!isTTY || /-mono|dumb/i.test(term)) return SPACE_BW;
 
   // truecolor support starts from Windows 10 build 14931 (2016-09-21), in 2024 we assume modern Windows is used
   if (isWin) return SPACE_TRUECOLOR;
@@ -71,7 +71,7 @@ let detectColorSpace = (env, isTTY, isWin) => {
   if (/-256(colou?r)?$/i.test(term)) return SPACE_256COLORS;
 
   // known terminals supporting 16 colors
-  if (/^screen|^tmux|^xterm|^vt[1-5][0-9]([0-9])?|^ansi|color|cygwin|linux|mintty|rxvt/i.test(term)) return SPACE_16COLORS;
+  if (/^(screen|tmux|xterm|vt[1-5][0-9]([0-9])?|ansi)|color|cygwin|linux|mintty|rxvt/i.test(term)) return SPACE_16COLORS;
 
   // note: for unknown terminals we allow truecolor output,
   // because all terminals supporting only 16 or 256 colors have already been detected above
@@ -107,7 +107,7 @@ export const getColorSpace = (mockThis) => {
       env = env.toObject();
     } catch (e) {
       // Deno: if interactive permission is not granted, do nothing, no colors
-      colorSpace = SPACE_MONO;
+      colorSpace = SPACE_BW;
     }
   }
 
@@ -147,13 +147,14 @@ export const getColorSpace = (mockThis) => {
 
   // if color space is undefined attempt to detect one with additional method, returns 0, 1, 2 or 3
   // size optimisation: place the `isWin` variable as expression directly in function argument
-  if (colorSpace < SPACE_MONO) colorSpace = detectColorSpace(env, isTTY, (isDeno ? Deno.build.os : proc.platform) === 'win32');
+  if (colorSpace < SPACE_BW) colorSpace = detectColorSpace(env, isTTY, (isDeno ? Deno.build.os : proc.platform) === 'win32');
 
   // if force disabled
   if (!forceColor
     || !!env.NO_COLOR
     // --no-color --color=false --color=never
-    || hasFlag(/^-{1,2}(no-color|color=(false|never))$/)) return SPACE_MONO;
+    || hasFlag(/^-{1,2}(no-color|color=(false|never))$/)) return SPACE_BW;
 
-  return isForceEnabled && colorSpace === SPACE_MONO ? SPACE_TRUECOLOR : colorSpace;
+  // optimisation: `!colorSpace` is equivalent to `colorSpace === SPACE_BW`
+  return isForceEnabled && !colorSpace ? SPACE_TRUECOLOR : colorSpace;
 };

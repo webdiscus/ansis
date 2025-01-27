@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.10.0 (2025-01-27)
+
+- feat: `ansis.reset()` returns the reset escape code `\e[0m`
+- feat: micro optimisations for slight performance improvements
+- chore: code cleanup
+- docs: update readme
+
 ## 3.9.1 (2025-01-15)
 
 - refactor: invisible code improvements

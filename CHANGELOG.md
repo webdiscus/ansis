@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.11.0 (2025-02-09)
+
+- feat: add support for legacy Node.js v14 (in package.json for npm was changed the `engines` to `"node": ">=14"`)
+- test: add test in GitHub workflow for legacy Node.js versions: 14, 16
+- chore: update dev dependencies
+
 ## 3.10.0 (2025-01-27)
 
 - feat: `ansis.reset()` returns the reset escape code `\e[0m`

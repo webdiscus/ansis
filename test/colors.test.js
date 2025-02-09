@@ -3,8 +3,8 @@ import { describe, test, expect } from 'vitest';
 // import env variables to simulate truecolor color space in CLI
 import './env/truecolor.js';
 
-//import { Ansis, red } from '../src/index.mjs'; //  // for debugging only
-import { Ansis, red } from 'ansis'; // test npm package
+//import { Ansis } from '../src/index.mjs'; //  // for debugging only
+import { Ansis } from 'ansis'; // test npm package
 
 // workaround: create new instance of Ansis to enable using the extended color as a sub-chain item
 const ansis = new Ansis();

@@ -15,15 +15,9 @@
 
 
 A Node.js library for applying ANSI colors in terminal output.\
-**Ansis** is focused on [small size]((#compare-size)) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
-
-<!--
-**Ansis** is as [small](#compare-size) as **Picocolors** but has the [functionality](#compare) of **Chalk**.
-**Ansis** is a powerful library focused on [small size]((#compare-size)) and [speed](#benchmark) while providing rich [functionality](#compare).
--->
+**Ansis** is focused on [small size](#compare-size) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
 ### 🚀 [Install and Quick Start](#install)  ✨[Why use Ansis](#why-ansis)
-
 
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
@@ -100,13 +94,6 @@ The most popular Node.js libraries for styling terminal output using ANSI colors
 >
 > The `v3` has the **BREAKING CHANGES** (removed not widely supported styles and DEPRECATIONS).\
 > For details see the [changelog](https://github.com/webdiscus/ansis/blob/master/CHANGELOG.md#v3-0-0).
--->
-
-<!--
-## ❓Question / Feature Request / Bug
-
-If you have discovered a bug or have a feature suggestion, feel free to create
-an [issue](https://github.com/webdiscus/ansis/issues) on GitHub.
 -->
 
 <a id="why-ansis" name="why-ansis"></a>

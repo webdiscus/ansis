@@ -11,17 +11,89 @@ on:
       - next
 
 jobs:
-  integration:
+  build:
+    name: Build package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # Rollup requires Node.js >=18
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Build package
+        run: npm run build
+
+      - name: Save build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-package
+          path: ./dist/ # build output
+          retention-days: 1 # keep the artifact for 1 day
+
+  test:
+    name: Test LTS
+    needs: build
     strategy:
+      fail-fast: false # doesn't stop on first failure
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
-        # rollup requires node >= 18
-        node-version: [ 18, 20, 22 ]
+        os: [ubuntu-latest, windows-latest]
+        node-version: [18, 20, 22]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Download built package
+        uses: actions/download-artifact@v4
+        with:
+          name: built-package
+          path: ./dist/
+
+      - name: Install dependencies (without rebuilding)
+        run: |
+          npm install --ignore-scripts
+
+      - name: Run tests
+        run: npx vitest
+        env:
+          NODE_OPTIONS: --unhandled-rejections=strict
+
+      - name: Submit coverage data to codecov
+        uses: codecov/codecov-action@v3
+        with:
+          flags: test
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  legacy-node-compatibility:
+    name: Test legacy
+    needs: build
+    strategy:
+      fail-fast: false # doesn't stop on first failure
+      matrix:
+        os: [ ubuntu-latest ]
+        node-version: [ 14, 16 ]
 
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
@@ -30,14 +102,26 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm i
-
-      - name: Run the tests
-        run: npm run test:coverage
-
-      - name: Submit coverage data to codecov
-        uses: codecov/codecov-action@v3
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          flags: integration
-          token: ${{ secrets.CODECOV_TOKEN }}
+          node-version: ${{ matrix.node-version }}
+
+      - name: Download built package
+        uses: actions/download-artifact@v4
+        with:
+          name: built-package
+          path: ./dist/
+
+      - name: Prepare package.json for Node.js <= 16
+        run: |
+         cp -f package-test-node16.json package.json
+
+      - name: Install dependencies (without rebuilding)
+        run: |
+          npm install
+
+      - name: Run tests
+        run: npx vitest
+        env:
+          NODE_OPTIONS: --unhandled-rejections=strict

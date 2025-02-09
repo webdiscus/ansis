@@ -1,0 +1,43 @@
+{
+  "name": "ansis",
+  "version": "3.11.0",
+  "description": "Special version of package.json for testing in Node.js v14 - v16",
+  "keywords": [],
+  "license": "ISC",
+  "author": "webdiscus",
+  "sideEffects": false,
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.mjs",
+      "require": "./src/index.js"
+    }
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:unit": "vitest run ./test/unit.test.js",
+    "test:ansi16": "vitest run ./test/ansi16.test.js",
+    "test:ansi256": "vitest run ./test/ansi256.test.js",
+    "test:functional": "vitest run ./test/functional.test.js",
+    "test:flags": "vitest run ./test/flags.test.js",
+    "test:package": "vitest run ./test/package.test.js",
+    "test:cjs": "node ./test/package/cjs/test.cjs",
+    "test:esm": "node ./test/package/esm/test.mjs",
+    "test:tsc": "vitest run ./test/ts-compiler.test.js",
+    "test:levels": "vitest run ./test/color-levels.test.js"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "devDependencies": {
+    "ansis": "file:dist",
+    "esbuild": "0.17.19",
+    "rimraf": "3.0.2",
+    "swc": "1.0.11",
+    "typescript": "5.7.3",
+    "vitest": "0.29.8"
+  }
+}

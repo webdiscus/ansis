@@ -289,15 +289,21 @@ describe('style tests', () => {
 });
 
 describe('style new line', () => {
-  test(`linux new line LF`, () => {
+  test(`new line LF, linux `, () => {
     const received = ansis.green('Hello\nWorld');
     const expected = '\x1b[32mHello\x1b[39m\n\x1b[32mWorld\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
 
-  test(`windows new line CRLF`, () => {
+  test(`new line CRLF, windows`, () => {
     const received = ansis.green('Hello\r\nWorld');
     const expected = '\x1b[32mHello\x1b[39m\r\n\x1b[32mWorld\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`new line LF in template strings`, () => {
+    const received = ansis.green`Hello\nWorld`;
+    const expected = '\x1b[32mHello\x1b[39m\n\x1b[32mWorld\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
 
@@ -309,6 +315,16 @@ describe('style new line', () => {
 
   test(`multiple new line`, () => {
     const received = ansis.bgGreen('\nHello\nNew line\nNext new line.\n');
+    const expected = `\x1b[42m\x1b[49m
+\x1b[42mHello\x1b[49m
+\x1b[42mNew line\x1b[49m
+\x1b[42mNext new line.\x1b[49m
+\x1b[42m\x1b[49m`;
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`multiple new line, template strings`, () => {
+    const received = ansis.bgGreen`\nHello\nNew line\nNext new line.\n`;
     const expected = `\x1b[42m\x1b[49m
 \x1b[42mHello\x1b[49m
 \x1b[42mNew line\x1b[49m

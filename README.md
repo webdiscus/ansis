@@ -74,7 +74,7 @@ The most popular Node.js libraries for styling terminal output using ANSI colors
 - Automatically detects [color support](#color-support) across a wide range of [environments](#color-support)
 - Supports [environment variables](#cli-vars) [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color) and [flags](#cli-flags) `--no-color` `--color`
 - Supports [`COLORTERM`](#using-env-colorterm) variable to test applications with 16, 256, or true-color
-- [Correct style break](#new-line) at the `end of line` when used `\n` in string
+- [Correct style break](#new-line) at the `end of line` when used `\n` in string `'A\nB'` or template literals ``` `A\nB` ```
 - Doesn't extend `String.prototype`
 - Zero dependencies
 - Test coverage 100%. Long term support.

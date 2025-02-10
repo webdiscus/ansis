@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "3.11.0",
+  "version": "3.12.0",
   "description": "Special version of package.json for testing in Node.js v14 - v16",
   "keywords": [],
   "license": "ISC",

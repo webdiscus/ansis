@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.12.0 (2025-02-11)
+
+- feat: add support for `\n` as a newline in template literals\
+  e.g.: ``` green`Hello\nWorld` ``` renders:
+  ```
+  Hello
+  World
+  ```
+
 ## 3.11.0 (2025-02-09)
 
 - feat: add support for legacy Node.js v14 (in package.json for npm was changed the `engines` to `"node": ">=14"`)

@@ -13,6 +13,7 @@ import { hexToRgb } from './utils.js';
 let { create, defineProperty, setPrototypeOf } = Object;
 let styles = {};
 let stylePrototype;
+let LF = '\n';
 
 /**
  * @param {Object} self
@@ -32,18 +33,6 @@ let createStyle = ({ _p: props }, { open, close}) => {
   let styleFn = (arg, ...values) => {
     // API rule: if the argument is one of '', undefined or null, then return empty string
 
-    // 1) longer but a tick faster than 2)
-    // if (!arg && 0 !== arg && false !== arg && !Number.isNaN(arg)) return '';
-
-    // 2) it's shorter, but a tick slower (0.1%) than 1) because it always compares 2 expressions
-    // if (null == arg || '' === arg) return '';
-
-    // 3) in theory it should be faster than 2), but in real tests it is no different from 2).
-    // As in 1), in most use cases only the first expression will be compared,
-    // because it is high probability to be truthy.
-    //if (!arg && (null == arg || '' === arg)) return '';
-
-    // 4) reserved (feature on demand): if called reset() w/o arguments, then return reset code
     if (!arg) {
       if (open && open === close) return open;
       if (null == arg || EMPTY_STRING === arg) return EMPTY_STRING;
@@ -51,7 +40,7 @@ let createStyle = ({ _p: props }, { open, close}) => {
 
     let output = arg.raw
       // render template string
-      ? String.raw(arg, ...values)
+      ? String.raw(arg, ...values).replace(/\\n/g, LF)
       // stringify the argument
       : EMPTY_STRING + arg;
 
@@ -86,7 +75,7 @@ let createStyle = ({ _p: props }, { open, close}) => {
     }
 
     // feat: detect new line
-    if (output.includes('\n')) {
+    if (output.includes(LF)) {
       output = output.replace(/(\r?\n)/g, closeStack + '$1' + openStack);
     }
 

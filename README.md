@@ -14,7 +14,7 @@
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/ansis)](https://bundlephobia.com/package/ansis)
 
 
-A Node.js library for applying ANSI colors in terminal output.\
+A library for applying ANSI colors in terminal or Chromium-based browser console.\
 **Ansis** is focused on [small size](#compare-size) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
 ### 🚀 [Install and Quick Start](#install)  ✨[Why use Ansis](#why-ansis)
@@ -41,7 +41,7 @@ hex('#E0115F').bold.underline('Truecolor!')
 
 ## ⚖️ Similar libraries
 
-The most popular Node.js libraries for styling terminal output using ANSI colors, similar to **Ansis**:
+The most popular libraries for styling terminal output using ANSI colors, similar to **Ansis**:
 
 [chalk][chalk], [picocolors][picocolors], [colorette][colorette], [kleur][kleur], [ansi-colors][ansi-colors], [kolorist][kolorist], [cli-color][cli-color], [colors-cli][colors-cli], [colors.js][colors.js]
 
@@ -59,6 +59,7 @@ The most popular Node.js libraries for styling terminal output using ANSI colors
 
 - Supports **ESM**, **CommonJS**, **TypeScript**
 - Supports **Bun**, **Deno**, **Next.JS** runtimes
+- Supports Chromium-based **browsers** such as **Chrome**, **Edge**, **Opera**, **Brave**, **Vivaldi** and others.
 - Drop-in [replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) [`ansi-colors`](#replacing-ansi-colors)
 - Default and [named import](#named-import) `import ansis, { red, bold, ansi256, hex } from 'ansis'`
 - [Chained syntax](#chained-syntax) `red.bold.underline('text')`
@@ -75,13 +76,16 @@ The most popular Node.js libraries for styling terminal output using ANSI colors
 - Supports [environment variables](#cli-vars) [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color) and [flags](#cli-flags) `--no-color` `--color`
 - Supports [`COLORTERM`](#using-env-colorterm) variable to test applications with 16, 256, or true-color
 - [Correct style break](#new-line) at the `end of line` when used `\n` in string `'A\nB'` or template literals ``` `A\nB` ```
-- Doesn't extend `String.prototype`
 - Zero dependencies
 - Test coverage 100%. Long term support.
 
+<!--  - Chromium-based browsers can display truecolor text in console.
+  - Browsers that do not support ANSI codes will display black/white text in console. -->
+
+
 ## 🌍 Used by
 
-[NestJS](https://github.com/nestjs/nest), [Facebook/StyleX](https://github.com/facebook/stylex), [Sequelize](https://github.com/sequelize/sequelize), [Salesforce](https://github.com/salesforcecli/cli), [Oclif](https://github.com/oclif/core), [WebpackBar](https://github.com/unjs/webpackbar)
+[NestJS](https://github.com/nestjs/nest), [Facebook/StyleX](https://github.com/facebook/stylex), [Sequelize](https://github.com/sequelize/sequelize), [Salesforce](https://github.com/salesforcecli/cli), [Oclif](https://github.com/oclif/core), [unjs/Webpackbar](https://github.com/unjs/webpackbar), [unjs/Unplugin](https://github.com/unjs/unplugin)
 
 
 <!--

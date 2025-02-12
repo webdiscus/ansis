@@ -805,6 +805,30 @@ describe('support colors in terminals', () => {
     expect(received).toEqual(expected);
   });
 
+  test(`Browser chromium`, () => {
+    const received = colorSpace({
+      window: {
+        chrome: {},
+      },
+    });
+    const expected = SPACE_TRUECOLOR;
+    expect(received).toEqual(expected);
+  });
+
+  test(`Browser others`, () => {
+    const received = colorSpace({
+      window: {},
+    });
+    const expected = SPACE_BW
+    expect(received).toEqual(expected);
+  });
+
+  test(`Unknown system`, () => {
+    const received = colorSpace({});
+    const expected = SPACE_BW
+    expect(received).toEqual(expected);
+  });
+
 });
 
 // Node.JS

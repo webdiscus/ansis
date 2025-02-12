@@ -25,13 +25,16 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // or do not set COLORTERM to `truecolor`
   // therefore they can be detected by specific EVN variables
 
+  // 1) Detect color support in COLORTERM
+
   // Common COLORTERM Values: `truecolor` or `24bit`, `ansi256`, `ansi`
   // terminals, that support truecolor, e.g., iTerm, VSCode
   if (colorterm === 'truecolor' || colorterm === '24bit') return SPACE_TRUECOLOR;
   if (colorterm === 'ansi256') return SPACE_256COLORS;
   if (colorterm === 'ansi') return SPACE_16COLORS;
 
-  // note: first, CI environments must be detected since they are not TTY and often advertise themselves as `dumb` terminals
+  // 2) Detect color support in CI,
+  // since in CI environments are not TTY and often advertise themselves as `dumb` terminals
 
   // Azure DevOps CI
   // https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml
@@ -53,28 +56,61 @@ let detectColorSpace = (env, isTTY, isWin) => {
     return SPACE_16COLORS;
   }
 
-  // unknown output or colors are not supported
+  // 3) Detect unknown output or colors are not supported
   if (!isTTY || /-mono|dumb/i.test(term)) return SPACE_BW;
 
-  // truecolor support starts from Windows 10 build 14931 (2016-09-21), in 2024 we assume modern Windows is used
+  // 4) Truecolor support starts from Windows 10 build 14931 (2016-09-21), in 2025 we assume modern Windows is used
   if (isWin) return SPACE_TRUECOLOR;
 
-  // kitty or KDE terminal emulator indicates truecolor support
-  if (/^xterm-(kitty|direct)$/i.test(term)) return SPACE_TRUECOLOR;
+  // 5) Detect terminal emulator with truecolor support
+
+  // kitty or KDE terminal
+  // - xterm-kitty
+  // - xterm-direct
+  if (/term-(kit|dir)/.test(term)) return SPACE_TRUECOLOR;
 
   // JetBrains IDEA: JetBrains-JediTerm
   // TODO: enable truecolor output in IDEA (defaults output 256 colors) if anybody need it
   //if (env.TERMINAL_EMULATOR?.include('JediTerm')) return SPACE_TRUECOLOR;
 
+  // 6) Detect terminal emulator with 256 color support
+
   // note: check for 256 colors after ENV variables such as TERM, COLORTERM, TERMINAL_EMULATOR etc.
   // terminals, that support 256 colors, e.g., native macOS terminal
-  if (/-256(colou?r)?$/i.test(term)) return SPACE_256COLORS;
+  // - screen-256color
+  // - xterm-256color
+  // - rxvt-256color
+  // - putty-256color
+  // - mintty-256color
+  // - linux-256color
+  // - tmux-256color
+  // - ansi-256color
+  if (/-256/.test(term)) return SPACE_256COLORS;
 
-  // known terminals supporting 16 colors
-  if (/^(screen|tmux|xterm|vt[1-5][0-9]([0-9])?|ansi)|color|cygwin|linux|mintty|rxvt/i.test(term)) return SPACE_16COLORS;
+  // 7) Detect terminal emulator with 16 color support
 
-  // note: for unknown terminals we allow truecolor output,
-  // because all terminals supporting only 16 or 256 colors have already been detected above
+  // Use `echo $TERM` command to display terminal name in `env.TERM`.
+  // TODO: drop detection of very rare and exotic terminals such as:
+  // - /vt[1-5][0-9]([0-9])?/ - vt100,vt102,vt110,vt220,vt240,vt320,vt420,vt520 - names historically used with Unix
+  // - /rxvt/ - terminal emulator for X Window System
+  // - /tmux/ - terminal tmux installed on macOS has `tmux-256color` name
+
+  // Known terminals supporting 16 colors.
+  // - screen-color
+  // - xterm-color
+  // - ansi, ansi-x3.64, ansi.sysk
+  // - linux - Linux virtual console (tty1, tty2, SSH, etc.)
+  // - tmux - Terminal emulator
+  // - cygwin - Cygwin terminal
+  // - mintty - Default terminal emulator for Cygwin
+  // - putty-color
+  // - rxvt-color
+  // - vt100
+  if (/scr|xterm|tty|ansi|color|[nm]ux|vt|cyg/.test(term)) return SPACE_16COLORS;
+
+  // 8) For unknown terminals we allow truecolor output,
+  // since all terminals supporting only 16 or 256 colors have already been detected above
+
   return SPACE_TRUECOLOR;
 };
 
@@ -156,5 +192,6 @@ export const getColorSpace = (mockThis) => {
     || hasFlag(/^-{1,2}(no-color|color=(false|never))$/)) return SPACE_BW;
 
   // optimisation: `!colorSpace` is equivalent to `colorSpace === SPACE_BW`
-  return isForceEnabled && !colorSpace ? SPACE_TRUECOLOR : colorSpace;
+  // detect browser support: !!_this.window?.chrome
+  return (isForceEnabled && !colorSpace) || !!_this.window?.chrome ? SPACE_TRUECOLOR : colorSpace;
 };

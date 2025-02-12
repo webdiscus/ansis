@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.14.0 (2025-02-13)
+
+- feat: add support for chromium-based browsers.\
+  Now you can use truecolor in the consoles of Chrome, Edge, Brave, and other Chromium-based browsers.
+  Browsers that do not support ANSI codes will display black and white text.
+- refactor: slight reduce the package size by ~40 bytes
+
+## 3.13.0 (2025-02-13)
+
+Skip this version number.
+
 ## 3.12.0 (2025-02-11)
 
 - feat: add support for `\n` as a newline in template literals\

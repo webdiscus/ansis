@@ -1,4 +1,5 @@
-import { hasColors, styleData, fnRgb, EMPTY_STRING } from './ansi-codes.js';
+import { create, defineProperty, setPrototypeOf, EMPTY_STRING } from './misc.js';
+import { hasColors, styleData, fnRgb } from './ansi-codes.js';
 import { hexToRgb } from './utils.js';
 
 /**
@@ -10,7 +11,6 @@ import { hexToRgb } from './utils.js';
  * @property {null | AnsisProps} _p The props.
  */
 
-let { create, defineProperty, setPrototypeOf } = Object;
 let styles = {};
 let stylePrototype;
 let LF = '\n';
@@ -23,7 +23,7 @@ let LF = '\n';
  * @param {string} codes.close
  * @returns {Ansis}
  */
-let createStyle = ({ _p: props }, { open, close}) => {
+let createStyle = ({ _p: props }, { open, close }) => {
   /**
    * Decorate the string with ANSI codes.
    * @param {unknown} arg The input value, can be any or a template string.
@@ -109,7 +109,15 @@ const Ansis = function() {
     isSupported: () => hasColors,
 
     /**
-     * Remove ANSI styling codes.
+     * Remove ANSI escape sequences.
+     *
+     * RegExp parts:
+     *
+     * - [] - ensures that the string starts with ANSI codes
+     * - [[()#;?]* - optional sequence used for device control
+     * - (?:[0-9]{1,4}(?:;[0-9]{0,4})*)? - parameter bytes, list of numbers separated by semicolons, (e.g., 1;31;42)
+     * - [0-9A-ORZcf-nqry=><] - final byte, determines the type of ANSI escape sequence
+     *
      * @param {string} str
      * @return {string}
      */

@@ -40,6 +40,8 @@ export default [
         exports: 'named',
         file: './dist/index.js',
         format: 'cjs',
+        strict: false,  // disable "use strict"
+        esModule: false, // prevents __esModule property
       },
     ],
     plugins: [

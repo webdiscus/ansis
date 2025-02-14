@@ -1,4 +1,5 @@
 import { SPACE_UNDEFINED, SPACE_BW, SPACE_16COLORS, SPACE_256COLORS, SPACE_TRUECOLOR } from './color-spaces.js';
+import { keys, separator } from './misc.js';
 
 /**
  * Detect color space.
@@ -17,8 +18,11 @@ import { SPACE_UNDEFINED, SPACE_BW, SPACE_16COLORS, SPACE_256COLORS, SPACE_TRUEC
  * @return {number}
  */
 let detectColorSpace = (env, isTTY, isWin) => {
-  let someEnv = (arr) => arr.some(val => val in env);
-  let { TERM: term, COLORTERM: colorterm } = env;
+  // Use `echo $TERM` command to display terminal name in `env.TERM`.
+  let term = env.TERM;
+  let envKeys = separator + keys(env).join(separator);
+
+  //console.log({ envKeys });
 
   // note: the order of checks is important
   // many terminals that support truecolor have TERM as `xterm-256colors` and `COLORTERM=truecolor`
@@ -26,12 +30,17 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // therefore they can be detected by specific EVN variables
 
   // 1) Detect color support in COLORTERM
-
   // Common COLORTERM Values: `truecolor` or `24bit`, `ansi256`, `ansi`
-  // terminals, that support truecolor, e.g., iTerm, VSCode
-  if (colorterm === 'truecolor' || colorterm === '24bit') return SPACE_TRUECOLOR;
-  if (colorterm === 'ansi256') return SPACE_256COLORS;
-  if (colorterm === 'ansi') return SPACE_16COLORS;
+  // Terminals supporting truecolor: iTerm, VSCode
+
+  let colorspace = {
+    '24bit': SPACE_TRUECOLOR,
+    truecolor: SPACE_TRUECOLOR,
+    ansi256: SPACE_256COLORS,
+    ansi: SPACE_16COLORS,
+  }[env.COLORTERM]
+
+  if (colorspace) return colorspace
 
   // 2) Detect color support in CI,
   // since in CI environments are not TTY and often advertise themselves as `dumb` terminals
@@ -40,18 +49,18 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml
   if (!!env.TF_BUILD) return SPACE_16COLORS;
 
-  // JetBrains TeamCity support 256 colors since 2020.1.1 (2020-06-23)
-  if (!!env.TEAMCITY_VERSION) return SPACE_256COLORS;
+  // JetBrains TeamCity support 256 colors since 2020.1.1 (2020-06-23), TEAMCITY_VERSION in env
+  if (/,TEAMCI/.test(envKeys)) return SPACE_256COLORS;
 
   // CI tools
   // https://github.com/watson/ci-info/blob/master/vendors.json
   if (!!env.CI) {
-    // CI supports truecolor
-    if (someEnv(['GITHUB_ACTIONS', 'GITEA_ACTIONS'])) return SPACE_TRUECOLOR;
+    // CI supports truecolor: GITHUB_ACTIONS, GITEA_ACTIONS
+    if (/,GIT(HUB|EA)/.test(envKeys)) return SPACE_TRUECOLOR;
 
     // others CI supports only 16 colors
     //if (env.CI_NAME === 'codeship' || env.CI_NAME === 'sourcehut') return SPACE_16COLORS;
-    //if (someEnv(['GITLAB_CI', 'TRAVIS', 'CIRCLECI', 'APPVEYOR', 'BUILDKITE', 'DRONE'])) return SPACE_16COLORS;
+    //if (/,(GITLAB_CI|TRAVIS|CIRCLECI|APPVEYOR|BUILDKITE|DRONE)/.test(envKeys)) return SPACE_16COLORS;
 
     return SPACE_16COLORS;
   }
@@ -89,23 +98,18 @@ let detectColorSpace = (env, isTTY, isWin) => {
 
   // 7) Detect terminal emulator with 16 color support
 
-  // Use `echo $TERM` command to display terminal name in `env.TERM`.
-  // TODO: drop detection of very rare and exotic terminals such as:
-  // - /vt[1-5][0-9]([0-9])?/ - vt100,vt102,vt110,vt220,vt240,vt320,vt420,vt520 - names historically used with Unix
-  // - /rxvt/ - terminal emulator for X Window System
-  // - /tmux/ - terminal tmux installed on macOS has `tmux-256color` name
-
   // Known terminals supporting 16 colors.
   // - screen-color
   // - xterm-color
   // - ansi, ansi-x3.64, ansi.sysk
   // - linux - Linux virtual console (tty1, tty2, SSH, etc.)
   // - tmux - Terminal emulator
+  // - tmux - Terminal tmux installed on macOS has `tmux-256color` name
   // - cygwin - Cygwin terminal
   // - mintty - Default terminal emulator for Cygwin
   // - putty-color
-  // - rxvt-color
-  // - vt100
+  // - rxvt-color - terminal emulator for X Window System
+  // - vt100,vt102,vt110,vt220,vt240,vt320,vt420,vt520 - names historically used with Unix
   if (/scr|xterm|tty|ansi|color|[nm]ux|vt|cyg/.test(term)) return SPACE_16COLORS;
 
   // 8) For unknown terminals we allow truecolor output,

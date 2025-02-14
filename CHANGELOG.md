@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.15.0-beta.0 (2025-02-14)
+
+- feat: reduce the package size by ~100 bytes
+- refactor: invisible micro optimisations
+
 ## 3.14.0 (2025-02-13)
 
 - feat: add support for chromium-based browsers.\
@@ -13,8 +18,7 @@ Skip this version number.
 
 ## 3.12.0 (2025-02-11)
 
-- feat: add support for `\n` as a newline in template literals\
-  e.g.: ``` green`Hello\nWorld` ``` renders:
+- feat: add support for `\n` as a newline in template literals, e.g.: ``` green`Hello\nWorld` ``` renders:
   ```
   Hello
   World
@@ -50,16 +54,16 @@ Skip this version number.
 ## 3.8.0 (2025-01-09)
 
 - feat: enforce a specific color support by a `FORCE_COLOR` value:
-        false - Disables colors
-            0 - Disables colors
-        true (or unset) - Auto detects the supported colors (if no color detected, enforce truecolor)
-            1 - Enables 16 colors
-            2 - Enables 256 colors
-            3 - Enables truecolor
+  - false - Disables colors
+  -    0 - Disables colors
+  - true (or unset) - Auto detects the supported colors (if no color detected, enforce truecolor)
+  -    1 - Enables 16 colors
+  -    2 - Enables 256 colors
+  -    3 - Enables truecolor
 
 - fix: if the function argument is an empty string should be returned an empty string w/o escape codes:
-  ```
-  ansis.red('') => '', w/o escape codes
+  ```js
+  ansis.red('') => '', // returns empty string w/o escape codes
   ```
 - refactor: optimize code by size
 
@@ -73,17 +77,17 @@ Skip this version number.
 ## 3.6.0 (2025-01-04)
 
 - feat: remove **undocumented** pointless dummy function `ansis(any)`
-  > [!WARNING]
-  > This is not a BREAKING CHANGE because it was never officially documented!
-  > ```
-  > import ansis from 'ansis';
-  > ansis('text'); <= now will occur the ERROR TS2349: This expression is not callable.
-  > ```
-  > This warning applies only to projects where Chalk was replaced with Ansis and something like `chalk('text')` was used.
-  >
-  > Just replace `ansis('text')` with `'text'`.
-  >
-  > The `ansis('text')` function was a dummy and did nothing except return the same input string.
+> [!WARNING]
+> This is not a BREAKING CHANGE because it was never officially documented!
+> ```js
+> import ansis from 'ansis';
+> ansis('text'); // <= now will occur the ERROR TS2349: This expression is not callable.
+> ```
+> This warning applies only to projects where Chalk was replaced with Ansis and something like `chalk('text')` was used.
+>
+> Just replace `ansis('text')` with `'text'`.
+>
+> The `ansis('text')` function was a dummy and did nothing except return the same input string.
 
 - chore: update license to current date
 

@@ -2,9 +2,10 @@ import { hexToRgb, rgbToAnsi256, rgbToAnsi16, ansi256To16 } from './utils.js';
 import { getColorSpace } from './color-support.js';
 import { SPACE_BW, SPACE_16COLORS, SPACE_256COLORS } from './color-spaces.js';
 
+import { EMPTY_STRING, separator } from './misc.js';
+
 let colorSpace = getColorSpace();
 let hasColors = colorSpace > SPACE_BW;
-let EMPTY_STRING = '';
 let mono = { open: EMPTY_STRING, close: EMPTY_STRING };
 let monoFn = () => mono;
 let esc = hasColors ? (open, close) => ({ open: `[${open}m`, close: `[${close}m` }) : monoFn;
@@ -63,7 +64,7 @@ let code = 30;
 let bgName;
 
 // using [].map() is 3 bytes shorter than for .. of
-'black,red,green,yellow,blue,magenta,cyan,white'.split(',').map((name) => {
+'black,red,green,yellow,blue,magenta,cyan,white'.split(separator).map((name) => {
   bgName = 'bg' + name[0].toUpperCase() + name.slice(1);
 
   styleData[name] = esc(code, closeCode);
@@ -85,5 +86,4 @@ export {
   hasColors,
   styleData,
   fnRgb,
-  EMPTY_STRING
 }

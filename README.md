@@ -17,7 +17,7 @@
 A library for applying ANSI colors in terminal or Chromium-based browser console.\
 **Ansis** is focused on [small size](#compare-size) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
-### 🚀 [Install and Quick Start](#install)  ✨[Why use Ansis](#why-ansis)
+### 🚀 [Install and Quick Start](#install)  ✨[Why use Ansis](#why-ansis)  🔧[Compatibility Check](#compatibility)
 
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
@@ -59,7 +59,7 @@ The most popular libraries for styling terminal output using ANSI colors, simila
 
 - Supports **ESM**, **CommonJS**, **TypeScript**
 - Supports **Bun**, **Deno**, **Next.JS** runtimes
-- Supports Chromium-based **browsers** such as **Chrome**, **Edge**, **Opera**, **Brave**, **Vivaldi** and others.
+- Supports [Chromium-based](#browsers-compatibility) **browsers** such as **Chrome**, **Edge**, **Opera**, **Brave**, **Vivaldi**.
 - Drop-in [replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) [`ansi-colors`](#replacing-ansi-colors)
 - Default and [named import](#named-import) `import ansis, { red, bold, ansi256, hex } from 'ansis'`
 - [Chained syntax](#chained-syntax) `red.bold.underline('text')`
@@ -1142,7 +1142,6 @@ See also:
 
 ---
 
-#### [↑ top](#top)
 
 ## Show ANSI demo
 
@@ -1153,6 +1152,48 @@ npm i
 npm run demo
 ```
 
+#### [↑ top](#top)
+<a id="compatibility" name="compatibility"></a>
+
+## Compatibility Check
+
+Check the minimum version of your tool required for compatibility with the latest Ansis.
+
+| Tool              | Version  | Compatibility | Supports |
+|-------------------|----------|---------------|----------|
+| **Node.js**       | **v14+** | ✅ Full support | CJS, ESM |
+| **TypeScript/tsc**| **v4.5+** | ✅ Full support | CJS, ESM |
+| **esbuild**       | **v0.8.0+** | ✅ Full support | CJS, ESM |
+| **swc**           | **v1.2.0+** | ✅ Full support | CJS, ESM, FAUX |
+| **tsup**          | **v4.0.0+** | ✅ Full support | CJS, ESM, FAUX |
+| **tsx**           | **v3.0.0+** | ✅ Full support | CJS, ESM |
+| **Rollup**        | **v2.0.0+** | ✅ Full support | CJS, ESM |
+| **Vite**          | **v2.5.0+** | ✅ Full support | ESM |
+| **Turbo**         | **v1.0.0+** | ✅ Full support | CJS, ESM |
+| **Webpack**       | **v5.0.0+** | ✅ Full support | CJS, ESM |
+
+**Supports:**
+- **CJS**: CommonJS module support.
+- **ESM**: ECMAScript module support.
+- **FAUX**: Fake or non-standard approach to module resolution (seen in **swc**).
+
+<a id="browsers-compatibility" name="browsers-compatibility"></a>
+
+### Browser Compatibility for ANSI Codes
+
+| Browser           | Version       | Colors Supported   |
+|-------------------|---------------|--------------------|
+| **Chrome**        | **v20+**      | TrueColor (16M)    |
+| **Safari**        | **v10+**      | TrueColor (16M)    |
+| **Edge**          | **v12+**      | TrueColor (16M)    |
+| **Opera**         | **v12+**      | TrueColor (16M)    |
+| **Brave**         | **v1.0+**     | TrueColor (16M)    |
+| **Vivaldi**       | **v1.0+**     | TrueColor (16M)    |
+
+> [!WARNING]
+> **Firefox** doesn't natively support ANSI codes in the developer console.
+
+#### [↑ top](#top)
 <a id="benchmark" name="benchmark"></a>
 
 ## Benchmarks

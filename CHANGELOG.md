@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.15.0-beta.1 (2025-02-15)
+
+- feat: remove "main" from package.json, since Ansis is a dual package using "exports".\
+  Note:
+  - requires Node >= v12.7.0 to support "exports".
+  - npm does not require "main" for publishing a package.
+  - Node.js prioritizes "exports" over "main" when resolving modules.
+  - Modern bundlers and tools (like Webpack, Rollup, and TypeScript) also use "exports".
+- docs: add to README the Compatibility Check for tools and browsers.
+
 ## 3.15.0-beta.0 (2025-02-14)
 
 - feat: reduce the package size by ~100 bytes
@@ -10,7 +20,7 @@
 - feat: add support for chromium-based browsers.\
   Now you can use truecolor in the consoles of Chrome, Edge, Brave, and other Chromium-based browsers.
   Browsers that do not support ANSI codes will display black and white text.
-- refactor: slight reduce the package size by ~40 bytes
+- refactor: slight reduce the package size by ~40 bytes.
 
 ## 3.13.0 (2025-02-13)
 

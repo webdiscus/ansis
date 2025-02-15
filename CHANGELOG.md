@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.15.0-beta.2 (2025-02-15)
+
+- refactor: slight reduce the package size
+
 ## 3.15.0-beta.1 (2025-02-15)
 
 - feat: remove "main" from package.json, since Ansis is a dual package using "exports".\

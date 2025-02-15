@@ -1,6 +1,6 @@
-import ansis, { Ansis } from './index.js';
+import a, { Ansis } from './index.js';
 
-export { Ansis, ansis as default };
+export { Ansis, a as default };
 
 export const {
   // color functions
@@ -66,4 +66,4 @@ export const {
   bgMagentaBright,
   bgCyanBright,
   bgWhiteBright,
-} = ansis;
+} = a;

@@ -22,8 +22,6 @@ let detectColorSpace = (env, isTTY, isWin) => {
   let term = env.TERM;
   let envKeys = separator + keys(env).join(separator);
 
-  //console.log({ envKeys });
-
   // note: the order of checks is important
   // many terminals that support truecolor have TERM as `xterm-256colors` and `COLORTERM=truecolor`
   // or do not set COLORTERM to `truecolor`

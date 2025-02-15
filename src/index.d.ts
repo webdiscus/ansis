@@ -61,16 +61,16 @@ type SP = {
    * 232 - 255: grayscale from black to white in 24 steps
    * ```
    *
-   * @param {number} code in range [0, 255].
+   * @param {number} n in range [0, 255].
    */
-  ansi256(code: number): A;
+  ansi256(n: number): A;
 
   /**
    * Alias for ansi256.
    *
-   * @param {number} code in range [0, 255].
+   * @param {number} n in range [0, 255].
    */
-  fg(code: number): A;
+  fg(n: number): A;
 
   /**
    * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for background color.
@@ -83,16 +83,16 @@ type SP = {
    * 232 - 255: grayscale from black to white in 24 steps
    * ```
    *
-   * @param {number} code in range [0, 255].
+   * @param {number} n in range [0, 255].
    */
-  bgAnsi256(code: number): A;
+  bgAnsi256(n: number): A;
 
   /**
    * Alias for bgAnsi256.
    *
-   * @param {number} code in range [0, 255].
+   * @param {number} n in range [0, 255].
    */
-  bg(code: number): A;
+  bg(n: number): A;
 
   /**
    * Set RGB values for foreground color.
@@ -129,10 +129,10 @@ type SP = {
   /**
    * Remove ANSI styling codes.
    *
-   * @param {string} str
+   * @param {string} s
    * @return {string}
    */
-  strip(str: string): string;
+  strip(s: string): string;
 
   /**
    * Extends the current `Ansis` instance with additional colors.

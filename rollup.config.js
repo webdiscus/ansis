@@ -3,6 +3,11 @@ import replace from '@rollup/plugin-replace';
 import copy from 'rollup-plugin-copy';
 import { minify } from 'terser';
 
+// Helpers
+//
+// - Display the size of a directory's content:
+//   find ./dist -type f -exec stat -f"%z" {} + | awk '{s+=$1} END {print s}'
+
 // last ECMA version compatible with node.js 12
 //const ecma = 2019;
 const ecma = 2021;

@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.15.0 (2025-02-16)
+
+- feat: reduce the package size by ~200 bytes.
+- refactor: invisible micro optimisations.
+- chore: after testing in many projects bump v3.15.0-beta.2 to release v3.15.0.
+- chore: update dev dependencies.
+- test: add tests for `tsup` bundler.
+
 ## 3.15.0-beta.2 (2025-02-15)
 
 - refactor: slight reduce the package size

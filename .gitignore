@@ -8,3 +8,4 @@ node_modules
 public
 dist
 test/output/
+tsconfig.tsbuildinfo

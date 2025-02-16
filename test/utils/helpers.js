@@ -92,6 +92,7 @@ export const executeTSFile = (testPath, compiler = 'tsc', script = null) => {
     tsc: 'build',
     swc: 'build:swc',
     esbuild: 'build:esbuild',
+    tsup_esm: 'build:tsup_esm',
   };
 
   const buildCompiler = script ? script : compilers[compiler] || 'build';

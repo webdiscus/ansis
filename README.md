@@ -43,7 +43,7 @@ hex('#E0115F').bold.underline('Truecolor!')
 
 The most popular libraries for styling terminal output using ANSI colors, similar to **Ansis**:
 
-[chalk][chalk], [picocolors][picocolors], [colorette][colorette], [kleur][kleur], [ansi-colors][ansi-colors], [kolorist][kolorist], [cli-color][cli-color], [colors-cli][colors-cli], [colors.js][colors.js]
+[chalk][chalk], [picocolors][picocolors], [colorette][colorette], [kleur][kleur], [ansi-colors][ansi-colors], [kolorist][kolorist], [cli-color][cli-color], [colors-cli][colors-cli], [colors.js][colors.js], [tinyrainbow][tinyrainbow]
 
 > [!IMPORTANT]
 >
@@ -1016,18 +1016,142 @@ npm run compare
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/compare-colorize-libraries?file=index.js)
 
-| Library<br><nobr>________________</nobr><br> - named import<br>- naming colors |  ANSI 16 colors   | ANSI 256<br>colors | True<br>Color | Chained<br>syntax | Nested<br>template strings | New<br>Line | Fallback to colors  | Supports<br>ENV vars<br>CLI flags                        |
-|:-------------------------------------------------------------------------------|:-----------------:|:------------------:|:-------------:|:-----------------:|:--------------------------:|:-----------:|---------------------|:---------------------------------------------------------|
-| [`ansis`][ansis]<br><nobr>`✅ named import`</nobr><br>`✅ standard`              |         ✅         |         ✅          |       ✅       |         ✅         |             ✅              |      ✅      | →256<br>→16<br>→b&w | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`chalk`][chalk]<br><nobr>`❌ named import`</nobr><br>`✅ standard`              |         ✅         |         ✅          |       ✅       |         ✅         |             ❌              |      ✅      | →256<br>→16<br>→b&w | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`kolorist`][kolorist]<br><nobr>`✅ named import`</nobr><br>`❌ standard`        |         ✅         |         ✅          |       ✅       |         ❌         |             ❌              |      ❌      | →256<br>→b&w        | `NO_COLOR`<br>`FORCE_COLOR`                              |
-| [`cli-color`][cli-color]<br><nobr>`❌ named import`</nobr><br>`✅ standard`      |         ✅         |         ✅          |       ❌       |         ✅         |             ❌              |      ❌      | →16<br>→b&w         | `NO_COLOR`                                               |
-| [`colors-cli`][colors-cli]<br><nobr>`❌ named import`</nobr><br>`❌ standard`    |         ✅         |         ✅          |       ❌       |         ✅         |             ❌              |      ✅      | →b&w                | `--no-color`<br>`--color`                                |
-| [`colors.js`][colors.js]<br><nobr>`❌ named import`</nobr><br>`❌ standard`      |         ✅         |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | →b&w                | `FORCE_COLOR`<br>`--no-color`<br>`--color`               |
-| [`ansi-colors`][ansi-colors]<br><nobr>`❌ named import`</nobr><br>`✅ standard`  |         ✅         |         ❌          |       ❌       |         ✅         |             ❌              |      ✅      | ❌                   | `FORCE_COLOR`                                            |
-| [`colorette`][colorette]<br><nobr>`✅ named import`</nobr><br>`✅ standard`      |         ✅         |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`picocolors`][picocolors]<br><nobr>`❌ named import`</nobr><br>`✅ standard`    | ✅<br>since v1.1.0 |         ❌          |       ❌       |         ❌         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`<br>`--no-color`<br>`--color` |
-| [`kleur`][kleur]<br><nobr>`✅ named import`</nobr><br>`✅ standard`              | ❌<br> `8` colors  |         ❌          |       ❌       |         ✅         |             ❌              |      ❌      | →b&w                | `NO_COLOR`<br>`FORCE_COLOR`                              |
+<table>
+  <tr>
+    <th>Library</th>
+    <th colspan="2">Colors support</th>
+    <th colspan="4">Features</th>
+  </tr>
+  <tr>
+    <th style='text-align:left'>
+      <nobr>- <code>ESM</code> | <code>CJS</code></nobr><br>
+      <nobr> - named import</nobr><br>
+      <nobr>- naming colors</nobr>
+    </th>
+    <th><nobr>16 | 256 | 16m | 🌐</nobr></th>
+    <th>Fallback</th>
+    <th>Chained<br>syntax</th>
+    <th>Nested<br>template<br>strings<br><code>`${}`</code><br></th>
+    <th>LF<br><code>\n</code></th>
+    <th>Supports<br>ENV vars<br>CLI flags</th>
+  </tr>
+
+  <tr>
+    <td style='text-align:left'>
+      <a href="https://github.com/webdiscus/ansis"><code>ansis</code></a><br>
+      <code>ESM</code> <code>CJS</code><br>
+      <nobr><code>✅ named import</code></nobr><br><code>✅ standard</code>
+    </td>
+    <td style='text-align:center'>✅ ✅ ✅ ✅</td>
+    <td style='text-align:left'>→256<br>→16<br>→b&amp;w</td>
+    <td style='text-align:center'>✅</td>
+    <td style='text-align:center'>✅</td>
+    <td style='text-align:center'>✅</td>
+    <td style="text-align:left"><code>NO_COLOR</code><br><code>FORCE_COLOR</code><br><code>--no-color</code><br><code>--color</code></td>
+  </tr>
+
+  <tr>
+    <td style="text-align:left"><a href="https://github.com/chalk/chalk"><code>chalk v5</code></a><br><code>ESM</code><br><nobr><code>❌ named import</code></nobr><br><code>✅ standard</code></td>
+    <td style="text-align:center">✅ ✅ ✅ ✅</td>
+    <td>→256<br>→16<br>→b&amp;w</td>
+    <td style="text-align:center">✅</td>
+    <td style="text-align:center">❌</td>
+    <td style="text-align:center">✅</td>
+    <td style="text-align:left"><code>NO_COLOR</code><br><code>FORCE_COLOR</code><br><code>--no-color</code><br><code>--color</code></td>
+  </tr>
+
+<tr>
+<td style="text-align:left"><a href="https://github.com/marvinhagemeister/kolorist"><code>kolorist</code></a><br><code>ESM</code> <code>CJS</code><br><nobr><code>✅ named import</code></nobr><br><code>❌ standard</code></td>
+<td style="text-align:center">✅ ✅ ✅ ❌</td>
+<td>→256<br>→b&amp;w</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:left"><code>NO_COLOR</code><br><code>FORCE_COLOR</code></td>
+</tr>
+
+<tr>
+<td style="text-align:left"><a href="https://github.com/medikoo/cli-color"><code>cli-color</code></a><br><code>CJS</code><br><nobr><code>❌ named import</code></nobr><br><code>✅ standard</code></td>
+<td style="text-align:center">✅ ✅ ❌ ☠️</td>
+<td>→16<br>→b&amp;w</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:left"><code>NO_COLOR</code></td>
+</tr>
+
+<tr>
+<td style="text-align:left"><a href="https://github.com/jaywcjlove/colors-cli"><code>colors-cli</code></a><br><code>CJS</code><br><nobr><code>❌ named import</code></nobr><br><code>❌ standard</code></td>
+<td style="text-align:center">✅ ✅ ❌ ☠️</td>
+<td>→b&amp;w</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:left"><code>--no-color</code><br><code>--color</code></td>
+</tr>
+
+<tr>
+<td style="text-align:left"><a href="https://github.com/DABH/colors.js"><code>colors.js</code></a><br><code>CJS</code><br><nobr><code>❌ named import</code></nobr><br><code>❌ standard</code></td>
+<td style="text-align:center">✅ ❌ ❌ ☠️</td>
+<td>→b&amp;w</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:left"><code>FORCE_COLOR</code><br><code>--no-color</code><br><code>--color</code></td>
+</tr>
+
+<tr>
+<td style="text-align:left"><a href="https://github.com/doowb/ansi-colors"><code>ansi-colors</code></a><br><code>CJS</code><br><nobr><code>❌ named import</code></nobr><br><code>✅ standard</code></td>
+<td style="text-align:center">✅ ❌ ❌ ❌</td>
+<td>❌</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:left"><code>FORCE_COLOR</code></td>
+</tr>
+
+<tr>
+<td style="text-align:left"><a href="https://github.com/jorgebucaran/colorette"><code>colorette</code></a><br><code>ESM</code> <code>CJS</code><br><nobr><code>✅ named import</code></nobr><br><code>✅ standard</code></td>
+<td style="text-align:center">✅ ❌ ❌ ☠️</td>
+<td>→b&amp;w</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:left"><code>NO_COLOR</code><br><code>FORCE_COLOR</code><br><code>--no-color</code><br><code>--color</code></td>
+</tr>
+
+<tr>
+<td style="text-align:left"><a href="https://github.com/alexeyraspopov/picocolors"><code>picocolors</code></a><br><code>CJS</code><br><nobr><code>❌ named import</code></nobr><br><code>✅ standard</code></td>
+<td style="text-align:center">✅ ❌ ❌ ❌</td>
+<td>→b&amp;w</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:left"><code>NO_COLOR</code><br><code>FORCE_COLOR</code><br><code>--no-color</code><br><code>--color</code></td>
+</tr>
+
+<tr>
+<td style="text-align:left"><a href="https://github.com/tinylibs/tinyrainbow"><code>tinyrainbow</code></a><br><code>ESM</code><br><nobr><code>❌ named import</code></nobr><br><code>✅ standard</code></td>
+<td style="text-align:center">✅ ❌ ❌ ✅</td>
+<td>→b&amp;w</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:left"><code>NO_COLOR</code><br><code>FORCE_COLOR</code><br><code>FORCE_TTY</code><br><code>--no-color</code><br><code>--color</code></td>
+</tr>
+
+<tr>
+<td style="text-align:left"><a href="https://github.com/lukeed/kleur"><code>kleur</code></a><br><code>ESM</code> <code>CJS</code><br><nobr><code>✅ named import</code></nobr><br><code>✅ standard</code></td>
+<td style="text-align:center">❌ ❌ ❌ ✅<br><code>8</code> colors</td>
+<td>→b&amp;w</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:left"><code>NO_COLOR</code><br><code>FORCE_COLOR</code></td>
+</tr>
+
+</table>
+
 
 ### Notes
 
@@ -1041,32 +1165,40 @@ CJS\
  - standard: colors have [standard names](#base-colors-and-styles), e.g.: `red`, `redBright`, `bgRed`, `bgRedBright`
  - _non-standard_: colors have lib-specific names, e.g.: `brightRed`, `bgBrightRed`, `red_b`, `red_btt`
 
-**ANSI 256 colors**
+#### Colors support
 
-The method names:
- - [`colors-cli`][colors-cli]: `x<n>`
- - [`cli-color`][cli-color]: `xterm(n)`
- - [`chalk`][chalk]: `ansi256(n)` `bgAnsi256(n)`
- - [`ansis`][ansis]: `ansi256(n)` `bgAnsi256(n)` `fg(n)` `bg(n)`
+- `16` - [ANSI 16 colors](#base-colors) like `red`, `redBright`, `bgRed`, `bgRedBright`
 
-**Truecolor**
+- `256` - [ANSI 256 colors](#256-colors) methods, e.g.:
+  - [`ansis`][ansis]: `ansi256(n)`, `bgAnsi256(n)`, `fg(n)`, `bg(n)`
+  - [`chalk`][chalk]: `ansi256(n)`, `bgAnsi256(n)`
+  - [`cli-color`][cli-color]: `xterm(n)`
+  - [`colors-cli`][colors-cli]: `x<n>`
 
-The method names:
- - [`chalk`][chalk]: `hex()` `rgb()`
- - [`ansis`][ansis]: `hex()` `rgb()`
+- `16m` - [Truecolor](#truecolor) methods, e.g.:
+  - [`ansis`][ansis]: `hex()`, `bgHex()`, `rgb()`, `bgRgb()`
+  - [`chalk`][chalk]: `hex()`, `bgHex()`, `rgb()`, `bgRgb()`
 
-**Chained syntax**\
-`lib.red.bold('text')`
+- 🌐 - Colored output in [Chromium-based](#browsers-compatibility) browser console:
+  - ✅ - colored output
+  - ❌ - b&w output
+  - ☠️ - **fatal error** by compilation or in runtime
 
-**Nested template strings**\
-``` lib.red`text ${lib.cyan`nested`} text` ```
+- [Fallback](#fallback) - Truecolor → 256 colors → 16 colors → no colors
 
-**New line**\
-Correct break styles at `end-of-line`.
-```
-lib.bgGreen(`First Line
-Next Line`);
-```
+#### Features
+
+- **Chained syntax**\
+  `lib.red.bold('text')`
+
+- **Nested template strings**\
+  ``` lib.red`text ${lib.cyan`nested`} text` ```
+
+- `LF` - Correct break styles at `end-of-line` (`\n`).
+  ```
+  lib.bgGreen(`First Line
+  Next Line`);
+  ```
 
 <a id="handling-input-arguments" name="handling-input-arguments"></a>
 
@@ -1074,18 +1206,19 @@ Next Line`);
 
 Compare how different libraries handle various input arguments in their functions.
 
-| Library                      | `c.reset()`  | `c.red()`      | `c.red(undefined)` | `c.red(null)` | `c.red('')` |
-|------------------------------|--------------|----------------|--------------------|---------------|-------------|
-| [`ansis`][ansis]             | ✅`\e[0m`     | ✅`''`          | ✅`''`              | ✅`''`         | ✅`''`       |
-| [`chalk`][chalk]             | ❌`''`        | ✅`''`          | ❌`'undefined'`     | ❌`'null'`     | ✅`''`       |
-| [`picocolors`][picocolors]   | ❌`undefined` | ❌`'undefined'` | ❌`'undefined'`     | ❌`'null'`     | ❌`'ESC'`    |
-| [`colorette`][colorette]     | ❌`''`        | ✅`''`          | ✅`''`              | ❌`'null'`     | ✅`''`       |
-| [`kleur`][kleur]             | ❌`[object]`  | ❌`[object]`    | ❌`[object]`        | ❌`'null'`     | ❌`'ESC'`    |
-| [`ansi-colors`][ansi-colors] | ❌`''`        | ✅`''`          | ✅`''`              | ✅`''`         | ✅`''`       |
-| [`kolorist`][kolorist]       | ❌`undefined` | ❌`'undefined'` | ❌`'undefined'`     | ❌`'null'`     | ❌`'ESC'`    |
-| [`colors.js`][colors.js]     | ❌`''`        | ✅`''`          | ❌`'undefined'`     | ❌`'null'`     | ✅`''`       |
-| [`cli-color`][cli-color]     | ❌`-`         | ❌`'ESC'`       | ❌`'ESC'`           | ❌`'ESC'`      | ❌`'ESC'`    |
-| [`colors-cli`][colors-cli]   | ❌`-`         | ❌ `Error`      | ❌`'undefined'`     | ❌`'null'`     | ❌`'ESC'`    |
+| Library                        | `c.reset()`  | `c.red()`      | `c.red(undefined)` | `c.red(null)` | `c.red('')` |
+|--------------------------------|--------------|----------------|--------------------|---------------|-------------|
+| [`ansis`][ansis]               | ✅`\e[0m`     | ✅`''`          | ✅`''`              | ✅`''`         | ✅`''`       |
+| [`chalk`][chalk]               | ❌`''`        | ✅`''`          | ❌`'undefined'`     | ❌`'null'`     | ✅`''`       |
+| [`picocolors`][picocolors]     | ❌`undefined` | ❌`'undefined'` | ❌`'undefined'`     | ❌`'null'`     | ❌`'ESC'`    |
+| [`tinyrainbow`][tinyrainbow]   | ❌`undefined` | ❌`'undefined'` | ❌`'undefined'`     | ❌`'null'`     | ❌`'ESC'`    |
+| [`colorette`][colorette]       | ❌`''`        | ✅`''`          | ✅`''`              | ❌`'null'`     | ✅`''`       |
+| [`kleur`][kleur]               | ❌`[object]`  | ❌`[object]`    | ❌`[object]`        | ❌`'null'`     | ❌`'ESC'`    |
+| [`ansi-colors`][ansi-colors]   | ❌`''`        | ✅`''`          | ✅`''`              | ✅`''`         | ✅`''`       |
+| [`kolorist`][kolorist]         | ❌`undefined` | ❌`'undefined'` | ❌`'undefined'`     | ❌`'null'`     | ❌`'ESC'`    |
+| [`colors.js`][colors.js]       | ❌`''`        | ✅`''`          | ❌`'undefined'`     | ❌`'null'`     | ✅`''`       |
+| [`cli-color`][cli-color]       | ❌`-`         | ❌`'ESC'`       | ❌`'ESC'`           | ❌`'ESC'`      | ❌`'ESC'`    |
+| [`colors-cli`][colors-cli]     | ❌`-`         | ❌ `Error`      | ❌`'undefined'`     | ❌`'null'`     | ❌`'ESC'`    |
 
 #### Legend:
 
@@ -1116,18 +1249,19 @@ c.red(1/0)     // 'Infinity' in red
 
 ## Compare the size of most popular packages
 
-| Npm package                  |     Dependencies     |                                            Unpacked Size |                                                          Download size | Code size |
-|:-----------------------------|:--------------------:|---------------------------------------------------------:|-----------------------------------------------------------------------:|----------:|
-| [`picocolors`][picocolors]   | [0][npm-picocolors]  |                                 [6.4 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |    2.6 kB |
-| [`ansis`][ansis]             |    [0][npm-ansis]    |                                      [6.6 kB][npm-ansis] |             [3.6 kB](https://arve0.github.io/npm-download-size/#ansis) |    3.2 kB |
-| [`colorette`][colorette]     |  [0][npm-colorette]  |                                 [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |    3.4 kB |
-| [`kleur`][kleur]             |    [0][npm-kleur]    |                                     [20.3 kB][npm-kleur] |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |    2.7 kB |
-| [`ansi-colors`][ansi-colors] | [0][npm-ansi-colors] |                               [26.1 kB][npm-ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |    5.8 kB |
-| [`kolorist`][kolorist]       |  [0][npm-kolorist]   |                                  [51.0 kB][npm-kolorist] |          [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |    6.8 kB |
-| [`colors.js`][colors.js]     |  [0][npm-colors.js]  |                                 [41.5 kB][npm-colors.js] | [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |   18.1 kB |
-| [`chalk`][chalk]             |    [0][npm-chalk]    |                                     [43.7 kB][npm-chalk] |            [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |   16.4 kB |
-| [`cli-color`][cli-color]     | [`5`][npm-cli-color] | [754.0 kB](https://packagephobia.com/result?p=cli-color) |       [216.8 kB](https://arve0.github.io/npm-download-size/#cli-color) |   12.1 kB |
-| [`colors-cli`][colors-cli]   | [0][npm-colors-cli]  |                               [511.0 kB][npm-colors-cli] |      [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |    8.7 kB |
+| Npm package                    |          Dependencies          |                                              Unpacked Size |                                                          Download size | Code size |
+| :----------------------------- |:------------------------------:|-----------------------------------------------------------:|-----------------------------------------------------------------------:|----------:|
+| [`picocolors`][picocolors]     |      [0][npm-picocolors]       |                                   [6.4 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |    2.6 kB |
+| [`ansis`][ansis]               |         [0][npm-ansis]         |                                        [6.6 kB][npm-ansis] |             [3.6 kB](https://arve0.github.io/npm-download-size/#ansis) |    3.2 kB |
+| [`tinyrainbow`][tinyrainbow]   |   [0][npm-tinyrainbow]         |                                  [8.1 kB][npm-tinyrainbow] |       [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |    2.8 kB |
+| [`colorette`][colorette]       |       [0][npm-colorette]       |                                   [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |    3.4 kB |
+| [`kleur`][kleur]               |         [0][npm-kleur]         |                                       [20.3 kB][npm-kleur] |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |    2.7 kB |
+| [`ansi-colors`][ansi-colors]   |      [0][npm-ansi-colors]      |                                 [26.1 kB][npm-ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |    5.8 kB |
+| [`kolorist`][kolorist]         |       [0][npm-kolorist]        |                                    [51.0 kB][npm-kolorist] |          [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |    6.8 kB |
+| [`colors.js`][colors.js]       |       [0][npm-colors.js]       |                                   [41.5 kB][npm-colors.js] | [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |   18.1 kB |
+| [`chalk`][chalk]               |         [0][npm-chalk]         |                                       [43.7 kB][npm-chalk] |            [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |   16.4 kB |
+| [`cli-color`][cli-color]       |      [`5`][npm-cli-color]      |   [754.0 kB](https://packagephobia.com/result?p=cli-color) |       [216.8 kB](https://arve0.github.io/npm-download-size/#cli-color) |   12.1 kB |
+| [`colors-cli`][colors-cli]     |      [0][npm-colors-cli]       |                                 [511.0 kB][npm-colors-cli] |      [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |    8.7 kB |
 
 **Unpacked Size:** The size of the npm package in the `node_modules/` directory, (incl. dependencies).\
 **Download size:** The size of the downloaded `*.tgz` package file.\
@@ -1731,6 +1865,8 @@ fg(202).bg(236)`Orange text on dark gray background`;
 
 [ansis]: https://github.com/webdiscus/ansis
 
+[tinyrainbow]: https://github.com/tinylibs/tinyrainbow
+
 [npm-colors.js]: https://www.npmjs.com/package/@colors/colors
 
 [npm-colorette]: https://www.npmjs.com/package/colorette
@@ -1750,3 +1886,5 @@ fg(202).bg(236)`Orange text on dark gray background`;
 [npm-chalk]: https://www.npmjs.com/package/chalk
 
 [npm-ansis]: https://www.npmjs.com/package/ansis
+
+[npm-tinyrainbow]: https://www.npmjs.com/package/tinyrainbow

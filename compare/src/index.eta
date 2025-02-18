@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title><%= pkg %></title>
+    <script src="./log-<%= pkg %>.js"></script>
+  </head>
+  <body>
+    <h1>Color output in the browser console</h1>
+    <p>Open browser console</p>
+  </body>
+</html>

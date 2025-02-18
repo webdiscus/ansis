@@ -8,6 +8,7 @@ import colorCli from 'colors-cli/safe.js';
 import kleur from 'kleur';
 import * as kolorist from 'kolorist';
 import pico from 'picocolors';
+import tinyrainbow from 'tinyrainbow';
 import ansis, { black } from 'ansis';
 
 // Handling edge cases by various libraries
@@ -56,6 +57,9 @@ fnArguments(chalk);
 
 console.log(black.bgGreen('\n picocolors '));
 fnArguments(pico);
+
+console.log(black.bgGreen('\n tinyrainbow '));
+fnArguments(tinyrainbow);
 
 console.log(black.bgGreen('\n ansi-colors '));
 fnArguments(ansiColors);

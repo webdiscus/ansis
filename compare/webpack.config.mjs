@@ -1,17 +1,15 @@
-//const path = require('path');
-//const HtmlBundlerPlugin = require('html-bundler-webpack-plugin');
-
 import path from 'path';
 import url, { URL } from 'node:url';
 import HtmlBundlerPlugin from 'html-bundler-webpack-plugin';
 
-// Project configuration
 const __filename = url.fileURLToPath(new URL(import.meta.url));
 const __dirname = path.dirname(__filename);
 
 export default {
   mode: 'production',
   output: {
+    // open in a browser a generated HTML file in the `dist/` directory
+    // then open browser console, if you see colored output, then the used module works
     path: path.join(__dirname, 'dist/'),
     clean: true,
   },
@@ -32,6 +30,7 @@ export default {
       },
       js: {
         filename: 'js/[name].js',
+        chunkFilename: 'js/[name].chunk.js',
       },
     }),
   ],

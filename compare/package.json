@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "node ./",
-    "build": "webpack build --node-env production"
+    "build:browser": "webpack build --node-env production"
   },
   "dependencies": {
     "@colors/colors": "1.6.0",

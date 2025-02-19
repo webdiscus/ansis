@@ -1175,9 +1175,7 @@ CJS\
   - [`cli-color`][cli-color]: `xterm(n)`
   - [`colors-cli`][colors-cli]: `x<n>`
 
-- `16m` - [Truecolor](#truecolor) methods, e.g.:
-  - [`ansis`][ansis]: `hex()`, `bgHex()`, `rgb()`, `bgRgb()`
-  - [`chalk`][chalk]: `hex()`, `bgHex()`, `rgb()`, `bgRgb()`
+- `16m` - [Truecolor](#truecolor) methods, e.g.: `hex()`, `bgHex()`, `rgb()`, `bgRgb()`
 
 - 🌐 - Colored output in [Chromium-based](#browsers-compatibility) browser console:
   - ✅ - colored output

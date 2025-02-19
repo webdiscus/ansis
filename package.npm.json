@@ -1,7 +1,7 @@
 {
 "name":"ansis",
 "version":"3.15.0",
-"description":"ANSI colors lib",
+"description":"ANSI color lib",
 "keywords":["ansi","color","cli"],
 "license":"ISC",
 "author":"webdiscus",

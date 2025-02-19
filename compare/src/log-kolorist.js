@@ -1,5 +1,11 @@
-import { bgGreen, red } from 'kolorist';
+import * as lib from 'kolorist';
+import { updatePageInfo } from './ansi-check.js';
 
-let label = (text) => bgGreen(text);
+window.onload = () => {
+  let test = lib.red('red');
+  updatePageInfo(test);
+};
 
-console.log(label(` Kolorist `) + red(` Red`));
+const label = (text) => lib.bgGreen(text);
+
+console.log(label(` Kolorist `) + lib.red(` Red`));

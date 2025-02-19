@@ -6,7 +6,7 @@
     <script src="./log-<%= pkg %>.js"></script>
   </head>
   <body>
-    <h1>Color output in the browser console</h1>
-    <p>Open browser console</p>
+    <h1>Open browser console</h1>
+    <p>Color output in the browser console using <b><%= pkg %></b> package: <span id="ansi-support"></span></p>
   </body>
 </html>

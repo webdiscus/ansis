@@ -1,11 +1,21 @@
 import lib from 'chalk';
 import spectrum from '../spectrum.js';
+import { updatePageInfo } from './ansi-check.js';
 
-let fallbackColors = '';
-spectrum.forEach(color => {fallbackColors += lib.hex(color)('█');});
 
-console.log(lib.bgGreen.whiteBright.bold` Chalk `+ lib.red` Red`);
-console.log(lib.bgGreen.whiteBright.bold` Chalk `+ lib.green` Green`);
-console.log(lib.bgGreen.whiteBright.bold` Chalk `+ lib.blue` Blue`);
-console.log(lib.bgGreen.whiteBright.bold` Chalk `+ lib.hex('#B57EDC')` TrueColor Lavenders`);
-console.log(fallbackColors);
+window.onload = () => {
+  let test = lib.red('red');
+  updatePageInfo(test);
+};
+
+const labelName = 'Chalk';
+const label = (text) => lib.bgGreen.whiteBright.bold(text);
+
+console.log(label(` ${labelName} `) + lib.red(` Red`));
+console.log(label(` ${labelName} `) + lib.green(` Green`));
+console.log(label(` ${labelName} `) + lib.blue(` Blue`));
+console.log(label(` ${labelName} `) + lib.hex('#B57EDC')(` TrueColor Lavenders`));
+
+let spectrumColors = '';
+spectrum.forEach(color => {spectrumColors += lib.hex(color)('█');});
+console.log(spectrumColors);

@@ -1,5 +1,21 @@
-import lib from 'colors-cli';
+import { updatePageInfo } from './ansi-check.js';
 
-let label = (text) => lib.green(text);
+const packageName = 'colors-cli';
 
-console.log(label(` colors-cli `) + lib.red(` Red`));
+import('colors-cli')
+.then(({ default: lib }) => main(lib))
+.catch((err) => {
+  updatePageInfo('', true);
+  console.log(err);
+});
+
+const main = (lib) => {
+  window.onload = () => {
+    let test = lib.red('red');
+    updatePageInfo(test);
+  };
+
+  const label = (text) => lib.green(text);
+
+  console.log(label(` ${packageName} `) + lib.red(` Red`));
+};

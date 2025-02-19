@@ -1,7 +1,23 @@
 // FATAL ERROR in ./node_modules/colorette/index.js
 // Can't resolve 'tty'...
-import lib from 'colorette';
+import { updatePageInfo } from './ansi-check.js';
 
-let label = (text) => lib.green(text);
+import('colorette')
+.then(({ default: lib }) => main(lib))
+.catch((err) => {
+  updatePageInfo('', true);
+  console.log(err);
+});
 
-console.log(label(` colorette `) + lib.red(` Red`));
+const packageName = 'Colorette';
+
+const main = (lib) => {
+  window.onload = () => {
+    let test = lib.red('red');
+    updatePageInfo(test);
+  };
+
+  const label = (text) => lib.green(text);
+
+  console.log(label(` ${packageName} `) + lib.red(` Red`));
+};

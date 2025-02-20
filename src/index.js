@@ -101,6 +101,9 @@ let createStyle = ({ _p: props }, { open, close }) => {
 
 const Ansis = function() {
   let self = {
+    // named export of the function to create new instance
+    Ansis: Ansis,
+
     /**
      * Whether the output supports ANSI colors.
      *
@@ -178,7 +181,6 @@ const ansis = new Ansis();
 
 // for distribution code, the export will be replaced (via @rollup/plugin-replace) with the following export:
 // module.exports = ansis;
-// module.exports.Ansis = Ansis;
 // ansis.default = ansis; // needs for tsc
 
 export { ansis as default, Ansis };

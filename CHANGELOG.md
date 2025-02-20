@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.16.0-beta.0 (2025-02-16)
+
+- refactor: micro optimisations for named exports to slight reduce the package size by ~40 bytes.
+
 ## 3.15.0 (2025-02-16)
 
 - feat: reduce the package size by ~200 bytes.

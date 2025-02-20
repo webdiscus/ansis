@@ -1,8 +1,11 @@
-import a, { Ansis } from './index.js';
+import a from './index.js';
 
-export { Ansis, a as default };
+// default export
+export default a;
 
+// named exports
 export const {
+  Ansis,
   // color functions
   ansi256,
   fg,

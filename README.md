@@ -1047,7 +1047,7 @@ npm run compare
     <td style='text-align:center'>✅</td>
     <td style='text-align:center'>✅</td>
     <td style='text-align:center'>✅</td>
-    <td style="text-align:left"><code>NO_COLOR</code><br><code>FORCE_COLOR</code><br><code>--no-color</code><br><code>--color</code></td>
+    <td style="text-align:left"><code>NO_COLOR</code><br><code>FORCE_COLOR</code><br><code>COLORTERM</code><br><code>--no-color</code><br><code>--color</code></td>
   </tr>
 
   <tr>

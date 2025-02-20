@@ -222,7 +222,21 @@ describe('style tests', () => {
 
   test(`reset in middle`, () => {
     const received = ansis.red('red ' + ansis.reset.underline('underline') + ' text');
+
+    // red + underline + text (in white)
+    console.log(received);
     const expected = '\x1b[31mred \x1b[0m\x1b[4munderline\x1b[24m\x1b[0m text\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`reset in middle only`, () => {
+    const { red } = ansis;
+    const received = red`red ${red.reset.underline`underline`} red`
+
+    // red + underline + red
+    console.log(received);
+    const expected = '\x1b[31mred \x1b[31m\x1b[0m\x1b[4munderline\x1b[24m\x1b[0m\x1b[31m red\x1b[39m';
+
     expect(received).toEqual(expected);
   });
 

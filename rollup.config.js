@@ -57,7 +57,7 @@ export default [
         'exports.Ansis = Ansis': 'module.exports = ansis',
         // then on the next line can be named and default export,
         // `ansis.default = ansis` is needed for tsc using default import, e.g. `import ansis from 'ansis'`
-        'exports.default = ansis': 'module.exports.Ansis = Ansis, ansis.default = ansis',
+        'exports.default = ansis': 'ansis.default = ansis',
       }),
       terser(terserOptions),
       copy({

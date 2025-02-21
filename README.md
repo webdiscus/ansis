@@ -1247,20 +1247,21 @@ c.red(1/0)     // 'Infinity' in red
 
 ## Compare the size of most popular packages
 
-| Npm package                    |          Dependencies          |                                              Unpacked Size |                                                          Download size | Code size |
-| :----------------------------- |:------------------------------:|-----------------------------------------------------------:|-----------------------------------------------------------------------:|----------:|
-| [`picocolors`][picocolors]     |      [0][npm-picocolors]       |                                   [6.4 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |    2.6 kB |
-| [`ansis`][ansis]               |         [0][npm-ansis]         |                                        [6.6 kB][npm-ansis] |             [3.6 kB](https://arve0.github.io/npm-download-size/#ansis) |    3.2 kB |
-| [`tinyrainbow`][tinyrainbow]   |   [0][npm-tinyrainbow]         |                                  [8.1 kB][npm-tinyrainbow] |       [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |    2.8 kB |
-| [`colorette`][colorette]       |       [0][npm-colorette]       |                                   [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |    3.4 kB |
-| [`kleur`][kleur]               |         [0][npm-kleur]         |                                       [20.3 kB][npm-kleur] |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |    2.7 kB |
-| [`ansi-colors`][ansi-colors]   |      [0][npm-ansi-colors]      |                                 [26.1 kB][npm-ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |    5.8 kB |
-| [`kolorist`][kolorist]         |       [0][npm-kolorist]        |                                    [51.0 kB][npm-kolorist] |          [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |    6.8 kB |
-| [`colors.js`][colors.js]       |       [0][npm-colors.js]       |                                   [41.5 kB][npm-colors.js] | [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |   18.1 kB |
-| [`chalk`][chalk]               |         [0][npm-chalk]         |                                       [43.7 kB][npm-chalk] |            [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |   16.4 kB |
-| [`cli-color`][cli-color]       |      [`5`][npm-cli-color]      |   [754.0 kB](https://packagephobia.com/result?p=cli-color) |       [216.8 kB](https://arve0.github.io/npm-download-size/#cli-color) |   12.1 kB |
-| [`colors-cli`][colors-cli]     |      [0][npm-colors-cli]       |                                 [511.0 kB][npm-colors-cli] |      [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |    8.7 kB |
+| Npm package                    |          Dependencies          | Is Minified         |                                              Unpacked Size |                                                          Download size | Code size |
+| :----------------------------- |:------------------------------:|---------------------|-----------------------------------------------------------:|-----------------------------------------------------------------------:|----------:|
+| [`picocolors`][picocolors]     |      [0][npm-picocolors]       | no                  |                                   [6.4 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |    2.6 kB |
+| [`ansis`][ansis]               |         [0][npm-ansis]         | uglified & minified |                                        [6.6 kB][npm-ansis] |             [3.6 kB](https://arve0.github.io/npm-download-size/#ansis) |    3.2 kB |
+| [`tinyrainbow`][tinyrainbow]   |   [0][npm-tinyrainbow]         | uglified            |                                  [8.1 kB][npm-tinyrainbow] |       [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |    2.8 kB |
+| [`colorette`][colorette]       |       [0][npm-colorette]       | no                  |                                   [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |    3.4 kB |
+| [`kleur`][kleur]               |         [0][npm-kleur]         | no                  |                                       [20.3 kB][npm-kleur] |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |    2.7 kB |
+| [`ansi-colors`][ansi-colors]   |      [0][npm-ansi-colors]      | no                  |                                 [26.1 kB][npm-ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |    5.8 kB |
+| [`kolorist`][kolorist]         |       [0][npm-kolorist]        | no                  |                                    [51.0 kB][npm-kolorist] |          [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |    6.8 kB |
+| [`colors.js`][colors.js]       |       [0][npm-colors.js]       | no                  |                                   [41.5 kB][npm-colors.js] | [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |   18.1 kB |
+| [`chalk`][chalk]               |         [0][npm-chalk]         | no                  |                                       [43.7 kB][npm-chalk] |            [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |   16.4 kB |
+| [`cli-color`][cli-color]       |      [`5`][npm-cli-color]      | no                  |   [754.0 kB](https://packagephobia.com/result?p=cli-color) |       [216.8 kB](https://arve0.github.io/npm-download-size/#cli-color) |   12.1 kB |
+| [`colors-cli`][colors-cli]     |      [0][npm-colors-cli]       | no                  |                                 [511.0 kB][npm-colors-cli] |      [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |    8.7 kB |
 
+**Is Minified:** Indicates whether the distributed npm package is minified.\
 **Unpacked Size:** The size of the npm package in the `node_modules/` directory, (incl. dependencies).\
 **Download size:** The size of the downloaded `*.tgz` package file.\
 **Code size**: The size of distributed code that will be loaded via `require` or `import` into your app.

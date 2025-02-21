@@ -88,18 +88,6 @@ The most popular libraries for styling terminal output using ANSI colors, simila
 [NestJS](https://github.com/nestjs/nest), [Facebook/StyleX](https://github.com/facebook/stylex), [Sequelize](https://github.com/sequelize/sequelize), [Salesforce](https://github.com/salesforcecli/cli), [Oclif](https://github.com/oclif/core), [unjs/Webpackbar](https://github.com/unjs/webpackbar), [unjs/Unplugin](https://github.com/unjs/unplugin)
 
 
-<!--
-## 🔆 What's New in v3
-
-- **NEW** added detection of supported color space: Truecolor, 256 colors, 16 colors, no colors (black & white)
-- **NEW** added fallback to supported color space: Truecolor —> 256 colors —> 16 colors —> no colors
-
-> #### ⚠️ Warning
->
-> The `v3` has the **BREAKING CHANGES** (removed not widely supported styles and DEPRECATIONS).\
-> For details see the [changelog](https://github.com/webdiscus/ansis/blob/master/CHANGELOG.md#v3-0-0).
--->
-
 <a id="why-ansis" name="why-ansis"></a>
 
 ## ✨ [Why use Ansis](#switch-to-ansis)
@@ -118,7 +106,7 @@ which focused on small size and speed while providing the similar functionality.
 The package size in `node_modules` directory:
 
 - `picocolors`: [6.4 kB][npm-picocolors] - A micro library with only basic features.
-- `аnsis`: [6.6 kB][npm-ansis] - A powerful library containing all the features you need.
+- `аnsis`: [6.8 kB][npm-ansis] - A powerful library containing all the features you need.
 - `chalk`:  [44.2 kB][npm-chalk] - Provides similar functionality to Ansis.
 
 ### ⚡ Performance
@@ -226,7 +214,7 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
   Spoiler: Both Ansis and Picocolors are more than [fast enough](#bench-picocolors-complex).
   - ✅ Picocolors
   - ❌ Ansis
-- Does it matter if the unpacked size is [6.4 kB][npm-picocolors] or [6.6 kB][npm-ansis], a difference of  **0.2 kB**?
+- Does it matter if the unpacked size is [6.4 kB][npm-picocolors] or [6.8 kB][npm-ansis], a difference of **0.4 kB**?
   - ✅ Picocolors
   - ❌ Ansis
 - Does support for [ANSI 256 colors](#256-colors) or [Truecolor](#truecolor) with [fallback](#fallback) matter?
@@ -1072,7 +1060,7 @@ npm run compare
 
 <tr>
 <td style="text-align:left"><a href="https://github.com/medikoo/cli-color"><code>cli-color</code></a><br><code>CJS</code><br><nobr><code>❌ named import</code></nobr><br><code>✅ standard</code></td>
-<td style="text-align:center">✅ ✅ ❌ ☠️</td>
+<td style="text-align:center">✅ ✅ ❌ 🛑</td>
 <td>→16<br>→b&amp;w</td>
 <td style="text-align:center">✅</td>
 <td style="text-align:center">❌</td>
@@ -1082,7 +1070,7 @@ npm run compare
 
 <tr>
 <td style="text-align:left"><a href="https://github.com/jaywcjlove/colors-cli"><code>colors-cli</code></a><br><code>CJS</code><br><nobr><code>❌ named import</code></nobr><br><code>❌ standard</code></td>
-<td style="text-align:center">✅ ✅ ❌ ☠️</td>
+<td style="text-align:center">✅ ✅ ❌ 🛑</td>
 <td>→b&amp;w</td>
 <td style="text-align:center">✅</td>
 <td style="text-align:center">❌</td>
@@ -1092,7 +1080,7 @@ npm run compare
 
 <tr>
 <td style="text-align:left"><a href="https://github.com/DABH/colors.js"><code>colors.js</code></a><br><code>CJS</code><br><nobr><code>❌ named import</code></nobr><br><code>❌ standard</code></td>
-<td style="text-align:center">✅ ❌ ❌ ☠️</td>
+<td style="text-align:center">✅ ❌ ❌ 🛑</td>
 <td>→b&amp;w</td>
 <td style="text-align:center">✅</td>
 <td style="text-align:center">❌</td>
@@ -1112,7 +1100,7 @@ npm run compare
 
 <tr>
 <td style="text-align:left"><a href="https://github.com/jorgebucaran/colorette"><code>colorette</code></a><br><code>ESM</code> <code>CJS</code><br><nobr><code>✅ named import</code></nobr><br><code>✅ standard</code></td>
-<td style="text-align:center">✅ ❌ ❌ ☠️</td>
+<td style="text-align:center">✅ ❌ ❌ 🛑</td>
 <td>→b&amp;w</td>
 <td style="text-align:center">❌</td>
 <td style="text-align:center">❌</td>
@@ -1180,7 +1168,7 @@ CJS\
 - 🌐 - Colored output in [Chromium-based](#browsers-compatibility) browser console:
   - ✅ - colored output
   - ❌ - b&w output
-  - ☠️ - **fatal error** by compilation or in runtime
+  - 🛑 - **fatal error** by compilation or in runtime
 
 - [Fallback](#fallback) - Truecolor → 256 colors → 16 colors → no colors
 
@@ -1247,19 +1235,19 @@ c.red(1/0)     // 'Infinity' in red
 
 ## Compare the size of most popular packages
 
-| Npm package                    |          Dependencies          | Is Minified         |                                              Unpacked Size |                                                          Download size | Code size |
-| :----------------------------- |:------------------------------:|---------------------|-----------------------------------------------------------:|-----------------------------------------------------------------------:|----------:|
-| [`picocolors`][picocolors]     |      [0][npm-picocolors]       | no                  |                                   [6.4 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |    2.6 kB |
-| [`ansis`][ansis]               |         [0][npm-ansis]         | uglified & minified |                                        [6.6 kB][npm-ansis] |             [3.6 kB](https://arve0.github.io/npm-download-size/#ansis) |    3.2 kB |
-| [`tinyrainbow`][tinyrainbow]   |   [0][npm-tinyrainbow]         | uglified            |                                  [8.1 kB][npm-tinyrainbow] |       [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |    2.8 kB |
-| [`colorette`][colorette]       |       [0][npm-colorette]       | no                  |                                   [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |    3.4 kB |
-| [`kleur`][kleur]               |         [0][npm-kleur]         | no                  |                                       [20.3 kB][npm-kleur] |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |    2.7 kB |
-| [`ansi-colors`][ansi-colors]   |      [0][npm-ansi-colors]      | no                  |                                 [26.1 kB][npm-ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |    5.8 kB |
-| [`kolorist`][kolorist]         |       [0][npm-kolorist]        | no                  |                                    [51.0 kB][npm-kolorist] |          [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |    6.8 kB |
-| [`colors.js`][colors.js]       |       [0][npm-colors.js]       | no                  |                                   [41.5 kB][npm-colors.js] | [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |   18.1 kB |
-| [`chalk`][chalk]               |         [0][npm-chalk]         | no                  |                                       [43.7 kB][npm-chalk] |            [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |   16.4 kB |
-| [`cli-color`][cli-color]       |      [`5`][npm-cli-color]      | no                  |   [754.0 kB](https://packagephobia.com/result?p=cli-color) |       [216.8 kB](https://arve0.github.io/npm-download-size/#cli-color) |   12.1 kB |
-| [`colors-cli`][colors-cli]     |      [0][npm-colors-cli]       | no                  |                                 [511.0 kB][npm-colors-cli] |      [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |    8.7 kB |
+| Npm package                    |          Dependencies          | Is Minified         |                                            Unpacked Size |                                                          Download size | Code size |
+| :----------------------------- |:------------------------------:|---------------------|---------------------------------------------------------:|-----------------------------------------------------------------------:|----------:|
+| [`picocolors`][picocolors]     |      [0][npm-picocolors]       | no                  |                                 [6.4 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |    2.6 kB |
+| [`ansis`][ansis]               |         [0][npm-ansis]         | uglified & minified |                                      [6.8 kB][npm-ansis] |             [3.6 kB](https://arve0.github.io/npm-download-size/#ansis) |    3.2 kB |
+| [`tinyrainbow`][tinyrainbow]   |   [0][npm-tinyrainbow]         | uglified            |                                [8.1 kB][npm-tinyrainbow] |       [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |    2.8 kB |
+| [`colorette`][colorette]       |       [0][npm-colorette]       | no                  |                                 [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |    3.4 kB |
+| [`kleur`][kleur]               |         [0][npm-kleur]         | no                  |                                     [20.3 kB][npm-kleur] |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |    2.7 kB |
+| [`ansi-colors`][ansi-colors]   |      [0][npm-ansi-colors]      | no                  |                               [26.1 kB][npm-ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |    5.8 kB |
+| [`kolorist`][kolorist]         |       [0][npm-kolorist]        | no                  |                                  [51.0 kB][npm-kolorist] |          [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |    6.8 kB |
+| [`colors.js`][colors.js]       |       [0][npm-colors.js]       | no                  |                                 [41.5 kB][npm-colors.js] | [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |   18.1 kB |
+| [`chalk`][chalk]               |         [0][npm-chalk]         | no                  |                                     [43.7 kB][npm-chalk] |            [13.1 kB](https://arve0.github.io/npm-download-size/#chalk) |   16.4 kB |
+| [`cli-color`][cli-color]       |      [`5`][npm-cli-color]      | no                  | [754.0 kB](https://packagephobia.com/result?p=cli-color) |       [216.8 kB](https://arve0.github.io/npm-download-size/#cli-color) |   12.1 kB |
+| [`colors-cli`][colors-cli]     |      [0][npm-colors-cli]       | no                  |                               [511.0 kB][npm-colors-cli] |      [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |    8.7 kB |
 
 **Is Minified:** Indicates whether the distributed npm package is minified.\
 **Unpacked Size:** The size of the npm package in the `node_modules/` directory, (incl. dependencies).\

@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.16.0 (2025-02-21)
+
+- chore: after testing bump version to release version 3.16.0
+
 ## 3.16.0-beta.3 (2025-02-21)
 
 - chore: revert the full text of ISC license from https://opensource.org/license/isc-license-txt

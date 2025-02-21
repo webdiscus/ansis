@@ -1,6 +1,10 @@
 # Changelog
 
-## 3.16.0-beta.0 (2025-02-16)
+## 3.16.0-beta.3 (2025-02-21)
+
+- chore: revert the full text of ISC license from https://opensource.org/license/isc-license-txt
+
+## 3.16.0-beta.0 (2025-02-19)
 
 - refactor: micro optimisations for named exports to slight reduce the package size by ~40 bytes.
 

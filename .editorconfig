@@ -12,3 +12,6 @@ tab_width = 2
 [{*.htm,*.html,*.md}]
 indent_size = 2
 tab_width = 2
+
+[LICENSE]
+insert_final_newline = false

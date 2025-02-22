@@ -1250,11 +1250,11 @@ c.red(1/0)     // 'Infinity' in red
 
 **Legend**
 
-- **Dependencies** Number of dependencies in the package.
+- **Dependencies:** Number of dependencies in the package.
 - **Is Minified:** Indicates whether the distributed npm package is minified.
 - **Unpacked Size:** The size of the npm package in the `node_modules/` directory, (incl. dependencies).
 - **Tarball size:** The size of the downloaded `*.tgz` package file.\
-  You can check a package with following cmd:
+  You can check the package size with the following command:
   ```bash
   curl -s -o package.tgz $(npm view <package-name> dist.tarball) && echo "Tarball size: $(stat -f%z package.tgz | awk '{printf "%.2f", $1/1024}') kB"
   ```

@@ -99,9 +99,11 @@ function showSupportOfNestedTemplateStrings() {
 
   // examples for screenshot in readme (Edge cases > Nested template strings)
   console.log();
-  console.log('✅  ansis ', ansis.red`R ${ansis.green`G ${ansis.blueBright`B`} G`} R`);
-  console.log('❌  chalk ', chalk.red`R ${chalk.green`G ${chalk.blueBright`B`} G`} R`);
-  console.log('❌  pico  ', pico.red`R ${pico.green`G ${pico.blueBright`B`} G`} R`);
+  console.log('✅  ansis ', ansis.red`R ${ansis.green`G ${ansis.blue`B`} G`} R`);
+  console.log('❌  chalk ', chalk.red`R ${chalk.green`G ${chalk.blue`B`} G`} R`);
+  console.log('❌  pico  ', pico.red`R ${pico.green`G ${pico.blue`B`} G`} R`);
+  console.log('❌  kleur  ', kleur.red`R ${kleur.green`G ${kleur.blue`B`} G`} R`);
+  console.log('❌  kleur/colors  ', kleurColors.red`R ${kleurColors.green`G ${kleurColors.blue`B`} G`} R`);
 }
 
 function showSupportOfBreakStyleAtNewLine() {

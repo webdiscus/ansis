@@ -19,3 +19,6 @@ Hello World!
 [100m bgGray [49m
 [106m[93m bgCyanBright [39m[49m
 [107m[3m bgWhiteBright [23m[49m
+[31mtrue[39m
+[31mfalse[39m
+[31mtrue,false[39m

@@ -66,3 +66,8 @@ log(bgGray` bgGray `);
 
 log(bgCyanBright.yellowBright` bgCyanBright `);
 log(ansis.bgWhiteBright.italic` bgWhiteBright `);
+
+// support boolean and array types
+log(ansis.red(true))
+log(ansis.red(false))
+log(ansis.red([true, false]))

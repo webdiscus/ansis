@@ -56,6 +56,7 @@ let styleData = {
   underline: esc(4, 24),
   inverse: esc(7, 27),
   hidden: esc(8, 28),
+  strikethrough: esc(9, 29),
 };
 
 // generate ANSI 16 colors dynamically to reduce the code
@@ -78,9 +79,6 @@ styleData.grey = styleData.gray = esc(90, closeCode);
 
 // UK and US spelling alias for bgBlackBright
 styleData.bgGrey = styleData.bgGray = esc(100, bgCloseCode);
-
-// alias for strikethrough
-styleData.strikethrough = styleData.strike = esc(9, 29);
 
 export {
   hasColors,

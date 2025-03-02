@@ -202,47 +202,16 @@ describe('handling numbers', () => {
 });
 
 describe('style tests', () => {
-  test(`ansis.visible('foo')`, () => {
-    const received = ansis.visible('foo');
-    const expected = 'foo';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
   test(`visible with template literal`, () => {
     const received = ansis.visible`foo ${green`bar ${red`baz`} bar`} foo`;
     const expected = 'foo \x1b[32mbar \x1b[31mbaz\x1b[32m bar\x1b[39m foo';
     expect(esc(received)).toEqual(esc(expected));
   });
 
-  test(`ansis.reset()`, () => {
-    const received = ansis.reset();
-    const expected = '\x1b[0m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
 
-  test(`reset in middle`, () => {
-    const received = ansis.red('red ' + ansis.reset.underline('underline') + ' text');
-
-    // red + underline + text (in white)
-    console.log(received);
-    const expected = '\x1b[31mred \x1b[0m\x1b[4munderline\x1b[24m\x1b[0m text\x1b[39m';
-    expect(received).toEqual(expected);
-  });
-
-  test(`reset in middle only`, () => {
-    const { red } = ansis;
-    const received = red`red ${red.reset.underline`underline`} red`
-
-    // red + underline + red
-    console.log(received);
-    const expected = '\x1b[31mred \x1b[31m\x1b[0m\x1b[4munderline\x1b[24m\x1b[0m\x1b[31m red\x1b[39m';
-
-    expect(received).toEqual(expected);
-  });
-
-  test(`ansis.green('foo', 'bar')`, () => {
-    const received = ansis.green(['foo', 'bar'].join(' '));
-    const expected = '\x1b[32mfoo bar\x1b[39m';
+  test(`ansis.green(['foo', 'bar'])`, () => {
+    const received = ansis.green(['foo', 'bar']);
+    const expected = '\x1b[32mfoo,bar\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
 
@@ -293,31 +262,48 @@ describe('style tests', () => {
     const expected = '\x1b[48;5;97mfoo\x1b[49m';
     expect(esc(received)).toEqual(esc(expected));
   });
-
-  // experimental link: not widely supported
-  // test(`ansis.link('foo')`, () => {
-  //   const received = ansis.link('https://github.com/webdiscus/ansis')('foo');
-  //   const expected = '\x1b]8;;https://github.com/webdiscus/ansis\x07foo\x1b]8;;\x07';
-  //   expect(esc(received)).toEqual(esc(expected));
-  // });
 });
 
-describe('style new line', () => {
-  test(`new line LF, linux `, () => {
-    const received = ansis.green('Hello\nWorld');
-    const expected = '\x1b[32mHello\x1b[39m\n\x1b[32mWorld\x1b[39m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
+describe('using newline', () => {
   test(`new line CRLF, windows`, () => {
     const received = ansis.green('Hello\r\nWorld');
     const expected = '\x1b[32mHello\x1b[39m\r\n\x1b[32mWorld\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
 
-  test(`new line LF in template strings`, () => {
+  test(`newline LF, linux `, () => {
+    const received = ansis.green('Hello\nWorld');
+    const expected = '\x1b[32mHello\x1b[39m\n\x1b[32mWorld\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`newline LF in template string`, () => {
+    const received = ansis.green`Hello
+World`;
+    const expected = '\x1b[32mHello\x1b[39m\n\x1b[32mWorld\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`newline in template string`, () => {
     const received = ansis.green`Hello\nWorld`;
     const expected = '\x1b[32mHello\x1b[39m\n\x1b[32mWorld\x1b[39m';
+    console.log(received);
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  // 1)
+  test(`newline in function used template string`, () => {
+    const received = ansis.green(`Hello\nWorld`);
+    const expected = '\x1b[32mHello\x1b[39m\n\x1b[32mWorld\x1b[39m';
+    //console.log(received);
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  // 2)
+  test(`newline as expression in template string`, () => {
+    const received = ansis.green`Hello${'\n'}World`;
+    const expected = '\x1b[32mHello\x1b[39m\n\x1b[32mWorld\x1b[39m';
+    //console.log(received);
     expect(esc(received)).toEqual(esc(expected));
   });
 
@@ -328,12 +314,13 @@ describe('style new line', () => {
   });
 
   test(`multiple new line`, () => {
-    const received = ansis.bgGreen('\nHello\nNew line\nNext new line.\n');
+    const received = ansis.bgGreen(`\nHello\nNew line\nNext new line.\n`);
     const expected = `\x1b[42m\x1b[49m
 \x1b[42mHello\x1b[49m
 \x1b[42mNew line\x1b[49m
 \x1b[42mNext new line.\x1b[49m
 \x1b[42m\x1b[49m`;
+    //console.log(received);
     expect(esc(received)).toEqual(esc(expected));
   });
 
@@ -344,6 +331,63 @@ describe('style new line', () => {
 \x1b[42mNew line\x1b[49m
 \x1b[42mNext new line.\x1b[49m
 \x1b[42m\x1b[49m`;
+    console.log(received);
+    expect(esc(received)).toEqual(esc(expected));
+  });
+});
+
+describe('Sequence in template literals', () => {
+  test(`Newline escape`, () => {
+    const received = ansis.red`foo\nbar`;
+    const expected = ansis.red(`foo\nbar`);
+    //console.log(received);
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`Newline escape, prev\\next`, () => {
+    const received = ansis.red`prev\\next`;
+    const expected = ansis.red(`prev\\next`);
+    //console.log(received);
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`Newline escape, \\nice`, () => {
+    const received = ansis.red`\\nice`;
+    const expected = ansis.red(`\\nice`);
+    //console.log(received);
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`Tab escape`, () => {
+    const received = ansis.red`foo\tbar`;
+    const expected = ansis.red(`foo\tbar`);
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`Identity (pointless) escape`, () => {
+    const received = ansis.red`\p`;
+    const expected = ansis.red(`\p`);
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`Backslash escape`, () => {
+    const received = ansis.red`\\`;
+    const expected = ansis.red(`\\`);
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`Escape Sequence`, () => {
+    const received = ansis.green`\\new\\next\\tab`;
+    const expected = '\x1b[32m\\new\\next\\tab\x1b[39m';
+    console.log(received);
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`Not Escape Sequence`, () => {
+    const received = ansis.green`\nnew\nnext\ttab`;
+    const expected = '\x1b[32m\x1b[39m\n' +
+      '\x1b[32mnew\x1b[39m\n' +
+      '\x1b[32mnext\ttab\x1b[39m';
     console.log(received);
     expect(esc(received)).toEqual(esc(expected));
   });
@@ -384,12 +428,6 @@ describe('advanced features tests', () => {
 });
 
 describe('alias tests', () => {
-  test(`strike == strikethrough`, () => {
-    const received = ansis.strike('foo');
-    const expected = ansis.strikethrough('foo');
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
   test(`gray == blackBright`, () => {
     const received = ansis.gray('foo');
     const expected = ansis.blackBright('foo');
@@ -663,6 +701,90 @@ describe('base ANSI 16 colors', () => {
     const received = ansis.bgWhiteBright('foo');
     const expected = '\x1b[107mfoo\x1b[49m';
     expect(esc(received)).toEqual(esc(expected));
+  });
+});
+
+describe('styles', () => {
+  test(`dim`, () => {
+    const received = ansis.dim('foo');
+    console.log(received);
+    const expected = '\x1b[2mfoo\x1b[22m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`bold`, () => {
+    const received = ansis.bold('foo');
+    console.log(received);
+    const expected = '\x1b[1mfoo\x1b[22m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`italic`, () => {
+    const received = ansis.italic('foo');
+    console.log(received);
+    const expected = '\x1b[3mfoo\x1b[23m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`underline`, () => {
+    const received = ansis.underline('foo');
+    console.log(received);
+    const expected = '\x1b[4mfoo\x1b[24m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`strikethrough`, () => {
+    const received = ansis.strikethrough('foo');
+    console.log(received);
+    const expected = '\x1b[9mfoo\x1b[29m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`inverse`, () => {
+    const received = ansis.inverse('foo');
+    console.log(received);
+    const expected = '\x1b[7mfoo\x1b[27m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`visible`, () => {
+    const received = ansis.visible('foo');
+    console.log(received);
+    const expected = 'foo';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`hidden`, () => {
+    const received = ansis.hidden('foo');
+    console.log(received);
+    const expected = '\x1b[8mfoo\x1b[28m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`reset fn`, () => {
+    const received = ansis.reset();
+    const expected = '\x1b[0m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`reset in middle`, () => {
+    const received = ansis.red('red ' + ansis.reset.underline('underline') + ' text');
+
+    // red + underline + text (in white)
+    console.log(received);
+    const expected = '\x1b[31mred \x1b[0m\x1b[4munderline\x1b[24m\x1b[0m text\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`reset in middle only`, () => {
+    const { red } = ansis;
+    const received = red`red ${red.reset.underline`underline`} red`
+
+    // red + underline + red
+    console.log(received);
+    const expected = '\x1b[31mred \x1b[31m\x1b[0m\x1b[4munderline\x1b[24m\x1b[0m\x1b[31m red\x1b[39m';
+
+    expect(received).toEqual(expected);
   });
 });
 

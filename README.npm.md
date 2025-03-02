@@ -1,3 +1,3 @@
 ![](docs/npm.png)
 
-ANSI color lib. [Docs on GitHub](../../)
+ANSI colors library - [Docs on GitHub](../../)

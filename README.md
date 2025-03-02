@@ -74,7 +74,7 @@ The most popular libraries for styling terminal output using ANSI colors, simila
 - Automatically detects [color support](#color-support) across a wide range of [environments](#color-support)
 - Supports [environment variables](#cli-vars) [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color) and [flags](#cli-flags) `--no-color` `--color`
 - Supports [`COLORTERM`](#using-env-colorterm) variable to test applications with 16, 256, or true-color
-- [Correct style break](#new-line) at the `end of line` when used `\n` in string `'A\nB'` or template literals ``` `A\nB` ```
+- [Correct style break](#new-line) at the `end of line` when used `\n` in string, e.g. `red('Hello\nWorld')`
 - Zero dependencies
 - Test coverage 100%. Long term support.
 
@@ -478,27 +478,26 @@ Output:\
 
 ## Base ANSI 16 colors and styles
 
-Colors and styles have standard names used by many popular libraries, such
-as [chalk], [colorette], [picocolors], [kleur].
+Colors and styles have standard names used by many popular libraries.
 
-| Foreground colors                                         | Background colors                                               | Styles                                  |
-|:----------------------------------------------------------|:----------------------------------------------------------------|-----------------------------------------|
-| `black`                                                   | `bgBlack`                                                       | `dim`                                   |
-| `red`                                                     | `bgRed`                                                         | **`bold`**                              |
-| `green`                                                   | `bgGreen`                                                       | _`italic`_                              |
-| `yellow`                                                  | `bgYellow`                                                      | <u>`underline`</u>                      |
-| `blue`                                                    | `bgBlue`                                                        | <s>`strikethrough`</s> (alias `strike`) |
-| `magenta`                                                 | `bgMagenta`                                                     | `inverse`                               |
-| `cyan`                                                    | `bgCyan`                                                        | `visible`                               |
-| `white`                                                   | `bgWhite`                                                       | `hidden`                                |
-| `blackBright`<br>aliases:<br>`grey`<br>`gray` US spelling | `bgBlackBright`<br>aliases:<br>`bgGrey`<br>`bgGray` US spelling | `reset`                                 |
-| `redBright`                                               | `bgRedBright`                                                   |                                         |
-| `greenBright`                                             | `bgGreenBright`                                                 |                                         |
-| `yellowBright`                                            | `bgYellowBright`                                                |                                         |
-| `blueBright`                                              | `bgBlueBright`                                                  |                                         |
-| `magentaBright`                                           | `bgMagentaBright`                                               |                                         |
-| `cyanBright`                                              | `bgCyanBright`                                                  |                                         |
-| `whiteBright`                                             | `bgWhiteBright`                                                 |                                         |
+| Foreground colors                                         | Background colors                                               | Styles                  |
+|:----------------------------------------------------------|:----------------------------------------------------------------|-------------------------|
+| `black`                                                   | `bgBlack`                                                       | `dim`                   |
+| `red`                                                     | `bgRed`                                                         | **`bold`**              |
+| `green`                                                   | `bgGreen`                                                       | _`italic`_              |
+| `yellow`                                                  | `bgYellow`                                                      | <u>`underline`</u>      |
+| `blue`                                                    | `bgBlue`                                                        | <s>`strikethrough`</s>  |
+| `magenta`                                                 | `bgMagenta`                                                     | `inverse`               |
+| `cyan`                                                    | `bgCyan`                                                        | `visible`               |
+| `white`                                                   | `bgWhite`                                                       | `hidden`                |
+| `blackBright`<br>aliases:<br>`grey`<br>`gray` US spelling | `bgBlackBright`<br>aliases:<br>`bgGrey`<br>`bgGray` US spelling | `reset`                 |
+| `redBright`                                               | `bgRedBright`                                                   |                         |
+| `greenBright`                                             | `bgGreenBright`                                                 |                         |
+| `yellowBright`                                            | `bgYellowBright`                                                |                         |
+| `blueBright`                                              | `bgBlueBright`                                                  |                         |
+| `magentaBright`                                           | `bgMagentaBright`                                               |                         |
+| `cyanBright`                                              | `bgCyanBright`                                                  |                         |
+| `whiteBright`                                             | `bgWhiteBright`                                                 |                         |
 
 <a id="extend-colors" name="extend-colors"></a>
 
@@ -719,7 +718,7 @@ Supports correct style break at the `end of line`.
 ```js
 import { bgGreen } from 'ansis';
 
-console.log(bgGreen`\nAnsis\nNew Line\nNext New Line\n`);
+console.log(bgGreen(`\nAnsis\nNew Line\nNext New Line\n`));
 ```
 
 ![output](https://github.com/webdiscus/ansis/raw/master/docs/img/break-style-nl.png?raw=true "break styles at EOL")
@@ -1286,18 +1285,18 @@ npm run demo
 
 Check the minimum version of your tool required for compatibility with the latest Ansis.
 
-| Tool              | Version  | Compatibility | Supports |
-|-------------------|----------|---------------|----------|
-| **Node.js**       | **v14+** | ✅ Full support | CJS, ESM |
-| **TypeScript/tsc**| **v4.5+** | ✅ Full support | CJS, ESM |
-| **esbuild**       | **v0.8.0+** | ✅ Full support | CJS, ESM |
-| **swc**           | **v1.2.0+** | ✅ Full support | CJS, ESM, FAUX |
-| **tsup**          | **v4.0.0+** | ✅ Full support | CJS, ESM, FAUX |
-| **tsx**           | **v3.0.0+** | ✅ Full support | CJS, ESM |
-| **Rollup**        | **v2.0.0+** | ✅ Full support | CJS, ESM |
-| **Vite**          | **v2.5.0+** | ✅ Full support | ESM |
-| **Turbo**         | **v1.0.0+** | ✅ Full support | CJS, ESM |
-| **Webpack**       | **v5.0.0+** | ✅ Full support | CJS, ESM |
+| Tool              | Version   | Compatibility | Supports |
+|-------------------|-----------|---------------|----------|
+| **Node.js**       | **v14+**  | ✅ Full support | CJS, ESM |
+| **TypeScript/tsc**| **v5.0+** | ✅ Full support | CJS, ESM |
+| **esbuild**       | **v0.8+** | ✅ Full support | CJS, ESM |
+| **swc**           | **v1.2+** | ✅ Full support | CJS, ESM, FAUX |
+| **tsup**          | **v4.0+** | ✅ Full support | CJS, ESM, FAUX |
+| **tsx**           | **v3.0+** | ✅ Full support | CJS, ESM |
+| **Rollup**        | **v2.0+** | ✅ Full support | CJS, ESM |
+| **Vite**          | **v2.5+** | ✅ Full support | ESM |
+| **Turbo**         | **v1.0+** | ✅ Full support | CJS, ESM |
+| **Webpack**       | **v5.0+** | ✅ Full support | CJS, ESM |
 
 **Supports:**
 - **CJS**: CommonJS module support.

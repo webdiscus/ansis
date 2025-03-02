@@ -14,8 +14,7 @@ type AnsiStyles =
   | 'dim' /** Faint style (low intensity or dim). */
   | 'italic' /** <i>Italic</i> style. (Not widely supported) */
   | 'underline' /** Underline style. (Not widely supported) */
-  | 'strikethrough' /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) */
-  | 'strike' /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) Alias for `strikethrough`. */;
+  | 'strikethrough' /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) */;
 
 // BasicColors
 type BC = 'black' | 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
@@ -228,7 +227,6 @@ export {
   a as italic,
   a as underline,
   a as strikethrough,
-  a as strike,
 
   // Foreground colors
   a as black,

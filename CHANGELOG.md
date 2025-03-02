@@ -1,12 +1,31 @@
 # Changelog
 
+## 4.0.0-beta.1 (2025-03-03)
+
+- feat: added support for escape sequences in template literals.\
+  Template tag returns the same as the standard function call result.
+
+- feat(BREAKING CHANGE): remove of non-standard `strike` style (alias for `strikethrough`)
+  - No usage of `ansis.strike()` was found in public GitHub repositories.
+  - Most popular packages use the standard `strikethrough` style name.
+
+### Migration to `v4`
+
+If you still use `ansis.strike`, replace it with the standard `ansis.strikethrough`.
+
+## 4.0.0-beta.0 (2025-03-02)
+
+Deprecated.
+
+---
+
 ## 3.17.0 (2025-03-02)
 
-- feat: add support for old `typescript` < `5.6` to fix the error TS2526:
+- feat: add support for `typescript` < `5.6` to fix TS2526 error:
   ```
   A 'this' type is available only in a non-static member of a class or interface.
   ```
-  NOTE: if you use already `typescript` >= `5.6`, you can skip this version.
+  NOTE: If you are already using TypeScript >= 5.6, this update is not required.
 
 ## 3.16.0 (2025-02-21)
 

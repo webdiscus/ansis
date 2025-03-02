@@ -20,7 +20,7 @@ import {
 import { hexToRgb } from '../src/utils.js';
 import spectrum from '../examples/fixtures/spectrum.js';
 
-const out = `${bold`bold`} ${dim`dim`} ${italic`italic`} ${underline`underline`} ${strikethrough`strikethrough`} ${inverse`inverse`} ${bold.italic.underline.strike`bold italic  underline strike`}` +
+const out = `${bold`bold`} ${dim`dim`} ${italic`italic`} ${underline`underline`} ${strikethrough`strikethrough`} ${inverse`inverse`} ${magenta.bold.italic.underline`magenta bold italic underline`}` +
   '\n' +
   `${red`red`} ${green`green`} ${yellow`yellow`} ${blue`blue`} ${magenta`magenta`} ${cyan`cyan`} ${white`white`} ${gray`gray`} ${bold.yellow`bold yellow`} ${dim.cyan`dim cyan`} ${red.italic`italic red`} ` +
   '\n' +

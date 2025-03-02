@@ -28,7 +28,6 @@ export const {
   italic,
   underline,
   strikethrough,
-  strike,
 
   // foreground colors
   black,

@@ -39,8 +39,9 @@ let createStyle = ({ _p: props }, { open, close }) => {
     }
 
     let output = arg.raw
-      // render template string
-      ? String.raw(arg, ...values).replace(/\\n/g, LF)
+      // concatenates the "cooked" (escaped string value) strings
+      // see https://github.com/tc39/proposal-string-cooked
+      ? String.raw({ raw: arg }, ...values)
       // stringify the argument
       : EMPTY_STRING + arg;
 

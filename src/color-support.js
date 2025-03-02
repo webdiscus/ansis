@@ -25,7 +25,7 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // note: the order of checks is important
   // many terminals that support truecolor have TERM as `xterm-256colors` and `COLORTERM=truecolor`
   // or do not set COLORTERM to `truecolor`
-  // therefore they can be detected by specific EVN variables
+  // therefore they can be detected by specific ENV variables
 
   // 1) Detect color support in COLORTERM
   // Common COLORTERM Values: `truecolor` or `24bit`, `ansi256`, `ansi`

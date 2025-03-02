@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.17.0 (2025-03-02)
+
+- feat: add support for old `typescript` < `5.6` to fix the error TS2526:
+  ```
+  A 'this' type is available only in a non-static member of a class or interface.
+  ```
+  NOTE: if you use already `typescript` >= `5.6`, you can skip this version.
+
 ## 3.16.0 (2025-02-21)
 
 - chore: after testing bump version to release version 3.16.0

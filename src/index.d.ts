@@ -45,7 +45,10 @@ type DP = {
 };
 
 // Static properties and methods (StaticMethods)
-type SP = {
+// Compatibility note:
+// - typescript <= 5.5: The `this` can be used within a method of an `interface`.
+// - typescript >= 5.6: The `this` can be used within a method of a `type`.
+interface SP {
   (value: unknown): string;
 
   (strings: TemplateStringsArray, ...values: any[]): string;
@@ -167,10 +170,11 @@ type SP = {
 
   /** The ANSI escape sequences for ending the current style. */
   close: string;
-};
+}
 
 // Combine dynamic and static properties
 type Ansis = SP & DP;
+
 // Short alias for Ansis
 type A = Ansis;
 

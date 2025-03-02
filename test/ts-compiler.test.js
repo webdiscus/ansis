@@ -45,3 +45,7 @@ describe('imports from package with type module', () => {
   test('module ESNext, tsup', () => executeTSFile('ts/module-import-esnext', 'tsup_esm'));
   test('module Node16, tsup', () => executeTSFile('ts/module-import-node16', 'tsup_esm_node16'));
 });
+
+describe('typescript = 5.4', () => {
+  test('method extend Node16', () => executeTSFile('ts/extend-colors-ts5.4', 'tsc'));
+});

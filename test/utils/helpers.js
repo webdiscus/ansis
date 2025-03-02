@@ -110,7 +110,7 @@ export const executeTSFile = (testPath, compiler = 'tsc', script = null) => {
 
     expect(received).toEqual(expected);
   });
-  // debugging inner errors
+  //debugging inner errors
   // .catch((error) => {
   //   let message;
   //   //console.log('>> err: ', error);

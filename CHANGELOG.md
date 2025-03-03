@@ -2,9 +2,25 @@
 
 ## 4.0.0-beta.1 (2025-03-03)
 
-- feat: added support for escape sequences in template literals.\
-  Template tag returns the same as the standard function call result.
-
+- feat: add support for escape sequences in template literals.\
+  The template tag now returns the same result as the standard function call.
+  - Example `\n` without escape:
+    ```
+    red`prev\nnext`
+    ```
+    Output:
+    ```
+    prev
+    next
+    ```
+  - Example `\n` with escape:
+    ```
+    red`prev\\next`
+    ```
+    Output:
+    ```
+    prev\next
+    ```
 - feat(BREAKING CHANGE): remove of non-standard `strike` style (alias for `strikethrough`)
   - No usage of `ansis.strike()` was found in public GitHub repositories.
   - Most popular packages use the standard `strikethrough` style name.

@@ -38,16 +38,18 @@ ansi256(214)`Orange`
 hex('#E0115F').bold.underline('Truecolor!')
 ```
 
-## ⚖️ Similar libraries
+## ⚖️ Alternatives
 
 The most popular libraries for styling terminal output using ANSI colors, similar to **Ansis**:
 
 [chalk][chalk], [picocolors][picocolors], [colorette][colorette], [kleur][kleur], [ansi-colors][ansi-colors], [kolorist][kolorist], [cli-color][cli-color], [colors-cli][colors-cli], [colors.js][colors.js], [tinyrainbow][tinyrainbow]
 
+<!--
 > [!IMPORTANT]
 >
 > All libraries claim: `I'm the fastest...`.\
 > But if every library is the fastest, then [which one is the _"fastest of the fastest"_](#benchmark) ? 😂
+-->
 
 ✅ [Compare features](#compare) 🧩 [Handling edge cases](#handling-input-arguments) 📦 [Compare package sizes](#compare-size) 📊 [Benchmarks](#benchmark)
 
@@ -84,7 +86,7 @@ The most popular libraries for styling terminal output using ANSI colors, simila
 
 ## 🌍 Used by
 
-[NestJS](https://github.com/nestjs/nest), [Facebook/StyleX](https://github.com/facebook/stylex), [Sequelize](https://github.com/sequelize/sequelize), [Salesforce](https://github.com/salesforcecli/cli), [Oclif](https://github.com/oclif/core), [unjs/Webpackbar](https://github.com/unjs/webpackbar), [unjs/Unplugin](https://github.com/unjs/unplugin)
+[NestJS](https://github.com/nestjs/nest), [Sequelize](https://github.com/sequelize/sequelize), [TypeORM](https://github.com/typeorm/typeorm), [Salesforce](https://github.com/salesforcecli/cli), [Oclif](https://github.com/oclif/core)
 
 
 <a id="why-ansis" name="why-ansis"></a>
@@ -104,9 +106,9 @@ which focused on small size and speed while providing the similar functionality.
 
 The package size in `node_modules` directory:
 
-- `picocolors`: [6.4 kB][npm-picocolors] - A micro library with only basic features.
-- `аnsis`: [6.8 kB][npm-ansis] - A powerful library containing all the features you need.
-- `chalk`:  [44.2 kB][npm-chalk] - Provides similar functionality to Ansis.
+- `picocolors`: [6.4 kB][npm-picocolors] (not minimized) - A micro library with basic features.
+- `аnsis`: [6.8 kB][npm-ansis] (minimized) - A powerful library containing all the features you need.
+- `chalk`:  [44.2 kB][npm-chalk] (not minimized) - Provides similar functionality to Ansis.
 
 ### ⚡ Performance
 
@@ -340,29 +342,11 @@ Output:\
 The `ansis` supports both the `default import` and `named import`.
 
 ```js
-// default import
-import ansis from 'ansis';
+import ansis, { red, hex } from 'ansis';
 
 ansis.red.bold('text');
-```
-
-You can import named colors, styles and functions. All imported colors and styles are `chainable`.
-
-```js
-// named import
-import { red, hex, italic } from 'ansis';
-
 red.bold('text');
-```
-
-Default import and named import can be combined.
-
-```js
-// default and named import
-import ansis, { red } from 'ansis';
-
-const redText = red('text'); // colorized ANSI string
-const text = ansis.strip(redText); // pure string without ANSI codes
+hex('#FFAB40').bold(`text`);
 ```
 
 <a id="chained-syntax" name="chained-syntax"></a>
@@ -386,7 +370,7 @@ italic.bold.yellow.bgMagentaBright`text`;
 
 ## Template literals
 
-**Ansis** supports both the function syntax `red('error')` and [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) ``` red`error` ```.
+Ansis supports both the function syntax `red('error')` and [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) ``` red`error` ```.
 
 Template literals improve readability and brevity for complex templates,
 while the function syntax is ideal for colorizing variables.
@@ -409,68 +393,15 @@ red`text ${message} text`;
 
 ## Nested syntax
 
-You can nest color functions and [template strings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) within each other.
-The support for **nested template strings** is unique to Ansis, as none of the other libraries (Chalk, Picocolors, Kleur, Colorette, etc.) handle nested template strings correctly.
+Ansis supports nested template strings, allowing you to seamlessly nest color functions and template strings within each other.
 
 Nested template strings:
 
 ```js
-import { red, green } from 'ansis';
+import { blue, green, red } from 'ansis';
 
-red`red ${green`green`} red`;
+red`Red ${green`Green ${blue`Blue`} Green`} Red`;
 ```
-Deep nested chained styles:
-
-```js
-import { red, green, cyan, magenta, yellow, italic, underline } from 'ansis';
-
-// parentheses can be omitted
-red`red ${italic`red italic ${underline`red italic underline`}`} red`;
-
-// deep nested chained styles
-green(
-  `green ${yellow(
-    `yellow ${magenta(
-      `magenta ${cyan(
-        `cyan ${red.italic.underline`red italic underline`} cyan`,
-      )} magenta`,
-    )} yellow`,
-  )} green`,
-);
-```
-
-Output:\
-![screenshot nested styles](https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-nested.png?raw=true)
-
-Multiline nested template strings:
-
-```js
-import { red, green, hex, visible, inverse } from 'ansis';
-
-// defined a Truecolor as the constant
-const orange = hex('#FFAB40');
-
-let cpu = 33;
-let ram = 44;
-let disk = 55;
-
-// normal colors
-visible`
-CPU:  ${red`${cpu}%`}
-RAM:  ${green`${ram}%`}
-DISK: ${orange`${disk}%`}
-`;
-
-// inversed colors
-inverse`
-CPU:  ${red`${cpu}%`}
-RAM:  ${green`${ram}%`}
-DISK: ${orange`${disk}%`}
-`;
-```
-
-Output:\
-![screenshot multiline nested](https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-multiline-nested.png?raw=true)
 
 #### [↑ top](#top)
 
@@ -498,76 +429,6 @@ Colors and styles have standard names used by many popular libraries.
 | `magentaBright`                                           | `bgMagentaBright`                                               |                         |
 | `cyanBright`                                              | `bgCyanBright`                                                  |                         |
 | `whiteBright`                                             | `bgWhiteBright`                                                 |                         |
-
-<a id="extend-colors" name="extend-colors"></a>
-
-## Extend base colors
-
-Defaults, the imported `ansis` instance contains [base styles and colors](#base-colors).
-To extend base colors with custom color names for Truecolor use the `ansis.extend()` method.
-
-> [!TIP]
-> You can find a color name by the hex code on the [Name that Color](https://chir.ag/projects/name-that-color/#FF681F) website.
-
-Define a theme with your custom colors and extends the `ansis` object:
-
-```js
-import ansis from 'ansis';
-
-const myTheme = {
-  apple: '#4FA83D',
-  orange: '#FFAB40',
-  pink: '#FF75D1',
-};
-
-// extend ansis this custom colors
-ansis.extend(myTheme);
-
-// you can destruct extended colors
-const { apple, orange, pink, red } = ansis;
-
-// access to extended colors
-console.log(ansis.pink('pink'));
-console.log(ansis.orange.bold('orange bold'));
-console.log(apple`apple`);
-console.log(orange.italic`orange italic`);
-```
-
-Usage example with TypeScript:
-
-```ts
-import ansis, { AnsiColorsExtend } from 'ansis';
-
-const myTheme = {
-  apple: '#4FA83D',
-  orange: '#FFAB40',
-  pink: '#FF75D1',
-};
-
-// extend base colors with your custom theme
-ansis.extend(myTheme);
-
-// your custom logger with the support for extended colors
-const write = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) => {
-  console.log(ansis[style](message));
-}
-
-write('red', 'message'); // base color OK
-write('pink', 'message'); // extended color OK
-write('orange', 'message'); // extended color OK
-write('unknown', 'message'); // TypeScript Error
-```
-
-> [!WARNING]
->
-> The extended color must be used as a first chain item.
->
-> ```js
-> ansis.orange.bold('orange bold'); // ✅ works fine
-> ansis.bold.orange('bold orange'); // ❌ extended color as a subchain item doesn't work
-> ```
-
-#### [↑ top](#top)
 
 <a id="256-colors" name="256-colors"></a>
 
@@ -673,6 +534,72 @@ If you use the `hex()`, `rgb()` or `ansis256()` functions in a terminal not supp
 
 #### [↑ top](#top)
 
+<a id="extend-colors" name="extend-colors"></a>
+
+## Extend base colors
+
+Defaults, the imported `ansis` instance contains [base styles and colors](#base-colors).
+To extend base colors with custom color names for Truecolor use the `ansis.extend()` method.
+
+> [!TIP]
+> You can find a color name by the hex code on the [Name that Color](https://chir.ag/projects/name-that-color/#FF681F) website.
+
+Define a theme with your custom colors and extends the `ansis` object:
+
+```js
+import ansis from 'ansis';
+
+const myTheme = {
+  orange: '#FFAB40',
+  pink: '#FF75D1',
+};
+
+// extend ansis this custom colors
+ansis.extend(myTheme);
+
+// you can destruct extended colors
+const { orange, pink, red } = ansis;
+
+// access to extended colors
+console.log(ansis.orange.bold('orange bold'));
+console.log(orange.italic`orange italic`);
+console.log(pink`pink color`);
+```
+
+Usage example with TypeScript:
+
+```ts
+import ansis, { AnsiColorsExtend } from 'ansis';
+
+const myTheme = {
+  orange: '#FFAB40',
+  pink: '#FF75D1',
+};
+
+// extend base colors with your custom theme
+ansis.extend(myTheme);
+
+// your custom logger with the support for extended colors
+const log = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) => {
+  console.log(ansis[style](message));
+}
+
+log('red', 'message'); // base color OK
+log('orange', 'message'); // extended color OK
+log('unknown', 'message'); // TypeScript Error
+```
+
+> [!WARNING]
+>
+> The extended color must be used as a first chain item.
+>
+> ```js
+> ansis.orange.bold('orange bold'); // ✅ works fine
+> ansis.bold.orange('bold orange'); // ❌ extended color as a subchain item doesn't work
+> ```
+
+#### [↑ top](#top)
+
 <a id="escape-codes" name="escape-codes"></a>
 
 ## Use ANSI codes
@@ -722,28 +649,6 @@ console.log(bgGreen(`\nAnsis\nNew Line\nNext New Line\n`));
 ```
 
 ![output](https://github.com/webdiscus/ansis/raw/master/docs/img/break-style-nl.png?raw=true "break styles at EOL")
-
-<a id="shortcuts" name="shortcuts"></a>
-
-## Shortcuts / Themes
-
-Define your own themes:
-
-```js
-import ansis from 'ansis';
-
-const theme = {
-  info: ansis.cyan.italic,
-  warn: ansis.black.bgYellowBright,
-  error: ansis.red.bold,
-  ruby: ansis.hex('#E0115F'),
-};
-
-theme.info('info');
-theme.warn('warning');
-theme.error('error');
-theme.ruby('Ruby color');
-```
 
 ---
 
@@ -1337,13 +1242,13 @@ To measure performance is used [benchmark.js](https://github.com/bestiejs/benchm
 
 > [!WARNING]
 >
-> ‼️ **Don't trust** other test results using [vitest benchmark](https://vitest.dev/config/#benchmark).
+> Results of [vitest benchmark](https://vitest.dev/config/#benchmark) are incorrect.
 >
-> The `vitest benchmark` generate FALSE/**unreal** results.\
+> The `vitest benchmark` generate **unreal** results.\
 > For example, the results of the simple bench:
 > ```
 > chalk.red('foo') -  7.000.000 ops/sec
-> ansis.red('foo') - 23.000.000 ops/sec (x3 faster is WRONG result)
+> ansis.red('foo') - 23.000.000 ops/sec (x3 faster is incorrect result)
 > ```
 >
 > The actual performance results of Chalk and Ansis in this test are very similar.

@@ -27,4 +27,8 @@ const main = (lib) => {
   let spectrumColors = '';
   spectrum.forEach(color => {spectrumColors += lib.hex(color)('█');});
   console.log(spectrumColors);
+
+  // test support for escape sequences in template literals
+  console.log(lib.green`prev\nnext`);
+  console.log(lib.green`prev\\next`);
 };

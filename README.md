@@ -86,7 +86,7 @@ The most popular libraries for styling terminal output using ANSI colors, simila
 
 ## 🌍 Used by
 
-[NestJS](https://github.com/nestjs/nest), [Sequelize](https://github.com/sequelize/sequelize), [TypeORM](https://github.com/typeorm/typeorm), [Salesforce](https://github.com/salesforcecli/cli), [Oclif](https://github.com/oclif/core)
+[NestJS](https://github.com/nestjs/nest), [Sequelize](https://github.com/sequelize/sequelize), [TypeORM](https://github.com/typeorm/typeorm), [Salesforce](https://github.com/salesforcecli/cli), [Oclif](https://github.com/oclif/core), [ni](https://github.com/antfu-collective/ni)
 
 
 <a id="why-ansis" name="why-ansis"></a>

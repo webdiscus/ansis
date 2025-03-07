@@ -45,8 +45,8 @@ type DP = {
 
 // Static properties and methods (StaticMethods)
 // Compatibility note:
-// - typescript <= 5.5: The `this` can be used within a method of an `interface`.
-// - typescript >= 5.6: The `this` can be used within a method of a `type`.
+// - typescript <= 5.5: The `this` can be used within a method of an `interface` only.
+// - typescript >= 5.6: The `this` can be used within a method of an `interface` or a `type`.
 interface SP {
   (value: unknown): string;
 

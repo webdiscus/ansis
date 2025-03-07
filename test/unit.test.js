@@ -562,17 +562,17 @@ describe('FORCE_COLOR', () => {
 });
 
 describe('color space', () => {
-  test(`Any new unknown terminal should support TrueColor (defaults)`, () => {
+  test(`Any unknown terminal should support 16 colors`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
-        env: { TERM: 'any-new-term' },
+        env: { TERM: 'unknown-term' },
         argv: [],
         stdout: { isTTY: true },
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = SPACE_16COLORS
     expect(received).toEqual(expected);
   });
 });

@@ -1,27 +1,40 @@
 # Changelog
 
+## 4.0.0-beta.2 (2025-03-07)
+
+- fix: if a terminal is not detected as supporting 256 colors or truecolor, only 16 colors are allowed by defaults.
+  - Old behaviour: unknown terminal -> allow truecolor (may output incorrect colors)
+  - New behaviour: unknown terminal -> allow 16 colors (ensures compatibility with any terminal that supports colors)
+
+  Note: This is not a breaking change, as Ansis automatically interpolates truecolor and 256 colors to 16 colors when using the `ansi256()` or `hex()` functions.\
+  To enable truecolor set the `COLORTERM=24bit` or `FORCE_COLOR=3` environment variable.
+
 ## 4.0.0-beta.1 (2025-03-03)
 
 - feat: add support for escape sequences in template literals.\
-  The template tag now returns the same result as the standard function call.
+  Ansis processes tagged template literals the same way as normal strings,
+  returning the same result as the standard function call.
   - Example `\n` without escape:
     ```
+    red('prev\nnext')
     red`prev\nnext`
     ```
-    Output:
+    Outputs:
     ```
     prev
     next
     ```
   - Example `\n` with escape:
     ```
+    red('prev\\next')
     red`prev\\next`
     ```
-    Output:
+    Outputs:
     ```
     prev\next
     ```
 - feat(BREAKING CHANGE): remove of non-standard `strike` style (alias for `strikethrough`)
+  - The `strike` style was never used, so it was removed as unnecessary clutter, leaving only the standard style name - `strikethrough`.
   - No usage of `ansis.strike()` was found in public GitHub repositories.
   - Most popular packages use the standard `strikethrough` style name.
 

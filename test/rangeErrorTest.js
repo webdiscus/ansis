@@ -2,7 +2,7 @@ import { red } from '../dist/index.mjs';
 
 let string = 'red';
 
-for (let i = 0; i < 1000_000; i++) {
+for (let i = 0; i < 1_000_000; i++) {
   string += `\x1b[39m`;
 }
 

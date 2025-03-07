@@ -38,7 +38,7 @@ let detectColorSpace = (env, isTTY, isWin) => {
     ansi: SPACE_16COLORS,
   }[env.COLORTERM]
 
-  if (colorspace) return colorspace
+  if (colorspace) return colorspace;
 
   // 2) Detect color support in CI,
   // since in CI environments are not TTY and often advertise themselves as `dumb` terminals
@@ -56,9 +56,9 @@ let detectColorSpace = (env, isTTY, isWin) => {
     // CI supports truecolor: GITHUB_ACTIONS, GITEA_ACTIONS
     if (/,GIT(HUB|EA)/.test(envKeys)) return SPACE_TRUECOLOR;
 
-    // others CI supports only 16 colors
-    //if (env.CI_NAME === 'codeship' || env.CI_NAME === 'sourcehut') return SPACE_16COLORS;
-    //if (/,(GITLAB_CI|TRAVIS|CIRCLECI|APPVEYOR|BUILDKITE|DRONE)/.test(envKeys)) return SPACE_16COLORS;
+    // others CI supports only 16 colors, e.g. when env contains:
+    // - CI_NAME === codeship | sourcehut
+    // - GITLAB_CI | TRAVIS | CIRCLECI |APPVEYOR | BUILDKITE | DRONE
 
     return SPACE_16COLORS;
   }
@@ -76,10 +76,6 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // - xterm-direct
   if (/term-(kit|dir)/.test(term)) return SPACE_TRUECOLOR;
 
-  // JetBrains IDEA: JetBrains-JediTerm
-  // TODO: enable truecolor output in IDEA (defaults output 256 colors) if anybody need it
-  //if (env.TERMINAL_EMULATOR?.include('JediTerm')) return SPACE_TRUECOLOR;
-
   // 6) Detect terminal emulator with 256 color support
 
   // note: check for 256 colors after ENV variables such as TERM, COLORTERM, TERMINAL_EMULATOR etc.
@@ -94,8 +90,6 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // - ansi-256color
   if (/-256/.test(term)) return SPACE_256COLORS;
 
-  // 7) Detect terminal emulator with 16 color support
-
   // Known terminals supporting 16 colors.
   // - screen-color
   // - xterm-color
@@ -108,12 +102,11 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // - putty-color
   // - rxvt-color - terminal emulator for X Window System
   // - vt100,vt102,vt110,vt220,vt240,vt320,vt420,vt520 - names historically used with Unix
-  if (/scr|xterm|tty|ansi|color|[nm]ux|vt|cyg/.test(term)) return SPACE_16COLORS;
 
-  // 8) For unknown terminals we allow truecolor output,
-  // since all terminals supporting only 16 or 256 colors have already been detected above
-
-  return SPACE_TRUECOLOR;
+  // 7) Defaults, 16-color output for unknown terminals,
+  // as all known terminals supporting 256 colors or truecolor have already been detected above.
+  // To enable truecolor in unknown terminals, set the `COLORTERM=24bit` environment variable.
+  return SPACE_16COLORS;
 };
 
 /**
@@ -174,13 +167,13 @@ export const getColorSpace = (mockThis) => {
   let FORCE_COLOR = 'FORCE_COLOR';
   let forceColorValue = env[FORCE_COLOR];
   let forceColorNum = parseInt(forceColorValue);
-  let forceColor = isNaN(forceColorNum) ? forceColorValue === 'false' ? 0 : SPACE_UNDEFINED : forceColorNum;
+  let forceColor = isNaN(forceColorNum)
+    ? forceColorValue === 'false' ? 0 : SPACE_UNDEFINED
+    : forceColorNum;
 
   // if FORCE_COLOR is present and is neither 'false' nor '0', OR has one of the flags: --color --color=true --color=always
   let isForceEnabled = (FORCE_COLOR in env && forceColor) || hasFlag(/^-{1,2}color=?(true|always)?$/);
 
-  // DON'T handle edge case for unsupported value, e.g. if value > 3
-  // if (isForceEnabled) colorSpace = forceColor > SPACE_TRUECOLOR ? SPACE_TRUECOLOR : forceColor;
   if (isForceEnabled) colorSpace = forceColor;
 
   // if color space is undefined attempt to detect one with additional method, returns 0, 1, 2 or 3
@@ -193,7 +186,10 @@ export const getColorSpace = (mockThis) => {
     // --no-color --color=false --color=never
     || hasFlag(/^-{1,2}(no-color|color=(false|never))$/)) return SPACE_BW;
 
-  // optimisation: `!colorSpace` is equivalent to `colorSpace === SPACE_BW`
-  // detect browser support: !!_this.window?.chrome
+  // API Rule: If color output is force enabled but the color space is detected as B&W (e.g., TERM is dumb),
+  // enable truecolor since color depth support does not matter.
+
+  // Optimisation: `!colorSpace` is equivalent to `colorSpace === SPACE_BW`
+  // Detect browser support: !!_this.window?.chrome
   return (isForceEnabled && !colorSpace) || !!_this.window?.chrome ? SPACE_TRUECOLOR : colorSpace;
 };

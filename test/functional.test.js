@@ -346,21 +346,21 @@ describe('Sequence in template literals', () => {
 
   test(`Newline not escape, prev\nnext`, () => {
     const received = ansis.red`prev\nnext`;
-    const expected = ansis.red(`prev\nnext`);
+    const expected = ansis.red('prev\nnext');
     //console.log(received);
     expect(esc(received)).toEqual(esc(expected));
   });
 
   test(`Newline escape, prev\\next`, () => {
     const received = ansis.red`prev\\next`;
-    const expected = ansis.red(`prev\\next`);
+    const expected = ansis.red('prev\\next');
     //console.log(received);
     expect(esc(received)).toEqual(esc(expected));
   });
 
-  test(`Newline escape, \\nice`, () => {
-    const received = ansis.red`\\nice`;
-    const expected = ansis.red(`\\nice`);
+  test(`Newline escape, \\north`, () => {
+    const received = ansis.red`\\north`;
+    const expected = ansis.red(`\\north`);
     //console.log(received);
     expect(esc(received)).toEqual(esc(expected));
   });

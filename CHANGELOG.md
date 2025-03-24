@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.0.0-beta.9 (2025-03-13)
+
+- feat: slightly improve performance for hex function
+
+## 4.0.0-beta.4 (2025-03-08)
+
+- feat: remove `xterm-direct` terminfo detection for truecolor support introduced in `v3.5.0`, as it is unnecessary.\
+  Note: No terminal emulator sets `TERM=xterm-direct` by default.
+  Most modern terminals (incl. KDE Konsole) use `TERM=xterm-256color` with `COLORTERM=truecolor` instead.
+
 ## 4.0.0-beta.2 (2025-03-07)
 
 - fix: if a terminal is not detected as supporting 256 colors or truecolor, only 16 colors are allowed by defaults.
@@ -33,10 +43,10 @@
     ```
     prev\next
     ```
-- feat(BREAKING CHANGE): remove of non-standard `strike` style (alias for `strikethrough`)
-  - The `strike` style was never used, so it was removed as unnecessary clutter, leaving only the standard style name - `strikethrough`.
+- feat(BREAKING CHANGE - highly unlikely): remove non-standard `strike` style (alias for `strikethrough`)
+  - The `strike` style was never used and has been removed to eliminate unnecessary clutter, leaving only the standard `strikethrough` style.
   - No usage of `ansis.strike()` was found in public GitHub repositories.
-  - Most popular packages use the standard `strikethrough` style name.
+  - The standard `strikethrough` style name is used in other popular ANSI libraries.
 
 ### Migration to `v4`
 

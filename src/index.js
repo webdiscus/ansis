@@ -6,9 +6,9 @@ import { hexToRgb } from './utils.js';
  * @typedef {Object} AnsisProps
  * @property {string} open
  * @property {string} close
- * @property {string?} _a The openStack.
- * @property {string?} _b The closeStack.
- * @property {null | AnsisProps} _p The props.
+ * @property {string?} o The open stack.
+ * @property {string?} c The close stack.
+ * @property {null | AnsisProps} p The properties.
  */
 
 let styles = {};
@@ -16,14 +16,12 @@ let stylePrototype;
 let LF = '\n';
 
 /**
- * @param {Object} self
- * @param {AnsisProps} self._p
- * @param {Object} codes
- * @param {string} codes.open
- * @param {string} codes.close
- * @returns {Ansis}
+ * @param {AnsisProps} p
+ * @param {string} open
+ * @param {string} close
+ * @return {Ansis}
  */
-let createStyle = ({ _p: props }, { open, close }) => {
+let createStyle = ({ p: props }, { open, close }) => {
   /**
    * Decorate the string with ANSI codes.
    * @param {unknown} arg The input value, can be any or a template string.
@@ -35,7 +33,8 @@ let createStyle = ({ _p: props }, { open, close }) => {
 
     if (!arg) {
       if (open && open === close) return open;
-      if (null == arg || EMPTY_STRING === arg) return EMPTY_STRING;
+      // null == arg || '' === arg
+      if ((arg ?? EMPTY_STRING) === EMPTY_STRING) return EMPTY_STRING;
     }
 
     let output = arg.raw
@@ -45,8 +44,9 @@ let createStyle = ({ _p: props }, { open, close }) => {
       // stringify the argument
       : EMPTY_STRING + arg;
 
-    let props = styleFn._p;
-    let { _a: openStack, _b: closeStack } = props;
+    let props = styleFn.p;
+    let openStack = props.o;
+    let closeStack = props.c;
 
     // feat: detect nested styles
     // note: on node >= 22, includes is 5x faster than ~indexOf
@@ -71,7 +71,7 @@ let createStyle = ({ _p: props }, { open, close }) => {
         }
         // -- end replaceAll
 
-        props = props._p;
+        props = props.p;
       }
     }
 
@@ -87,13 +87,13 @@ let createStyle = ({ _p: props }, { open, close }) => {
   let closeStack = close;
 
   if (props) {
-    openStack = props._a + open;
-    closeStack = close + props._b;
+    openStack = props.o + open;
+    closeStack = close + props.c;
   }
 
   setPrototypeOf(styleFn, stylePrototype);
 
-  styleFn._p = { open, close, _a: openStack, _b: closeStack, _p: props };
+  styleFn.p = { open, close, o: openStack, c: closeStack, p: props };
   styleFn.open = openStack;
   styleFn.close = closeStack;
 

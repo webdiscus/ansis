@@ -1,7 +1,6 @@
 import { hexToRgb, rgbToAnsi256, rgbToAnsi16, ansi256To16 } from './utils.js';
 import { getColorSpace } from './color-support.js';
 import { SPACE_BW, SPACE_16COLORS, SPACE_256COLORS } from './color-spaces.js';
-
 import { EMPTY_STRING, separator } from './misc.js';
 
 let colorSpace = getColorSpace();
@@ -17,9 +16,9 @@ let createRgb16Fn = (offset, closeCode) => (r, g, b) => esc(rgbToAnsi16(r, g, b)
 
 let createRgb256Fn = (fn) => (r, g, b) => fn(rgbToAnsi256(r, g, b));
 
-let createHexFn = (fn) => (hex) => fn(...hexToRgb(hex))
+let createHexFn = (fn) => (hex) => fn(...hexToRgb(hex));
 
-// defaults, truecolor
+// truecolor functions
 let fnRgb = (r, g, b) => esc(`38;2;${r};${g};${b}`, closeCode);
 let fnBgRgb = (r, g, b) => esc(`48;2;${r};${g};${b}`, bgCloseCode);
 
@@ -59,29 +58,31 @@ let styleData = {
   strikethrough: esc(9, 29),
 };
 
-// generate ANSI 16 colors dynamically to reduce the code
-let bright = 'Bright';
+// Generate ANSI 16 colors dynamically to reduce the code size.
+
+// `gray` (US) and `grey` (UK) are aliases for `blackBright` and use code 90.
+// `black` uses code 30, and each subsequent color in the list increments sequentially.
 let code = 30;
+let bright = 'Bright';
 let bgName;
 
-// using [].map() is 3 bytes shorter than for .. of
-'black,red,green,yellow,blue,magenta,cyan,white'.split(separator).map((name) => {
+'black,red,green,yellow,blue,magenta,cyan,white,gray,grey'.split(separator).map((name) => {
   bgName = 'bg' + name[0].toUpperCase() + name.slice(1);
 
   styleData[name] = esc(code, closeCode);
-  styleData[name + bright] = esc(60 + code, closeCode);
   styleData[bgName] = esc(code + bgOffset, bgCloseCode);
-  styleData[bgName + bright] = esc(70 + code++, bgCloseCode);
+
+  // exclude for `gray` and `grey` aliases
+  if (code < 38) {
+    styleData[name + bright] = esc(60 + code, closeCode);
+    styleData[bgName + bright] = esc(70 + code++, bgCloseCode);
+  }
+
+  if (code > 37) code = 90;
 });
-
-// UK and US spelling alias for blackBright
-styleData.grey = styleData.gray = esc(90, closeCode);
-
-// UK and US spelling alias for bgBlackBright
-styleData.bgGrey = styleData.bgGray = esc(100, bgCloseCode);
 
 export {
   hasColors,
   styleData,
   fnRgb,
-}
+};

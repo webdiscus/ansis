@@ -1,8 +1,10 @@
 import { expect, describe, test } from 'vitest';
 
+import ansis from '../src/index.js';
 import { hexToRgb, rgbToAnsi256, ansi256To16, rgbToAnsi16 } from '../src/utils.js';
 import { getColorSpace } from '../src/color-support.js';
 import { SPACE_BW, SPACE_16COLORS, SPACE_256COLORS, SPACE_TRUECOLOR } from '../src/color-spaces.js';
+import { esc } from './utils/helpers.js';
 
 const colorSpace = (mock) => getColorSpace(mock);
 
@@ -10,49 +12,61 @@ describe('convert HEX to RGB', () => {
   test(`hexToRgb('FFAA99')`, () => {
     const received = hexToRgb('FFAA99');
     const expected = [255, 170, 153];
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`hexToRgb('#FFAA99')`, () => {
     const received = hexToRgb('#FFAA99');
     const expected = [255, 170, 153];
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`hexToRgb('#FA9')`, () => {
     const received = hexToRgb('#FA9');
     const expected = [255, 170, 153];
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
+  });
+
+  test(`hexToRgb('#000')`, () => {
+    const received = hexToRgb('#000');
+    const expected = [0, 0, 0];
+    expect(expected).toEqual(received);
+  });
+
+  test(`hexToRgb('#000000')`, () => {
+    const received = hexToRgb('#000000');
+    const expected = [0, 0, 0];
+    expect(expected).toEqual(received);
   });
 
   test(`invalid hexToRgb('#F')`, () => {
     const received = hexToRgb('#F');
     const expected = [0, 0, 0];
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`invalid hexToRgb('#F8')`, () => {
     const received = hexToRgb('#F8');
     const expected = [0, 0, 0];
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`invalid hexToRgb('#FF88')`, () => {
     const received = hexToRgb('#FF88');
     const expected = [0, 0, 0];
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`invalid hexToRgb('#FF88E')`, () => {
     const received = hexToRgb('#FF88E');
     const expected = [0, 0, 0];
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`hexToRgb('invalid')`, () => {
     const received = hexToRgb('invalid');
     const expected = [0, 0, 0];
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 });
 
@@ -60,31 +74,31 @@ describe('convert RGB to ANSI 256', () => {
   test(`rgbToAnsi256(7, 7, 7) lowest greyscale`, () => {
     const received = rgbToAnsi256(7, 7, 7);
     const expected = 16;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`rgbToAnsi256(249, 249, 249) highest greyscale`, () => {
     const received = rgbToAnsi256(249, 249, 249);
     const expected = 231;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`rgbToAnsi256(127, 127, 127) greyscale`, () => {
     const received = rgbToAnsi256(127, 127, 127);
     const expected = 244;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`rgbToAnsi256(16, 16, 16) greyscale`, () => {
     const received = rgbToAnsi256(15, 15, 15);
     const expected = 233;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`rgbToAnsi256(127, 63, 63) color`, () => {
     const received = rgbToAnsi256(200, 16, 16);
     const expected = 160;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 });
 
@@ -92,61 +106,61 @@ describe('convert ANSI 256 to ANSI 16', () => {
   test(`black`, () => {
     const received = ansi256To16(0);
     const expected = 30;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`white`, () => {
     const received = ansi256To16(7);
     const expected = 37;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`whiteBright`, () => {
     const received = ansi256To16(15);
     const expected = 97;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`ansi256To16(232) -> black`, () => {
     const received = ansi256To16(233);
     const expected = 30;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`redBright`, () => {
     const received = ansi256To16(196);
     const expected = 91;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`red`, () => {
     const received = ansi256To16(124);
     const expected = 31;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`blue`, () => {
     const received = ansi256To16(20);
     const expected = 34;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`blueBright`, () => {
     const received = ansi256To16(27);
     const expected = 94;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`green`, () => {
     const received = ansi256To16(34);
     const expected = 32;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`greenBright`, () => {
     const received = ansi256To16(82);
     const expected = 92;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 });
 
@@ -154,37 +168,37 @@ describe('convert RGB to ANSI 16', () => {
   test(`redBright`, () => {
     const received = rgbToAnsi16(...hexToRgb('#ff6e67'));
     const expected = 91;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`red`, () => {
     const received = rgbToAnsi16(...hexToRgb('#c91b00'));
     const expected = 31;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`blue`, () => {
     const received = rgbToAnsi16(...hexToRgb('#0225c7'));
     const expected = 34;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`blueBright`, () => {
     const received = rgbToAnsi16(...hexToRgb('#6871ff'));
     const expected = 94;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`green`, () => {
     const received = rgbToAnsi16(...hexToRgb('#00c200'));
     const expected = 32;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`greenBright`, () => {
     const received = rgbToAnsi16(...hexToRgb('#5ffa68'));
     const expected = 92;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 });
 
@@ -199,7 +213,7 @@ describe('CI tools', () => {
 
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`GitLab CI`, () => {
@@ -212,7 +226,7 @@ describe('CI tools', () => {
 
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`Azure CI`, () => {
@@ -224,7 +238,7 @@ describe('CI tools', () => {
 
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`TeamCity`, () => {
@@ -236,7 +250,7 @@ describe('CI tools', () => {
 
     });
     const expected = SPACE_256COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 });
 
@@ -251,20 +265,7 @@ describe('flags and options', () => {
 
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
-  });
-
-  test(`-color`, () => {
-    const received = colorSpace({
-      process: {
-        platform: 'linux',
-        env: {},
-        argv: ['-color'],
-      },
-
-    });
-    const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`--color=true`, () => {
@@ -279,22 +280,7 @@ describe('flags and options', () => {
 
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
-  });
-
-  test(`-color=true`, () => {
-    const received = colorSpace({
-      process: {
-        platform: 'linux',
-        env: { TERM: 'dumb' },
-        argv: ['-color=true'],
-        stdout: { isTTY: true },
-        stderr: { isTTY: true },
-      },
-
-    });
-    const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`--color=false`, () => {
@@ -309,7 +295,7 @@ describe('flags and options', () => {
 
     });
     const expected = SPACE_BW;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`--color=never`, () => {
@@ -324,7 +310,7 @@ describe('flags and options', () => {
 
     });
     const expected = SPACE_BW;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`NO_COLOR=1`, () => {
@@ -339,7 +325,7 @@ describe('flags and options', () => {
 
     });
     const expected = SPACE_BW;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 });
 
@@ -354,7 +340,7 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_BW;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`FORCE_COLOR=false`, () => {
@@ -368,7 +354,7 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_BW;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`FORCE_COLOR=0`, () => {
@@ -382,44 +368,71 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_BW;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
-  test(`FORCE_COLOR unset, no isTTY`, () => {
+  test(`FORCE_COLOR true, no isTTY`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
-        env: { FORCE_COLOR: '' },
+        env: { FORCE_COLOR: 'true' },
         argv: [],
       },
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
-  test(`FORCE_COLOR unset, TERM=xterm-256color, no isTTY`, () => {
+  test(`FORCE_COLOR=3, TERM=xterm-256color, no isTTY`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
-        env: { FORCE_COLOR: '', TERM: 'xterm-256color' },
+        env: { FORCE_COLOR: '3', TERM: 'xterm-256color' },
         argv: [],
       },
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`FORCE_COLOR unset, TERM=xterm-256color, isTTY`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
-        env: { FORCE_COLOR: '', TERM: 'xterm-256color' },
+        // equivalent to: env: { TERM: 'xterm-256color' },
+        env: { FORCE_COLOR: undefined, TERM: 'xterm-256color' },
         argv: [],
         stdout: { isTTY: true },
       },
     });
     const expected = SPACE_256COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
+  });
+
+  // FORCE_COLOR= node -e "console.log(process.env.FORCE_COLOR)"
+  test(`FORCE_COLOR=, COLORTERM=ansi256`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: '', COLORTERM: 'ansi256' },
+        argv: [],
+      },
+    });
+    const expected = SPACE_256COLORS;
+    expect(expected).toEqual(received);
+  });
+
+  // FORCE_COLOR= node -e "console.log(process.env.FORCE_COLOR)"
+  test(`FORCE_COLOR=, TERM=dumb`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: '', TERM: 'dumb' },
+        argv: [],
+      },
+    });
+    const expected = SPACE_TRUECOLOR;
+    expect(expected).toEqual(received);
   });
 
   test(`FORCE_COLOR=true`, () => {
@@ -431,7 +444,7 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`FORCE_COLOR=true, TERM=dumb`, () => {
@@ -443,7 +456,7 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`FORCE_COLOR=true, COLORTERM=truecolor`, () => {
@@ -455,7 +468,7 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`FORCE_COLOR=true, COLORTERM=ansi256`, () => {
@@ -467,7 +480,7 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_256COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`FORCE_COLOR=true, COLORTERM=ansi`, () => {
@@ -479,7 +492,7 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`FORCE_COLOR=1`, () => {
@@ -491,7 +504,7 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`FORCE_COLOR=2`, () => {
@@ -503,7 +516,7 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_256COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`FORCE_COLOR=3`, () => {
@@ -515,7 +528,7 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   // disable the test for unsupported value, whoever uses it has only himself to blame
@@ -528,7 +541,7 @@ describe('FORCE_COLOR', () => {
   //     },
   //   });
   //   const expected = SPACE_TRUECOLOR;
-  //   expect(received).toEqual(expected);
+  //   expect(expected).toEqual(received);
   // });
 
   test(`FORCE_COLOR=something`, () => {
@@ -540,7 +553,7 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`isTTY false, FORCE_COLOR=1`, () => {
@@ -557,7 +570,7 @@ describe('FORCE_COLOR', () => {
       },
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 });
 
@@ -573,7 +586,7 @@ describe('color space', () => {
       },
     });
     const expected = SPACE_16COLORS
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 });
 
@@ -589,7 +602,21 @@ describe('COLORTERM', () => {
       },
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
+  });
+
+  test(`detect truecolor for TERM=xterm-256color and COLORTERM=truecolor`, () => {
+    const received = colorSpace({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'xterm-256color', COLORTERM: 'truecolor' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+    });
+    const expected = SPACE_TRUECOLOR;
+    expect(expected).toEqual(received);
   });
 
   test(`detect 256 colors from COLORTERM`, () => {
@@ -603,7 +630,7 @@ describe('COLORTERM', () => {
       },
     });
     const expected = SPACE_256COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`detect 16 colors from COLORTERM`, () => {
@@ -617,7 +644,7 @@ describe('COLORTERM', () => {
       },
     });
     const expected = SPACE_16COLORS
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
 });
@@ -634,7 +661,7 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`xterm-16colour`, () => {
@@ -648,7 +675,7 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`xterm-256`, () => {
@@ -662,7 +689,7 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_256COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`xterm-256color`, () => {
@@ -676,7 +703,7 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_256COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`xterm-256colour`, () => {
@@ -690,21 +717,21 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_256COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`xterm-kitty`, () => {
     const received = colorSpace({
       process: {
         platform: 'linux',
-        env: { TERM: 'xterm-kitty' },
+        env: { TERM: 'xterm-kitty', COLORTERM: 'truecolor' },
         argv: [],
         stdout: { isTTY: true },
         stderr: { isTTY: true },
       },
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`vt220`, () => {
@@ -718,7 +745,7 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`vt320-w`, () => {
@@ -732,7 +759,7 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`vt52`, () => {
@@ -746,7 +773,7 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`vt525`, () => {
@@ -760,7 +787,7 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`tmux`, () => {
@@ -774,7 +801,7 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`mintty-direct`, () => {
@@ -788,7 +815,7 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`ansi.sysk`, () => {
@@ -802,7 +829,7 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`Browser chromium`, () => {
@@ -812,7 +839,7 @@ describe('support colors in terminals', () => {
       },
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`Browser others`, () => {
@@ -820,13 +847,13 @@ describe('support colors in terminals', () => {
       window: {},
     });
     const expected = SPACE_BW
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`Unknown system`, () => {
     const received = colorSpace({});
     const expected = SPACE_BW
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
 });
@@ -840,7 +867,7 @@ describe('Node.JS different env', () => {
 
     const received = colorSpace(undefined);
     const expected = SPACE_BW;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
 
     // restore original `process` object
     process = processOriginal;
@@ -849,7 +876,7 @@ describe('Node.JS different env', () => {
   test(`processMock {}`, () => {
     const received = colorSpace({});
     const expected = SPACE_BW;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`colors on windows platform`, () => {
@@ -864,7 +891,7 @@ describe('Node.JS different env', () => {
 
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`no colors, unsupported terminal`, () => {
@@ -878,7 +905,7 @@ describe('Node.JS different env', () => {
 
     });
     const expected = SPACE_BW;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`no colors, simulate output in file > log.txt`, () => {
@@ -890,7 +917,7 @@ describe('Node.JS different env', () => {
 
     });
     const expected = SPACE_BW;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`COLORTERM: 'truecolor'`, () => {
@@ -904,7 +931,7 @@ describe('Node.JS different env', () => {
 
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`PM2: no isTTY but COLORTERM: 'truecolor'`, () => {
@@ -922,7 +949,7 @@ describe('Node.JS different env', () => {
 
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`PM2: no isTTY and unsupported terminal`, () => {
@@ -940,7 +967,7 @@ describe('Node.JS different env', () => {
 
     });
     const expected = SPACE_BW;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 });
 
@@ -961,7 +988,7 @@ describe('Deno support', () => {
 
     });
     const expected = SPACE_256COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`no permissions`, () => {
@@ -982,7 +1009,7 @@ describe('Deno support', () => {
 
     });
     const expected = SPACE_BW;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`platform win`, () => {
@@ -1000,7 +1027,7 @@ describe('Deno support', () => {
 
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
 
@@ -1020,7 +1047,7 @@ describe('Deno support', () => {
 
     });
     const expected = SPACE_TRUECOLOR;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 });
 
@@ -1036,7 +1063,7 @@ describe('Next.JS support', () => {
 
     });
     const expected = SPACE_256COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`runtime edge`, () => {
@@ -1049,7 +1076,7 @@ describe('Next.JS support', () => {
 
     });
     const expected = SPACE_256COLORS;
-    expect(received).toEqual(expected);
+    expect(expected).toEqual(received);
   });
 
   test(`runtime nodejs`, () => {
@@ -1064,6 +1091,32 @@ describe('Next.JS support', () => {
 
     });
     const expected = SPACE_256COLORS;
+    expect(expected).toEqual(received);
+  });
+});
+
+describe('strip ANSI codes', () => {
+  test(`red`, () => {
+    const received = ansis.strip('Hello \x1b[31mWorld\x1b[0m!');
+    const expected = 'Hello World!';
     expect(received).toEqual(expected);
   });
+
+  test(`red.bold.underline`, () => {
+    //const str = ansis.red.bold.underline('red.bold.underline');
+    const str = '[31m[1m[4mred.bold.underline[24m[22m[39m';
+    const received = ansis.strip(str);
+    const expected = 'red.bold.underline';
+    expect(received).toEqual(expected);
+  });
+
+
+  test(`foo red bar bold baz`, () => {
+    //const str = `foo ${ansis.red`red`} bar ${ansis.bold`bold`} baz`;
+    const str = 'foo [31mred[39m bar [1mbold[22m baz';
+    const received = ansis.strip(str);
+    const expected = 'foo red bar bold baz';
+    expect(received).toEqual(expected);
+  });
+
 });

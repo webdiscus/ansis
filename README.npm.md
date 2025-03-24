@@ -1,3 +1,5 @@
-![](docs/npm.png)
+# Ansis
 
-ANSI colors library - [Docs on GitHub](../../)
+ANSI color library.
+
+[Documentation](../../)

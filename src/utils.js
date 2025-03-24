@@ -15,17 +15,15 @@ let { round, max } = Math;
  * @return {[number, number, number]} The red, green, blue values in range [0, 255] .
  */
 export let hexToRgb = (value) => {
-  let [, color] = /([a-f\d]{3,6})/i.exec(value) || [];
-  let len = color ? color.length : 0;
+  let color = /([a-f\d]{3,6})/i.exec(value)?.[1] ?? '';
+  let len = color.length;
 
-  if (len === 3) {
-    //let [r, g, b] = color; color = r + r + g + g + b + b; // this is a bit slower than direct access by index
-    color = color[0] + color[0] + color[1] + color[1] + color[2] + color[2];
-  } else if (6 ^ len) { // faster and shorter equivalent to `6 !== len`
-    return [0, 0, 0];
-  }
+  let hex = len === 3
+    ? color[0] + color[0] + color[1] + color[1] + color[2] + color[2]
+    // faster than 6 !== len
+    : 6 ^ len ? '0': color;
 
-  let decimal = parseInt(color, 16);
+  let decimal = parseInt(hex, 16);
 
   return [decimal >> 16 & 255, decimal >> 8 & 255, decimal & 255];
 };
@@ -44,7 +42,7 @@ export let rgbToAnsi256 = (r, g, b) => {
   if (r === g && g === b) {
     if (r < 8) return 16;
     if (r > 248) return 231;
-    return round(((r - 8) / 247) * 24) + 232;
+    return round(((r - 8) * 24) / 247) + 232;
   }
 
   return 16

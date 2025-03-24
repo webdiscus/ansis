@@ -18,18 +18,15 @@ import { keys, separator } from './misc.js';
  * @return {number}
  */
 let detectColorSpace = (env, isTTY, isWin) => {
-  // Use `echo $TERM` command to display terminal name in `env.TERM`.
   let term = env.TERM;
   let envKeys = separator + keys(env).join(separator);
 
-  // note: the order of checks is important
-  // many terminals that support truecolor have TERM as `xterm-256colors` and `COLORTERM=truecolor`
-  // or do not set COLORTERM to `truecolor`
-  // therefore they can be detected by specific ENV variables
+  // Note: the order of checks is important!
 
-  // 1) Detect color support in COLORTERM
-  // Common COLORTERM Values: `truecolor` or `24bit`, `ansi256`, `ansi`
-  // Terminals supporting truecolor: iTerm, VSCode
+  // 1) Detect terminals supporting TrueColor by COLORTERM
+  // Most modern terminals use `TERM=xterm-256color` with `COLORTERM=truecolor`.
+  // COLORTERM values: `truecolor` or `24bit`, `ansi256`, `ansi`
+  // Terminals that set COLORTERM=truecolor: iTerm, VSCode, `xterm-kitty`, KDE Konsole.
 
   let colorspace = {
     '24bit': SPACE_TRUECOLOR,
@@ -40,8 +37,8 @@ let detectColorSpace = (env, isTTY, isWin) => {
 
   if (colorspace) return colorspace;
 
-  // 2) Detect color support in CI,
-  // since in CI environments are not TTY and often advertise themselves as `dumb` terminals
+  // 2) Detect color support in CI.
+  // Note: CI environments are not TTY and often advertise themselves as `dumb` terminals.
 
   // Azure DevOps CI
   // https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml
@@ -64,22 +61,15 @@ let detectColorSpace = (env, isTTY, isWin) => {
   }
 
   // 3) Detect unknown output or colors are not supported
-  if (!isTTY || /-mono|dumb/i.test(term)) return SPACE_BW;
+  if (!isTTY || term === 'dumb') return SPACE_BW;
 
   // 4) Truecolor support starts from Windows 10 build 14931 (2016-09-21), in 2025 we assume modern Windows is used
   if (isWin) return SPACE_TRUECOLOR;
 
-  // 5) Detect terminal emulator with truecolor support
+  // 5) Detect terminals supporting 256 color
 
-  // kitty or KDE terminal
-  // - xterm-kitty
-  // - xterm-direct
-  if (/term-(kit|dir)/.test(term)) return SPACE_TRUECOLOR;
-
-  // 6) Detect terminal emulator with 256 color support
-
-  // note: check for 256 colors after ENV variables such as TERM, COLORTERM, TERMINAL_EMULATOR etc.
-  // terminals, that support 256 colors, e.g., native macOS terminal
+  // Note: check for 256 colors after ENV variables such as TERM, COLORTERM.
+  // Terminals, that support 256 colors:
   // - screen-256color
   // - xterm-256color
   // - rxvt-256color
@@ -90,9 +80,14 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // - ansi-256color
   if (/-256/.test(term)) return SPACE_256COLORS;
 
-  // Known terminals supporting 16 colors.
-  // - screen-color
+  // 6) Defaults, 16-color output for unknown terminals,
+  // as all known terminals supporting 256 colors or truecolor have already been detected above.
+  // To enable truecolor in unknown terminals, set the `COLORTERM=24bit` environment variable.
+
+  // Known terminals supporting 16 colors:
+  // - xterm
   // - xterm-color
+  // - screen-color
   // - ansi, ansi-x3.64, ansi.sysk
   // - linux - Linux virtual console (tty1, tty2, SSH, etc.)
   // - tmux - Terminal emulator
@@ -103,9 +98,6 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // - rxvt-color - terminal emulator for X Window System
   // - vt100,vt102,vt110,vt220,vt240,vt320,vt420,vt520 - names historically used with Unix
 
-  // 7) Defaults, 16-color output for unknown terminals,
-  // as all known terminals supporting 256 colors or truecolor have already been detected above.
-  // To enable truecolor in unknown terminals, set the `COLORTERM=24bit` environment variable.
   return SPACE_16COLORS;
 };
 
@@ -115,21 +107,21 @@ let detectColorSpace = (env, isTTY, isWin) => {
  */
 export const getColorSpace = (mockThis) => {
   /**
-   * Detect whether flags exist with `-` or `--` prefix in command-line arguments.
+   * Detect whether flags exist in command-line arguments.
    *
    * @param {RegExp} regex The RegEx to match all possible flags.
    * @return {boolean}
    */
-  let hasFlag = (regex) => argv.some((value) => regex.test(value));
+  let hasFlag = (regex) => argv?.some((value) => regex.test(value));
 
-  let _this = mockThis || globalThis;
+  let _this = mockThis ?? globalThis;
   let Deno = _this.Deno;
   let isDeno = !!Deno;
   let proc = _this.process || Deno || {};
 
   // Node -> `argv`, Deno -> `args`
-  let argv = proc.argv || proc.args || [];
-  let env = proc.env || {};
+  let argv = proc.argv ?? proc.args;
+  let env = proc.env ?? {};
   let colorSpace = SPACE_UNDEFINED;
 
   if (isDeno) {
@@ -152,8 +144,8 @@ export const getColorSpace = (mockThis) => {
   let isTTY = isPM2 || env.NEXT_RUNTIME?.includes('edge') || (isDeno ? Deno.isatty(1) : !!proc.stdout?.isTTY);
 
   // enforce a specific color support:
-  // FORCE_COLOR=false   // 2 colors (no color)
-  // FORCE_COLOR=0       // 2 colors (no color)
+  // FORCE_COLOR=false   // disables colors
+  // FORCE_COLOR=0       // disables colors
   // FORCE_COLOR=true    // auto detects the supported colors (if no color detected, enforce truecolor)
   // FORCE_COLOR=(unset) // auto detects the supported colors (if no color detected, enforce truecolor)
   // FORCE_COLOR=1       // 16 colors
@@ -166,30 +158,36 @@ export const getColorSpace = (mockThis) => {
 
   let FORCE_COLOR = 'FORCE_COLOR';
   let forceColorValue = env[FORCE_COLOR];
-  let forceColorNum = parseInt(forceColorValue);
-  let forceColor = isNaN(forceColorNum)
-    ? forceColorValue === 'false' ? 0 : SPACE_UNDEFINED
-    : forceColorNum;
+
+  // mapping FORCE_COLOR values to color space values
+  let forceColorSpace = {
+    false: SPACE_BW,
+    0: SPACE_BW,
+    1: SPACE_16COLORS,
+    2: SPACE_256COLORS,
+    3: SPACE_TRUECOLOR,
+  }[forceColorValue] ?? SPACE_UNDEFINED;
 
   // if FORCE_COLOR is present and is neither 'false' nor '0', OR has one of the flags: --color --color=true --color=always
-  let isForceEnabled = (FORCE_COLOR in env && forceColor) || hasFlag(/^-{1,2}color=?(true|always)?$/);
+  let isForceEnabled = (FORCE_COLOR in env && forceColorSpace) || hasFlag(/^--color=?(true|always)?$/);
 
-  if (isForceEnabled) colorSpace = forceColor;
+  if (isForceEnabled) colorSpace = forceColorSpace;
 
-  // if color space is undefined attempt to detect one with additional method, returns 0, 1, 2 or 3
-  // size optimisation: place the `isWin` variable as expression directly in function argument
-  if (colorSpace < SPACE_BW) colorSpace = detectColorSpace(env, isTTY, (isDeno ? Deno.build.os : proc.platform) === 'win32');
+  // if colorSpace === SPACE_UNDEFINED, attempt to detect space, returns 0, 1, 2 or 3
+  if (!~colorSpace) colorSpace = detectColorSpace(env, isTTY, (isDeno ? Deno.build.os : proc.platform) === 'win32');
 
-  // if force disabled
-  if (!forceColor
+  // if force disabled: FORCE_COLOR=0 or FORCE_COLOR=false
+  if (!forceColorSpace
     || !!env.NO_COLOR
     // --no-color --color=false --color=never
-    || hasFlag(/^-{1,2}(no-color|color=(false|never))$/)) return SPACE_BW;
+    || hasFlag(/^--(no-color|color=(false|never))$/)) return SPACE_BW;
+
+  // Detect browser support
+  if (!!_this.window?.chrome) return SPACE_TRUECOLOR;
 
   // API Rule: If color output is force enabled but the color space is detected as B&W (e.g., TERM is dumb),
   // enable truecolor since color depth support does not matter.
 
   // Optimisation: `!colorSpace` is equivalent to `colorSpace === SPACE_BW`
-  // Detect browser support: !!_this.window?.chrome
-  return (isForceEnabled && !colorSpace) || !!_this.window?.chrome ? SPACE_TRUECOLOR : colorSpace;
+  return isForceEnabled && !colorSpace ? SPACE_TRUECOLOR : colorSpace;
 };

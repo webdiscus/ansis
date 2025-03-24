@@ -10,7 +10,6 @@ const TEST_PATH = path.resolve('./test/');
 // CLI with flags and environment variables
 // Note: using child_process.execSync the stdout.isTTY is always false
 // TODO:
-//   - test FORCE_COLOR=0
 //   - test NO_COLOR=1
 
 describe('enable colors', () => {
@@ -47,6 +46,33 @@ describe('enable colors', () => {
     expect(esc(received)).toEqual(esc(expected));
   });
 
+  test(`FORCE_COLOR=true, string`, () => {
+    const filename = path.join(TEST_PATH, './cli/output.js');
+    const received = execScriptSync(filename, [], { FORCE_COLOR: 'true' });
+    const expected =
+      '\x1b[31mred\x1b[39m|\x1b[38;2;80;80;80mrgb\x1b[39m|\x1b[48;2;80;80;80mbgRgb\x1b[49m|\x1b[38;2;255;255;255mhex\x1b[39m|\x1b[48;2;255;255;255mbgHex\x1b[49m';
+
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  // test(`FORCE_COLOR=undefined => true`, () => {
+  //   const filename = path.join(TEST_PATH, './cli/output.js');
+  //   const received = execScriptSync(filename, [], { FORCE_COLOR: undefined });
+  //   const expected =
+  //     '\x1b[31mred\x1b[39m|\x1b[38;2;80;80;80mrgb\x1b[39m|\x1b[48;2;80;80;80mbgRgb\x1b[49m|\x1b[38;2;255;255;255mhex\x1b[39m|\x1b[48;2;255;255;255mbgHex\x1b[49m';
+  //
+  //   expect(esc(received)).toEqual(esc(expected));
+  // });
+  //
+  // test(`FORCE_COLOR=null => true`, () => {
+  //   const filename = path.join(TEST_PATH, './cli/output.js');
+  //   const received = execScriptSync(filename, [], { FORCE_COLOR: null });
+  //   const expected =
+  //     '\x1b[31mred\x1b[39m|\x1b[38;2;80;80;80mrgb\x1b[39m|\x1b[48;2;80;80;80mbgRgb\x1b[49m|\x1b[38;2;255;255;255mhex\x1b[39m|\x1b[48;2;255;255;255mbgHex\x1b[49m';
+  //
+  //   expect(esc(received)).toEqual(esc(expected));
+  // });
+
   test(`FORCE_COLOR=1`, () => {
     const filename = path.join(TEST_PATH, './cli/output.js');
     const received = execScriptSync(filename, [], { FORCE_COLOR: 1 });
@@ -63,6 +89,15 @@ describe('enable colors', () => {
     expect(esc(received)).toEqual(esc(expected));
   });
 
+  test(`FORCE_COLOR=2, string`, () => {
+    const filename = path.join(TEST_PATH, './cli/output.js');
+    const received = execScriptSync(filename, [], { FORCE_COLOR: '2' });
+    const expected = '\x1b[31mred\x1b[39m|\x1b[38;5;239mrgb\x1b[39m|\x1b[48;5;239mbgRgb\x1b[49m|\x1b[38;5;231mhex\x1b[39m|\x1b[48;5;231mbgHex\x1b[49m';
+
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+
   test(`FORCE_COLOR=3`, () => {
     const filename = path.join(TEST_PATH, './cli/output.js');
     const received = execScriptSync(filename, [], { FORCE_COLOR: 3 });
@@ -71,9 +106,46 @@ describe('enable colors', () => {
 
     expect(esc(received)).toEqual(esc(expected));
   });
+
+  test(`FORCE_COLOR=3, string`, () => {
+    const filename = path.join(TEST_PATH, './cli/output.js');
+    const received = execScriptSync(filename, [], { FORCE_COLOR: '3' });
+    const expected =
+      '\x1b[31mred\x1b[39m|\x1b[38;2;80;80;80mrgb\x1b[39m|\x1b[48;2;80;80;80mbgRgb\x1b[49m|\x1b[38;2;255;255;255mhex\x1b[39m|\x1b[48;2;255;255;255mbgHex\x1b[49m';
+
+    expect(esc(received)).toEqual(esc(expected));
+  });
 });
 
 describe('disable colors', () => {
+  test(`FORCE_COLOR=0`, () => {
+    const filename = path.join(TEST_PATH, './cli/output.js');
+    const received = execScriptSync(filename, [], { FORCE_COLOR: 0 });
+    const expected = 'red|rgb|bgRgb|hex|bgHex';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`FORCE_COLOR=0, string`, () => {
+    const filename = path.join(TEST_PATH, './cli/output.js');
+    const received = execScriptSync(filename, [], { FORCE_COLOR: '0' });
+    const expected = 'red|rgb|bgRgb|hex|bgHex';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`FORCE_COLOR=false`, () => {
+    const filename = path.join(TEST_PATH, './cli/output.js');
+    const received = execScriptSync(filename, [], { FORCE_COLOR: false });
+    const expected = 'red|rgb|bgRgb|hex|bgHex';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`FORCE_COLOR=false, string`, () => {
+    const filename = path.join(TEST_PATH, './cli/output.js');
+    const received = execScriptSync(filename, [], { FORCE_COLOR: 'false' });
+    const expected = 'red|rgb|bgRgb|hex|bgHex';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
   test(`--no-color`, () => {
     const filename = path.join(TEST_PATH, './cli/output.js');
     // flags has priority over env variable

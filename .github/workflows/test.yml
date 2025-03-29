@@ -113,7 +113,7 @@ jobs:
           path: ./dist/
 
       - name: Prepare package.json for Node.js <= 16
-        run: cp -f package-test-node16.json package.json
+        run: cp -f package.test-node16.json package.json
 
       - name: Install dependencies (without rebuilding)
         run: npm install -f # --force option is required to install tsup dependencies

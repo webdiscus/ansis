@@ -75,19 +75,24 @@ export default [
             dest: 'dist/',
             transform: (contents, name) => {
               return removeComments(contents.toString()).
-                // remove insignificant spaces
+                // remove insignificant spaces, new lines and trailing commas
                 replaceAll(/\n/g, '').
                 replaceAll(/\s{2,}/g, ' ').
-                replaceAll(' | ', '|').
-                replaceAll(' = ', '=').
-                replaceAll('=|', '=').
-                replaceAll(' => ', '=>').
-                replaceAll(', ', ',').
                 replaceAll(': ', ':').
+                replaceAll(' | ', '|').
+                replaceAll(' & ', '&').
+                replaceAll(' = ', '=').
+                replaceAll(' =', '=').
+                replaceAll('=|', '=').
+                replaceAll('=> ', '=>').
+                replaceAll(', ', ',').
                 replaceAll('{ ', '{').
                 replaceAll(' {', '{').
                 replaceAll(' }', '}').
-                replaceAll('; ', ';');
+                replaceAll('; ', ';').
+                replaceAll(' ;', ';').
+                replaceAll(',}', '}').
+                replaceAll(';}', '}');
             },
           },
 

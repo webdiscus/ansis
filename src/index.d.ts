@@ -11,7 +11,9 @@
  *
  * Benefits:
  * - The smaller `.d.ts` file reduces the package size.
- * - The TypeScript compiler treats them exactly as the native types.
+ * - The TypeScript compiler treats them exactly as the native types with no perf difference.
+ * - The TypeScript compiler cares only about structure, not formatting.
+ * - In TypeScript, the whitespace in type definitions is not significant.
  * - Given the simplicity of the API, the tradeoff in readability is acceptable.
  *
  * Example:
@@ -23,10 +25,26 @@ type N = number;
 type S = string;
 type B = boolean;
 
+// BasicColors
+type C = 'black' | 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
+
+// BrightColors
+type BC = `${C}Bright`;
+
+/**
+ * Base ANSI Colors
+ */
+export type AnsiColors =
+  | C
+  | 'gray' | 'grey'
+  | BC
+  | `bg${Capitalize<C> | Capitalize<BC>}`
+  | 'bgGray' | 'bgGrey';
+
 /**
  * Base ANSI Styles
  */
-type AnsiStyles =
+export type AnsiStyles =
   | 'reset' /** Reset the current style. */
   | 'inverse' /** Invert background and foreground colors. */
   | 'hidden' /** Print the invisible text. */
@@ -37,27 +55,11 @@ type AnsiStyles =
   | 'underline' /** Underline style. (Not widely supported) */
   | 'strikethrough' /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) */;
 
-// BasicColors
-type BC = 'black' | 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
-
-// BrightColors
-type BBC = `${BC}Bright`;
-
-/**
- * Base ANSI Colors
- */
-type AnsiColors =
-  | BC
-  | 'gray' | 'grey'
-  | BBC
-  | `bg${Capitalize<BC>}`
-  | `bg${Capitalize<BBC>}`
-  | 'bgGray' | 'bgGrey';
+// Note: AnsiColors, AnsiStyles and AnsiColorsExtend types used in many project on GitHub, don't remove it!
+export type AnsiColorsExtend<T extends S> = AC | (T & Record<never, never>);
 
 // Short alias for Ansis
 type AC = AnsiColors;
-
-type AnsiColorsExtend<T extends S> = AC | (T & Record<never, never>);
 
 // Dynamic properties mapped to `Ansis` (DynamicProperties)
 type DP = {
@@ -66,12 +68,27 @@ type DP = {
 
 // Static properties and methods (StaticMethods)
 // Compatibility note:
-// - typescript <= 5.5: The `this` can be used within a method of an `interface` only.
-// - typescript >= 5.6: The `this` can be used within a method of an `interface` or a `type`.
+// - TypeScript <= 5.5: The `this` can be used within a method of an `interface` only.
+// - TypeScript >= 5.6: The `this` can be used within a method of an `interface` or a `type`.
 interface SP {
-  (value: unknown): S;
+  /**
+   * @param {unknown} v The value to be processed, can be of any type, which will be converted to a string.
+   * @return {string} The resulting string.
+   */
+  (v: unknown): S;
 
-  (strings: TemplateStringsArray, ...values: any[]): S;
+  /**
+   * Processes a template string with embedded values and returns a string.
+   *
+   * This method allows you to use template strings with embedded expressions.
+   * It takes a `TemplateStringsArray` and an arbitrary number of `values`,
+   * which are interpolated into the string and returned as a result.
+   *
+   * @param {TemplateStringsArray} s The template literal string array.
+   * @param {any[]} v The values to be interpolated into the template string.
+   * @return {string} The resulting string.
+   */
+  (s: TemplateStringsArray, ...v: any[]): S;
 
   /**
    * Whether the output supports ANSI color and styles.
@@ -153,16 +170,16 @@ interface SP {
   /**
    * Set HEX value for foreground color.
    *
-   * @param {string} hex
+   * @param {string} s The hex value.
    */
-  hex(hex: S): A;
+  hex(s: S): A;
 
   /**
    * Set HEX value for background color.
    *
-   * @param {string} hex
+   * @param {string} s The hex value.
    */
-  bgHex(hex: S): A;
+  bgHex(s: S): A;
 
   /**
    * Extends the current `Ansis` instance with additional colors.
@@ -192,7 +209,7 @@ interface SP {
   close: S;
 }
 
-// Combine dynamic and static properties
+// Combine static and dynamic properties
 type Ansis = SP & DP;
 
 // Short alias for Ansis
@@ -203,21 +220,17 @@ type A = Ansis;
 declare const Ansis: new () => A,
   isSupported: () => B,
   strip: (s: S) => S,
-  extend: SP["extend"],
+  extend: SP['extend'],
 
-  fg: SP["fg"],
-  rgb: SP["rgb"],
-  hex: SP["hex"],
+  fg: SP['fg'],
+  rgb: SP['rgb'],
+  hex: SP['hex'],
 
   // declare all styles and colors of type Ansis
   a: A;
 
 // Named exports
 export {
-  // Note: AnsiColors, AnsiStyles and AnsiColorsExtend types used in many project on GitHub, don't remove it!
-  type AnsiColors,
-  type AnsiStyles,
-  type AnsiColorsExtend,
   a as default,
   Ansis,
 

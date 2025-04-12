@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.0-beta.14 (2025-04-13)
+
+- feat: reduce size of index.d.ts file
+
 ## 4.0.0-beta.13 (2025-04-12)
 
 - feat: reduce the package size

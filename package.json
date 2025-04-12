@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "4.0.0-beta.13",
+  "version": "4.0.0-beta.14",
   "description": "A small and fast library for applying ANSI colors in terminal or browser console",
   "keywords": [
     "ansi",
@@ -53,6 +53,7 @@
     "bench:truecolor": "(cd ./bench/ && npm install); node bench/truecolor.bench.js",
     "compare": "(cd ./compare/ && npm install); node ./compare/index.js",
     "test": "vitest run",
+    "test:types": "vitest run ./test/types.test.ts",
     "test:unit": "vitest run ./test/unit.test.js",
     "test:ansi16": "vitest run ./test/ansi16.test.js",
     "test:ansi256": "vitest run ./test/ansi256.test.js",

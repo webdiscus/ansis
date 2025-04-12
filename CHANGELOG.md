@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.0-beta.13 (2025-04-12)
+
+- feat: reduce the package size
+
 ## 4.0.0-beta.9 (2025-03-13)
 
 - feat: slightly improve performance for hex function

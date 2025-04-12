@@ -3,6 +3,27 @@
  */
 
 /**
+ * Primitive type aliases for size optimization.
+ *
+ * Ansis is a very small library, intentionally optimized for minimal package size.
+ * Since its API uses only simple, predictable function signatures with primitive types (number, string, boolean),
+ * we define short aliases for frequently used types.
+ *
+ * Benefits:
+ * - The smaller `.d.ts` file reduces the package size.
+ * - The TypeScript compiler treats them exactly as the native types.
+ * - Given the simplicity of the API, the tradeoff in readability is acceptable.
+ *
+ * Example:
+ *   rgb(r: N, g: N, b: N): A
+ *   // is equivalent to:
+ *   rgb(r: number, g: number, b: number): Ansis
+ */
+type N = number;
+type S = string;
+type B = boolean;
+
+/**
  * Base ANSI Styles
  */
 type AnsiStyles =
@@ -36,7 +57,7 @@ type AnsiColors =
 // Short alias for Ansis
 type AC = AnsiColors;
 
-type AnsiColorsExtend<T extends string> = AC | (T & Record<never, never>);
+type AnsiColorsExtend<T extends S> = AC | (T & Record<never, never>);
 
 // Dynamic properties mapped to `Ansis` (DynamicProperties)
 type DP = {
@@ -48,9 +69,24 @@ type DP = {
 // - typescript <= 5.5: The `this` can be used within a method of an `interface` only.
 // - typescript >= 5.6: The `this` can be used within a method of an `interface` or a `type`.
 interface SP {
-  (value: unknown): string;
+  (value: unknown): S;
 
-  (strings: TemplateStringsArray, ...values: any[]): string;
+  (strings: TemplateStringsArray, ...values: any[]): S;
+
+  /**
+   * Whether the output supports ANSI color and styles.
+   *
+   * @return {boolean}
+   */
+  isSupported(): B;
+
+  /**
+   * Remove ANSI styling codes.
+   *
+   * @param {string} s
+   * @return {string}
+   */
+  strip(s: S): S;
 
   /**
    * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for foreground color.
@@ -65,14 +101,14 @@ interface SP {
    *
    * @param {number} n in range [0, 255].
    */
-  ansi256(n: number): A;
+  ansi256(n: N): A;
 
   /**
    * Alias for ansi256.
    *
    * @param {number} n in range [0, 255].
    */
-  fg(n: number): A;
+  fg(n: N): A;
 
   /**
    * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for background color.
@@ -87,14 +123,14 @@ interface SP {
    *
    * @param {number} n in range [0, 255].
    */
-  bgAnsi256(n: number): A;
+  bgAnsi256(n: N): A;
 
   /**
    * Alias for bgAnsi256.
    *
    * @param {number} n in range [0, 255].
    */
-  bg(n: number): A;
+  bg(n: N): A;
 
   /**
    * Set RGB values for foreground color.
@@ -103,7 +139,7 @@ interface SP {
    * @param {number} g The green value, in range [0, 255].
    * @param {number} b The blue value, in range [0, 255].
    */
-  rgb(r: number, g: number, b: number): A;
+  rgb(r: N, g: N, b: N): A;
 
   /**
    * Set RGB values for background color.
@@ -112,29 +148,21 @@ interface SP {
    * @param {number} g The green value, in range [0, 255].
    * @param {number} b The blue value, in range [0, 255].
    */
-  bgRgb(r: number, g: number, b: number): A;
+  bgRgb(r: N, g: N, b: N): A;
 
   /**
    * Set HEX value for foreground color.
    *
    * @param {string} hex
    */
-  hex(hex: string): A;
+  hex(hex: S): A;
 
   /**
    * Set HEX value for background color.
    *
    * @param {string} hex
    */
-  bgHex(hex: string): A;
-
-  /**
-   * Remove ANSI styling codes.
-   *
-   * @param {string} s
-   * @return {string}
-   */
-  strip(s: string): string;
+  bgHex(hex: S): A;
 
   /**
    * Extends the current `Ansis` instance with additional colors.
@@ -155,20 +183,13 @@ interface SP {
    * @param colors A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
    * @returns An instance of `Ansis` with the extended colors available as properties.
    */
-  extend<U extends string>(colors: Record<U, string | { open: string; close: string }>): asserts this is InstanceType<typeof Ansis> & Record<U, A>;
-
-  /**
-   * Whether the output supports ANSI color and styles.
-   *
-   * @return {boolean}
-   */
-  isSupported(): boolean;
+  extend<U extends S>(colors: Record<U, S | { open: S; close: S }>): asserts this is InstanceType<typeof Ansis> & Record<U, A>;
 
   /** The ANSI escape sequences for starting the current style. */
-  open: string;
+  open: S;
 
   /** The ANSI escape sequences for ending the current style. */
-  close: string;
+  close: S;
 }
 
 // Combine dynamic and static properties
@@ -180,8 +201,8 @@ type A = Ansis;
 // Note: define constants with only unique declarations,
 // E.g. the methods rgb and bgRgb have the same arguments and return, therefore we need it only once.
 declare const Ansis: new () => A,
-  isSupported: () => boolean,
-  strip: SP["strip"],
+  isSupported: () => B,
+  strip: (s: S) => S,
   extend: SP["extend"],
 
   fg: SP["fg"],
@@ -193,14 +214,14 @@ declare const Ansis: new () => A,
 
 // Named exports
 export {
-  // note: AnsiColors, AnsiStyles and AnsiColorsExtend types used in many project on GitHub, don't remove it!
+  // Note: AnsiColors, AnsiStyles and AnsiColorsExtend types used in many project on GitHub, don't remove it!
   type AnsiColors,
   type AnsiStyles,
   type AnsiColorsExtend,
   a as default,
   Ansis,
 
-  // exporting these methods is required if the `module` compiler option is `node16,
+  // Exporting these methods is required if the `module` compiler option is `node16,
   // otherwise the TS compiler can't find they in default import:
   // import ansis from 'ansis';
   // ansis.strip(text); // <= TS2339: Property strip does not exist on type

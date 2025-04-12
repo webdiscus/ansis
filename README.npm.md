@@ -1,5 +1,5 @@
+![](docs/n.png)
+
 # Ansis
 
-ANSI color library.
-
-[Documentation](../../)
+ANSI color library - [Docs](../../)

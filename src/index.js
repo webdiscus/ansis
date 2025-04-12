@@ -30,7 +30,6 @@ let createStyle = ({ p: props }, { open, close }) => {
    */
   let styleFn = (arg, ...values) => {
     // API rule: if the argument is one of '', undefined or null, then return empty string
-
     if (!arg) {
       if (open && open === close) return open;
       // null == arg || '' === arg

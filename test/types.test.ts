@@ -1,30 +1,11 @@
 import { describe, test, expect } from 'vitest';
 import ansis, { Ansis, AnsiColors, AnsiStyles, AnsiColorsExtend, ansi256, rgb, hex } from 'ansis';
 
-describe('Types validation', () => {
-  // test('Ansis type should be an instance of SP & DP', () => {
-  //   // Test that Ansis type is a valid intersection of SP and DP
-  //   const instance: Ansis = {
-  //     //...fg(1),
-  //     //...rgb(1, 2, 3),
-  //     isSupported: () => true,
-  //     strip: (s) => s,
-  //     extend: (colors) => {},
-  //     open: 'open',
-  //     close: 'close',
-  //     ansi256: fg(1),
-  //     // bgAnsi256: fg(1),
-  //     // bg: fg(1),
-  //     // rgb: rgb(1, 2, 3),
-  //     // bgRgb: rgb(1, 2, 3),
-  //     // hex: hex('123456'),
-  //     // bgHex: hex('123456'),
-  //   };
-  //
-  //   expect(instance).toHaveProperty('open');
-  //   expect(instance).toHaveProperty('close');
-  // });
+function assertType<T>(value: T): void {
+  // do nothing, just let the compiler verify
+}
 
+describe('Types validation', () => {
   test('isSupported function should return a boolean', () => {
     const result = ansis.isSupported();
     expect(result).toBeTypeOf('boolean');
@@ -62,7 +43,6 @@ describe('Types validation', () => {
     expect(color).toBe('red');
   });
 
-
   test('AnsiStyles should contain valid string literals', () => {
     const validAnsiStyles: AnsiStyles[] = [
       'reset', 'inverse', 'hidden', 'visible', 'bold', 'dim', 'italic', 'underline', 'strikethrough'
@@ -86,6 +66,18 @@ describe('Types validation', () => {
       expect(validStyles.includes(style as AnsiStyles)).toBe(false);
     });
   });
+});
+
+describe('AnsiColorsExtend validation', () => {
+  test('AnsiColorsExtend should accept known AnsiColors', () => {
+    const color: AnsiColorsExtend<'red'> = 'red';
+    expect(color).toBe('red');
+  });
+
+  test('AnsiColorsExtend should accept extended color strings', () => {
+    const custom: AnsiColorsExtend<'orange'> = 'orange';
+    expect(custom).toBe('orange');
+  });
 
   test('AnsiColorsExtend type should accept both AC and the extended type', () => {
     type TestType = AnsiColorsExtend<string>;
@@ -93,17 +85,37 @@ describe('Types validation', () => {
     expect(testInstance).toBeTypeOf('string');
   });
 
-
   test('extend function should handle types correctly for AnsiColorsExtend', () => {
     const mockExtend = <T extends string>(colors: Record<string, T>) => {
       return ansis.extend(colors);
     };
 
     const result = mockExtend({ 'purple': 'rgb(128, 0, 128)' });
-
-    // Type assertion for AnsiColorsExtend
-    //const extendedColor: AnsiColorsExtend<typeof result> = result;
-
     expect(result).toHaveProperty('purple');
+  });
+
+  test('should treat extended color as string at runtime', () => {
+    const color = 'orange';
+
+    // TypeScript ensures this is assignable to AnsiColorsExtend<'orange'>
+    const extendedColor: AnsiColorsExtend<typeof color> = color;
+
+    // At runtime, it's a string
+    expect(typeof extendedColor).toBe('string');
+    expect(extendedColor).toBe('orange');
+  });
+
+});
+
+// Check types at compile time (IDE editor), not at runtime (vitest).
+describe('Type validation at compilation', () => {
+  test('AnsiColorsExtend should reject non-string values', () => {
+    // @ts-expect-error - numbers are not assignable
+    const invalid: AnsiColorsExtend<'orange'> = 123;
+  });
+
+  test('AnsiColorsExtend type accepts extended string', () => {
+    const color = 'orange';
+    assertType<AnsiColorsExtend<typeof color>>(color);
   });
 });

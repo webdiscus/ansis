@@ -1,4 +1,4 @@
-import ansis, { AnsiColorsExtend } from 'ansis';
+import ansis, { Ansis, AnsiColorsExtend } from 'ansis';
 
 const log = console.log;
 
@@ -22,11 +22,9 @@ const myLog = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) =
 // };
 
 // Extend base colors
-//const customAnsis = ansis.extend(myTheme);
 ansis.extend(myTheme);
 
 // Access extended colors
-//const { pink, orange, red } = customAnsis;
 const { pink, orange, red } = ansis;
 
 myLog('red', 'default: red'); // default style, OK
@@ -44,3 +42,24 @@ log(orange.italic`destructured extended color: orange italic`);
 
 log(ansis.pink.underline('extended chained color: pink underline'));
 log(pink.underline('destructured extended chained color: pink underline'));
+
+
+// Usage test: This should simulate what you'd get in TS validation
+
+function testExtend1(inst: Ansis) {
+  inst.extend({
+    foo: '#abc',
+    bar: { open: '\x1b[31m', close: '\x1b[39m' },
+  });
+
+  inst.foo('test');
+  inst.bar('test');
+}
+
+function testExtend2(inst: InstanceType<typeof Ansis>) {
+  inst.extend({
+    baz: '#fff',
+  });
+
+  inst.baz('ok');
+}

@@ -17,7 +17,7 @@ ANSI color library with support for CI, terminals, and Chromium-based browser co
 Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
 
-### 🚀 [Install and Quick Start](#install) ⚖️ [Alternatives](#alternatives) ✨[Why Ansis](#why-ansis)  🔧[Compatibility Check](#compatibility)
+### 🚀 [Getting Started](#install) ⚖️ [Alternatives](#alternatives) ✨[Why Ansis](#why-ansis)  🔄 [Switch from](#switch-to-ansis)  🔧[Compatibility](#compatibility)
 
 ![Ansis demo](docs/img/ansis-demo.png)
 
@@ -385,8 +385,8 @@ italic.bold.yellow.bgMagentaBright`text`;
 
 256 color functions:
 
-- **Foreground:** `ansi256(code)`, _alias_ `fg(code)`
-- **Background:** `bgAnsi256(code)`, _alias_ `bg(code)`
+- **Foreground:** `fg(code)`, _alias_ `ansi256(code)`
+- **Background:** `bg(code)`, _alias_ `bgAnsi256(code)`
 
 > [!NOTE]
 > The function names `fg(code)` and `bg(code)` are designed for brevity,
@@ -551,51 +551,48 @@ log('unknown', 'message'); // TypeScript Error
 
 ## CLI environment variables
 
-Defaults, the output in terminal console is colored and output in a file is uncolored.
+By default, output in the terminal console is colored, while output in a file is uncolored.
 
-To force disable or enable colored output you can use environment variables `NO_COLOR` and `FORCE_COLOR`.
+To force enable or disable colored output, you can use the `NO_COLOR` and `FORCE_COLOR` environment variables.
 
 <a id="using-env-no-color" name="using-env-no-color"></a>
-#### `NO_COLOR`
+### NO_COLOR
 
-The `NO_COLOR` variable should be presents with any not empty value.
-The value is not important, e.g., `NO_COLOR=1` `NO_COLOR=true` disable colors.
+Setting the `NO_COLOR` variable to any non-empty value will disable color output. For example:
+```sh
+NO_COLOR=1      # Disable colors
+NO_COLOR=true   # Disable colors
+```
 
-See the [`NO_COLOR` standard](https://no-color.org/).
+Refer to the [`NO_COLOR` standard](https://no-color.org/) for more details.
 
 <a id="using-env-force-color" name="using-env-force-color"></a>
-#### `FORCE_COLOR`
+### FORCE_COLOR
 
-The `FORCE_COLOR` environment variable is used to enable ANSI colors in the terminal output.
+The [`FORCE_COLOR` standard](https://force-color.org/) variable is used to control the color output in the terminal.
+The behavior of `FORCE_COLOR` in Ansis follows the Node.js convention, with a few adaptations:
 
-The proposed [`FORCE_COLOR` standard](https://force-color.org/):
+| Value                   | Description                                                        |
+|-------------------------|--------------------------------------------------------------------|
+| `FORCE_COLOR=false`     | Disables colors                                                    |
+| `FORCE_COLOR=0`         | Disables colors                                                    |
+| `FORCE_COLOR=true`      | Auto-detects supported colors; enforces truecolor if none detected |
+| `FORCE_COLOR=`_(unset)_ | Auto-detects supported colors; enforces truecolor if none detected |
+| `FORCE_COLOR=1`         | Enables 16 colors                                                  |
+| `FORCE_COLOR=2`         | Enables 256 colors                                                 |
+| `FORCE_COLOR=3`         | Enables truecolor                                                  |
 
-> When `FORCE_COLOR` is present and not an empty string (regardless of its value), it should force enable colors.
-
-But Node.js supports the `FORCE_COLOR` variable in a different way, see [here](https://nodejs.org/api/cli.html#force_color1-2-3) and [here](https://nodejs.org/api/tty.html#writestreamhascolorscount-env).
-
-Ansis interprets `FORCE_COLOR` in accordance with its support in Node.js, with slight adaptations:
-
-```
-FORCE_COLOR=false   // Disables colors
-FORCE_COLOR=0       // Disables colors
-FORCE_COLOR=true    // Auto detects the supported colors (if no color detected, enforce truecolor)
-FORCE_COLOR=(unset) // Auto detects the supported colors (if no color detected, enforce truecolor)
-FORCE_COLOR=1       // Enables 16 colors
-FORCE_COLOR=2       // Enables 256 colors
-FORCE_COLOR=3       // Enables truecolor
-```
 
 > [!IMPORTANT]
-> Node.js [interprets](https://nodejs.org/api/cli.html#force_color1-2-3) the values `1`, `true` and an empty string `''` (unset value) as enabling 16 colors.
+> In [Node.js](https://nodejs.org/api/cli.html#force_color1-2-3) `FORCE_COLOR` values of `1`, `true`,
+> and and an empty string (`''`) are treated as enabling 16 colors.
 >
-> Ansis interprets the value `1` as enabling exactly 16 colors.\
-> The values `true` and an empty string indicate automatic detection of supported colors (16, 256, truecolor).
-> If no color is detected, enforce using truecolor.
-
+> In Ansis:
+> - `1` - enables exactly 16 colors
+> - `true` - and an empty string trigger automatic color detection (16, 256, or truecolor).\
+>    If no colors are detected, `truecolor` is enforced.
 
 See:
-- [`FORCE_COLOR` standard](https://force-color.org/)
 - [Node.js getColorDepth](https://nodejs.org/api/tty.html#writestreamhascolorscount-env)
 - [Node.js FORCE_COLOR=[1, 2, 3]](https://nodejs.org/api/cli.html#force_color1-2-3)
 
@@ -607,95 +604,153 @@ import { red } from 'ansis';
 console.log(red`red color`);
 ```
 
-Execute the script in a terminal:
+You can test the following behaviors by executing the script in the terminal:
 
-```
-node app.js           # colored output in terminal
-node app.js > log.txt # output in file without ANSI codes
+```sh
+node app.js           # Colored output in terminal
+node app.js > log.txt # Output in file without ANSI codes
 
-NO_COLOR=1 node app.js              # force disable colors
-FORCE_COLOR=0 node app.js           # force disable colors
-FORCE_COLOR=1 node app.js > log.txt # force enable 16 colors
-FORCE_COLOR=2 node app.js > log.txt # force enable 256 colors
-FORCE_COLOR=3 node app.js > log.txt # force enable truecolor
+NO_COLOR=1 node app.js              # Force disable colors
+FORCE_COLOR=0 node app.js           # Force disable colors
+FORCE_COLOR=1 node app.js > log.txt # Force enable 16 colors
+FORCE_COLOR=2 node app.js > log.txt # Force enable 256 colors
+FORCE_COLOR=3 node app.js > log.txt # Force enable truecolor
 ```
 
 <a id="using-env-colorterm" name="using-env-colorterm"></a>
 
-#### `COLORTERM`
+### COLORTERM
 
-The `COLORTERM` environment variable is used by terminal emulators to indicate support for colors.
-Its value can vary depending on the terminal emulator and the level of color support provided.
-
-The commonly used values supported by `ansis`:
+The `COLORTERM`  environment variable indicates color support in terminal emulators.
+Its value depends on the terminal and its level of color support. Common values supported by Ansis are:
 
 - `truecolor` or `24bit` - 16 million colors
-- `ansi256` - ANSI 256 colors
-- `ansi` - basic ANSI 16 colors
+- `ansi256` - 256 colors
+- `ansi` - 16 colors
 
-You can set the variable in cmd before running the Node script:
+To force a specific color level, you can set the `COLORTERM` variable before running the Node script:
 
+```sh
+COLORTERM=ansi      node script.js  # Force enable 16 colors
+COLORTERM=ansi256   node script.js  # Force enable 256 colors
+COLORTERM=truecolor node script.js  # Force enable truecolor
 ```
-COLORTERM=ansi node script.js      # force enable 16 olors
-COLORTERM=ansi256 node script.js   # force enable 256 colors
-COLORTERM=truecolor node script.js # force enable truecolor
+
+## Testing CLI output with Ansis
+
+Ansis automatically detects the supported color level (none, 16, 256, or truecolor) based on the environment.
+
+To ensure consistent test results across different terminals and environments,
+you can explicitly set the desired color level using one of the supported environment variables:
+`NO_COLOR`, `FORCE_COLOR` or `COLORTERM`.
+
+> [!IMPORTANT]
+>
+> You must define the environment variable _before_ importing `ansis`.
+>
+> ```js
+> process.env.NO_COLOR = '1'; // ❌ Doesn't work
+> import { red } from 'ansis'; // <- Too late! NO_COLOR was undefined when ansis loaded
+> ```
+>
+> Instead, create a separate file to set the environment variable and import it first:
+> ```js
+> import './no-color.js';       // ✅ Sets env variable early
+> import { red } from 'ansis';  // NO_COLOR is defined
+> ```
+
+### Disable colors in tests
+
+To ensure consistent test output without ANSI codes, you can disable color rendering using the `NO_COLOR` environment variable.
+
+#### Disable via Environment Variable
+
+Create a file: _no-color.js_:
+
+```js
+process.env.NO_COLOR = '1';
 ```
 
-To set the color level in a script, create a JS file in which you define the `COLORTERM` environment variable with the needed value,
-and import this file before `ansis`.
+Import this file first in your test:
+```js
+import './no-color.js'; // disables colors
+import { expect, test } from 'vitest';
+import { red } from 'ansis';
 
-This can be useful, for example, for testing your cli application to ensure that the test results will be the same
-regardless of the supported color level in different environments and terminals.
+console.log(red('foo')); // Output: plain "foo", no ANSI codes
 
-#### Force use truecolor
+test('output should not contain ANSI codes', () => {
+  const output = red('foo');
+  expect(output).toBe('foo');
+});
+```
 
-_enable-truecolor.js_
+#### Strip ANSI Codes with `ansis.strip()`
+
+Alternatively, use `ansis.strip()` to remove color codes from strings in your tests:
+
+```js
+import { expect, describe, test } from 'vitest';
+import ansis, { red } from 'ansis';
+
+test('should remove ANSI codes from output', () => {
+  const output = red('foo');
+  expect(ansis.strip(output)).toBe('foo');
+});
+```
+
+### Force truecolor
+
+File: _enable-truecolor.js_:
 
 ```js
 process.env.COLORTERM = 'truecolor';
 ```
-your script file:
+
+Test file:
 ```js
-import './level-truecolor'; // <= force use truecolor
+import './enable-truecolor.js'; // enables truecolor
 import { red, fg, hex } from 'ansis';
 
-console.log(hex('#FFAB40')('orange')); // native ANSI RGB color value
-console.log(fg(200)('pink'));          // native ANSI 256 color value
-console.log(red('red'));               // native ANSI 16 color value
+console.log(hex('#FFAB40')('orange')); // uses native ANSI RGB
+console.log(fg(200)('pink'));          // uses ANSI 256
+console.log(red('red'));               // uses ANSI 16
 ```
 
-#### Force use 256 colors
+### Force 256 colors
 
-_enable-256colors.js_
+File: _enable-256colors.js_:
 
 ```js
 process.env.COLORTERM = 'ansi256';
 ```
-your script file:
+
+Test file:
 ```js
-import './level-256colors'; // <= force use 256 colors
+import './enable-256colors.js'; // enables 256 colors
 import { red, fg, hex } from 'ansis';
 
-console.log(hex('#FFAB40')('orange')); // fallback to ANSI 256 color value
-console.log(fg(200)('pink'));          // native ANSI 256 color value
-console.log(red('red'));               // native ANSI 16 color value
+console.log(hex('#FFAB40')('orange')); // fallback to ANSI 256 color
+console.log(fg(200)('pink'));          // uses ANSI 256
+console.log(red('red'));               // uses ANSI 16
 ```
 
-#### Force use base 16 colors
+### Force 16 colors
 
-_enable-16colors.js_
+File: _enable-16colors.js_:
 
 ```js
 process.env.COLORTERM = 'ansi';
 ```
-your script file:
+
+Test file:
 ```js
-import './level-16colors'; // <= force use 16 olors
+import './enable-16colors.js'; // enables 16 colors
 import { red, fg, hex } from 'ansis';
 
-console.log(hex('#FFAB40')('orange')); // fallback to ANSI 16 color value - `bright red`
-console.log(fg(200)('pink'));          // fallback to ANSI 16 color value - `bright magenta`
-console.log(red('red'));               // native ANSI 16 color value
+console.log(hex('#FFAB40')('orange')); // fallback to ANSI 16 color (e.g., bright red)
+console.log(fg(200)('pink'));          // fallback to ANSI 16 color (e.g., bright magenta)
+console.log(red('red'));               // uses ANSI 16
 ```
 
 #### [↑ top](#top)

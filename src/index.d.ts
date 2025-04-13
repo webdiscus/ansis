@@ -190,44 +190,40 @@ interface SP {
    *   apple: '#4FA83D',
    *   pink: '#FF75D1',
    * };
-   * const customAnsis = ansis.extend(myTheme);
-   * const { apple, pink, red } = customAnsis;
    *
-   * // it works w/o return too:
-   * // ansis.extend(myTheme);
-   * // const { apple, pink, red } = ansis;
+   * It works w/o return:
+   * ansis.extend(myTheme);
+   * const { apple, pink, red } = ansis;
    *
-   * @param colors A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
-   * @returns An instance of `Ansis` with the extended colors available as properties.
+   * @param c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
+   * @return void.
    */
-  extend<U extends S>(colors: Record<U, S | { open: S; close: S }>): asserts this is InstanceType<typeof Ansis> & Record<U, A>;
-
-  /** The ANSI escape sequences for starting the current style. */
-  open: S;
-
-  /** The ANSI escape sequences for ending the current style. */
-  close: S;
+  extend<U extends S>(c: Record<U, S | P>): asserts this is A & Record<U, A>;
 }
 
-// Combine static and dynamic properties
-type Ansis = SP & DP;
+/**
+ * The ANSI escape sequences for starting and ending the current style.
+ */
+type P = { open: S; close: S };
 
-// Short alias for Ansis
-type A = Ansis;
+// Combine static and dynamic properties
+type A = SP & DP & P;
+
+// Named alias for "A" type (Don't remove it!)
+type Ansis = A;
 
 // Note: define constants with only unique declarations,
 // E.g. the methods rgb and bgRgb have the same arguments and return, therefore we need it only once.
 declare const Ansis: new () => A,
+  // declare all styles and colors of type Ansis
+  a: A,
   isSupported: () => B,
   strip: (s: S) => S,
-  extend: SP['extend'],
+  extend: A['extend'],
 
-  fg: SP['fg'],
-  rgb: SP['rgb'],
-  hex: SP['hex'],
-
-  // declare all styles and colors of type Ansis
-  a: A;
+  fg: A['fg'],
+  rgb: A['rgb'],
+  hex: A['hex'];
 
 // Named exports
 export {

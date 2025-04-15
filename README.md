@@ -27,7 +27,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 
 ## 💡 Highlights
 
-- Supports **ESM**, **CommonJS**, **TypeScript** across **Node.js**, **Bun**, **Deno**, **Next.JS** runtimes
+- Supports **ESM**, **CommonJS**, **Bun**, **Deno**, **Next.JS**
 - Works in [Chromium-based](#browsers-compatibility) browsers such as **Chrome**, **Edge**, **Opera**, **Brave**, **Vivaldi**
 - Default and [named import](#import): `import ansis, { red, green, bold, dim } from 'ansis'`
 - [Chained syntax](#chained-syntax): `red.bold.underline('text')`
@@ -42,6 +42,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - Strip ANSI escape codes with `ansis.strip()`
 - Auto-detects [color support](#color-support) across a wide range of [environments](#color-support)
 - Supports [ENV variables](#cli-vars) and [flags](#cli-flags): [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color), [`COLORTERM`](#using-env-colorterm), `--no-color`, `--color`
+- Reliable [CLI testing](#cli-testing) by forcing specific color levels: no color, 16, 256 or truecolor
 - [Drop-in replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors)
 
 <!--  - Chromium-based browsers can display truecolor text in console.
@@ -89,8 +90,8 @@ Both are [recommended](https://github.com/es-tooling/module-replacements/blob/ma
 
 The package size in `node_modules` directory:
 
-- `picocolors`: [6.4 kB][npm-picocolors] (not minimized) - A micro library with basic features.
-- `аnsis`: [6.8 kB][npm-ansis] (minimized) - A powerful library containing all the features you need.
+- `picocolors`: [6.3 kB][npm-picocolors] (not minimized) - A micro library with basic features.
+- `аnsis`: [6.3 kB][npm-ansis] (minimized) - A powerful library containing all the features you need.
 - `chalk`:  [44.2 kB][npm-chalk] (not minimized) - Provides similar functionality to Ansis.
 
 ### ⚡ Performance
@@ -197,24 +198,31 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
 - Does support for ESM or CJS matter?
   - ✅ Ansis: `ESM` and `CJS`
   - ☑️ Picocolors: `CJS` only
+  - ☑️ Chalk: `ESM` only
 - Does it matter if a library performs [~60 million](#bench-simple) or [~100 million](#bench-simple) **ops/sec** when outputting to the terminal?
-  Spoiler: Both Ansis and Picocolors are more than [fast enough](#bench-picocolors-complex).
+  Spoiler: All libraries are more than [fast enough](#bench-picocolors-complex).
   - ✅ Picocolors
-  - ❌ Ansis
-- Does it matter if the unpacked size is [6.4 kB][npm-picocolors] or [6.8 kB][npm-ansis], a difference of **0.4 kB**?
-  - ✅ Picocolors
-  - ❌ Ansis
+  - ☑️ Ansis
+  - ☑️ Chalk
+- Does it matter the unpacked size?
+  - ✅ [Ansis - 6.33 kB][npm-ansis]
+  - ✅ [Picocolors - 6.37 kB][npm-picocolors]
+  - ❌ [Chalk - 44.4 kB][npm-chalk]
 - Does support for [ANSI 256 colors](#256-colors) or [Truecolor](#truecolor) with [fallback](#fallback) matter?
   - ✅ Ansis
+  - ✅ Chalk
   - ❌ Picocolors
 - Does handling [edge cases](#handling-input-arguments) matter?
   - ✅ Ansis
+  - ☑️ Chalk
   - ❌ Picocolors
 - Does supporting a wide range of [environments](#color-support) matter?
   - ✅ Ansis
+  - ✅ Chalk
   - ❌ Picocolors
 - Does keeping your code clean and readable matter?
   - ✅ Ansis ([default and named import](#import), [chained syntax](#chained-syntax), [nested **template strings**](#nested-syntax))
+  - ✅ Chalk (default import, chained syntax)
   - ☑️ Picocolors (default import, nested calls)
 
 
@@ -392,7 +400,7 @@ italic.bold.yellow.bgMagentaBright`text`;
 > The function names `fg(code)` and `bg(code)` are designed for brevity,
 > while `ansi256(code)` and `bgAnsi256(code)` ensure compatibility with Chalk.
 
-256 colors codes:
+256 color codes:
 
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
@@ -467,7 +475,7 @@ bold.hex('#E0115F').bgHex('#96C')`ruby bold text on amethyst background`
 
 ## Fallback
 
-The `ansis` supports fallback to supported color space.
+The `ansis` supports fallback to supported color level.
 
 ```
 Truecolor —> 256 colors —> 16 colors —> no colors (black & white)
@@ -636,7 +644,13 @@ COLORTERM=ansi256   node script.js  # Force enable 256 colors
 COLORTERM=truecolor node script.js  # Force enable truecolor
 ```
 
-## Testing CLI output with Ansis
+---
+
+#### [↑ top](#top)
+
+<a id="using-env-colorterm" name="cli-testing"></a>
+
+## Testing CLI output
 
 Ansis automatically detects the supported color level (none, 16, 256, or truecolor) based on the environment.
 
@@ -730,9 +744,9 @@ Test file:
 import './enable-256colors.js'; // enables 256 colors
 import { red, fg, hex } from 'ansis';
 
-console.log(hex('#FFAB40')('orange')); // fallback to ANSI 256 color
-console.log(fg(200)('pink'));          // uses ANSI 256
-console.log(red('red'));               // uses ANSI 16
+console.log(hex('#FFAB40')('orange')); // fallback to ANSI 256 colors
+console.log(fg(200)('pink'));          // uses ANSI 256 colors
+console.log(red('red'));               // uses ANSI 16 colors
 ```
 
 ### Force 16 colors
@@ -748,9 +762,9 @@ Test file:
 import './enable-16colors.js'; // enables 16 colors
 import { red, fg, hex } from 'ansis';
 
-console.log(hex('#FFAB40')('orange')); // fallback to ANSI 16 color (e.g., bright red)
-console.log(fg(200)('pink'));          // fallback to ANSI 16 color (e.g., bright magenta)
-console.log(red('red'));               // uses ANSI 16
+console.log(hex('#FFAB40')('orange')); // fallback to ANSI 16 colors (e.g., bright red)
+console.log(fg(200)('pink'));          // fallback to ANSI 16 colors (e.g., bright magenta)
+console.log(red('red'));               // uses ANSI 16 colors
 ```
 
 #### [↑ top](#top)
@@ -792,7 +806,7 @@ Execute the script in a terminal:
 
 ## Color support
 
-Ansis automatically detects the supported color space:
+Ansis automatically detects the supported color level:
 
 - Truecolor
 - ANSI 256 colors
@@ -807,7 +821,7 @@ import ansis from 'ansis';
 console.log('Color output: ', ansis.isSupported());
 ```
 
-There is no standard way to detect which color space is supported.
+There is no standard way to detect which color level is supported.
 The most common way to detect color support is to check the `TERM` and `COLORTERM` environment variables.
 CI systems can be detected by checking for the existence of the `CI` and other specifically environment variables.
 Combine that with the knowledge about which operating system the program is running on, and we have a decent enough way to detect colors.
@@ -1086,19 +1100,19 @@ c.red(1/0)     // 'Infinity' in red
 
 ## Compare the size of most popular packages
 
-| Npm package                    |          Dependencies          | Is Minified         |                                            Unpacked Size |                                                              Tarball size |
-| :----------------------------- |:------------------------------:|---------------------|---------------------------------------------------------:|--------------------------------------------------------------------------:|
-| [`picocolors`][picocolors]     |      [0][npm-picocolors]       | no                  |                                 [6.4 kB][npm-picocolors] |           [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |
-| [`ansis`][ansis]               |         [0][npm-ansis]         | uglified & minified |                                      [6.8 kB][npm-ansis] |                [3.6 kB](https://arve0.github.io/npm-download-size/#ansis) |
-| [`tinyrainbow`][tinyrainbow]   |   [0][npm-tinyrainbow]         | uglified            |                                [8.1 kB][npm-tinyrainbow] |          [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |
-| [`colorette`][colorette]       |       [0][npm-colorette]       | no                  |                                 [17.0 kB][npm-colorette] |            [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |
-| [`kleur`][kleur]               |         [0][npm-kleur]         | no                  |                                     [20.3 kB][npm-kleur] |                [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |
-| [`ansi-colors`][ansi-colors]   |      [0][npm-ansi-colors]      | no                  |                               [26.1 kB][npm-ansi-colors] |          [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |
-| [`kolorist`][kolorist]         |       [0][npm-kolorist]        | no                  |                                  [51.0 kB][npm-kolorist] |             [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |
-| [`colors.js`][colors.js]       |       [0][npm-colors.js]       | no                  |                                 [41.5 kB][npm-colors.js] |    [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |
-| [`chalk`][chalk]               |         [0][npm-chalk]         | no                  |                                     [43.7 kB][npm-chalk] |               [13.4 kB](https://arve0.github.io/npm-download-size/#chalk) |
-| [`cli-color`][cli-color]       |      [`5`][npm-cli-color]      | no                  | [754.0 kB](https://packagephobia.com/result?p=cli-color) |          [216.8 kB](https://arve0.github.io/npm-download-size/#cli-color) |
-| [`colors-cli`][colors-cli]     |      [0][npm-colors-cli]       | no                  |                               [511.0 kB][npm-colors-cli] |         [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |
+| Npm package                    |          Dependencies          | Is Minified         |                                            Unpacked Size |                                                           Tarball size |
+| :----------------------------- |:------------------------------:|---------------------|---------------------------------------------------------:|-----------------------------------------------------------------------:|
+| [`picocolors`][picocolors]     |      [0][npm-picocolors]       | no                  |                                 [6.3 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |
+| [`ansis`][ansis]               |         [0][npm-ansis]         | uglified & minified |                                      [6.3 kB][npm-ansis] |             [3.7 kB](https://arve0.github.io/npm-download-size/#ansis) |
+| [`tinyrainbow`][tinyrainbow]   |   [0][npm-tinyrainbow]         | uglified            |                                [8.1 kB][npm-tinyrainbow] |       [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |
+| [`colorette`][colorette]       |       [0][npm-colorette]       | no                  |                                 [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |
+| [`kleur`][kleur]               |         [0][npm-kleur]         | no                  |                                     [20.3 kB][npm-kleur] |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |
+| [`ansi-colors`][ansi-colors]   |      [0][npm-ansi-colors]      | no                  |                               [26.1 kB][npm-ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |
+| [`kolorist`][kolorist]         |       [0][npm-kolorist]        | no                  |                                  [51.0 kB][npm-kolorist] |          [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |
+| [`colors.js`][colors.js]       |       [0][npm-colors.js]       | no                  |                                 [41.5 kB][npm-colors.js] | [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |
+| [`chalk`][chalk]               |         [0][npm-chalk]         | no                  |                                     [43.7 kB][npm-chalk] |            [13.4 kB](https://arve0.github.io/npm-download-size/#chalk) |
+| [`cli-color`][cli-color]       |      [`5`][npm-cli-color]      | no                  | [754.0 kB](https://packagephobia.com/result?p=cli-color) |       [216.8 kB](https://arve0.github.io/npm-download-size/#cli-color) |
+| [`colors-cli`][colors-cli]     |      [0][npm-colors-cli]       | no                  |                               [511.0 kB][npm-colors-cli] |      [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |
 
 **Legend**
 

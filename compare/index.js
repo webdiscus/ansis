@@ -140,7 +140,7 @@ function showSupportOfBreakStyleAtNewLine() {
 function showFallbackToSupportedColorSpace() {
   let fallbackColors;
 
-  log(bgBlueBright(`\n -= Supports the fallback to color space =- `));
+  log(bgBlueBright(`\n -= Supports the fallback to color level =- `));
 
   fallbackColors = '';
   spectrum.forEach(color => {fallbackColors += hex(color)('█');});
@@ -152,7 +152,7 @@ function showFallbackToSupportedColorSpace() {
 
   fallbackColors = '';
   spectrum.forEach(color => {fallbackColors += kolorist.trueColor(...hexToRgb(color))('█');});
-  logWithLabel(black.bgYellow`  +/- `, 'kolorist: ', fallbackColors + yellow` (not for 16 color space)`);
+  logWithLabel(black.bgYellow`  +/- `, 'kolorist: ', fallbackColors + yellow` (not for 16 colors)`);
 }
 
 showSupportOfDeepNestedStyling();

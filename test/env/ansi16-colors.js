@@ -1,2 +1,2 @@
-// set env variable to simulate ANSI 16 color space
+// set env variable to simulate ANSI 16 colors
 process.env.COLORTERM = 'ansi';

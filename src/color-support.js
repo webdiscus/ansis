@@ -1,8 +1,8 @@
-import { SPACE_UNDEFINED, SPACE_BW, SPACE_16COLORS, SPACE_256COLORS, SPACE_TRUECOLOR } from './color-spaces.js';
+import { LEVEL_UNDEFINED, LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS, LEVEL_TRUECOLOR } from './color-levels.js';
 import { keys, separator } from './misc.js';
 
 /**
- * Detect color space.
+ * Detect color level.
  *
  * Truecolor is supported by:
  * - some CI (e.g. GitHub CI)
@@ -29,10 +29,10 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // Terminals that set COLORTERM=truecolor: iTerm, VSCode, `xterm-kitty`, KDE Konsole.
 
   let colorspace = {
-    '24bit': SPACE_TRUECOLOR,
-    truecolor: SPACE_TRUECOLOR,
-    ansi256: SPACE_256COLORS,
-    ansi: SPACE_16COLORS,
+    '24bit': LEVEL_TRUECOLOR,
+    truecolor: LEVEL_TRUECOLOR,
+    ansi256: LEVEL_256COLORS,
+    ansi: LEVEL_16COLORS,
   }[env.COLORTERM]
 
   if (colorspace) return colorspace;
@@ -42,31 +42,31 @@ let detectColorSpace = (env, isTTY, isWin) => {
 
   // Azure DevOps CI
   // https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml
-  if (!!env.TF_BUILD) return SPACE_16COLORS;
+  if (!!env.TF_BUILD) return LEVEL_16COLORS;
 
   // JetBrains TeamCity support 256 colors since 2020.1.1 (2020-06-23), TEAMCITY_VERSION in env
-  if (/,TEAMCI/.test(envKeys)) return SPACE_256COLORS;
+  if (/,TEAMCI/.test(envKeys)) return LEVEL_256COLORS;
 
   // CI tools
   // https://github.com/watson/ci-info/blob/master/vendors.json
   if (!!env.CI) {
     // CI supports truecolor: GITHUB_ACTIONS, GITEA_ACTIONS
-    if (/,GIT(HUB|EA)/.test(envKeys)) return SPACE_TRUECOLOR;
+    if (/,GIT(HUB|EA)/.test(envKeys)) return LEVEL_TRUECOLOR;
 
     // others CI supports only 16 colors, e.g. when env contains:
     // - CI_NAME === codeship | sourcehut
     // - GITLAB_CI | TRAVIS | CIRCLECI |APPVEYOR | BUILDKITE | DRONE
 
-    return SPACE_16COLORS;
+    return LEVEL_16COLORS;
   }
 
   // 3) Detect unknown output or colors are not supported
-  if (!isTTY || term === 'dumb') return SPACE_BW;
+  if (!isTTY || term === 'dumb') return LEVEL_BW;
 
   // 4) Truecolor support starts from Windows 10 build 14931 (2016-09-21), in 2025 we assume modern Windows is used
-  if (isWin) return SPACE_TRUECOLOR;
+  if (isWin) return LEVEL_TRUECOLOR;
 
-  // 5) Detect terminals supporting 256 color
+  // 5) Detect terminals supporting 256 colors
 
   // Note: check for 256 colors after ENV variables such as TERM, COLORTERM.
   // Terminals, that support 256 colors:
@@ -78,7 +78,7 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // - linux-256color
   // - tmux-256color
   // - ansi-256color
-  if (/-256/.test(term)) return SPACE_256COLORS;
+  if (/-256/.test(term)) return LEVEL_256COLORS;
 
   // 6) Defaults, 16-color output for unknown terminals,
   // as all known terminals supporting 256 colors or truecolor have already been detected above.
@@ -98,7 +98,7 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // - rxvt-color - terminal emulator for X Window System
   // - vt100,vt102,vt110,vt220,vt240,vt320,vt420,vt520 - names historically used with Unix
 
-  return SPACE_16COLORS;
+  return LEVEL_16COLORS;
 };
 
 /**
@@ -122,7 +122,7 @@ export const getColorSpace = (mockThis) => {
   // Node -> `argv`, Deno -> `args`
   let argv = proc.argv ?? proc.args;
   let env = proc.env ?? {};
-  let colorSpace = SPACE_UNDEFINED;
+  let colorLevel = LEVEL_UNDEFINED;
 
   if (isDeno) {
     try {
@@ -130,7 +130,7 @@ export const getColorSpace = (mockThis) => {
       env = env.toObject();
     } catch (e) {
       // Deno: if interactive permission is not granted, do nothing, no colors
-      colorSpace = SPACE_BW;
+      colorLevel = LEVEL_BW;
     }
   }
 
@@ -159,35 +159,35 @@ export const getColorSpace = (mockThis) => {
   let FORCE_COLOR = 'FORCE_COLOR';
   let forceColorValue = env[FORCE_COLOR];
 
-  // mapping FORCE_COLOR values to color space values
+  // mapping FORCE_COLOR values to color level values
   let forceColorSpace = {
-    false: SPACE_BW,
-    0: SPACE_BW,
-    1: SPACE_16COLORS,
-    2: SPACE_256COLORS,
-    3: SPACE_TRUECOLOR,
-  }[forceColorValue] ?? SPACE_UNDEFINED;
+    false: LEVEL_BW,
+    0: LEVEL_BW,
+    1: LEVEL_16COLORS,
+    2: LEVEL_256COLORS,
+    3: LEVEL_TRUECOLOR,
+  }[forceColorValue] ?? LEVEL_UNDEFINED;
 
   // if FORCE_COLOR is present and is neither 'false' nor '0', OR has one of the flags: --color --color=true --color=always
   let isForceEnabled = (FORCE_COLOR in env && forceColorSpace) || hasFlag(/^--color=?(true|always)?$/);
 
-  if (isForceEnabled) colorSpace = forceColorSpace;
+  if (isForceEnabled) colorLevel = forceColorSpace;
 
-  // if colorSpace === SPACE_UNDEFINED, attempt to detect space, returns 0, 1, 2 or 3
-  if (!~colorSpace) colorSpace = detectColorSpace(env, isTTY, (isDeno ? Deno.build.os : proc.platform) === 'win32');
+  // if colorLevel === LEVEL_UNDEFINED, attempt to detect space, returns 0, 1, 2 or 3
+  if (!~colorLevel) colorLevel = detectColorSpace(env, isTTY, (isDeno ? Deno.build.os : proc.platform) === 'win32');
 
   // if force disabled: FORCE_COLOR=0 or FORCE_COLOR=false
   if (!forceColorSpace
     || !!env.NO_COLOR
     // --no-color --color=false --color=never
-    || hasFlag(/^--(no-color|color=(false|never))$/)) return SPACE_BW;
+    || hasFlag(/^--(no-color|color=(false|never))$/)) return LEVEL_BW;
 
   // Detect browser support
-  if (!!_this.window?.chrome) return SPACE_TRUECOLOR;
+  if (!!_this.window?.chrome) return LEVEL_TRUECOLOR;
 
-  // API Rule: If color output is force enabled but the color space is detected as B&W (e.g., TERM is dumb),
+  // API Rule: If color output is force enabled but the color level is detected as B&W (e.g., TERM is dumb),
   // enable truecolor since color depth support does not matter.
 
-  // Optimisation: `!colorSpace` is equivalent to `colorSpace === SPACE_BW`
-  return isForceEnabled && !colorSpace ? SPACE_TRUECOLOR : colorSpace;
+  // Optimisation: `!colorLevel` is equivalent to `colorLevel === LEVEL_BW`
+  return isForceEnabled && !colorLevel ? LEVEL_TRUECOLOR : colorLevel;
 };

@@ -41,7 +41,7 @@ import { Ansis, cyan, green, red, yellow, hex, rgb } from 'ansis';
 
 import spectrum from '../examples/fixtures/spectrum.js';
 import { getColorSpace } from '../src/color-support.js';
-import { colorSpaces, SPACE_TRUECOLOR } from '../src/color-spaces.js';
+import { colorLevels, LEVEL_TRUECOLOR } from '../src/color-levels.js';
 
 import packages from './packages.js';
 
@@ -52,9 +52,9 @@ const colorSpace = getColorSpace();
 const log = console.log;
 
 log();
-log(cyan.inverse` Colors `, `Your terminal supports ${cyan(colorSpaces[colorSpace])}.`);
+log(cyan.inverse` Colors `, `Your terminal supports ${cyan(colorLevels[colorSpace])}.`);
 
-if (colorSpace < SPACE_TRUECOLOR) {
+if (colorSpace < LEVEL_TRUECOLOR) {
   log(red.inverse` WARNING `, yellow`Your terminal doesn't support Truecolor!`);
   log('The result of some tests can be NOT correct!\nChoose a modern terminal, e.g. iTerm.\n');
 }

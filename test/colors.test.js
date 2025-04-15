@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 
-// import env variables to simulate truecolor color space in CLI
+// import env variables to simulate truecolor in CLI
 import './env/truecolor.js';
 
 //import { Ansis } from '../src/index.mjs'; //  // for debugging only

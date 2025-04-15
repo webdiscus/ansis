@@ -55,6 +55,7 @@
     "test": "vitest run",
     "test:types": "vitest run ./test/types.test.ts",
     "test:unit": "vitest run ./test/unit.test.js",
+    "test:no-color": "vitest run ./test/no-color.test.js",
     "test:ansi16": "vitest run ./test/ansi16.test.js",
     "test:ansi256": "vitest run ./test/ansi256.test.js",
     "test:functional": "vitest run ./test/functional.test.js",

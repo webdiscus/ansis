@@ -348,13 +348,13 @@ Skip this version number.
 
 ## 3.0.0 (2024-03-29)
 
-- feat: add detection of color spaces support: TrueColor, 256 colors, 16 colors, no color
+- feat: add detection of color levels support: TrueColor, 256 colors, 16 colors, no color
 - feat: add fallback for supported color space: truecolor —> 256 colors —> 16 colors —> no colors
 - perform: improve performance for `hex()` function
 - chore: size increased from 3.2 KB to 3.8 KB as new features were added
 - test: switch from jest to vitest
 - test: add tests for new features
-- docs: update readme for color spaces support
+- docs: update readme for color levels support
 
 ### BREAKING CHANGE
 

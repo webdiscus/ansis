@@ -3,7 +3,7 @@ import { expect, describe, test } from 'vitest';
 import ansis from '../src/index.js';
 import { hexToRgb, rgbToAnsi256, ansi256To16, rgbToAnsi16 } from '../src/utils.js';
 import { getColorSpace } from '../src/color-support.js';
-import { SPACE_BW, SPACE_16COLORS, SPACE_256COLORS, SPACE_TRUECOLOR } from '../src/color-spaces.js';
+import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS, LEVEL_TRUECOLOR } from '../src/color-levels.js';
 import { esc } from './utils/helpers.js';
 
 const colorSpace = (mock) => getColorSpace(mock);
@@ -212,7 +212,7 @@ describe('CI tools', () => {
       },
 
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -225,7 +225,7 @@ describe('CI tools', () => {
       },
 
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -237,7 +237,7 @@ describe('CI tools', () => {
       },
 
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -249,7 +249,7 @@ describe('CI tools', () => {
       },
 
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 });
@@ -264,7 +264,7 @@ describe('flags and options', () => {
       },
 
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -279,7 +279,7 @@ describe('flags and options', () => {
       },
 
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -294,7 +294,7 @@ describe('flags and options', () => {
       },
 
     });
-    const expected = SPACE_BW;
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 
@@ -309,7 +309,7 @@ describe('flags and options', () => {
       },
 
     });
-    const expected = SPACE_BW;
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 
@@ -324,7 +324,7 @@ describe('flags and options', () => {
       },
 
     });
-    const expected = SPACE_BW;
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 });
@@ -339,7 +339,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_BW;
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 
@@ -353,7 +353,7 @@ describe('FORCE_COLOR', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_BW;
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 
@@ -367,7 +367,7 @@ describe('FORCE_COLOR', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_BW;
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 
@@ -379,7 +379,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -391,7 +391,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -405,7 +405,7 @@ describe('FORCE_COLOR', () => {
         stdout: { isTTY: true },
       },
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -418,7 +418,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -431,7 +431,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -443,7 +443,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -455,7 +455,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -467,7 +467,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -479,7 +479,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -491,7 +491,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -503,7 +503,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -515,7 +515,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -527,7 +527,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -540,7 +540,7 @@ describe('FORCE_COLOR', () => {
   //       argv: [],
   //     },
   //   });
-  //   const expected = SPACE_TRUECOLOR;
+  //   const expected = LEVEL_TRUECOLOR;
   //   expect(expected).toEqual(received);
   // });
 
@@ -552,7 +552,7 @@ describe('FORCE_COLOR', () => {
         argv: [],
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -569,12 +569,12 @@ describe('FORCE_COLOR', () => {
         isatty: (rid) => false, // analog to process.stdout.isTTY in node
       },
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 });
 
-describe('color space', () => {
+describe('color level', () => {
   test(`Any unknown terminal should support 16 colors`, () => {
     const received = colorSpace({
       process: {
@@ -585,7 +585,7 @@ describe('color space', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_16COLORS
+    const expected = LEVEL_16COLORS
     expect(expected).toEqual(received);
   });
 });
@@ -601,7 +601,7 @@ describe('COLORTERM', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -615,7 +615,7 @@ describe('COLORTERM', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -629,7 +629,7 @@ describe('COLORTERM', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -643,7 +643,7 @@ describe('COLORTERM', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_16COLORS
+    const expected = LEVEL_16COLORS
     expect(expected).toEqual(received);
   });
 
@@ -660,7 +660,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -674,7 +674,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -688,7 +688,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -702,7 +702,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -716,7 +716,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -730,7 +730,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -744,7 +744,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -758,7 +758,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -772,7 +772,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -786,7 +786,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -800,7 +800,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -814,7 +814,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -828,7 +828,7 @@ describe('support colors in terminals', () => {
         stderr: { isTTY: true },
       },
     });
-    const expected = SPACE_16COLORS;
+    const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -838,7 +838,7 @@ describe('support colors in terminals', () => {
         chrome: {},
       },
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -846,13 +846,13 @@ describe('support colors in terminals', () => {
     const received = colorSpace({
       window: {},
     });
-    const expected = SPACE_BW
+    const expected = LEVEL_BW
     expect(expected).toEqual(received);
   });
 
   test(`Unknown system`, () => {
     const received = colorSpace({});
-    const expected = SPACE_BW
+    const expected = LEVEL_BW
     expect(expected).toEqual(received);
   });
 
@@ -866,7 +866,7 @@ describe('Node.JS different env', () => {
     process = undefined;
 
     const received = colorSpace(undefined);
-    const expected = SPACE_BW;
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
 
     // restore original `process` object
@@ -875,7 +875,7 @@ describe('Node.JS different env', () => {
 
   test(`processMock {}`, () => {
     const received = colorSpace({});
-    const expected = SPACE_BW;
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 
@@ -890,7 +890,7 @@ describe('Node.JS different env', () => {
       },
 
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -904,7 +904,7 @@ describe('Node.JS different env', () => {
       },
 
     });
-    const expected = SPACE_BW;
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 
@@ -916,7 +916,7 @@ describe('Node.JS different env', () => {
       },
 
     });
-    const expected = SPACE_BW;
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 
@@ -930,7 +930,7 @@ describe('Node.JS different env', () => {
       },
 
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -948,7 +948,7 @@ describe('Node.JS different env', () => {
       },
 
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -966,7 +966,7 @@ describe('Node.JS different env', () => {
       },
 
     });
-    const expected = SPACE_BW;
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 });
@@ -987,7 +987,7 @@ describe('Deno support', () => {
       },
 
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -1008,7 +1008,7 @@ describe('Deno support', () => {
       },
 
     });
-    const expected = SPACE_BW;
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 
@@ -1026,7 +1026,7 @@ describe('Deno support', () => {
       },
 
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
@@ -1046,7 +1046,7 @@ describe('Deno support', () => {
       },
 
     });
-    const expected = SPACE_TRUECOLOR;
+    const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 });
@@ -1062,7 +1062,7 @@ describe('Next.JS support', () => {
       },
 
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -1075,7 +1075,7 @@ describe('Next.JS support', () => {
       },
 
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 
@@ -1090,7 +1090,7 @@ describe('Next.JS support', () => {
       },
 
     });
-    const expected = SPACE_256COLORS;
+    const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 });

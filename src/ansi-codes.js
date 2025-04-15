@@ -1,10 +1,10 @@
 import { hexToRgb, rgbToAnsi256, rgbToAnsi16, ansi256To16 } from './utils.js';
 import { getColorSpace } from './color-support.js';
-import { SPACE_BW, SPACE_16COLORS, SPACE_256COLORS } from './color-spaces.js';
+import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS } from './color-levels.js';
 import { EMPTY_STRING, separator } from './misc.js';
 
 let colorSpace = getColorSpace();
-let hasColors = colorSpace > SPACE_BW;
+let hasColors = colorSpace > LEVEL_BW;
 let mono = { open: EMPTY_STRING, close: EMPTY_STRING };
 let monoFn = () => mono;
 let esc = hasColors ? (open, close) => ({ open: `[${open}m`, close: `[${close}m` }) : monoFn;
@@ -25,10 +25,10 @@ let fnBgRgb = (r, g, b) => esc(`48;2;${r};${g};${b}`, bgCloseCode);
 let fnAnsi256 = (code) => esc(`38;5;${code}`, closeCode);
 let fnBgAnsi256 = (code) => esc(`48;5;${code}`, bgCloseCode);
 
-if (colorSpace === SPACE_256COLORS) {
+if (colorSpace === LEVEL_256COLORS) {
   fnRgb = createRgb256Fn(fnAnsi256);
   fnBgRgb = createRgb256Fn(fnBgAnsi256);
-} else if (colorSpace === SPACE_16COLORS) {
+} else if (colorSpace === LEVEL_16COLORS) {
   fnRgb = createRgb16Fn(0, closeCode);
   fnBgRgb = createRgb16Fn(bgOffset, bgCloseCode);
   fnAnsi256 = (code) => esc(ansi256To16(code), closeCode);

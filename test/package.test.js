@@ -2,7 +2,7 @@ import path from 'path';
 import { expect, describe, test } from 'vitest';
 import { esc, execScriptSync } from './utils/helpers.js';
 
-// import env variables to simulate truecolor color space in CLI
+// import env variables to simulate truecolor in CLI
 import './env/truecolor.js';
 
 const TEST_PATH = path.resolve('./test/');

@@ -40,14 +40,14 @@ import picocolors from 'picocolors';
 import { Ansis, cyan, green, red, yellow, hex, rgb } from 'ansis';
 
 import spectrum from '../examples/fixtures/spectrum.js';
-import { getColorSpace } from '../src/color-support.js';
+import { getLevel } from '../src/color-support.js';
 import { colorLevels, LEVEL_TRUECOLOR } from '../src/color-levels.js';
 
 import packages from './packages.js';
 
 // create a new instance of Ansis for correct measure in benchmark
 const ansis = new Ansis();
-const colorSpace = getColorSpace();
+const colorSpace = getLevel();
 
 const log = console.log;
 

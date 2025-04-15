@@ -17,7 +17,7 @@ import { keys, separator } from './misc.js';
  * @param {boolean} isWin
  * @return {number}
  */
-let detectColorSpace = (env, isTTY, isWin) => {
+let detectColors = (env, isTTY, isWin) => {
   let term = env.TERM;
   let envKeys = separator + keys(env).join(separator);
 
@@ -28,14 +28,14 @@ let detectColorSpace = (env, isTTY, isWin) => {
   // COLORTERM values: `truecolor` or `24bit`, `ansi256`, `ansi`
   // Terminals that set COLORTERM=truecolor: iTerm, VSCode, `xterm-kitty`, KDE Konsole.
 
-  let colorspace = {
+  let level = {
     '24bit': LEVEL_TRUECOLOR,
     truecolor: LEVEL_TRUECOLOR,
     ansi256: LEVEL_256COLORS,
     ansi: LEVEL_16COLORS,
   }[env.COLORTERM]
 
-  if (colorspace) return colorspace;
+  if (level) return level;
 
   // 2) Detect color support in CI.
   // Note: CI environments are not TTY and often advertise themselves as `dumb` terminals.
@@ -105,7 +105,7 @@ let detectColorSpace = (env, isTTY, isWin) => {
  * @param {Object?} mockThis The mock object of globalThis, used by unit test only.
  * @return {number}
  */
-export const getColorSpace = (mockThis) => {
+export const getLevel = (mockThis) => {
   /**
    * Detect whether flags exist in command-line arguments.
    *
@@ -160,7 +160,7 @@ export const getColorSpace = (mockThis) => {
   let forceColorValue = env[FORCE_COLOR];
 
   // mapping FORCE_COLOR values to color level values
-  let forceColorSpace = {
+  let forceLevel = {
     false: LEVEL_BW,
     0: LEVEL_BW,
     1: LEVEL_16COLORS,
@@ -169,15 +169,15 @@ export const getColorSpace = (mockThis) => {
   }[forceColorValue] ?? LEVEL_UNDEFINED;
 
   // if FORCE_COLOR is present and is neither 'false' nor '0', OR has one of the flags: --color --color=true --color=always
-  let isForceEnabled = (FORCE_COLOR in env && forceColorSpace) || hasFlag(/^--color=?(true|always)?$/);
+  let isForceEnabled = (FORCE_COLOR in env && forceLevel) || hasFlag(/^--color=?(true|always)?$/);
 
-  if (isForceEnabled) colorLevel = forceColorSpace;
+  if (isForceEnabled) colorLevel = forceLevel;
 
-  // if colorLevel === LEVEL_UNDEFINED, attempt to detect space, returns 0, 1, 2 or 3
-  if (!~colorLevel) colorLevel = detectColorSpace(env, isTTY, (isDeno ? Deno.build.os : proc.platform) === 'win32');
+  // if colorLevel === LEVEL_UNDEFINED, attempt to detect color level, returns 0, 1, 2 or 3
+  if (!~colorLevel) colorLevel = detectColors(env, isTTY, (isDeno ? Deno.build.os : proc.platform) === 'win32');
 
   // if force disabled: FORCE_COLOR=0 or FORCE_COLOR=false
-  if (!forceColorSpace
+  if (!forceLevel
     || !!env.NO_COLOR
     // --no-color --color=false --color=never
     || hasFlag(/^--(no-color|color=(false|never))$/)) return LEVEL_BW;

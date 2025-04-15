@@ -1,5 +1,5 @@
 import { create, defineProperty, setPrototypeOf, EMPTY_STRING } from './misc.js';
-import { hasColors, styleData, fnRgb } from './ansi-codes.js';
+import { hasColors, styleData, fnRgb, mono } from './ansi-codes.js';
 import { hexToRgb } from './utils.js';
 
 /**
@@ -17,11 +17,11 @@ let LF = '\n';
 
 /**
  * @param {AnsisProps} p
- * @param {string} open
- * @param {string} close
+ * @param {{ open: string, close: string }} style
+ * @param {boolean} useColors
  * @return {Ansis}
  */
-let createStyle = ({ p: props }, { open, close }) => {
+let createStyle = ({ p: props }, style, useColors) => {
   /**
    * Decorate the string with ANSI codes.
    * @param {unknown} arg The input value, can be any or a template string.
@@ -42,6 +42,8 @@ let createStyle = ({ p: props }, { open, close }) => {
       ? String.raw({ raw: arg }, ...values)
       // stringify the argument
       : EMPTY_STRING + arg;
+
+    //if (!useColors) return output;
 
     let props = styleFn.p;
     let openStack = props.o;
@@ -82,6 +84,8 @@ let createStyle = ({ p: props }, { open, close }) => {
     return openStack + output + closeStack;
   };
 
+  let { open, close } = useColors ? style : mono
+
   let openStack = open;
   let closeStack = close;
 
@@ -99,7 +103,7 @@ let createStyle = ({ p: props }, { open, close }) => {
   return styleFn;
 };
 
-const Ansis = function() {
+const Ansis = function(useColors = hasColors) {
   let self = {
     // named export of the function to create new instance
     Ansis: Ansis,
@@ -147,13 +151,13 @@ const Ansis = function() {
         if (type === 'f') {
           styles[name] = {
             get() {
-              return (...args) => createStyle(this, color(...args));
+              return (...args) => createStyle(this, color(...args), useColors);
             },
           };
         } else {
           styles[name] = {
             get() {
-              let style = createStyle(this, styleProps);
+              let style = createStyle(this, styleProps, useColors);
 
               // performance impact: up to 5x faster;
               // V8 optimizes access to properties defined via `defineProperty`,

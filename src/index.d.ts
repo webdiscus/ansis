@@ -214,7 +214,7 @@ type Ansis = A;
 
 // Note: define constants with only unique declarations,
 // E.g. the methods rgb and bgRgb have the same arguments and return, therefore we need it only once.
-declare const Ansis: new () => A,
+declare const Ansis: new (o?: B) => A,
   // declare all styles and colors of type Ansis
   a: A,
   isSupported: () => B,

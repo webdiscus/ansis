@@ -9,8 +9,6 @@ const TEST_PATH = path.resolve('./test/');
 
 // CLI with flags and environment variables
 // Note: using child_process.execSync the stdout.isTTY is always false
-// TODO:
-//   - test NO_COLOR=1
 
 describe('enable colors', () => {
   test(`--color`, () => {

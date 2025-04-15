@@ -2,11 +2,11 @@ import { expect, describe, test } from 'vitest';
 
 import ansis from '../src/index.js';
 import { hexToRgb, rgbToAnsi256, ansi256To16, rgbToAnsi16 } from '../src/utils.js';
-import { getColorSpace } from '../src/color-support.js';
+import { getLevel } from '../src/color-support.js';
 import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS, LEVEL_TRUECOLOR } from '../src/color-levels.js';
 import { esc } from './utils/helpers.js';
 
-const colorSpace = (mock) => getColorSpace(mock);
+const colorSpace = (mock) => getLevel(mock);
 
 describe('convert HEX to RGB', () => {
   test(`hexToRgb('FFAA99')`, () => {

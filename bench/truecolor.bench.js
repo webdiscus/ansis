@@ -5,14 +5,14 @@ import Bench from './lib/bench.js';
 import chalk from 'chalk';
 import { Ansis, cyan, green, red, yellow, hex } from 'ansis';
 
-import { getColorSpace } from '../src/color-support.js';
+import { getLevel } from '../src/color-support.js';
 import { colorLevels, LEVEL_TRUECOLOR } from '../src/color-levels.js';
 
 const log = console.log;
 
 // create a new instance of Ansis for correct measure in benchmark
 const truecolorBench = new Ansis();
-const colorSpace = getColorSpace();
+const colorSpace = getLevel();
 
 log();
 log(cyan.inverse` Colors `, `Your terminal supports ${cyan(colorLevels[colorSpace])}.`);

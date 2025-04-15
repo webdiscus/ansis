@@ -1,6 +1,13 @@
-import { create, defineProperty, setPrototypeOf, EMPTY_STRING } from './misc.js';
-import { hasColors, styleData, fnRgb, mono } from './ansi-codes.js';
-import { hexToRgb } from './utils.js';
+import { create, defineProperty, setPrototypeOf, separator, EMPTY_STRING } from './misc.js';
+import { hexToRgb, rgbToAnsi256, rgbToAnsi16, ansi256To16 } from './utils.js';
+import { getLevel } from './color-support.js';
+import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS } from './color-levels.js';
+
+let detectedLevel = getLevel();
+let mono = { open: EMPTY_STRING, close: EMPTY_STRING };
+let closeCode = 39;
+let bgCloseCode = 49;
+let bgOffset = 10;
 
 /**
  * @typedef {Object} AnsisProps
@@ -18,10 +25,9 @@ let LF = '\n';
 /**
  * @param {AnsisProps} p
  * @param {{ open: string, close: string }} style
- * @param {boolean} useColors
  * @return {Ansis}
  */
-let createStyle = ({ p: props }, style, useColors) => {
+let createStyle = ({ p: props }, { open, close }) => {
   /**
    * Decorate the string with ANSI codes.
    * @param {unknown} arg The input value, can be any or a template string.
@@ -84,8 +90,6 @@ let createStyle = ({ p: props }, style, useColors) => {
     return openStack + output + closeStack;
   };
 
-  let { open, close } = useColors ? style : mono
-
   let openStack = open;
   let closeStack = close;
 
@@ -103,7 +107,7 @@ let createStyle = ({ p: props }, style, useColors) => {
   return styleFn;
 };
 
-const Ansis = function(useColors = hasColors) {
+const Ansis = function(level = detectedLevel) {
   let self = {
     // named export of the function to create new instance
     Ansis: Ansis,
@@ -151,13 +155,13 @@ const Ansis = function(useColors = hasColors) {
         if (type === 'f') {
           styles[name] = {
             get() {
-              return (...args) => createStyle(this, color(...args), useColors);
+              return (...args) => createStyle(this, color(...args));
             },
           };
         } else {
           styles[name] = {
             get() {
-              let style = createStyle(this, styleProps, useColors);
+              let style = createStyle(this, styleProps);
 
               // performance impact: up to 5x faster;
               // V8 optimizes access to properties defined via `defineProperty`,
@@ -176,6 +180,77 @@ const Ansis = function(useColors = hasColors) {
       return self;
     },
   };
+
+  // Generate ANSI codes by color level
+
+  let hasColors = level > LEVEL_BW;
+  let esc = (open, close) => (hasColors ? { open: `[${open}m`, close: `[${close}m` } : mono);
+  let createRgb16Fn = (offset, closeCode) => (r, g, b) => esc(rgbToAnsi16(r, g, b) + offset, closeCode);
+  let createRgb256Fn = (fn) => (r, g, b) => fn(rgbToAnsi256(r, g, b));
+  let createHexFn = (fn) => (hex) => fn(...hexToRgb(hex));
+
+  // truecolor functions
+  let fnRgb = (r, g, b) => esc(`38;2;${r};${g};${b}`, closeCode);
+  let fnBgRgb = (r, g, b) => esc(`48;2;${r};${g};${b}`, bgCloseCode);
+
+  let fnAnsi256 = (code) => esc(`38;5;${code}`, closeCode);
+  let fnBgAnsi256 = (code) => esc(`48;5;${code}`, bgCloseCode);
+
+  if (level === LEVEL_256COLORS) {
+    fnRgb = createRgb256Fn(fnAnsi256);
+    fnBgRgb = createRgb256Fn(fnBgAnsi256);
+  } else if (level === LEVEL_16COLORS) {
+    fnRgb = createRgb16Fn(0, closeCode);
+    fnBgRgb = createRgb16Fn(bgOffset, bgCloseCode);
+    fnAnsi256 = (code) => esc(ansi256To16(code), closeCode);
+    fnBgAnsi256 = (code) => esc(ansi256To16(code) + bgOffset, bgCloseCode);
+  }
+
+  let styleData = {
+    // color functions
+    ansi256: fnAnsi256, // alias for compatibility with chalk
+    bgAnsi256: fnBgAnsi256, // alias for compatibility with chalk
+    fg: fnAnsi256,
+    bg: fnBgAnsi256,
+    rgb: fnRgb,
+    bgRgb: fnBgRgb,
+    hex: createHexFn(fnRgb),
+    bgHex: createHexFn(fnBgRgb),
+
+    // styles
+    visible: mono,
+    reset: esc(0, 0),
+    bold: esc(1, 22),
+    dim: esc(2, 22),
+    italic: esc(3, 23),
+    underline: esc(4, 24),
+    inverse: esc(7, 27),
+    hidden: esc(8, 28),
+    strikethrough: esc(9, 29),
+  };
+
+  // Generate ANSI 16 colors dynamically to reduce the code size.
+
+  // `gray` (US) and `grey` (UK) are aliases for `blackBright` and use code 90.
+  // `black` uses code 30, and each subsequent color in the list increments sequentially.
+  let code = 30;
+  let bright = 'Bright';
+  let bgName;
+
+  'black,red,green,yellow,blue,magenta,cyan,white,gray,grey'.split(separator).map((name) => {
+    bgName = 'bg' + name[0].toUpperCase() + name.slice(1);
+
+    styleData[name] = esc(code, closeCode);
+    styleData[bgName] = esc(code + bgOffset, bgCloseCode);
+
+    // exclude for `gray` and `grey` aliases
+    if (code < 38) {
+      styleData[name + bright] = esc(60 + code, closeCode);
+      styleData[bgName + bright] = esc(70 + code++, bgCloseCode);
+    }
+
+    if (code > 37) code = 90;
+  });
 
   // define base functions, colors and styles
   return self.extend(styleData);

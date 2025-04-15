@@ -214,7 +214,12 @@ type Ansis = A;
 
 // Note: define constants with only unique declarations,
 // E.g. the methods rgb and bgRgb have the same arguments and return, therefore we need it only once.
-declare const Ansis: new (o?: B) => A,
+
+declare const
+  /**
+   * @param {number?} level The color level: 0 - no colors, 1 - 16 colors, 2 - 256 colors, 3 - truecolor. Defaults is auto detected.
+   */
+  Ansis: new (level?: N) => A,
   // declare all styles and colors of type Ansis
   a: A,
   isSupported: () => B,

@@ -2,9 +2,13 @@
 [96mdefault: cyanBright[39m
 [38;2;255;117;209mextended: pink[39m
 [38;2;255;171;64mextended: orange[39m
+[38;2;79;168;61mextended: apple[39m
 [38;2;79;168;61m[3mextended color: apple italic[23m[39m
 [31mdestructured default color: red[39m
 [38;2;255;117;209mdestructured extended color: pink[39m
 [38;2;255;171;64m[3mdestructured extended color: orange italic[23m[39m
 [38;2;255;117;209m[4mextended chained color: pink underline[24m[39m
 [38;2;255;117;209m[4mdestructured extended chained color: pink underline[24m[39m
+[38;2;255;255;0mshould be yellow[39m
+[31mshould be red[39m
+[38;2;255;0;0mshould be red[39m

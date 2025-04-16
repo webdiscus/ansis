@@ -28,10 +28,10 @@ const myTheme = {
 };
 
 // Extend base colors
-ansis.extend(myTheme);
+const themed = ansis.extend(myTheme);
 
 // Access extended colors
-const { pink, orange, red } = ansis;
+const { pink, orange, red } = themed;
 
 // OK
 // Define the function using the extracted valid styles from the extended instance
@@ -53,12 +53,12 @@ myLog('orange', 'extended: orange'); // extended style, OK
 
 log(formatValue('formatValue', ansis.red));
 
-log(ansis.apple.italic`extended color: apple italic`);
+log(themed.apple.italic`extended color: apple italic`);
 log(red`destructured default color: red`);
 log(pink`destructured extended color: pink`);
 log(orange.italic`destructured extended color: orange italic`);
 
-log(ansis.pink.underline('extended chained color: pink underline'));
+log(themed.pink.underline('extended chained color: pink underline'));
 log(pink.underline('destructured extended chained color: pink underline'));
 
 log(ansis.gray`gray`);

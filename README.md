@@ -42,7 +42,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - Strip ANSI escape codes with `ansis.strip()`
 - Auto-detects [color support](#color-support) across a wide range of [environments](#color-support)
 - Supports [ENV variables](#cli-vars) and [flags](#cli-flags): [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color), [`COLORTERM`](#using-env-colorterm), `--no-color`, `--color`
-- Reliable [CLI testing](#cli-testing) by forcing specific color levels: no color, 16, 256 or truecolor
+- Reliable [CLI testing](#cli-testing) by forcing specific [color levels](#color-levels): no color, 16, 256 or truecolor
 - [Drop-in replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors)
 
 <!--  - Chromium-based browsers can display truecolor text in console.
@@ -642,6 +642,41 @@ To force a specific color level, you can set the `COLORTERM` variable before run
 COLORTERM=ansi      node script.js  # Force enable 16 colors
 COLORTERM=ansi256   node script.js  # Force enable 256 colors
 COLORTERM=truecolor node script.js  # Force enable truecolor
+```
+
+---
+
+#### [↑ top](#top)
+
+<a name="color-levels"></a>
+
+## Color levels
+
+Ansis automatically detects color support, but you can manually set the color level.
+
+| Level | Description                          |
+|:-----:|:-------------------------------------|
+|  `0`  | No colors (all colors disabled)      |
+|  `1`  | Basic colors (16 colors)             |
+|  `2`  | 256 colors                           |
+|  `3`  | Truecolor (16 million colors)        |
+
+You can create a new instance of `Ansis` with the desired color level.
+
+Disable colors:
+```ts
+import { Ansis } from 'ansis';
+
+const custom = new Ansis(0);
+console.log(custom.red`foo`); // Output: plain string, no ANSI codes
+```
+
+Use only basic colors:
+```ts
+import { Ansis } from 'ansis';
+
+const custom = new Ansis(1);
+console.log(custom.hex('#FFAB40')`Orange`); // Output: fallback to yellowBright
 ```
 
 ---

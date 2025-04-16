@@ -9,6 +9,10 @@ let closeCode = 39;
 let bgCloseCode = 49;
 let bgOffset = 10;
 
+let styles = {};
+let stylePrototype;
+let LF = '\n';
+
 /**
  * @typedef {Object} AnsisProps
  * @property {string} open
@@ -18,24 +22,21 @@ let bgOffset = 10;
  * @property {null | AnsisProps} p The properties.
  */
 
-let styles = {};
-let stylePrototype;
-let LF = '\n';
-
 /**
+ * Creates a style function that applies ANSI codes to a string.
  * @param {AnsisProps} p
  * @param {{ open: string, close: string }} style
  * @return {Ansis}
  */
 let createStyle = ({ p: props }, { open, close }) => {
   /**
-   * Decorate the string with ANSI codes.
+   * Decorates a string with ANSI escape sequences.
    * @param {unknown} arg The input value, can be any or a template string.
    * @param {array} values The values of the template string.
    * @return {string}
    */
   let styleFn = (arg, ...values) => {
-    // API rule: if the argument is one of '', undefined or null, then return empty string
+    // If the argument is empty or null, return an empty string
     if (!arg) {
       if (open && open === close) return open;
       // null == arg || '' === arg
@@ -43,20 +44,18 @@ let createStyle = ({ p: props }, { open, close }) => {
     }
 
     let output = arg.raw
-      // concatenates the "cooked" (escaped string value) strings
+      // Concatenate the "cooked" (escaped string value) strings
       // see https://github.com/tc39/proposal-string-cooked
       ? String.raw({ raw: arg }, ...values)
-      // stringify the argument
+      // Stringify the argument
       : EMPTY_STRING + arg;
-
-    //if (!useColors) return output;
 
     let props = styleFn.p;
     let openStack = props.o;
     let closeStack = props.c;
 
-    // feat: detect nested styles
-    // note: on node >= 22, includes is 5x faster than ~indexOf
+    // Detect nested styles
+    // Note: on node >= 22, includes is 5x faster than ~indexOf
     if (output.includes('')) {
       while (props) {
         // this implementation is over 30% faster than native String.replaceAll()
@@ -82,7 +81,7 @@ let createStyle = ({ p: props }, { open, close }) => {
       }
     }
 
-    // feat: detect new line
+    // Detect new line
     if (output.includes(LF)) {
       output = output.replace(/(\r?\n)/g, closeStack + '$1' + openStack);
     }
@@ -109,18 +108,17 @@ let createStyle = ({ p: props }, { open, close }) => {
 
 const Ansis = function(level = detectedLevel) {
   let self = {
-    // named export of the function to create new instance
+    // Named export of the function to create new instance
     Ansis: Ansis,
 
     /**
-     * Whether the output supports ANSI colors.
-     *
+     * Checks if ANSI colors are supported in the output.
      * @return {boolean}
      */
     isSupported: () => hasColors,
 
     /**
-     * Remove ANSI escape sequences.
+     * Removes ANSI escape sequences  from a string.
      *
      * RegExp parts:
      *
@@ -135,7 +133,7 @@ const Ansis = function(level = detectedLevel) {
     strip: (str) => str.replace(/[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, EMPTY_STRING),
 
     /**
-     * Extend base colors with custom ones.
+     * Extends the base colors with custom ones.
      *
      * @param {Object.<name:string, value:string|{open:string, close:string}>} colors The object with key as color name
      *  and value as hex code of custom color or the object with 'open' and 'close' codes.
@@ -167,7 +165,6 @@ const Ansis = function(level = detectedLevel) {
               // V8 optimizes access to properties defined via `defineProperty`,
               // the `style` becomes a cached value on the object with direct access, w/o lookup for prototype chain
               defineProperty(this, name, { value: style });
-
               return style;
             },
           };
@@ -189,7 +186,6 @@ const Ansis = function(level = detectedLevel) {
   let createRgb256Fn = (fn) => (r, g, b) => fn(rgbToAnsi256(r, g, b));
   let createHexFn = (fn) => (hex) => fn(...hexToRgb(hex));
 
-  // truecolor functions
   let fnRgb = (r, g, b) => esc(`38;2;${r};${g};${b}`, closeCode);
   let fnBgRgb = (r, g, b) => esc(`48;2;${r};${g};${b}`, bgCloseCode);
 
@@ -207,7 +203,6 @@ const Ansis = function(level = detectedLevel) {
   }
 
   let styleData = {
-    // color functions
     ansi256: fnAnsi256, // alias for compatibility with chalk
     bgAnsi256: fnBgAnsi256, // alias for compatibility with chalk
     fg: fnAnsi256,
@@ -217,7 +212,6 @@ const Ansis = function(level = detectedLevel) {
     hex: createHexFn(fnRgb),
     bgHex: createHexFn(fnBgRgb),
 
-    // styles
     visible: mono,
     reset: esc(0, 0),
     bold: esc(1, 22),
@@ -258,7 +252,7 @@ const Ansis = function(level = detectedLevel) {
 
 const ansis = new Ansis();
 
-// for distribution code, the export will be replaced (via @rollup/plugin-replace) with the following export:
+// For distribution code, the export will be replaced (via @rollup/plugin-replace) with the following export:
 // module.exports = ansis;
 // ansis.default = ansis; // needs for tsc
 

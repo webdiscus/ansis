@@ -1,5 +1,88 @@
 # Changelog
 
+## 4.0.0-beta.16 (2025-04-16)
+
+### ⚠️ BREAKING CHANGE: Improved `extend()` method
+
+The `extend()` method has been redesigned for better TypeScript support and flexibility.
+
+#### Old behavior:
+```ts
+extend<U extends string>(colors: Record<U, string | P>): asserts this is Ansis & Record<U, Ansis>;
+```
+- Modifies the current instance in-place.
+- Returns `void`.
+- ✅ Worked with default instance:
+  ```ts
+  import ansis from 'ansis';
+
+  ansis.extend({ pink: '#FF75D1' });
+  console.log(ansis.pink.bold('foo'));
+  ```
+- ❌ **Limitation** Did not work with reassigned or newly created instances:
+  ```ts
+  import ansis from 'ansis';
+
+  const ansis = new Ansis(3);
+  ansis.extend({ pink: '#FF75D1' });
+  console.log(ansis.orange.bold('Hello')); // TS2339: Property 'pink' does not exist
+  ```
+
+#### New behavior:
+
+```ts
+extend<U extends string>(colors: Record<U, string | P>): Ansis & Record<U, Ansis>;
+```
+- Returns a new extended instance with full type support.
+- ✅ Works with both ansis and new Ansis():
+  ```ts
+  import ansis, { Ansis } from 'ansis';
+
+  const colors = ansis.extend({ pink: '#FF75D1' });
+  console.log(colors.pink.bold('foo'));
+
+  const custom = new Ansis().extend({ apple: '#4FA83D' });
+  console.log(custom.apple.underline('bar'));
+  ```
+
+#### Why this change?
+
+TypeScript cannot widen the type of an existing variable when using `asserts`.
+This means the old approach only worked for top-level constants like `ansis`, not new instances.
+By returning the extended instance, the new approach enables full type inference in all scenarios.
+
+Summary:
+
+- `asserts` version removed
+- `extend()` now returns a new instance with extended types
+- Cleaner, safer, and fully compatible with all usage patterns
+
+#### Migration
+
+The new `extend()` method now returns an extended instance instead of modifying the original in-place.
+To migrate, assign the result of `extend()` to a new variable (**avoid reassigning the original instance**):
+
+
+```diff
+import ansis from 'ansis';
+
+- ansis.extend({ pink: '#FF75D1' });
++ const theme = ansis.extend({ pink: '#FF75D1' });
+
+- console.log(ansis.pink('foo'));
++ console.log(theme.pink('foo'));
+```
+
+```diff
+import { Ansis } from 'ansis';
+
+- const ansis = new Ansis();
+- ansis.extend({ pink: '#FF75D1' });
++ const ansis = new Ansis().extend({ pink: '#FF75D1' });
+
+console.log(ansis.pink('foo'));
+```
+
 ## 4.0.0-beta.14 (2025-04-13)
 
 - feat: reduce size of index.d.ts file
@@ -14,51 +97,81 @@
 
 ## 4.0.0-beta.4 (2025-03-08)
 
-- feat: remove `xterm-direct` terminfo detection for truecolor support introduced in `v3.5.0`, as it is unnecessary.\
-  Note: No terminal emulator sets `TERM=xterm-direct` by default.
-  Most modern terminals (incl. KDE Konsole) use `TERM=xterm-256color` with `COLORTERM=truecolor` instead.
+### Features
+
+#### Removed `xterm-direct` terminfo check for truecolor support
+
+The `xterm-direct` detection logic (introduced in `v3.5.0`) has been removed, as it's unnecessary for identifying truecolor-capable terminals.
+
+> **Note**
+>
+> No terminal emulator sets `TERM=xterm-direct` by default.
+> Modern terminals—including KDE Konsole—typically use `TERM=xterm-256color` along with `COLORTERM=truecolor`
+> to indicate truecolor support.
 
 ## 4.0.0-beta.2 (2025-03-07)
 
-- fix: if a terminal is not detected as supporting 256 colors or truecolor, only 16 colors are allowed by defaults.
-  - Old behaviour: unknown terminal -> allow truecolor (may output incorrect colors)
-  - New behaviour: unknown terminal -> allow 16 colors (ensures compatibility with any terminal that supports colors)
+### Fixes
 
-  Note: This is not a breaking change, as Ansis automatically interpolates truecolor and 256 colors to 16 colors when using the `ansi256()` or `hex()` functions.\
-  To enable truecolor set the `COLORTERM=24bit` or `FORCE_COLOR=3` environment variable.
+#### Default to 16 colors when terminal color support is unknown
+
+Ansis now defaults to 16 colors if it cannot detect support for 256 colors or truecolor in the terminal.
+
+- **Old behavior:** Unknown terminal → allowed truecolor (could result in incorrect colors)
+- **New behavior:** Unknown terminal → allows only 16 colors (ensures broad compatibility)
+
+> **Note**
+>
+> This is not a breaking change. Ansis gracefully interpolates higher color depths (truecolor and 256 colors)
+> down to 16 colors when using `ansi256()`, `hex()` or `rgb()`.
+> To explicitly enable truecolor, set the environment variable `COLORTERM=24bit` or `FORCE_COLOR=3`.
+
 
 ## 4.0.0-beta.1 (2025-03-03)
 
-- feat: add support for escape sequences in template literals.\
-  Ansis processes tagged template literals the same way as normal strings,
-  returning the same result as the standard function call.
-  - Example `\n` without escape:
-    ```
-    red('prev\nnext')
-    red`prev\nnext`
-    ```
-    Outputs:
-    ```
-    prev
-    next
-    ```
-  - Example `\n` with escape:
-    ```
-    red('prev\\next')
-    red`prev\\next`
-    ```
-    Outputs:
-    ```
-    prev\next
-    ```
-- feat(BREAKING CHANGE - highly unlikely): remove non-standard `strike` style (alias for `strikethrough`)
-  - The `strike` style was never used and has been removed to eliminate unnecessary clutter, leaving only the standard `strikethrough` style.
-  - No usage of `ansis.strike()` was found in public GitHub repositories.
-  - The standard `strikethrough` style name is used in other popular ANSI libraries.
+### BREAKING CHANGE (very unlikely impact): Removed non-standard `strike` style (alias for `strikethrough`)
 
-### Migration to `v4`
+The legacy `strike` alias has been removed to clean up the API and stay consistent with ANSI style conventions.
 
-If you still use `ansis.strike`, replace it with the standard `ansis.strikethrough`.
+- The `strike` style was rarely (if ever) used and added unnecessary redundancy.
+- No usage of `ansis.strike()` was found in public GitHub repositories.
+- Other ANSI libraries use the standard `strikethrough` name exclusively.
+
+#### Migration
+
+If you're using `ansis.strike`, replace it with `ansis.strikethrough`.
+
+---
+
+### Features
+
+#### Support escape sequences in tagged template literals
+
+Ansis now treats tagged template literals the same way as normal strings,
+returning the same result as the standard function call.
+
+Example with `\n` (newline, unescaped):
+```js
+red('prev\nnext')
+red`prev\nnext`
+```
+
+Output:
+```text
+prev
+next
+```
+
+Example with escaped backslash:
+```
+red('prev\\next')
+red`prev\\next`
+```
+
+Output:
+```
+prev\next
+```
 
 ## 4.0.0-beta.0 (2025-03-02)
 

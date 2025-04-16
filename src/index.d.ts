@@ -71,6 +71,7 @@ type DP = {
 // - TypeScript <= 5.5: The `this` can be used within a method of an `interface` only.
 // - TypeScript >= 5.6: The `this` can be used within a method of an `interface` or a `type`.
 interface SP {
+//type SP = {
   /**
    * @param {unknown} v The value to be processed, can be of any type, which will be converted to a string.
    * @return {string} The resulting string.
@@ -183,6 +184,7 @@ interface SP {
 
   /**
    * Extends the current `Ansis` instance with additional colors.
+   * @deprecated
    *
    * For example:
    *
@@ -198,7 +200,25 @@ interface SP {
    * @param c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
    * @return void.
    */
-  extend<U extends S>(c: Record<U, S | P>): asserts this is A & Record<U, A>;
+  //extend<U extends S>(c: Record<U, S | P>): asserts this is A & Record<U, A>;
+
+  /**
+   * Extends Ansis with additional colors.
+   *
+   * For example:
+   *
+   * const myTheme = {
+   *   apple: '#4FA83D',
+   *   pink: '#FF75D1',
+   * };
+   *
+   * const custom = ansis.extend(myTheme);
+   * const { apple, pink, red } = custom;
+   *
+   * @param c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
+   * @return {Ansis} Return extended instance.
+   */
+  extend<U extends S>(c: Record<U, S | P>): A & Record<U, A>;
 }
 
 /**

@@ -29,17 +29,14 @@ type B = boolean;
 type C = 'black' | 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
 
 // BrightColors
-type BC = `${C}Bright`;
+type H = `${C}Bright`;
 
 /**
  * Base ANSI Colors
  */
 export type AnsiColors =
-  | C
-  | 'gray' | 'grey'
-  | BC
-  | `bg${Capitalize<C> | Capitalize<BC>}`
-  | 'bgGray' | 'bgGrey';
+  | C | 'gray' | 'grey' | H
+  | `bg${Capitalize<C> | Capitalize<H>}` | 'bgGray' | 'bgGrey';
 
 /**
  * Base ANSI Styles
@@ -56,22 +53,46 @@ export type AnsiStyles =
   | 'strikethrough' /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) */;
 
 // Note: AnsiColors, AnsiStyles and AnsiColorsExtend types used in many project on GitHub, don't remove it!
-export type AnsiColorsExtend<T extends S> = AC | (T & Record<never, never>);
+export type AnsiColorsExtend<T extends S> = AnsiColors | (T & Record<never, never>);
 
-// Short alias for Ansis
-type AC = AnsiColors;
+/**
+ * Set ANSI code.
+ *
+ * @param {number} n in range [0, 255].
+ *
+ * @return {Ansis}
+ */
+type Q = (n: N) => A;
 
-// Dynamic properties mapped to `Ansis` (DynamicProperties)
-type DP = {
-  [K in AnsiStyles | AC]: A;
-};
+/**
+ * Set HEX value.
+ *
+ * @param {string} s The hex value.
+ *
+ * @return {Ansis}
+ */
+type L = (s: S) => A;
 
-// Static properties and methods (StaticMethods)
-// Compatibility note:
-// - TypeScript <= 5.5: The `this` can be used within a method of an `interface` only.
-// - TypeScript >= 5.6: The `this` can be used within a method of an `interface` or a `type`.
-interface SP {
-//type SP = {
+/**
+ * Set RGB values.
+ *
+ * @param {number} r The red value, in range [0, 255].
+ * @param {number} g The green value, in range [0, 255].
+ * @param {number} b The blue value, in range [0, 255].
+ *
+ * @return {Ansis}
+ */
+type R = (r: N, g: N, b: N) => A;
+
+/**
+ * The ANSI escape sequences for starting and ending the current style.
+ */
+type P = { open: S; close: S };
+
+// Short alias
+type A = Ansis;
+
+type Ansis = {
   /**
    * @param {unknown} v The value to be processed, can be of any type, which will be converted to a string.
    * @return {string} The resulting string.
@@ -108,99 +129,43 @@ interface SP {
 
   /**
    * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for foreground color.
-   *
-   * Code ranges:
-   * ```
-   *   0 -   7: standard colors
-   *   8 -  15: high intensity colors
-   *  16 - 231: 6 × 6 × 6 cube (216 colors)
-   * 232 - 255: grayscale from black to white in 24 steps
-   * ```
-   *
-   * @param {number} n in range [0, 255].
    */
-  ansi256(n: N): A;
+  ansi256: Q;
 
   /**
    * Alias for ansi256.
-   *
-   * @param {number} n in range [0, 255].
    */
-  fg(n: N): A;
+  fg: Q;
 
   /**
    * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for background color.
-   *
-   * Code ranges:
-   * ```
-   *   0 -   7: standard colors
-   *   8 -  15: high intensity colors
-   *  16 - 231: 6 × 6 × 6 cube (216 colors)
-   * 232 - 255: grayscale from black to white in 24 steps
-   * ```
-   *
-   * @param {number} n in range [0, 255].
    */
-  bgAnsi256(n: N): A;
+  bgAnsi256: Q;
 
   /**
    * Alias for bgAnsi256.
-   *
-   * @param {number} n in range [0, 255].
    */
-  bg(n: N): A;
+  bg: Q;
 
   /**
-   * Set RGB values for foreground color.
-   *
-   * @param {number} r The red value, in range [0, 255].
-   * @param {number} g The green value, in range [0, 255].
-   * @param {number} b The blue value, in range [0, 255].
+   * Set RGB for foreground color.
    */
-  rgb(r: N, g: N, b: N): A;
+  rgb: R;
 
   /**
-   * Set RGB values for background color.
-   *
-   * @param {number} r The red value, in range [0, 255].
-   * @param {number} g The green value, in range [0, 255].
-   * @param {number} b The blue value, in range [0, 255].
+   * Set RGB for background color.
    */
-  bgRgb(r: N, g: N, b: N): A;
+  bgRgb: R;
 
   /**
    * Set HEX value for foreground color.
-   *
-   * @param {string} s The hex value.
    */
-  hex(s: S): A;
+  hex: L;
 
   /**
    * Set HEX value for background color.
-   *
-   * @param {string} s The hex value.
    */
-  bgHex(s: S): A;
-
-  /**
-   * Extends the current `Ansis` instance with additional colors.
-   * @deprecated
-   *
-   * For example:
-   *
-   * const myTheme = {
-   *   apple: '#4FA83D',
-   *   pink: '#FF75D1',
-   * };
-   *
-   * It works w/o return:
-   * ansis.extend(myTheme);
-   * const { apple, pink, red } = ansis;
-   *
-   * @param c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
-   * @return void.
-   */
-  //extend<U extends S>(c: Record<U, S | P>): asserts this is A & Record<U, A>;
+  bgHex: L;
 
   /**
    * Extends Ansis with additional colors.
@@ -213,24 +178,16 @@ interface SP {
    * };
    *
    * const custom = ansis.extend(myTheme);
-   * const { apple, pink, red } = custom;
    *
    * @param c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
    * @return {Ansis} Return extended instance.
    */
   extend<U extends S>(c: Record<U, S | P>): A & Record<U, A>;
 }
-
-/**
- * The ANSI escape sequences for starting and ending the current style.
- */
-type P = { open: S; close: S };
-
-// Combine static and dynamic properties
-type A = SP & DP & P;
-
-// Named alias for "A" type (Don't remove it!)
-type Ansis = A;
+  // Dynamic properties
+  & { [K in AnsiStyles | AnsiColors]: A }
+  // open|close properties
+  & P;
 
 // Note: define constants with only unique declarations,
 // E.g. the methods rgb and bgRgb have the same arguments and return, therefore we need it only once.
@@ -246,9 +203,9 @@ declare const
   strip: (s: S) => S,
   extend: A['extend'],
 
-  fg: A['fg'],
-  rgb: A['rgb'],
-  hex: A['hex'];
+  fg: Q,
+  rgb: R,
+  hex: L;
 
 // Named exports
 export {

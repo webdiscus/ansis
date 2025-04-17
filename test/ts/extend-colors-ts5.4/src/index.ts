@@ -28,3 +28,8 @@ console.log(pink.bold('Pink256'));
 // themed3 = themed3.extend(myTheme); // override doesn't works
 // console.log(themed3.red.bold('Red')); // ✅ works properly
 // console.log(themed3.pink.bold('Pink')); // ❌ TS2339: Property 'pink' does not exist on type A
+
+// ❌ Old version < v4: Did not work with newly created instances:
+// const ansis = new Ansis();
+// ansis.extend({ pink: '#FF75D1' }); // TS2775: Assertions require every name in the call target to be declared with an explicit type annotation.
+// console.log(ansis.pink('Hello')); // TS2339: Property 'pink' does not exist

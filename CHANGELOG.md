@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.0-beta.17 (2025-04-18)
+
+- feat: refactor .d.ts and reduce the package size
+
 ## 4.0.0-beta.16 (2025-04-16)
 
 ### ⚠️ BREAKING CHANGE: Improved `extend()` method
@@ -17,15 +21,15 @@ extend<U extends string>(colors: Record<U, string | P>): asserts this is Ansis &
   import ansis from 'ansis';
 
   ansis.extend({ pink: '#FF75D1' });
-  console.log(ansis.pink.bold('foo'));
+  console.log(ansis.pink('foo'));
   ```
-- ❌ **Limitation** Did not work with reassigned or newly created instances:
+- ❌ **Limitation** - Did not work with newly created instances:
   ```ts
-  import ansis from 'ansis';
+  import { Ansis } from 'ansis';
 
-  const ansis = new Ansis(3);
+  const ansis = new Ansis();
   ansis.extend({ pink: '#FF75D1' });
-  console.log(ansis.orange.bold('Hello')); // TS2339: Property 'pink' does not exist
+  console.log(ansis.pink('Hello')); // TS2339: Property 'pink' does not exist
   ```
 
 #### New behavior:
@@ -34,15 +38,15 @@ extend<U extends string>(colors: Record<U, string | P>): asserts this is Ansis &
 extend<U extends string>(colors: Record<U, string | P>): Ansis & Record<U, Ansis>;
 ```
 - Returns a new extended instance with full type support.
-- ✅ Works with both ansis and new Ansis():
+- ✅ Works with both `ansis` and `new Ansis()`:
   ```ts
   import ansis, { Ansis } from 'ansis';
 
   const colors = ansis.extend({ pink: '#FF75D1' });
-  console.log(colors.pink.bold('foo'));
+  console.log(colors.pink('foo'));
 
   const custom = new Ansis().extend({ apple: '#4FA83D' });
-  console.log(custom.apple.underline('bar'));
+  console.log(custom.apple('bar'));
   ```
 
 #### Why this change?
@@ -57,7 +61,7 @@ Summary:
 - `extend()` now returns a new instance with extended types
 - Cleaner, safer, and fully compatible with all usage patterns
 
-#### Migration
+#### Migrating
 
 The new `extend()` method now returns an extended instance instead of modifying the original in-place.
 To migrate, assign the result of `extend()` to a new variable (**avoid reassigning the original instance**):
@@ -72,15 +76,37 @@ import ansis from 'ansis';
 - console.log(ansis.pink('foo'));
 + console.log(theme.pink('foo'));
 ```
-
+Or
 ```diff
 import { Ansis } from 'ansis';
 
-- const ansis = new Ansis();
 - ansis.extend({ pink: '#FF75D1' });
 + const ansis = new Ansis().extend({ pink: '#FF75D1' });
 
 console.log(ansis.pink('foo'));
+```
+
+### Features
+
+#### Manually set the color level
+
+Ansis automatically detects color support, but you can manually set the color level.
+You can create a new instance of `Ansis` with the desired color level.
+
+Disable colors:
+```ts
+import { Ansis } from 'ansis';
+
+const custom = new Ansis(0);
+console.log(custom.red`foo`); // Output: plain string, no ANSI codes
+```
+
+Use only basic colors:
+```ts
+import { Ansis } from 'ansis';
+
+const custom = new Ansis(1);
+console.log(custom.hex('#FFAB40')`Orange`); // Output: fallback to yellowBright
 ```
 
 ## 4.0.0-beta.14 (2025-04-13)
@@ -106,19 +132,19 @@ The `xterm-direct` detection logic (introduced in `v3.5.0`) has been removed, as
 > **Note**
 >
 > No terminal emulator sets `TERM=xterm-direct` by default.
-> Modern terminals—including KDE Konsole—typically use `TERM=xterm-256color` along with `COLORTERM=truecolor`
+> Modern terminals, including KDE Konsole, typically use `TERM=xterm-256color` along with `COLORTERM=truecolor`
 > to indicate truecolor support.
 
 ## 4.0.0-beta.2 (2025-03-07)
 
 ### Fixes
 
-#### Default to 16 colors when terminal color support is unknown
+#### Defaults to 16 colors when terminal color support is unknown
 
-Ansis now defaults to 16 colors if it cannot detect support for 256 colors or truecolor in the terminal.
+Ansis now defaults uses 16 colors if it cannot detect support for 256 colors or truecolor.
 
-- **Old behavior:** Unknown terminal → allowed truecolor (could result in incorrect colors)
-- **New behavior:** Unknown terminal → allows only 16 colors (ensures broad compatibility)
+- **Old behavior:** Unknown terminal → used truecolor (could result in incorrect colors)
+- **New behavior:** Unknown terminal → uses only 16 colors (ensures broad compatibility)
 
 > **Note**
 >
@@ -137,9 +163,9 @@ The legacy `strike` alias has been removed to clean up the API and stay consiste
 - No usage of `ansis.strike()` was found in public GitHub repositories.
 - Other ANSI libraries use the standard `strikethrough` name exclusively.
 
-#### Migration
+#### Migrating
 
-If you're using `ansis.strike`, replace it with `ansis.strikethrough`.
+If you're using `strike` style, replace it with `strikethrough`.
 
 ---
 
@@ -163,7 +189,7 @@ next
 ```
 
 Example with escaped backslash:
-```
+```js
 red('prev\\next')
 red`prev\\next`
 ```

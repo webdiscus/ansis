@@ -130,20 +130,10 @@ type Ansis = {
   /**
    * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for foreground color.
    */
-  ansi256: Q;
-
-  /**
-   * Alias for ansi256.
-   */
   fg: Q;
 
   /**
    * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for background color.
-   */
-  bgAnsi256: Q;
-
-  /**
-   * Alias for bgAnsi256.
    */
   bg: Q;
 
@@ -222,8 +212,6 @@ export {
 
   fg,
   fg as bg,
-  fg as ansi256,
-  fg as bgAnsi256,
   rgb,
   rgb as bgRgb,
   hex,

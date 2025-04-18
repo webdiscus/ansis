@@ -74,7 +74,7 @@ const out = `${bold`bold`} ${dim`dim`} ${italic`italic`} ${underline`underline`}
     ' 141 ',
     '  98 ',
     '  92 ',
-  ].reduce((out, code) => out + black.bgAnsi256(parseInt(code, 10))(code), '') +
+  ].reduce((out, code) => out + black.bg(parseInt(code, 10))(code), '') +
   '\n ';
 
 export { out as ansisStylesDemo };

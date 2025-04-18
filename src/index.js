@@ -203,8 +203,6 @@ const Ansis = function(level = detectedLevel) {
   }
 
   let styleData = {
-    ansi256: fnAnsi256, // alias for compatibility with chalk
-    bgAnsi256: fnBgAnsi256, // alias for compatibility with chalk
     fg: fnAnsi256,
     bg: fnBgAnsi256,
     rgb: fnRgb,

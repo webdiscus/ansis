@@ -3,7 +3,7 @@ import ansis, { Ansis, red, green, hex } from 'ansis';
 
 const log = console.log;
 
-log(ansis.ansi256(208).inverse(' -= [ansis package] ESM =- '));
+log(ansis.fg(208).inverse(' -= [ansis package] ESM =- '));
 
 // styles
 log(red.bold.underline(`red.bold.underline('red')`));

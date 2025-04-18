@@ -1,5 +1,52 @@
 # Changelog
 
+
+## Pre release note: ✨ Ansis v4 - Smaller package, and cleaner API
+
+Version 4 is a step forward, removing legacy duplicates and streamlining the API.
+With this release, Ansis focuses on stability, clarity, and minimalism, providing a modern
+ANSI library that is compact and free of legacy layer.
+
+## 4.0.0-beta.18 (2025-04-18)
+
+### ⚠️ BREAKING CHANGE (if using 256-color functions)
+
+The following legacy method aliases have been removed:
+
+| ❌ Removed Method  | ✅ Use Instead  |
+|-------------------|----------------|
+| `ansi256(code)`   | `fg(code)`     |
+| `bgAnsi256(code)` | `bg(code)`     |
+
+These aliases were originally added for compatibility with Chalk.
+Starting with this release, Ansis focuses on a cleaner and compact API, free from duplicated methods and legacy layers.
+
+#### Why `fg()` and `bg()` are better than `ansi256()` and `bgAnsi256()`
+
+Ansis has grown beyond being a Chalk-compatible alternative - it's now a modern and compact ANSI library with its own identity.
+
+**Clear and expressive API**
+
+- `ansis.bg(code)` and `ansis.bg(code)` are shorter more elegant than `ansis.ansi256(code)` and `ansis.bgAnsi256(code)`
+- `fg` and `bg` clearly describe their purpose: setting **foreground** and **background** colors
+- These method names align with conventions used by many other color libraries
+- Introduced in 2021-12-29, `fg()` and `bg()` are already being used in GitHub projects
+- Removing duplicates makes the API cleaner and more compact
+
+#### Migrating
+
+Updating from a previous version is simple:
+
+```diff
+- ansis.ansi256(196)('Error')
++ ansis.fg(196)('Error')
+
+- ansis.bgAnsi256(21)('Info')
++ ansis.bg(21)('Info')
+```
+
+No other changes are required - everything else remains fully compatible.
+
 ## 4.0.0-beta.17 (2025-04-18)
 
 - feat: refactor .d.ts and reduce the package size
@@ -149,7 +196,7 @@ Ansis now defaults uses 16 colors if it cannot detect support for 256 colors or 
 > **Note**
 >
 > This is not a breaking change. Ansis gracefully interpolates higher color depths (truecolor and 256 colors)
-> down to 16 colors when using `ansi256()`, `hex()` or `rgb()`.
+> down to 16 colors when using `fg()`, `hex()` or `rgb()`.
 > To explicitly enable truecolor, set the environment variable `COLORTERM=24bit` or `FORCE_COLOR=3`.
 
 
@@ -538,8 +585,8 @@ The `not widely supported` styles are deleted:
 
 The methods are deleted:
 
-- `ansi`, replace in your code with `ansi256` or `fg`
-- `bgAnsi`, replace in your code with `bgAnsi256` or `bg`
+- `ansi`, replace in your code with `fg`
+- `bgAnsi`, replace in your code with `bg`
 
 ### Deleted clamp in functions
 
@@ -548,8 +595,8 @@ You should self check the function arguments.
 
 The affected functions:
 
-- `ansi256` and `fg` (alias to ansi256) - expected a code in the range `0 - 255`
-- `bgAnsi256` and `bg` (alias to bgAnsi256) - expected a code in the range`0 - 255`
+- `fg` - expected a code in the range `0 - 255`
+- `bg` - expected a code in the range`0 - 255`
 - `rgb` - expected r, g, b values in the range `0 - 255`
 - `bgRgb` - expected r, g, b values in the range `0 - 255`
 
@@ -601,8 +648,8 @@ The affected functions:
   then you should use the new syntax,
   update you code: `import { red } from 'ansis/colors'` --> `import { red } from 'ansis'`.
 - feat(DEPRECATE): OLD named import `import { red } from 'ansis/colors'` is deprecated, use the NEW named import
-- feat(DEPRECATE): instead of the `ansi` use `ansi256` or alias `fg`
-- feat(DEPRECATE): instead of the `bgAnsi` use `bgAnsi256` or alias `bg`
+- feat(DEPRECATE): instead of the `ansi` use `fg`
+- feat(DEPRECATE): instead of the `bgAnsi` use `bg`
 - feat: optimize named export
 - feat: reduce the size of dist/ directory
 - chore: update dev dependencies, new jest requires node.js >= 14
@@ -710,7 +757,8 @@ The affected functions:
 ## 1.3.0 (2021-12-29)
 
 - feat: add support CommonJS (now supported ESM and CommonJS)
-- feat: add aliases: `.fg()` for `.ansi256()` and `.bg()` for `.bgAnsi256()` methods
+- feat: add aliases: `.fg()` for `.ansi256()` and `.bg()` for `.bgAnsi256()` methods.
+  DEPRECATED methods: `ansi`, `ansi256`, `bgAnsi`,`bgAnsi256` - use `fg` and `bg` instead.
 - fix: some inner param types
 - chore: remove examples from NPM package (it can be cloned und run local)
 

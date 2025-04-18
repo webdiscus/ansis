@@ -17,7 +17,7 @@ const colorizeASCII = ({ ascii, data }, paddingLeft = 5) => {
       for (let charWidthIdx = 0; charWidthIdx < width; charWidthIdx++) {
         char = ascii[i++];
         code = Array.isArray(codes) ? codes[row] : codes + row;
-        out += ansis.ansi256(code)(char);
+        out += ansis.fg(code)(char);
       }
     }
     row++;

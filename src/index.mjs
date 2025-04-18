@@ -7,9 +7,7 @@ export default a;
 export const {
   Ansis,
   // color functions
-  ansi256,
   fg,
-  bgAnsi256,
   bg,
   rgb,
   bgRgb,

@@ -251,14 +251,14 @@ describe('style tests', () => {
     expect(esc(received)).toEqual(esc(expected));
   });
 
-  test(`ansis.ansi256(97)`, () => {
-    const received = ansis.ansi256(97)('foo');
+  test(`ansis.fg(97)`, () => {
+    const received = ansis.fg(97)('foo');
     const expected = '\x1b[38;5;97mfoo\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
 
-  test(`ansis.bgAnsi256(97)`, () => {
-    const received = ansis.bgAnsi256(97)('foo');
+  test(`ansis.bg(97)`, () => {
+    const received = ansis.bg(97)('foo');
     const expected = '\x1b[48;5;97mfoo\x1b[49m';
     expect(esc(received)).toEqual(esc(expected));
   });
@@ -456,24 +456,6 @@ describe('alias tests', () => {
   test(`grey.bgGray('foo')`, () => {
     const received = ansis.grey.bgGray('foo');
     const expected = '\x1b[90m\x1b[100mfoo\x1b[49m\x1b[39m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`fg == ansi256`, () => {
-    const received = ansis.fg(96)('foo');
-    const expected = ansis.ansi256(96)('foo');
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`bg == bgAnsi256`, () => {
-    const received = ansis.bg(96)('foo');
-    const expected = ansis.bgAnsi256(96)('foo');
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`ansi256(96).fg(96)('foo')`, () => {
-    const received = ansis.ansi256(96).fg(96)('foo');
-    const expected = '\x1b[38;5;96m\x1b[38;5;96mfoo\x1b[39m\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
 

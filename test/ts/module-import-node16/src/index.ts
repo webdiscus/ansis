@@ -1,5 +1,5 @@
 // TS1484: AnsiColorsExtend is a type and must be imported using a type-only import when `verbatimModuleSyntax` is enabled.
-import ansis, { Ansis, type AnsiColorsExtend, greenBright, bgAnsi256, bgGray, bgCyanBright } from 'ansis';
+import ansis, { Ansis, type AnsiColorsExtend, greenBright, bg, bgGray, bgCyanBright } from 'ansis';
 
 //import pico from 'picocolors'; // ok
 //import { blue } from 'picocolors'; // Error: Named export 'blue' not found. The requested module 'picocolors' is a CommonJS module, which may not support all module.exports as named exports.
@@ -11,9 +11,9 @@ const log = console.log;
 //log(blue('pico blue')); // fatal error
 
 let isSupported = ansis.isSupported();
-log('isSupported: ', ansis.ansi256(192)`${isSupported}`);
-log('bgAnsi256: ', bgAnsi256(127)(1993)); // test number value
-log('bgAnsi256: ', bgAnsi256(21)(true)); // test boolean value
+log('isSupported: ', ansis.fg(192)`${isSupported}`);
+log('bgAnsi256: ', bg(127)(1993)); // test number value
+log('bgAnsi256: ', bg(21)(true)); // test boolean value
 
 // test the magic getters defined static and dynamically
 const resultColor: string = `${ansis.hex('#ff0')`Hello`}, ${ansis.red(`World`)}!`;

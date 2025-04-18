@@ -393,12 +393,37 @@ italic.bold.yellow.bgMagentaBright`text`;
 
 256 color functions:
 
-- **Foreground:** `fg(code)`, _alias_ `ansi256(code)`
-- **Background:** `bg(code)`, _alias_ `bgAnsi256(code)`
+- **Foreground:** `fg(code)` - equivalent to `chalk.ansi256(code)`
+- **Background:** `bg(code)` - equivalent to `chalk.bgAnsi256(code)`
 
-> [!NOTE]
-> The function names `fg(code)` and `bg(code)` are designed for brevity,
-> while `ansi256(code)` and `bgAnsi256(code)` ensure compatibility with Chalk.
+> [!CAUTION]
+> ## Breaking Changes in v4.0.0
+>
+> In Ansis v4.0.0, the following legacy method aliases have been removed:
+>
+> | ❌ Removed Method  | ✅ Use Instead  |
+> |-------------------|----------------|
+> | `ansi256(code)`   | `fg(code)`     |
+> | `bgAnsi256(code)` | `bg(code)`     |
+>
+> These aliases were originally added for compatibility with Chalk.
+> Starting with this release, Ansis focuses on a cleaner and more consistent API without duplicated methods or legacy aliases.
+>
+> ## Example Migration:
+>
+> ```js
+> // Before (v3.x)
+> ansis.ansi256(196)('Error');
+> ansis.bgAnsi256(21)('Info');
+> ```
+>
+> ```js
+> // After (v4.x)
+> ansis.fg(196)('Error');
+> ansis.bg(21)('Info');
+> ```
+>
+> These changes align the API with Ansis' vision of being a modern, compact library, completely free from legacy compatibility layers.
 
 256 color codes:
 
@@ -423,15 +448,13 @@ If a terminal supports only 16 colors then ANSI 256 colors will be interpolated 
 #### Usage example
 
 ```js
-import { bold, ansi256, fg, bgAnsi256, bg } from 'ansis';
+import { bold, fg, bg } from 'ansis';
 
 // foreground color
-ansi256(96)`Bright Cyan`;
-fg(96)`Bright Cyan`; // alias for ansi256
+fg(96)`Bright Cyan`;
 
 // background color
-bgAnsi256(105)`Bright Magenta`;
-bg(105)`Bright Magenta`; // alias for bgAnsi256
+bg(105)`Bright Magenta`;
 
 // function is chainable
 fg(96).bold`bold Bright Cyan`;
@@ -489,15 +512,15 @@ If you use the `hex()`, `rgb()` or `ansis256()` functions in a terminal not supp
 
 <a id="extend-colors" name="extend-colors"></a>
 
-## Extend base colors
+## Extend with Custom Colors
 
-Defaults, the imported `ansis` instance contains [base styles and colors](#base-colors).
-To extend base colors with custom color names for Truecolor use the `ansis.extend()` method.
+By default, the imported `ansis` instance includes a set of [base styles](#base-colors) and standard ANSI colors.
+To define additional named colors using Truecolor (24-bit RGB), use the `ansis.extend()` method.
 
 > [!TIP]
-> You can find a color name by the hex code on the [Name that Color](https://chir.ag/projects/name-that-color/#FF681F) website.
+> Need help picking a color name? Try the [Name that Color](https://chir.ag/projects/name-that-color/#FF681F) website - just enter a hex code.
 
-Define a theme with your custom colors and extends the `ansis` object:
+Example:
 
 ```js
 import ansis from 'ansis';
@@ -507,19 +530,18 @@ const myTheme = {
   pink: '#FF75D1',
 };
 
-// extend ansis this custom colors
-ansis.extend(myTheme);
+// Create an instance with extended colors
+const colors = ansis.extend(myTheme);
 
-// you can destruct extended colors
-const { orange, pink, red } = ansis;
+// Destructure extended and base colors
+const { orange, pink, red } = colors;
 
-// access to extended colors
-console.log(ansis.orange.bold('orange bold'));
+console.log(colors.orange.bold('orange bold'));
 console.log(orange.italic`orange italic`);
 console.log(pink`pink color`);
 ```
 
-Usage example with TypeScript:
+TypeScript example:
 
 ```ts
 import ansis, { AnsiColorsExtend } from 'ansis';
@@ -529,26 +551,26 @@ const myTheme = {
   pink: '#FF75D1',
 };
 
-// extend base colors with your custom theme
-ansis.extend(myTheme);
+// Create an instance with extended colors
+const colors = ansis.extend(myTheme);
 
-// your custom logger with the support for extended colors
+// Custom logger supporting both base and extended colors
 const log = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) => {
-  console.log(ansis[style](message));
+  console.log(colors[style](message));
 }
 
-log('red', 'message'); // base color OK
-log('orange', 'message'); // extended color OK
-log('unknown', 'message'); // TypeScript Error
+log('red', 'message'); // ✅ base color OK
+log('orange', 'message'); // ✅ extended color OK
+log('unknown', 'message'); // ❌ TypeScript Error
 ```
 
 > [!WARNING]
 >
-> The extended color must be used as a first chain item.
+> Extended colors must be used as the first item in the style chain:
 >
 > ```js
-> ansis.orange.bold('orange bold'); // ✅ works fine
-> ansis.bold.orange('bold orange'); // ❌ extended color as a subchain item doesn't work
+> colors.orange.bold('orange bold'); // ✅ works as expected
+> colors.bold.orange('bold orange'); // ❌ won't work: extended color used as a subchain
 > ```
 
 ---
@@ -1057,7 +1079,7 @@ CJS\
 - `16` - [ANSI 16 colors](#base-colors) like `red`, `redBright`, `bgRed`, `bgRedBright`
 
 - `256` - [ANSI 256 colors](#256-colors) methods, e.g.:
-  - [`ansis`][ansis]: `ansi256(n)`, `bgAnsi256(n)`, aliases - `fg(n)`, `bg(n)`
+  - [`ansis`][ansis]: `fg(n)`, `bg(n)`
   - [`chalk`][chalk]: `ansi256(n)`, `bgAnsi256(n)`
   - [`cli-color`][cli-color]: `xterm(n)`
   - [`colors-cli`][colors-cli]: `x<n>`
@@ -1486,7 +1508,7 @@ Just replace your `import ... from ...` or `require(...)` to `ansis`.
 
 <a id="replacing-chalk" name="replacing-chalk"></a>
 
-### Drop-in replacement for [chalk], no migration required
+### Drop-in replacement for [chalk]
 
 ```diff
 - import chalk from 'chalk';
@@ -1502,16 +1524,23 @@ chalk.red.bold('Error!');
 // colorize "Error: file not found!"
 chalk.red(`Error: ${chalk.cyan.bold('file')} not found!`);
 
-// ANSI 256 colors
-chalk.ansi256(93)('Violet color');
-chalk.bgAnsi256(194)('Honeydew, more or less');
-
 // truecolor
 chalk.hex('#FFA500').bold('Bold orange color');
 chalk.rgb(123, 45, 67).underline('Underlined reddish color');
 chalk.bgHex('#E0115F')('Ruby');
 chalk.bgHex('#96C')('Amethyst');
 ```
+
+> [!WARNING]
+>
+> If used ANSI 256 colors functions, replace them with Ansis equivalents:
+> ```diff
+> - chalk.ansi256(196)('Error');
+> + ansis.fg((196)('Error');
+>
+> - chalk.bgAnsi256(21)('Info');
+> + ansis.bg(21)('Info');
+> ```
 
 > [!WARNING]
 >
@@ -1535,8 +1564,8 @@ red.bold`Error!`;   // using template string
 red`Error: ${cyan.bold`file`} not found!`;
 
 // ANSI 256 colors
-fg(93)`Violet color`; // alias for ansi256()
-bg(194)`Honeydew, more or less`;  // alias for bgAnsi256()
+fg(93)`Violet color`; // equivalent for chalk.ansi256()
+bg(194)`Honeydew, more or less`;  // equivalent for chalk.bgAnsi256()
 
 // truecolor
 hex('#FFA500').bold`Bold orange color`;
@@ -1549,7 +1578,7 @@ bgHex('#96C')`Amethyst`;
 
 <a id="replacing-colorette" name="replacing-colorette"></a>
 
-### Drop-in replacement for [colorette], no migration required
+### Drop-in replacement for [colorette]
 
 ```diff
 - import { red, bold, underline } from 'colorette';
@@ -1575,7 +1604,7 @@ bold`I'm ${red`da ba ${underline`dee`} da ba`} daa`;
 
 <a id="replacing-picocolors" name="replacing-picocolors"></a>
 
-### Drop-in replacement for [picocolors], no migration required
+### Drop-in replacement for [picocolors]
 
 ```diff
 - import pico from 'picocolors';
@@ -1609,7 +1638,7 @@ red`Error: ${cyan.bold`file`} not found!`
 
 <a id="replacing-ansi-colors" name="replacing-ansi-colors"></a>
 
-### Drop-in replacement for [ansi-colors], no migration required
+### Drop-in replacement for [ansi-colors]
 
 ```diff
 - const c = require('ansi-colors');

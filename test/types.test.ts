@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import ansis, { Ansis, AnsiColors, AnsiStyles, AnsiColorsExtend, ansi256, rgb, hex } from 'ansis';
+import ansis, { Ansis, AnsiColors, AnsiStyles, AnsiColorsExtend, fg, rgb, hex } from 'ansis';
 
 function assertType<T>(value: T): void {
   // do nothing, just let the compiler verify
@@ -16,8 +16,8 @@ describe('Types validation', () => {
     expect(result).toBeTypeOf('string');
   });
 
-  test('ansi256 function should return an Ansis instance', () => {
-    const result = ansi256(255);
+  test('ansi 256 color function should return an Ansis instance', () => {
+    const result = fg(255);
     const checkAnsis: Ansis = result;
     expect(result).toBeInstanceOf(Object);
     expect(checkAnsis).toBeTruthy();

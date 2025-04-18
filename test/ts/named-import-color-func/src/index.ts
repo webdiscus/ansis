@@ -1,4 +1,4 @@
-import { red, ansi256 } from 'ansis';
+import { red, fg } from 'ansis';
 
-const message: string = `${ansi256(165)`Hello`}, ${red`World`}!`;
+const message: string = `${fg(165)`Hello`}, ${red`World`}!`;
 console.log(message);

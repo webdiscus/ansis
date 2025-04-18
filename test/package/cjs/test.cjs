@@ -5,7 +5,7 @@ const { Ansis, red, green, hex } = require('ansis');
 
 const log = console.log;
 
-log(ansis.ansi256(227).inverse(' -= [ansis package] CommonJS =- '));
+log(ansis.fg(227).inverse(' -= [ansis package] CommonJS =- '));
 
 // styles
 log(red.bold.underline(`red.bold.underline('red')`));

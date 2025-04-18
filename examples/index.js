@@ -65,9 +65,7 @@ log('FG HEX 3 color: ', ansis.hex('#FBA')('foo'));
 log('BG HEX 6 color: ', ansis.bgHex('#FFBBAA').black('foo'));
 log('FG RGB color: ', ansis.rgb(100, 150, 200)('foo'));
 log('BG RGB color: ', ansis.bgRgb(100, 150, 200).black('foo'));
-log('FG ANSI 256 colors: ', ansis.ansi256(96)('foo'));
 log('FG ANSI 256 colors: ', ansis.fg(96)('foo alias'));
-log('BG ANSI 256 colors: ', ansis.black.bgAnsi256(106)('foo'));
 log('BG ANSI 256 colors: ', ansis.black.bg(106)('foo alias'));
 log();
 

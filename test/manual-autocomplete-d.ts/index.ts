@@ -1,4 +1,6 @@
-import ansis, { Ansis, AnsiColorsExtend, red, green, blue, yellow, magenta } from 'ansis';
+import ansis, { Ansis, AnsiColors, red, green, blue, yellow, magenta } from 'ansis';
+
+type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>);
 
 const log = console.log;
 const pink = ansis.hex('#FF75D1');

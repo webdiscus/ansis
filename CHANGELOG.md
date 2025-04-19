@@ -3,9 +3,42 @@
 
 ## Pre release note: ✨ Ansis v4 - Smaller package, and cleaner API
 
-Version 4 is a step forward, removing legacy duplicates and streamlining the API.
-With this release, Ansis focuses on stability, clarity, and minimalism, providing a modern
-ANSI library that is compact and free of legacy layer.
+Version 4 is a step forward, removing legacy clutter, eliminating duplicates, and cleaning up the API.
+With this release, Ansis focuses on stability, clarity, and minimalism, providing a compact ANSI library that is free of legacy layer.
+
+## 4.0.0-beta.19 (2025-04-20)
+
+### ⚠️ BREAKING CHANGE
+
+The unused `AnsiColorsExtend` type has been removed.
+
+This type was intended to support extended theme colors, but it was never actively used in the package source.
+If you relied on it in your own code (e.g. for typing custom styles), you can easily define it yourself.
+
+#### Migrating
+
+If you previously used `AnsiColorsExtend`, replace it with a custom utility type:
+
+```diff
+- import ansis, { AnsiColorsExtend } from 'ansis';
++ import ansis, { AnsiColors } from 'ansis';
+
++ type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>);
+
+const myTheme = {
+  orange: '#FFAB40',
+};
+
+// Extend ansis with custom colors
+const colors = ansis.extend(myTheme);
+
+// Custom logger supporting both built-in and extended styles
+const log = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) => {
+  console.log(colors[style](message));
+}
+
+log('orange', 'message'); // extended color
+```
 
 ## 4.0.0-beta.18 (2025-04-18)
 
@@ -27,7 +60,7 @@ Ansis has grown beyond being a Chalk-compatible alternative - it's now a modern 
 
 **Clear and expressive API**
 
-- `ansis.bg(code)` and `ansis.bg(code)` are shorter more elegant than `ansis.ansi256(code)` and `ansis.bgAnsi256(code)`
+- `ansis.fg(code)` and `ansis.bg(code)` are shorter more elegant than `ansis.ansi256(code)` and `ansis.bgAnsi256(code)`
 - `fg` and `bg` clearly describe their purpose: setting **foreground** and **background** colors
 - These method names align with conventions used by many other color libraries
 - Introduced in 2021-12-29, `fg()` and `bg()` are already being used in GitHub projects

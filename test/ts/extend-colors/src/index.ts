@@ -1,4 +1,6 @@
-import ansis, { Ansis, AnsiColorsExtend } from 'ansis';
+import ansis, { Ansis, AnsiColors } from 'ansis';
+
+type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>);
 
 const log = console.log;
 

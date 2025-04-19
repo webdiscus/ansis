@@ -1,5 +1,6 @@
-// TS1484: AnsiColorsExtend is a type and must be imported using a type-only import when `verbatimModuleSyntax` is enabled.
-import ansis, { Ansis, type AnsiColorsExtend, greenBright, bg, bgGray, bgCyanBright } from 'ansis';
+import ansis, { Ansis, type AnsiColors, greenBright, bg, bgGray, bgCyanBright } from 'ansis';
+
+type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>);
 
 const log = console.log;
 

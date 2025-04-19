@@ -544,17 +544,20 @@ console.log(pink`pink color`);
 TypeScript example:
 
 ```ts
-import ansis, { AnsiColorsExtend } from 'ansis';
+import ansis, { AnsiColors } from 'ansis';
+
+// Extends the built-in `AnsiColors` type with custom user defined color names.
+type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>);
 
 const myTheme = {
   orange: '#FFAB40',
   pink: '#FF75D1',
 };
 
-// Create an instance with extended colors
+// Extend ansis with custom colors
 const colors = ansis.extend(myTheme);
 
-// Custom logger supporting both base and extended colors
+// Custom logger supporting both built-in and extended styles
 const log = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) => {
   console.log(colors[style](message));
 }

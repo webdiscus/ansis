@@ -1,5 +1,7 @@
 import { describe, test, expect } from 'vitest';
-import ansis, { Ansis, AnsiColors, AnsiStyles, AnsiColorsExtend, fg, rgb, hex } from 'ansis';
+import ansis, { Ansis, AnsiColors, AnsiStyles, fg, rgb, hex } from 'ansis';
+
+type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>);
 
 function assertType<T>(value: T): void {
   // do nothing, just let the compiler verify

@@ -52,9 +52,6 @@ export type AnsiStyles =
   | 'underline' /** Underline style. (Not widely supported) */
   | 'strikethrough' /** S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ style. (Not widely supported) */;
 
-// Note: AnsiColors, AnsiStyles and AnsiColorsExtend types used in many project on GitHub, don't remove it!
-//export type AnsiColorsExtend<T extends S> = AnsiColors | (T & Record<never, never>);
-
 /**
  * Set ANSI code.
  *

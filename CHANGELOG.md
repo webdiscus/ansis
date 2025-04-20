@@ -3,8 +3,8 @@
 
 ## Pre release note: ✨ Ansis v4 - Smaller package, and cleaner API
 
-Version 4 is a step forward, removing legacy clutter, eliminating duplicates, and cleaning up the API.
-With this release, Ansis focuses on stability, clarity, and minimalism, providing a compact ANSI library that is free of legacy layer.
+Ansis v4 drops legacy baggage and unused artifacts.
+This release brings a stable and more compact ANSI library.
 
 ## 4.0.0-beta.19 (2025-04-20)
 
@@ -12,12 +12,13 @@ With this release, Ansis focuses on stability, clarity, and minimalism, providin
 
 The unused `AnsiColorsExtend` type has been removed.
 
-This type was intended to support extended theme colors, but it was never actively used in the package source.
+This type was intended to support extended theme colors, but it was never used in other projects.
 If you relied on it in your own code (e.g. for typing custom styles), you can easily define it yourself.
 
 #### Migrating
 
-If you previously used `AnsiColorsExtend`, replace it with a custom utility type:
+If you previously used the `AnsiColorsExtend` type, you’ll now need to define a custom utility type.
+Here's an example how to update your code:
 
 ```diff
 - import ansis, { AnsiColorsExtend } from 'ansis';
@@ -39,6 +40,8 @@ const log = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) => 
 
 log('orange', 'message'); // extended color
 ```
+
+This change ensures compatibility with the latest version of Ansis, where `AnsiColorsExtend` is no longer available.
 
 ## 4.0.0-beta.18 (2025-04-18)
 
@@ -205,7 +208,7 @@ console.log(custom.hex('#FFAB40')`Orange`); // Output: fallback to yellowBright
 
 ### Features
 
-#### Removed `xterm-direct` terminfo check for truecolor support
+#### Dropped `xterm-direct` terminfo check for truecolor support (not a breaking change)
 
 The `xterm-direct` detection logic (introduced in `v3.5.0`) has been removed, as it's unnecessary for identifying truecolor-capable terminals.
 

@@ -43,7 +43,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - Auto-detects [color support](#color-support) across a wide range of [environments](#color-support)
 - Supports [ENV variables](#cli-vars) and [flags](#cli-flags): [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color), [`COLORTERM`](#using-env-colorterm), `--no-color`, `--color`
 - Reliable [CLI testing](#cli-testing) by forcing specific [color levels](#color-levels): no color, 16, 256 or truecolor
-- [Drop-in replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors)
+- [Replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors)
 
 <!--  - Chromium-based browsers can display truecolor text in console.
   - Browsers that do not support ANSI codes will display black/white text in console. -->
@@ -90,7 +90,7 @@ Both are [recommended](https://github.com/es-tooling/module-replacements/blob/ma
 
 The package size in `node_modules` directory:
 
-- `picocolors`: [6.3 kB][npm-picocolors] (not minimized) - A micro library with basic features.
+- `picocolors`: [6.37 kB][npm-picocolors] (not minimized) - A micro library with basic features.
 - `аnsis`: [6.1 kB][npm-ansis] (minimized) - A powerful library containing all the features you need.
 - `chalk`:  [44.2 kB][npm-chalk] (not minimized) - Provides similar functionality to Ansis.
 
@@ -207,7 +207,7 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
 - Does it matter the unpacked size?
   - ✅ [Ansis - 6.1 kB][npm-ansis]
   - ✅ [Picocolors - 6.37 kB][npm-picocolors]
-  - ❌ [Chalk - 44.4 kB][npm-chalk]
+  - ❌ [Chalk - 44.2 kB][npm-chalk]
 - Does support for [ANSI 256 colors](#256-colors) or [Truecolor](#truecolor) with [fallback](#fallback) matter?
   - ✅ Ansis
   - ✅ Chalk
@@ -258,12 +258,12 @@ pico.green(`Create ${pico.blue(pico.bold('React'))} app.`) // picocolors ❌ usa
 
 ## [How to switch to Ansis](#switch-to-ansis)
 
-- [Replacing `chalk`](#replacing-chalk)
-- [Replacing `colorette`](#replacing-colorette)
-- [Replacing `picocolors`](#replacing-picocolors)
-- [Replacing `ansi-colors`](#replacing-ansi-colors)
-- [Replacing `kleur`](#replacing-kleur)
-- [Replacing `cli-color`](#replacing-cli-color)
+- [Migrating from `chalk`](#replacing-chalk)
+- [Migrating from `colorette`](#replacing-colorette)
+- [Migrating from `picocolors`](#replacing-picocolors)
+- [Migrating from `ansi-colors`](#replacing-ansi-colors)
+- [Migrating from `kleur`](#replacing-kleur)
+- [Migrating from `cli-color`](#replacing-cli-color)
 
 ---
 
@@ -395,35 +395,6 @@ italic.bold.yellow.bgMagentaBright`text`;
 
 - **Foreground:** `fg(code)` - equivalent to `chalk.ansi256(code)`
 - **Background:** `bg(code)` - equivalent to `chalk.bgAnsi256(code)`
-
-> [!CAUTION]
-> ## Breaking Changes in v4.0.0
->
-> In Ansis v4.0.0, the following legacy method aliases have been removed:
->
-> | ❌ Removed Method  | ✅ Use Instead  |
-> |-------------------|----------------|
-> | `ansi256(code)`   | `fg(code)`     |
-> | `bgAnsi256(code)` | `bg(code)`     |
->
-> These aliases were originally added for compatibility with Chalk.
-> Starting with this release, Ansis focuses on a cleaner and more consistent API without duplicated methods or legacy aliases.
->
-> ## Example Migration:
->
-> ```js
-> // Before (v3.x)
-> ansis.ansi256(196)('Error');
-> ansis.bgAnsi256(21)('Info');
-> ```
->
-> ```js
-> // After (v4.x)
-> ansis.fg(196)('Error');
-> ansis.bg(21)('Info');
-> ```
->
-> These changes align the API with Ansis' vision of being a modern, compact library, completely free from legacy compatibility layers.
 
 256 color codes:
 
@@ -650,7 +621,7 @@ FORCE_COLOR=2 node app.js > log.txt # Force enable 256 colors
 FORCE_COLOR=3 node app.js > log.txt # Force enable truecolor
 ```
 
-<a id="using-env-colorterm" name="using-env-colorterm"></a>
+<a name="using-env-colorterm"></a>
 
 ### COLORTERM
 
@@ -708,7 +679,7 @@ console.log(custom.hex('#FFAB40')`Orange`); // Output: fallback to yellowBright
 
 #### [↑ top](#top)
 
-<a id="using-env-colorterm" name="cli-testing"></a>
+<a name="cli-testing"></a>
 
 ## Testing CLI output
 
@@ -1506,12 +1477,12 @@ c.red('Add plugin ' + c.cyan.underline('name') + ' to use time limit with ' + c.
 
 ## How to switch to Ansis
 
-Ansis is a powerful, small, and fast replacement that requires **no code migration** for many similar libraries.\
+Ansis is a powerful, small, and fast replacement for many similar libraries.\
 Just replace your `import ... from ...` or `require(...)` to `ansis`.
 
 <a id="replacing-chalk" name="replacing-chalk"></a>
 
-### Drop-in replacement for [chalk]
+### Migrating from [chalk]
 
 ```diff
 - import chalk from 'chalk';
@@ -1581,7 +1552,7 @@ bgHex('#96C')`Amethyst`;
 
 <a id="replacing-colorette" name="replacing-colorette"></a>
 
-### Drop-in replacement for [colorette]
+### Migrating from [colorette]
 
 ```diff
 - import { red, bold, underline } from 'colorette';
@@ -1607,7 +1578,7 @@ bold`I'm ${red`da ba ${underline`dee`} da ba`} daa`;
 
 <a id="replacing-picocolors" name="replacing-picocolors"></a>
 
-### Drop-in replacement for [picocolors]
+### Migrating from [picocolors]
 
 ```diff
 - import pico from 'picocolors';
@@ -1641,7 +1612,7 @@ red`Error: ${cyan.bold`file`} not found!`
 
 <a id="replacing-ansi-colors" name="replacing-ansi-colors"></a>
 
-### Drop-in replacement for [ansi-colors]
+### Migrating from [ansi-colors]
 
 ```diff
 - const c = require('ansi-colors');
@@ -1674,7 +1645,7 @@ red`Error: ${cyan.bold`file`} not found!`;
 
 <a id="replacing-kleur" name="replacing-kleur"></a>
 
-### Migration from [kleur]
+### Migrating from [kleur]
 
 ```diff
 - import { red, green, yellow, cyan } from 'kleur';
@@ -1707,7 +1678,7 @@ yellow`foo ${red.bold`red`} bar ${cyan`cyan`} baz`;
 
 <a id="replacing-cli-color" name="replacing-cli-color"></a>
 
-### Migration from [cli-color]
+### Migrating from [cli-color]
 
 ```diff
 - const clc = require('cli-color');

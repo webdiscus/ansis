@@ -17,6 +17,8 @@ ANSI color library with support for CI, terminals, and Chromium-based browser co
 Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
 
+## Announced `v4.0.0-beta` - [Changes](https://github.com/webdiscus/ansis/discussions/36) - [Docs](https://github.com/webdiscus/ansis/tree/next)
+
 ### 🚀 [Getting Started](#install) ⚖️ [Alternatives](#alternatives) ✨[Why Ansis](#why-ansis)  🔄 [Switch from](#switch-to-ansis)  🔧[Compatibility](#compatibility)
 
 ![Ansis demo](docs/img/ansis-demo.png)

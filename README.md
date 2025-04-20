@@ -17,7 +17,7 @@ ANSI color library with support for CI, terminals, and Chromium-based browser co
 Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
 
-### 🚀 [Install and Quick Start](#install) ⚖️ [Alternatives](#alternatives) ✨[Why Ansis](#why-ansis)  🔧[Compatibility Check](#compatibility)
+### 🚀 [Getting Started](#install) ⚖️ [Alternatives](#alternatives) ✨[Why Ansis](#why-ansis)  🔄 [Switch from](#switch-to-ansis)  🔧[Compatibility](#compatibility)
 
 ![Ansis demo](docs/img/ansis-demo.png)
 
@@ -27,7 +27,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 
 ## 💡 Highlights
 
-- Supports **ESM**, **CommonJS**, **TypeScript** across **Node.js**, **Bun**, **Deno**, **Next.JS** runtimes
+- Supports **ESM**, **CommonJS**, **Bun**, **Deno**, **Next.JS**
 - Works in [Chromium-based](#browsers-compatibility) browsers such as **Chrome**, **Edge**, **Opera**, **Brave**, **Vivaldi**
 - Default and [named import](#import): `import ansis, { red, green, bold, dim } from 'ansis'`
 - [Chained syntax](#chained-syntax): `red.bold.underline('text')`
@@ -42,7 +42,8 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - Strip ANSI escape codes with `ansis.strip()`
 - Auto-detects [color support](#color-support) across a wide range of [environments](#color-support)
 - Supports [ENV variables](#cli-vars) and [flags](#cli-flags): [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color), [`COLORTERM`](#using-env-colorterm), `--no-color`, `--color`
-- [Drop-in replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors)
+- Reliable [CLI testing](#cli-testing) by forcing specific color levels: no color, 16, 256 or truecolor
+- [Replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors)
 
 <!--  - Chromium-based browsers can display truecolor text in console.
   - Browsers that do not support ANSI codes will display black/white text in console. -->
@@ -197,24 +198,31 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
 - Does support for ESM or CJS matter?
   - ✅ Ansis: `ESM` and `CJS`
   - ☑️ Picocolors: `CJS` only
+  - ☑️ Chalk: `ESM` only
 - Does it matter if a library performs [~60 million](#bench-simple) or [~100 million](#bench-simple) **ops/sec** when outputting to the terminal?
   Spoiler: Both Ansis and Picocolors are more than [fast enough](#bench-picocolors-complex).
   - ✅ Picocolors
-  - ❌ Ansis
-- Does it matter if the unpacked size is [6.4 kB][npm-picocolors] or [6.8 kB][npm-ansis], a difference of **0.4 kB**?
-  - ✅ Picocolors
-  - ❌ Ansis
+  - ☑️ Ansis
+  - ☑️ Chalk
+- Does it matter the unpacked size?
+  - ✅ [Ansis - 6.7 kB][npm-ansis]
+  - ✅ [Picocolors - 6.4 kB][npm-picocolors]
+  - ❌ [Chalk - 44.4 kB][npm-chalk]
 - Does support for [ANSI 256 colors](#256-colors) or [Truecolor](#truecolor) with [fallback](#fallback) matter?
   - ✅ Ansis
+  - ✅ Chalk
   - ❌ Picocolors
 - Does handling [edge cases](#handling-input-arguments) matter?
   - ✅ Ansis
+  - ☑️ Chalk
   - ❌ Picocolors
 - Does supporting a wide range of [environments](#color-support) matter?
   - ✅ Ansis
+  - ✅ Chalk
   - ❌ Picocolors
 - Does keeping your code clean and readable matter?
   - ✅ Ansis ([default and named import](#import), [chained syntax](#chained-syntax), [nested **template strings**](#nested-syntax))
+  - ✅ Chalk (default import, chained syntax)
   - ☑️ Picocolors (default import, nested calls)
 
 
@@ -250,12 +258,12 @@ pico.green(`Create ${pico.blue(pico.bold('React'))} app.`) // picocolors ❌ usa
 
 ## [How to switch to Ansis](#switch-to-ansis)
 
-- [Replacing `chalk`](#replacing-chalk)
-- [Replacing `colorette`](#replacing-colorette)
-- [Replacing `picocolors`](#replacing-picocolors)
-- [Replacing `ansi-colors`](#replacing-ansi-colors)
-- [Replacing `kleur`](#replacing-kleur)
-- [Replacing `cli-color`](#replacing-cli-color)
+- [Migrating from `chalk`](#replacing-chalk)
+- [Migrating from `colorette`](#replacing-colorette)
+- [Migrating from `picocolors`](#replacing-picocolors)
+- [Migrating from `ansi-colors`](#replacing-ansi-colors)
+- [Migrating from `kleur`](#replacing-kleur)
+- [Migrating from `cli-color`](#replacing-cli-color)
 
 ---
 
@@ -361,12 +369,12 @@ italic.bold.yellow.bgMagentaBright`text`;
 
 256 color functions:
 
-- **Foreground:** `ansi256(code)`, _alias_ `fg(code)`
-- **Background:** `bgAnsi256(code)`, _alias_ `bg(code)`
+- **Foreground:** `fg(code)` - equivalent to `chalk.ansi256(code)`
+- **Background:** `bg(code)` - equivalent to `chalk.bgAnsi256(code)`
 
-> [!NOTE]
-> The function names `fg(code)` and `bg(code)` are designed for brevity,
-> while `ansi256(code)` and `bgAnsi256(code)` ensure compatibility with Chalk.
+> [!CAUTION]
+> The legacy `ansi256()` and `bgAnsi256()` Chalk-compatible aliases are **deprecated**.\
+> Use `fg()` and `bg()` instead for setting 256-color foreground and background.
 
 256 colors codes:
 
@@ -391,15 +399,13 @@ If a terminal supports only 16 colors then ANSI 256 colors will be interpolated 
 #### Usage example
 
 ```js
-import { bold, ansi256, fg, bgAnsi256, bg } from 'ansis';
+import { bold, fg, bg } from 'ansis';
 
 // foreground color
-ansi256(96)`Bright Cyan`;
-fg(96)`Bright Cyan`; // alias for ansi256
+fg(96)`Bright Cyan`;
 
 // background color
-bgAnsi256(105)`Bright Magenta`;
-bg(105)`Bright Magenta`; // alias for bgAnsi256
+bg(105)`Bright Magenta`;
 
 // function is chainable
 fg(96).bold`bold Bright Cyan`;
@@ -443,7 +449,7 @@ bold.hex('#E0115F').bgHex('#96C')`ruby bold text on amethyst background`
 
 ## Fallback
 
-The `ansis` supports fallback to supported color space.
+The `ansis` supports fallback to supported color level.
 
 ```
 Truecolor —> 256 colors —> 16 colors —> no colors (black & white)
@@ -457,15 +463,15 @@ If you use the `hex()`, `rgb()` or `ansis256()` functions in a terminal not supp
 
 <a id="extend-colors" name="extend-colors"></a>
 
-## Extend base colors
+## Extend with Custom Colors
 
-Defaults, the imported `ansis` instance contains [base styles and colors](#base-colors).
-To extend base colors with custom color names for Truecolor use the `ansis.extend()` method.
+By default, the imported `ansis` instance includes a set of [base styles](#base-colors) and standard ANSI colors.
+To define additional named colors using Truecolor (24-bit RGB), use the `ansis.extend()` method.
 
 > [!TIP]
-> You can find a color name by the hex code on the [Name that Color](https://chir.ag/projects/name-that-color/#FF681F) website.
+> Need help picking a color name? Try the [Name that Color](https://chir.ag/projects/name-that-color/#FF681F) website - just enter a hex code.
 
-Define a theme with your custom colors and extends the `ansis` object:
+Example:
 
 ```js
 import ansis from 'ansis';
@@ -475,48 +481,54 @@ const myTheme = {
   pink: '#FF75D1',
 };
 
-// extend ansis this custom colors
+// Extend ansis instance with extended colors
 ansis.extend(myTheme);
 
-// you can destruct extended colors
+//  Destructure extended and base colors
 const { orange, pink, red } = ansis;
 
-// access to extended colors
 console.log(ansis.orange.bold('orange bold'));
 console.log(orange.italic`orange italic`);
 console.log(pink`pink color`);
 ```
 
-Usage example with TypeScript:
+TypeScript example:
 
 ```ts
-import ansis, { AnsiColorsExtend } from 'ansis';
+import ansis, { AnsiColors } from 'ansis';
+
+// Extends the built-in `AnsiColors` type with custom user defined color names.
+type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>);
 
 const myTheme = {
   orange: '#FFAB40',
   pink: '#FF75D1',
 };
 
-// extend base colors with your custom theme
+// Extend ansis with custom colors
 ansis.extend(myTheme);
 
-// your custom logger with the support for extended colors
+// Custom logger supporting both built-in and extended styles
 const log = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) => {
   console.log(ansis[style](message));
 }
 
-log('red', 'message'); // base color OK
-log('orange', 'message'); // extended color OK
-log('unknown', 'message'); // TypeScript Error
+log('red', 'message'); // ✅ base color OK
+log('orange', 'message'); // ✅ extended color OK
+log('unknown', 'message'); // ❌ TypeScript Error
 ```
+
+> [!CAUTION]
+> The `AnsiColorsExtend` type is **deprecated**.
+> You’ll need to define it manually as in the example above.
 
 > [!WARNING]
 >
-> The extended color must be used as a first chain item.
+> Extended colors must be used as the first item in the style chain:
 >
 > ```js
-> ansis.orange.bold('orange bold'); // ✅ works fine
-> ansis.bold.orange('bold orange'); // ❌ extended color as a subchain item doesn't work
+> ansis.orange.bold('orange bold'); // ✅ works as expected
+> ansis.bold.orange('bold orange'); // ❌ won't work: extended color used as a subchain
 > ```
 
 ---
@@ -527,51 +539,48 @@ log('unknown', 'message'); // TypeScript Error
 
 ## CLI environment variables
 
-Defaults, the output in terminal console is colored and output in a file is uncolored.
+By default, output in the terminal console is colored, while output in a file is uncolored.
 
-To force disable or enable colored output you can use environment variables `NO_COLOR` and `FORCE_COLOR`.
+To force enable or disable colored output, you can use the `NO_COLOR` and `FORCE_COLOR` environment variables.
 
 <a id="using-env-no-color" name="using-env-no-color"></a>
-#### `NO_COLOR`
+### NO_COLOR
 
-The `NO_COLOR` variable should be presents with any not empty value.
-The value is not important, e.g., `NO_COLOR=1` `NO_COLOR=true` disable colors.
+Setting the `NO_COLOR` variable to any non-empty value will disable color output. For example:
+```sh
+NO_COLOR=1      # Disable colors
+NO_COLOR=true   # Disable colors
+```
 
-See the [`NO_COLOR` standard](https://no-color.org/).
+Refer to the [`NO_COLOR` standard](https://no-color.org/) for more details.
 
 <a id="using-env-force-color" name="using-env-force-color"></a>
-#### `FORCE_COLOR`
+### FORCE_COLOR
 
-The `FORCE_COLOR` environment variable is used to enable ANSI colors in the terminal output.
+The [`FORCE_COLOR` standard](https://force-color.org/) variable is used to control the color output in the terminal.
+The behavior of `FORCE_COLOR` in Ansis follows the Node.js convention, with a few adaptations:
 
-The proposed [`FORCE_COLOR` standard](https://force-color.org/):
+| Value                   | Description                                                        |
+|-------------------------|--------------------------------------------------------------------|
+| `FORCE_COLOR=false`     | Disables colors                                                    |
+| `FORCE_COLOR=0`         | Disables colors                                                    |
+| `FORCE_COLOR=true`      | Auto-detects supported colors; enforces truecolor if none detected |
+| `FORCE_COLOR=`_(unset)_ | Auto-detects supported colors; enforces truecolor if none detected |
+| `FORCE_COLOR=1`         | Enables 16 colors                                                  |
+| `FORCE_COLOR=2`         | Enables 256 colors                                                 |
+| `FORCE_COLOR=3`         | Enables truecolor                                                  |
 
-> When `FORCE_COLOR` is present and not an empty string (regardless of its value), it should force enable colors.
-
-But Node.js supports the `FORCE_COLOR` variable in a different way, see [here](https://nodejs.org/api/cli.html#force_color1-2-3) and [here](https://nodejs.org/api/tty.html#writestreamhascolorscount-env).
-
-Ansis interprets `FORCE_COLOR` in accordance with its support in Node.js, with slight adaptations:
-
-```
-FORCE_COLOR=false   // Disables colors
-FORCE_COLOR=0       // Disables colors
-FORCE_COLOR=true    // Auto detects the supported colors (if no color detected, enforce truecolor)
-FORCE_COLOR=(unset) // Auto detects the supported colors (if no color detected, enforce truecolor)
-FORCE_COLOR=1       // Enables 16 colors
-FORCE_COLOR=2       // Enables 256 colors
-FORCE_COLOR=3       // Enables truecolor
-```
 
 > [!IMPORTANT]
-> Node.js [interprets](https://nodejs.org/api/cli.html#force_color1-2-3) the values `1`, `true` and an empty string `''` (unset value) as enabling 16 colors.
+> In [Node.js](https://nodejs.org/api/cli.html#force_color1-2-3) `FORCE_COLOR` values of `1`, `true`,
+> and and an empty string (`''`) are treated as enabling 16 colors.
 >
-> Ansis interprets the value `1` as enabling exactly 16 colors.\
-> The values `true` and an empty string indicate automatic detection of supported colors (16, 256, truecolor).
-> If no color is detected, enforce using truecolor.
-
+> In Ansis:
+> - `1` - enables exactly 16 colors
+> - `true` - and an empty string trigger automatic color detection (16, 256, or truecolor).\
+>    If no colors are detected, `truecolor` is enforced.
 
 See:
-- [`FORCE_COLOR` standard](https://force-color.org/)
 - [Node.js getColorDepth](https://nodejs.org/api/tty.html#writestreamhascolorscount-env)
 - [Node.js FORCE_COLOR=[1, 2, 3]](https://nodejs.org/api/cli.html#force_color1-2-3)
 
@@ -583,95 +592,159 @@ import { red } from 'ansis';
 console.log(red`red color`);
 ```
 
-Execute the script in a terminal:
+You can test the following behaviors by executing the script in the terminal:
 
+```sh
+node app.js           # Colored output in terminal
+node app.js > log.txt # Output in file without ANSI codes
+
+NO_COLOR=1 node app.js              # Force disable colors
+FORCE_COLOR=0 node app.js           # Force disable colors
+FORCE_COLOR=1 node app.js > log.txt # Force enable 16 colors
+FORCE_COLOR=2 node app.js > log.txt # Force enable 256 colors
+FORCE_COLOR=3 node app.js > log.txt # Force enable truecolor
 ```
-node app.js           # colored output in terminal
-node app.js > log.txt # output in file without ANSI codes
 
-NO_COLOR=1 node app.js              # force disable colors
-FORCE_COLOR=0 node app.js           # force disable colors
-FORCE_COLOR=1 node app.js > log.txt # force enable 16 colors
-FORCE_COLOR=2 node app.js > log.txt # force enable 256 colors
-FORCE_COLOR=3 node app.js > log.txt # force enable truecolor
-```
+<a name="using-env-colorterm"></a>
 
-<a id="using-env-colorterm" name="using-env-colorterm"></a>
+### COLORTERM
 
-#### `COLORTERM`
-
-The `COLORTERM` environment variable is used by terminal emulators to indicate support for colors.
-Its value can vary depending on the terminal emulator and the level of color support provided.
-
-The commonly used values supported by `ansis`:
+The `COLORTERM`  environment variable indicates color support in terminal emulators.
+Its value depends on the terminal and its level of color support. Common values supported by Ansis are:
 
 - `truecolor` or `24bit` - 16 million colors
-- `ansi256` - ANSI 256 colors
-- `ansi` - basic ANSI 16 colors
+- `ansi256` - 256 colors
+- `ansi` - 16 colors
 
-You can set the variable in cmd before running the Node script:
+To force a specific color level, you can set the `COLORTERM` variable before running the Node script:
 
+```sh
+COLORTERM=ansi      node script.js  # Force enable 16 colors
+COLORTERM=ansi256   node script.js  # Force enable 256 colors
+COLORTERM=truecolor node script.js  # Force enable truecolor
 ```
-COLORTERM=ansi node script.js      # force enable 16 olors
-COLORTERM=ansi256 node script.js   # force enable 256 colors
-COLORTERM=truecolor node script.js # force enable truecolor
+
+---
+
+#### [↑ top](#top)
+
+<a name="cli-testing"></a>
+
+## Testing CLI output
+
+Ansis automatically detects the supported color level (none, 16, 256, or truecolor) based on the environment.
+
+To ensure consistent test results across different terminals and environments,
+you can explicitly set the desired color level using one of the supported environment variables:
+`NO_COLOR`, `FORCE_COLOR` or `COLORTERM`.
+
+> [!IMPORTANT]
+>
+> You must define the environment variable _before_ importing `ansis`.
+>
+> ```js
+> process.env.NO_COLOR = '1'; // ❌ Doesn't work
+> import { red } from 'ansis'; // <- Too late! NO_COLOR was undefined when ansis loaded
+> ```
+>
+> Instead, create a separate file to set the environment variable and import it first:
+> ```js
+> import './no-color.js';       // ✅ Sets env variable early
+> import { red } from 'ansis';  // NO_COLOR is defined
+> ```
+
+### Disable colors in tests
+
+To ensure consistent test output without ANSI codes, you can disable color rendering using the `NO_COLOR` environment variable.
+
+#### Disable via Environment Variable
+
+Create a file: _no-color.js_:
+
+```js
+process.env.NO_COLOR = '1';
 ```
 
-To set the color level in a script, create a JS file in which you define the `COLORTERM` environment variable with the needed value,
-and import this file before `ansis`.
+Import this file first in your test:
+```js
+import './no-color.js'; // disables colors
+import { expect, test } from 'vitest';
+import { red } from 'ansis';
 
-This can be useful, for example, for testing your cli application to ensure that the test results will be the same
-regardless of the supported color level in different environments and terminals.
+console.log(red('foo')); // Output: plain "foo", no ANSI codes
 
-#### Force use truecolor
+test('output should not contain ANSI codes', () => {
+  const output = red('foo');
+  expect(output).toBe('foo');
+});
+```
 
-_enable-truecolor.js_
+#### Strip ANSI Codes with `ansis.strip()`
+
+Alternatively, use `ansis.strip()` to remove color codes from strings in your tests:
+
+```js
+import { expect, describe, test } from 'vitest';
+import ansis, { red } from 'ansis';
+
+test('should remove ANSI codes from output', () => {
+  const output = red('foo');
+  expect(ansis.strip(output)).toBe('foo');
+});
+```
+
+### Force truecolor
+
+File: _enable-truecolor.js_:
 
 ```js
 process.env.COLORTERM = 'truecolor';
 ```
-your script file:
+
+Test file:
 ```js
-import './level-truecolor'; // <= force use truecolor
+import './enable-truecolor.js'; // enables truecolor
 import { red, fg, hex } from 'ansis';
 
-console.log(hex('#FFAB40')('orange')); // native ANSI RGB color value
-console.log(fg(200)('pink'));          // native ANSI 256 color value
-console.log(red('red'));               // native ANSI 16 color value
+console.log(hex('#FFAB40')('orange')); // uses native ANSI RGB
+console.log(fg(200)('pink'));          // uses ANSI 256
+console.log(red('red'));               // uses ANSI 16
 ```
 
-#### Force use 256 colors
+### Force 256 colors
 
-_enable-256colors.js_
+File: _enable-256colors.js_:
 
 ```js
 process.env.COLORTERM = 'ansi256';
 ```
-your script file:
+
+Test file:
 ```js
-import './level-256colors'; // <= force use 256 colors
+import './enable-256colors.js'; // enables 256 colors
 import { red, fg, hex } from 'ansis';
 
-console.log(hex('#FFAB40')('orange')); // fallback to ANSI 256 color value
-console.log(fg(200)('pink'));          // native ANSI 256 color value
-console.log(red('red'));               // native ANSI 16 color value
+console.log(hex('#FFAB40')('orange')); // fallback to ANSI 256 colors
+console.log(fg(200)('pink'));          // uses ANSI 256 colors
+console.log(red('red'));               // uses ANSI 16 colors
 ```
 
-#### Force use base 16 colors
+### Force 16 colors
 
-_enable-16colors.js_
+File: _enable-16colors.js_:
 
 ```js
 process.env.COLORTERM = 'ansi';
 ```
-your script file:
+
+Test file:
 ```js
-import './level-16colors'; // <= force use 16 olors
+import './enable-16colors.js'; // enables 16 colors
 import { red, fg, hex } from 'ansis';
 
-console.log(hex('#FFAB40')('orange')); // fallback to ANSI 16 color value - `bright red`
-console.log(fg(200)('pink'));          // fallback to ANSI 16 color value - `bright magenta`
-console.log(red('red'));               // native ANSI 16 color value
+console.log(hex('#FFAB40')('orange')); // fallback to ANSI 16 colors (e.g., bright red)
+console.log(fg(200)('pink'));          // fallback to ANSI 16 colors (e.g., bright magenta)
+console.log(red('red'));               // uses ANSI 16 colors
 ```
 
 #### [↑ top](#top)
@@ -713,7 +786,7 @@ Execute the script in a terminal:
 
 ## Color support
 
-Ansis automatically detects the supported color space:
+Ansis automatically detects the supported color level:
 
 - Truecolor
 - ANSI 256 colors
@@ -728,7 +801,7 @@ import ansis from 'ansis';
 console.log('Color output: ', ansis.isSupported());
 ```
 
-There is no standard way to detect which color space is supported.
+There is no standard way to detect which color level is supported.
 The most common way to detect color support is to check the `TERM` and `COLORTERM` environment variables.
 CI systems can be detected by checking for the existence of the `CI` and other specifically environment variables.
 Combine that with the knowledge about which operating system the program is running on, and we have a decent enough way to detect colors.
@@ -929,7 +1002,7 @@ CJS\
 - `16` - [ANSI 16 colors](#base-colors) like `red`, `redBright`, `bgRed`, `bgRedBright`
 
 - `256` - [ANSI 256 colors](#256-colors) methods, e.g.:
-  - [`ansis`][ansis]: `ansi256(n)`, `bgAnsi256(n)`, aliases - `fg(n)`, `bg(n)`
+  - [`ansis`][ansis]: `fg(n)`, `bg(n)`
   - [`chalk`][chalk]: `ansi256(n)`, `bgAnsi256(n)`
   - [`cli-color`][cli-color]: `xterm(n)`
   - [`colors-cli`][colors-cli]: `x<n>`
@@ -1353,12 +1426,12 @@ c.red('Add plugin ' + c.cyan.underline('name') + ' to use time limit with ' + c.
 
 ## How to switch to Ansis
 
-Ansis is a powerful, small, and fast replacement that requires **no code migration** for many similar libraries.\
+Ansis is a powerful, small, and fast replacement for many similar libraries.\
 Just replace your `import ... from ...` or `require(...)` to `ansis`.
 
 <a id="replacing-chalk" name="replacing-chalk"></a>
 
-### Drop-in replacement for [chalk], no migration required
+### Migrating from [chalk]
 
 ```diff
 - import chalk from 'chalk';
@@ -1374,16 +1447,23 @@ chalk.red.bold('Error!');
 // colorize "Error: file not found!"
 chalk.red(`Error: ${chalk.cyan.bold('file')} not found!`);
 
-// ANSI 256 colors
-chalk.ansi256(93)('Violet color');
-chalk.bgAnsi256(194)('Honeydew, more or less');
-
 // truecolor
 chalk.hex('#FFA500').bold('Bold orange color');
 chalk.rgb(123, 45, 67).underline('Underlined reddish color');
 chalk.bgHex('#E0115F')('Ruby');
 chalk.bgHex('#96C')('Amethyst');
 ```
+
+> [!WARNING]
+>
+> If used ANSI 256 colors functions, replace them with Ansis equivalents:
+> ```diff
+> - chalk.ansi256(196)('Error');
+> + ansis.fg((196)('Error');
+>
+> - chalk.bgAnsi256(21)('Info');
+> + ansis.bg(21)('Info');
+> ```
 
 > [!WARNING]
 >
@@ -1407,8 +1487,8 @@ red.bold`Error!`;   // using template string
 red`Error: ${cyan.bold`file`} not found!`;
 
 // ANSI 256 colors
-fg(93)`Violet color`; // alias for ansi256()
-bg(194)`Honeydew, more or less`;  // alias for bgAnsi256()
+fg(93)`Violet color`; // equivalent for chalk.ansi256()
+bg(194)`Honeydew, more or less`;  // equivalent for chalk.bgAnsi256()
 
 // truecolor
 hex('#FFA500').bold`Bold orange color`;
@@ -1421,7 +1501,7 @@ bgHex('#96C')`Amethyst`;
 
 <a id="replacing-colorette" name="replacing-colorette"></a>
 
-### Drop-in replacement for [colorette], no migration required
+### Migrating from [colorette]
 
 ```diff
 - import { red, bold, underline } from 'colorette';
@@ -1447,7 +1527,7 @@ bold`I'm ${red`da ba ${underline`dee`} da ba`} daa`;
 
 <a id="replacing-picocolors" name="replacing-picocolors"></a>
 
-### Drop-in replacement for [picocolors], no migration required
+### Migrating from [picocolors]
 
 ```diff
 - import pico from 'picocolors';
@@ -1481,7 +1561,7 @@ red`Error: ${cyan.bold`file`} not found!`
 
 <a id="replacing-ansi-colors" name="replacing-ansi-colors"></a>
 
-### Drop-in replacement for [ansi-colors], no migration required
+### Migrating from [ansi-colors]
 
 ```diff
 - const c = require('ansi-colors');
@@ -1514,7 +1594,7 @@ red`Error: ${cyan.bold`file`} not found!`;
 
 <a id="replacing-kleur" name="replacing-kleur"></a>
 
-### Migration from [kleur]
+### Migrating from [kleur]
 
 ```diff
 - import { red, green, yellow, cyan } from 'kleur';
@@ -1547,7 +1627,7 @@ yellow`foo ${red.bold`red`} bar ${cyan`cyan`} baz`;
 
 <a id="replacing-cli-color" name="replacing-cli-color"></a>
 
-### Migration from [cli-color]
+### Migrating from [cli-color]
 
 ```diff
 - const clc = require('cli-color');

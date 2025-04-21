@@ -6,6 +6,31 @@
 Ansis v4 drops legacy baggage and unused artifacts.
 This release brings a stable and more compact ANSI library.
 
+## 4.0.0-beta.20 (2025-04-21)
+
+### ⚠️ BREAKING CHANGE
+
+Removed unused and rarely used aliases for `gray` and `bgGray`:
+
+- `grey`, `bgGrey` - British spelling, uncommon, redundant aliases for `gray` and `bgGray`
+- `blackBright`, `bgBlackBright` - Spec-style names for "bright black", less intuitive, rarely used, and awkward in practice
+
+Supporting three separate names for the same color is too much and introduces ambiguity into the API.
+
+#### Migrating
+
+Replace deprecated aliases with the preferred standard names:
+
+```diff
+- ansis.grey('text')
+- ansis.blackBright('text')
++ ansis.gray('text')
+
+- ansis.bgGrey('text')
+- ansis.bgBlackBright('text')
++ ansis.bgGray('text')
+```
+
 ## 4.0.0-beta.19 (2025-04-20)
 
 ### ⚠️ BREAKING CHANGE
@@ -74,11 +99,23 @@ Ansis has grown beyond being a Chalk-compatible alternative - it's now a modern 
 Updating from a previous version is simple:
 
 ```diff
+import ansis from 'ansis';
+
 - ansis.ansi256(196)('Error')
 + ansis.fg(196)('Error')
 
 - ansis.bgAnsi256(21)('Info')
 + ansis.bg(21)('Info')
+```
+
+Alternatively, to keep compatibility with existing code:
+
+```diff
+- import { ansi256, bgAnsi256 } from 'ansis';
++ import { fg as ansi256, bg as bgAnsi256 } from 'ansis';
+
+ansi256(196)('Error')
+bgAnsi256(21)('Info')
 ```
 
 No other changes are required - everything else remains fully compatible.

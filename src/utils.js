@@ -38,7 +38,7 @@ export let hexToRgb = (value) => {
  * @return {number}
  */
 export let rgbToAnsi256 = (r, g, b) => {
-  // greyscale
+  // grayscale
   if (r === g && g === b) {
     if (r < 8) return 16;
     if (r > 248) return 231;
@@ -65,7 +65,7 @@ export let ansi256To16 = (code) => {
   if (code < 16) return 90 + (code - 8);
 
   if (code >= 232) {
-    // greyscale
+    // grayscale
     r = g = b = (((code - 232) * 10) + 8) / 255;
   } else {
     code -= 16;

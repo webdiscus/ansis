@@ -223,19 +223,19 @@ const Ansis = function(level = detectedLevel) {
 
   // Generate ANSI 16 colors dynamically to reduce the code size.
 
-  // `gray` (US) and `grey` (UK) are aliases for `blackBright` and use code 90.
-  // `black` uses code 30, and each subsequent color in the list increments sequentially.
+  // code 30 - `black`, each subsequent color in the list increments sequentially.
+  // code 90 - `gray` is common used color name for "bright black".
   let code = 30;
   let bright = 'Bright';
   let bgName;
 
-  'black,red,green,yellow,blue,magenta,cyan,white,gray,grey'.split(separator).map((name) => {
+  'black,red,green,yellow,blue,magenta,cyan,white,gray'.split(separator).map((name) => {
     bgName = 'bg' + name[0].toUpperCase() + name.slice(1);
 
     styleData[name] = esc(code, closeCode);
     styleData[bgName] = esc(code + bgOffset, bgCloseCode);
 
-    // exclude for `gray` and `grey` aliases
+    // exclude for gray aliases
     if (code < 38) {
       styleData[name + bright] = esc(60 + code, closeCode);
       styleData[bgName + bright] = esc(70 + code++, bgCloseCode);

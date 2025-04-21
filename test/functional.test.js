@@ -4,8 +4,8 @@ import { esc } from './utils/helpers.js';
 // import env variables to simulate truecolor in CLI
 import './env/truecolor.js';
 
-//import ansis, { Ansis, red, yellow, green, grey, gray, bold, italic, underline, hex } from '../src/index.mjs'; //  // for debugging only
-import ansis, { Ansis, red, grey, gray, green, yellow, bold, italic, underline, hex } from 'ansis'; // test npm package
+//import ansis, { Ansis, red, yellow, green, gray, bold, italic, underline, hex } from '../src/index.mjs'; //  // for debugging only
+import ansis, { Ansis, red, gray, green, yellow, bold, italic, underline, hex } from 'ansis'; // test npm package
 
 describe('support colors', () => {
   test(`ansis.isSupported()`, () => {
@@ -72,13 +72,13 @@ describe('convert function argument to string', () => {
   });
 
   test(`NaN`, () => {
-    const received = ansis.green(100/'5px');
+    const received = ansis.green(100 / '5px');
     const expected = '\x1b[32mNaN\x1b[39m';
     expect(received).toEqual(expected);
   });
 
   test(`Infinity`, () => {
-    const received = ansis.green(1/0);
+    const received = ansis.green(1 / 0);
     const expected = '\x1b[32mInfinity\x1b[39m';
     expect(received).toEqual(expected);
   });
@@ -207,7 +207,6 @@ describe('style tests', () => {
     const expected = 'foo \x1b[32mbar \x1b[31mbaz\x1b[32m bar\x1b[39m foo';
     expect(esc(received)).toEqual(esc(expected));
   });
-
 
   test(`ansis.green(['foo', 'bar'])`, () => {
     const received = ansis.green(['foo', 'bar']);
@@ -428,48 +427,6 @@ describe('advanced features tests', () => {
   });
 });
 
-describe('alias tests', () => {
-  test(`gray == blackBright`, () => {
-    const received = ansis.gray('foo');
-    const expected = ansis.blackBright('foo');
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`grey == gray`, () => {
-    const received = ansis.grey('foo');
-    const expected = ansis.gray('foo');
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`bgGrey == bgGray`, () => {
-    const received = ansis.bgGrey('foo');
-    const expected = ansis.bgGray('foo');
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`grey.gray('foo')`, () => {
-    const received = ansis.grey.gray('foo');
-    const expected = '\x1b[90m\x1b[90mfoo\x1b[39m\x1b[39m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`grey.bgGray('foo')`, () => {
-    const received = ansis.grey.bgGray('foo');
-    const expected = '\x1b[90m\x1b[100mfoo\x1b[49m\x1b[39m';
-    expect(esc(received)).toEqual(esc(expected));
-  });
-
-  test(`caching of aliases`, () => {
-    const {gray, grey} = ansis.gray;
-    const grayBold = gray.bold.italic;
-    const greyBold = grey.bold.underline;
-
-    expect(gray('foo')).toBe(grey('foo'));
-    expect(grayBold('bar')).not.toBe(greyBold('bar'));
-    expect(grey('baz')).not.toBe(greyBold('baz'));
-  });
-});
-
 describe('template literals tests', () => {
   test('ansis.red`red color`', () => {
     const received = ansis.red`red color`;
@@ -484,15 +441,15 @@ describe('template literals tests', () => {
   });
 
   test('nested gray and gray', () => {
-    const received = red`red ${grey.underline`grey ${yellow`yellow ${gray.italic`gray ${green`green`} gray`} yellow`} grey`} red`;
-    const expected = '\x1b[31mred \x1b[90m\x1b[4mgrey \x1b[33myellow \x1b[90m\x1b[3mgray \x1b[32mgreen\x1b[90m gray\x1b[23m\x1b[33m yellow\x1b[90m grey\x1b[24m\x1b[31m red\x1b[39m';
+    const received = red`red ${gray.underline`gray ${yellow`yellow ${gray.italic`gray ${green`green`} gray`} yellow`} gray`} red`;
+    const expected = '\x1b[31mred \x1b[90m\x1b[4mgray \x1b[33myellow \x1b[90m\x1b[3mgray \x1b[32mgreen\x1b[90m gray\x1b[23m\x1b[33m yellow\x1b[90m gray\x1b[24m\x1b[31m red\x1b[39m';
     console.log(received); // visual control
     expect(esc(received)).toEqual(esc(expected));
   });
 
   test('nested gray and gray 2', () => {
-    const received = red`red ${underline.grey`grey ${yellow`yellow ${italic.gray`gray ${green`green`} gray`} yellow`} grey`} red`;
-    const expected = '\x1b[31mred \x1b[4m\x1b[90mgrey \x1b[33myellow \x1b[3m\x1b[90mgray \x1b[32mgreen\x1b[90m gray\x1b[33m\x1b[23m yellow\x1b[90m grey\x1b[31m\x1b[24m red\x1b[39m';
+    const received = red`red ${underline.gray`gray ${yellow`yellow ${italic.gray`gray ${green`green`} gray`} yellow`} gray`} red`;
+    const expected = '\x1b[31mred \x1b[4m\x1b[90mgray \x1b[33myellow \x1b[3m\x1b[90mgray \x1b[32mgreen\x1b[90m gray\x1b[33m\x1b[23m yellow\x1b[90m gray\x1b[31m\x1b[24m red\x1b[39m';
     console.log(received); // visual control
     expect(esc(received)).toEqual(esc(expected));
   });
@@ -526,7 +483,7 @@ describe('base ANSI 16 colors', () => {
   test(`ansis.black('foo')`, () => {
     const received = ansis.black('foo');
     const expected = '\x1b[30mfoo\x1b[39m';
-    expect(esc(received)).toEqual(esc(expected));
+    expect(received).toEqual(expected);
   });
   test(`ansis.red('foo')`, () => {
     const received = ansis.red('foo');
@@ -563,8 +520,8 @@ describe('base ANSI 16 colors', () => {
     const expected = '\x1b[37mfoo\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
-  test(`ansis.blackBright('foo')`, () => {
-    const received = ansis.blackBright('foo');
+  test(`ansis.gray('foo')`, () => {
+    const received = ansis.gray('foo');
     const expected = '\x1b[90mfoo\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
@@ -645,8 +602,8 @@ describe('base ANSI 16 colors', () => {
     const expected = '\x1b[47mfoo\x1b[49m';
     expect(esc(received)).toEqual(esc(expected));
   });
-  test(`ansis.bgBlackBright('foo')`, () => {
-    const received = ansis.bgBlackBright('foo');
+  test(`ansis.bgGray('foo')`, () => {
+    const received = ansis.bgGray('foo');
     const expected = '\x1b[100mfoo\x1b[49m';
     expect(esc(received)).toEqual(esc(expected));
   });
@@ -761,7 +718,7 @@ describe('styles', () => {
 
   test(`reset in middle only`, () => {
     const { red } = ansis;
-    const received = red`red ${red.reset.underline`underline`} red`
+    const received = red`red ${red.reset.underline`underline`} red`;
 
     // red + underline + red
     console.log(received);

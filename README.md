@@ -375,16 +375,56 @@ italic.bold.yellow.bgMagentaBright`text`;
 
 ## ANSI 16 colors
 
-| Standard Colors  | Bright Colors                                             | Standard Backgrounds | Bright Backgrounds                                              |
-|:-----------------|:----------------------------------------------------------|:---------------------|:----------------------------------------------------------------|
-| `black`          | `blackBright`<br>_aliases:_<br>`grey` (UK)<br>`gray` (US) | `bgBlack`            | `bgBlackBright`<br>_aliases:_<br>`bgGrey` (UK)<br>`bgGray` (US) |
-| `red`            | `redBright`                                               | `bgRed`              | `bgRedBright`                                                   |
-| `green`          | `greenBright`                                             | `bgGreen`            | `bgGreenBright`                                                 |
-| `yellow`         | `yellowBright`                                            | `bgYellow`           | `bgYellowBright`                                                |
-| `blue`           | `blueBright`                                              | `bgBlue`             | `bgBlueBright`                                                  |
-| `magenta`        | `magentaBright`                                           | `bgMagenta`          | `bgMagentaBright`                                               |
-| `cyan`           | `cyanBright`                                              | `bgCyan`             | `bgCyanBright`                                                  |
-| `white`          | `whiteBright`                                             | `bgWhite`            | `bgWhiteBright`                                                 |
+| Standard Colors  | Bright Colors   | Standard Backgrounds | Bright Backgrounds |
+|:-----------------|:----------------|:---------------------|:-------------------|
+| `black`          | `gray`          | `bgBlack`            | `bgGray`           |
+| `red`            | `redBright`     | `bgRed`              | `bgRedBright`      |
+| `green`          | `greenBright`   | `bgGreen`            | `bgGreenBright`    |
+| `yellow`         | `yellowBright`  | `bgYellow`           | `bgYellowBright`   |
+| `blue`           | `blueBright`    | `bgBlue`             | `bgBlueBright`     |
+| `magenta`        | `magentaBright` | `bgMagenta`          | `bgMagentaBright`  |
+| `cyan`           | `cyanBright`    | `bgCyan`             | `bgCyanBright`     |
+| `white`          | `whiteBright`   | `bgWhite`            | `bgWhiteBright`    |
+
+
+<a name="gray-naming-in-libs"></a>
+### Color naming in libraries: `gray` vs `grey` vs `blackBright`
+
+The same ANSI codes `90` (_gray_) and `100` (_bgGray_) are referred to by different names and aliases in various libraries.
+
+| Library                    | Standart<br>`gray`<br>`bgGray` | UK-spelling<br>`grey`<br>`bgGrey` | Spec-style<br>&nbsp;`blackBright`<br>`bgBlackBright` |
+|:---------------------------|:------------------------------:|:---------------------------------:|:----------------------------------------------------:|
+| [ansis][ansis]             |               ✅                |                 ❌                 |                          ❌                           |
+| [yoctocolors][yoctocolors] |               ✅                |                 ❌                 |                          ❌                           |
+| [kolorist][kolorist]       |               ✅                |                 ❌                 |                          ❌                           |
+| [colors.js][colors.js]     |               ✅                |                 ✅                 |                          ❌                           |
+| [picocolors][picocolors]   |               ✅                |                 ❌                 |                          ✅                           |
+| [tinyrainbow][tinyrainbow] |               ✅                |                 ❌                 |                          ✅                           |
+| [colorette][colorette]     |               ✅                |                 ❌                 |                          ✅                           |
+| [chalk][chalk]             |               ✅                |                 ✅                 |                          ✅                           |
+| [ansi-colors][ansi-colors] |               ✅                |                 ✅                 |                          ✅                           |
+| [kleur][kleur] (8 colors)  |               ✅                |                 ✅                 |                          -                           |
+| [cli-color][cli-color]     |               ❌                |                 ❌                 |                          ✅                           |
+| [colors-cli][colors-cli]   |               ❌                |                 ❌                 |                          ✅                           |
+
+However, keeping three separate names for the same color is too much and introduces ambiguity into the API.
+
+### Holywar: Why `gray` only, without aliases?
+
+ANSI codes for the gray color:
+
+- &nbsp; `90` is officially "**bright black**" foreground (i.e., `gray`) in terminal specs.
+- `100` is officially "**bright black**" background (i.e., `bgGray`) in terminal specs.
+
+Ansis prefers the more intuitive and commonly used names: `gray` and `bgGray`.
+
+- ✅ `gray`, `bgGray` - Standard spelling, common used, and intuitive
+- ❌ `grey`, `bgGrey` - British spelling, uncommon, and a redundant alias for `gray`
+- ❌ `blackBright`, `bgBlackBright` - Spec-style name for "bright black", less intuitive, rarely used, awkward for practical use
+
+> [!NOTE]
+> Supporting both `gray` and `grey` (or even worse, verbose aliases like `blackBright`) introduces unnecessary duplication.\
+> Ansis v4 is focused on a clean, minimal API by intentionally **_avoiding redundant aliases_**.
 
 
 <a id="256-colors" name="256-colors"></a>
@@ -1758,6 +1798,8 @@ fg(202).bg(236)`Orange text on dark gray background`;
 [kolorist]: https://github.com/marvinhagemeister/kolorist
 
 [chalk]: https://github.com/chalk/chalk
+
+[yoctocolors]: https://github.com/sindresorhus/yoctocolors
 
 [ansis]: https://github.com/webdiscus/ansis
 

@@ -71,25 +71,25 @@ describe('convert HEX to RGB', () => {
 });
 
 describe('convert RGB to ANSI 256', () => {
-  test(`rgbToAnsi256(7, 7, 7) lowest greyscale`, () => {
+  test(`rgbToAnsi256(7, 7, 7) lowest grayscale`, () => {
     const received = rgbToAnsi256(7, 7, 7);
     const expected = 16;
     expect(expected).toEqual(received);
   });
 
-  test(`rgbToAnsi256(249, 249, 249) highest greyscale`, () => {
+  test(`rgbToAnsi256(249, 249, 249) highest grayscale`, () => {
     const received = rgbToAnsi256(249, 249, 249);
     const expected = 231;
     expect(expected).toEqual(received);
   });
 
-  test(`rgbToAnsi256(127, 127, 127) greyscale`, () => {
+  test(`rgbToAnsi256(127, 127, 127) grayscale`, () => {
     const received = rgbToAnsi256(127, 127, 127);
     const expected = 244;
     expect(expected).toEqual(received);
   });
 
-  test(`rgbToAnsi256(16, 16, 16) greyscale`, () => {
+  test(`rgbToAnsi256(16, 16, 16) grayscale`, () => {
     const received = rgbToAnsi256(15, 15, 15);
     const expected = 233;
     expect(expected).toEqual(received);

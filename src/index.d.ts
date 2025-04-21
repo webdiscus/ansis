@@ -26,7 +26,7 @@ type S = string;
 type B = boolean;
 
 // BasicColors
-type C = 'black' | 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
+type C =  'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
 
 // BrightColors
 type H = `${C}Bright`;
@@ -35,8 +35,9 @@ type H = `${C}Bright`;
  * Base ANSI Colors
  */
 export type AnsiColors =
-  | C | 'gray' | 'grey' | H
-  | `bg${Capitalize<C> | Capitalize<H>}` | 'bgGray' | 'bgGrey';
+  | 'black' | C | 'gray' | H
+  //| 'bgBlack' | `bg${Capitalize<C> | Capitalize<H>}` | 'bgGray';
+  | `bg${'Black' | Capitalize<C> | 'Gray' | Capitalize<H>}`;
 
 /**
  * Base ANSI Styles
@@ -235,8 +236,6 @@ export {
   a as cyan,
   a as white,
   a as gray,
-  a as grey,
-  a as blackBright,
   a as redBright,
   a as greenBright,
   a as yellowBright,
@@ -248,7 +247,6 @@ export {
   // Background colors
   a as bgBlack,
   a as bgGray,
-  a as bgGrey,
   a as bgRed,
   a as bgGreen,
   a as bgYellow,
@@ -256,7 +254,6 @@ export {
   a as bgMagenta,
   a as bgCyan,
   a as bgWhite,
-  a as bgBlackBright,
   a as bgRedBright,
   a as bgGreenBright,
   a as bgYellowBright,

@@ -130,23 +130,24 @@ export const getColorSpace = (mockThis) => {
   let hasFlag = (regex) => argv.some((value) => regex.test(value));
 
   let _this = mockThis || globalThis;
-  let Deno = _this.Deno;
-  let isDeno = !!Deno;
-  let proc = _this.process || Deno || {};
+  let isDeno = !!_this.Deno;
+  let proc = _this.process || {};
 
-  // Node -> `argv`, Deno -> `args`
-  let argv = proc.argv || proc.args || [];
-  let env = proc.env || {};
+  let argv = proc.argv || [];
   let colorSpace = SPACE_UNDEFINED;
 
+  let env;
   if (isDeno) {
     try {
       // Deno requires the permission for the access to env, use the `--allow-env` flag: deno run --allow-env ./app.js
-      env = env.toObject();
+      env = proc.env;
     } catch (e) {
       // Deno: if interactive permission is not granted, do nothing, no colors
       colorSpace = SPACE_BW;
+      env = {};
     }
+  } else {
+    env = proc.env || {};
   }
 
   // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
@@ -156,7 +157,7 @@ export const getColorSpace = (mockThis) => {
   // runtime values supported colors: `nodejs`, `edge`, `experimental-edge`
 
   // whether the output is supported
-  let isTTY = isPM2 || env.NEXT_RUNTIME?.includes('edge') || (isDeno ? Deno.isatty(1) : !!proc.stdout?.isTTY);
+  let isTTY = isPM2 || env.NEXT_RUNTIME?.includes('edge') || !!proc.stdout?.isTTY;
 
   // enforce a specific color support:
   // FORCE_COLOR=false   // 2 colors (no color)
@@ -185,7 +186,7 @@ export const getColorSpace = (mockThis) => {
 
   // if color space is undefined attempt to detect one with additional method, returns 0, 1, 2 or 3
   // size optimisation: place the `isWin` variable as expression directly in function argument
-  if (colorSpace < SPACE_BW) colorSpace = detectColorSpace(env, isTTY, (isDeno ? Deno.build.os : proc.platform) === 'win32');
+  if (colorSpace < SPACE_BW) colorSpace = detectColorSpace(env, isTTY, proc.platform === 'win32');
 
   // if force disabled
   if (!forceColor

@@ -545,15 +545,13 @@ describe('FORCE_COLOR', () => {
 
   test(`isTTY false, FORCE_COLOR=1`, () => {
     const received = colorSpace({
-      Deno: {
-        env: {
-          toObject: () => ({ FORCE_COLOR: 1 }),
-        },
-        args: [],
-        build: {
-          os: 'linux',
-        },
-        isatty: (rid) => false, // analog to process.stdout.isTTY in node
+      Deno: {},
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: 1 },
+        argv: [],
+        stdout: { isTTY: false },
+        stderr: { isTTY: false },
       },
     });
     const expected = SPACE_16COLORS;
@@ -948,17 +946,14 @@ describe('Node.JS different env', () => {
 describe('Deno support', () => {
   test(`env TERM`, () => {
     const received = colorSpace({
-      Deno: {
-        env: {
-          toObject: () => ({ TERM: 'xterm-256color' }),
-        },
-        args: [],
-        build: {
-          os: 'linux', // win32
-        },
-        isatty: (rid) => rid === 1, // analog to process.stdout.isTTY in node
+      Deno: {},
+      process: {
+        platform: 'linux',
+        env: { TERM: 'xterm-256color' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
-
     });
     const expected = SPACE_256COLORS;
     expect(received).toEqual(expected);
@@ -966,20 +961,16 @@ describe('Deno support', () => {
 
   test(`no permissions`, () => {
     const received = colorSpace({
-      Deno: {
-        env: {
-          toObject: () => {
-            // throw error to simulate no permission
-            throw new Error('np permissions');
-          },
+      Deno: {},
+      process: {
+        platform: 'linux',
+        get env() {
+          throw new Error('No permissions');
         },
-        args: [],
-        build: {
-          os: 'linux',
-        },
-        isatty: (rid) => rid === 1, // analog to process.stdout.isTTY in node
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
-
     });
     const expected = SPACE_BW;
     expect(received).toEqual(expected);
@@ -987,37 +978,29 @@ describe('Deno support', () => {
 
   test(`platform win`, () => {
     const received = colorSpace({
-      Deno: {
-        env: {
-          toObject: () => ({ TERM: '' }),
-        },
-        args: [],
-        build: {
-          os: 'win32',
-        },
-        isatty: (rid) => true, // analog to process.stdout.isTTY in node
+      Deno: {},
+      process: {
+        platform: 'win32',
+        env: { TERM: '' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
-
     });
     const expected = SPACE_TRUECOLOR;
     expect(received).toEqual(expected);
   });
 
-
-
   test(`flag '--color'`, () => {
     const received = colorSpace({
-      Deno: {
-        env: {
-          toObject: () => ({}),
-        },
-        args: ['--color'],
-        build: {
-          os: 'linux',
-        },
-        isatty: (rid) => false, // analog to process.stdout.isTTY in node
+      Deno: {},
+      process: {
+        platform: 'linux',
+        env: {},
+        argv: ['--color'],
+        stdout: { isTTY: false },
+        stderr: { isTTY: false },
       },
-
     });
     const expected = SPACE_TRUECOLOR;
     expect(received).toEqual(expected);

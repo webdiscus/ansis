@@ -17,7 +17,13 @@ ANSI color library with support for CI, terminals, and Chromium-based browser co
 Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
 
-## Announced `v4.0.0-beta` - [Changes](https://github.com/webdiscus/ansis/discussions/36) - [Docs](https://github.com/webdiscus/ansis/tree/next)
+## 📣 Announced [v4.0.0-beta](https://github.com/webdiscus/ansis/discussions/36)
+
+
+> [!IMPORTANT]
+> ✅ [Check your code now to ensure a smooth migration to `v4`](https://github.com/webdiscus/ansis/blob/master/CHANGELOG.md#deprecations-in-v3)
+
+##
 
 ### 🚀 [Getting Started](#install) ⚖️ [Alternatives](#alternatives) ✨[Why Ansis](#why-ansis)  🔄 [Switch from](#switch-to-ansis)  🔧[Compatibility](#compatibility)
 
@@ -202,7 +208,7 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
   - ☑️ Picocolors: `CJS` only
   - ☑️ Chalk: `ESM` only
 - Does it matter if a library performs [~60 million](#bench-simple) or [~100 million](#bench-simple) **ops/sec** when outputting to the terminal?
-  Spoiler: Both Ansis and Picocolors are more than [fast enough](#bench-picocolors-complex).
+  Spoiler: All libraries are more than [fast enough](#bench-picocolors-complex).
   - ✅ Picocolors
   - ☑️ Ansis
   - ☑️ Chalk
@@ -353,16 +359,58 @@ italic.bold.yellow.bgMagentaBright`text`;
 
 ## ANSI 16 colors
 
-| Standard Colors  | Bright Colors                                             | Standard Backgrounds | Bright Backgrounds                                              |
-|:-----------------|:----------------------------------------------------------|:---------------------|:----------------------------------------------------------------|
-| `black`          | `blackBright`<br>_aliases:_<br>`grey` (UK)<br>`gray` (US) | `bgBlack`            | `bgBlackBright`<br>_aliases:_<br>`bgGrey` (UK)<br>`bgGray` (US) |
-| `red`            | `redBright`                                               | `bgRed`              | `bgRedBright`                                                   |
-| `green`          | `greenBright`                                             | `bgGreen`            | `bgGreenBright`                                                 |
-| `yellow`         | `yellowBright`                                            | `bgYellow`           | `bgYellowBright`                                                |
-| `blue`           | `blueBright`                                              | `bgBlue`             | `bgBlueBright`                                                  |
-| `magenta`        | `magentaBright`                                           | `bgMagenta`          | `bgMagentaBright`                                               |
-| `cyan`           | `cyanBright`                                              | `bgCyan`             | `bgCyanBright`                                                  |
-| `white`          | `whiteBright`                                             | `bgWhite`            | `bgWhiteBright`                                                 |
+| Standard Colors  | Bright Colors   | Standard Backgrounds | Bright Backgrounds |
+|:-----------------|:----------------|:---------------------|:-------------------|
+| `black`          | `gray`          | `bgBlack`            | `bgGray`           |
+| `red`            | `redBright`     | `bgRed`              | `bgRedBright`      |
+| `green`          | `greenBright`   | `bgGreen`            | `bgGreenBright`    |
+| `yellow`         | `yellowBright`  | `bgYellow`           | `bgYellowBright`   |
+| `blue`           | `blueBright`    | `bgBlue`             | `bgBlueBright`     |
+| `magenta`        | `magentaBright` | `bgMagenta`          | `bgMagentaBright`  |
+| `cyan`           | `cyanBright`    | `bgCyan`             | `bgCyanBright`     |
+| `white`          | `whiteBright`   | `bgWhite`            | `bgWhiteBright`    |
+
+> [!CAUTION]
+> The redundant `grey`, `bgGrey`, `blackBright` and `bgBlackBright` aliases for `gray` and `bgGray` are **deprecated**.
+
+<a name="gray-naming-in-libs"></a>
+### Color naming in libraries: `gray` vs `grey` vs `blackBright`
+
+The same ANSI codes `90` (_gray_) and `100` (_bgGray_) are referred to by different names and aliases in various libraries.
+
+| Library                    | Standard<br>`gray`<br>`bgGray` | UK-spelling<br>`grey`<br>`bgGrey` | Spec-style<br>&nbsp;`blackBright`<br>`bgBlackBright` |
+|:---------------------------|:------------------------------:|:---------------------------------:|:----------------------------------------------------:|
+| [ansis][ansis]             |               ✅                |                 ❌                 |                          ❌                           |
+| [yoctocolors][yoctocolors] |               ✅                |                 ❌                 |                          ❌                           |
+| [kolorist][kolorist]       |               ✅                |                 ❌                 |                          ❌                           |
+| [colors.js][colors.js]     |               ✅                |                 ✅                 |                          ❌                           |
+| [picocolors][picocolors]   |               ✅                |                 ❌                 |                          ✅                           |
+| [tinyrainbow][tinyrainbow] |               ✅                |                 ❌                 |                          ✅                           |
+| [colorette][colorette]     |               ✅                |                 ❌                 |                          ✅                           |
+| [chalk][chalk]             |               ✅                |                 ✅                 |                          ✅                           |
+| [ansi-colors][ansi-colors] |               ✅                |                 ✅                 |                          ✅                           |
+| [kleur][kleur] (8 colors)  |               ✅                |                 ✅                 |                          -                           |
+| [cli-color][cli-color]     |               ❌                |                 ❌                 |                          ✅                           |
+| [colors-cli][colors-cli]   |               ❌                |                 ❌                 |                          ✅                           |
+
+However, keeping three separate names for the same color is too much for a small library.
+
+### Holywar: Why `gray` only, without aliases?
+
+ANSI codes for the gray color:
+
+- &nbsp; `90` is officially "**bright black**" foreground (i.e., `gray`) in terminal specs.
+- `100` is officially "**bright black**" background (i.e., `bgGray`) in terminal specs.
+
+Ansis prefers the more intuitive and commonly used names: `gray` and `bgGray`.
+
+- ✅ `gray`, `bgGray` - Standard spelling, common used, and intuitive
+- ❌ `grey`, `bgGrey` - British spelling, uncommon, and a redundant alias for `gray` and `bgGray`
+- ❌ `blackBright`, `bgBlackBright` - Spec-style names for "bright black", less intuitive, rarely used, awkward for practical use
+
+> [!NOTE]
+> Supporting both `gray` and `grey` (or even worse, verbose aliases like `blackBright`) introduces unnecessary duplication.\
+> Next Ansis v4 is focused on a clean, minimal API by intentionally **_avoiding redundant aliases_**.
 
 
 <a id="256-colors" name="256-colors"></a>
@@ -1429,74 +1477,71 @@ c.red('Add plugin ' + c.cyan.underline('name') + ' to use time limit with ' + c.
 ## How to switch to Ansis
 
 Ansis is a powerful, small, and fast replacement for many similar libraries.\
-Just replace your `import ... from ...` or `require(...)` to `ansis`.
+Just update your imports or requires from your previous library to `ansis`.
+
+> [!NOTE]
+>
+> Ansis doesn't supports `grey`, `bgGrey`, `blackBright` or `bgBlackBright` - it only provides the commonly used, intuitive `gray` and `bgGray`.
 
 <a id="replacing-chalk" name="replacing-chalk"></a>
 
 ### Migrating from [chalk]
 
 ```diff
-- import chalk from 'chalk';
-+ import chalk from 'ansis';
+- import c from 'chalk';
++ import c from 'ansis';
 ```
 
-Ansis supports the Chalk syntax and is compatible* with [styles and color names](https://github.com/chalk/chalk?tab=readme-ov-file#styles), so you don't need to modify the
-original code:
+In most use cases, Ansis is compatible with [chalk](https://github.com/chalk/chalk#styles).
 
 ```js
-chalk.red.bold('Error!');
-
-// colorize "Error: file not found!"
-chalk.red(`Error: ${chalk.cyan.bold('file')} not found!`);
-
-// truecolor
-chalk.hex('#FFA500').bold('Bold orange color');
-chalk.rgb(123, 45, 67).underline('Underlined reddish color');
-chalk.bgHex('#E0115F')('Ruby');
-chalk.bgHex('#96C')('Amethyst');
+c.red.bold('Error!');
+c.red(`Error: ${c.cyan.bold('file')} not found!`);
+c.hex('#FFA500').bold('Bold orange');
+c.rgb(123, 45, 67).underline('Reddish');
+c.bgHex('#E0115F')('Ruby');
 ```
 
-> [!WARNING]
->
-> If used ANSI 256 colors functions, replace them with Ansis equivalents:
-> ```diff
-> - chalk.ansi256(196)('Error');
-> + ansis.fg((196)('Error');
->
-> - chalk.bgAnsi256(21)('Info');
-> + ansis.bg(21)('Info');
-> ```
+Replace redundant aliases:
 
-> [!WARNING]
->
-> Ansis doesn't not support the `overline` style, because it's **not widely supported** and no one uses it.\
-> Check you code and remove the `overline` style:
->
-> ```diff
-> - chalk.red.overline('text');
-> + chalk.red('text');
-> ```
+```diff
+- c.grey('text')
+- c.blackBright('text')
++ c.gray('text')
 
-Optionally, you can rewrite the same code to make it even shorter and cleaner:
+- c.bgGrey('text')
+- c.bgBlackBright('text')
++ c.bgGray('text')
+```
+
+Remove unsupported styles like `overline`:
+
+```diff
+- c.red.overline('text');
++ c.red('text');
+```
+
+Replace ANSI 256 color methods:
+```diff
+- c.ansi256(196)('Error');
++ c.fg((196)('Error');
+
+- c.bgAnsi256(21)('Info');
++ c.bg(21)('Info');
+```
+
+Cleaner alternative:
 
 ```js
-import { red, cyan, fg, bg, hex, rgb, bgHex, bgRgb } from 'ansis';
+import { red, cyan, fg, bg, hex, rgb, bgHex } from 'ansis';
 
-red.bold('Error!'); // using parentheses
-red.bold`Error!`;   // using template string
-
-// colorize "Error: file not found!"
+red.bold`Error!`;
 red`Error: ${cyan.bold`file`} not found!`;
-
-// ANSI 256 colors
-fg(93)`Violet color`; // equivalent for chalk.ansi256()
-bg(194)`Honeydew, more or less`;  // equivalent for chalk.bgAnsi256()
-
-// truecolor
-hex('#FFA500').bold`Bold orange color`;
-rgb(123, 45, 67).underline`Underlined reddish color`;
+hex('#FFA500').bold`Bold orange`;
+rgb(123, 45, 67).underline`Reddish`;
 bgHex('#E0115F')`Ruby`;
-bgHex('#96C')`Amethyst`;
+fg(93)`Violet`;
+bg(194)`Honeydew`;
 ```
 
 #### [↑ top](#top)
@@ -1506,23 +1551,35 @@ bgHex('#96C')`Amethyst`;
 ### Migrating from [colorette]
 
 ```diff
-- import { red, bold, underline } from 'colorette';
-+ import { red, bold, underline } from 'ansis';
+- import { red, gray, bold } from 'colorette';
++ import { red, gray, bold } from 'ansis';
 ```
 
-Ansis is fully compatible with `colorette` [styles and color names](https://github.com/jorgebucaran/colorette#supported-colors), so you don't need to modify the
-original code:
+In most use cases, Ansis is compatible with [colorette](https://github.com/jorgebucaran/colorette#supported-colors):
 
 ```js
-red.bold('Error!');
-bold(`I'm ${red(`da ba ${underline("dee")} da ba`)} daa`);
+red(bold('Error!'));
+gray('text');
 ```
 
-Optionally, you can rewrite the same code to make it even shorter and cleaner:
+Rewrite to modern style:
 
 ```js
 red.bold`Error!`;
-bold`I'm ${red`da ba ${underline`dee`} da ba`} daa`;
+gray`text`;
+```
+
+Replace redundant aliases:
+
+```diff
+- import { blackBright, bgBlackBright } from 'colorette';
++ import { gray, bgGray } from 'ansis';
+
+- blackBright('text')
++ gray('text')
+
+- bgBlackBright('text')
++ bgGray('text')
 ```
 
 #### [↑ top](#top)
@@ -1532,32 +1589,36 @@ bold`I'm ${red`da ba ${underline`dee`} da ba`} daa`;
 ### Migrating from [picocolors]
 
 ```diff
-- import pico from 'picocolors';
-+ import pico from 'ansis';
+- import c from 'picocolors';
++ import c from 'ansis';
 ```
 
-Ansis is fully compatible with `picocolors` [styles and color names](https://github.com/alexeyraspopov/picocolors#usage), so you don't need to modify the
-original code:
+In most use cases, Ansis is compatible with [picocolors](https://github.com/alexeyraspopov/picocolors#usage):
 
 ```js
-pico.red(pico.bold('text'));
-pico.red(pico.bold(variable));
-
-// colorize "Error: file not found!"
-pico.red('Error: ' + pico.cyan(pico.bold('file')) + ' not found!');
+c.red(c.bold('text'));
+c.red('Error: ' + c.cyan(c.bold('file')) + ' not found!');
 ```
 
-Optionally, you can rewrite the same code to make it even shorter and cleaner:
+Modern alternative:
 
 ```js
 import { red, cyan } from 'ansis';
 
 red.bold`text`;
-red.bold(variable);
-
-// colorize "Error: file not found!"
 red`Error: ${cyan.bold`file`} not found!`
 ```
+
+Replace aliases:
+
+```diff
+- c.blackBright('text')
++ c.gray('text')
+
+- c.bgBlackBright('text')
++ c.bgGray('text')
+```
+
 
 #### [↑ top](#top)
 
@@ -1570,26 +1631,33 @@ red`Error: ${cyan.bold`file`} not found!`
 + const c = require('ansis');
 ```
 
-Ansis is fully compatible with `ansi-color` [styles and color names](https://github.com/doowb/ansi-colors#available-styles), so you don't need to modify the
-original code:
+In most use cases, Ansis is compatible with [ansi-color](https://github.com/doowb/ansi-colors#available-styles):
 
 ```js
 c.red.bold('Error!');
-
-// colorize "Error: file not found!"
 c.red(`Error: ${c.cyan.bold('file')} not found!`);
 ```
 
-Optionally, you can rewrite the same code to make it even shorter and cleaner:
+Cleaner alternative:
 
 ```js
 import { red, cyan } from 'ansis';
 
-red.bold('Error!'); // using parentheses
-red.bold`Error!`;   // using template string
-
-// colorize "Error: file not found!"
+red.bold`Error!`;
 red`Error: ${cyan.bold`file`} not found!`;
+```
+
+Replace redundant aliases:
+
+```diff
+- c.grey('text')
+- c.blackBright('text')
++ c.gray('text')
+```
+```diff
+- c.bgGrey('text')
+- c.bgBlackBright('text')
++ c.bgGray('text')
 ```
 
 #### [↑ top](#top)
@@ -1599,30 +1667,39 @@ red`Error: ${cyan.bold`file`} not found!`;
 ### Migrating from [kleur]
 
 ```diff
-- import { red, green, yellow, cyan } from 'kleur';
-+ import { red, green, yellow, cyan } from 'ansis';
+- import { red, green, yellow } from 'kleur';
++ import { red, green, yellow } from 'ansis';
 ```
 
-Ansis is fully compatible with `kleur` [styles and color names](https://github.com/lukeed/kleur#api),
-but Kleur `v3.0` no longer uses Chalk-style syntax (magical getter):
+[Kleur](https://github.com/lukeed/kleur#api) `v3+` dropped support for magical chaining (e.g., `red.bold()`).
 
 ```js
-green().bold().underline('this is a bold green underlined message');
-yellow(`foo ${red().bold('red')} bar ${cyan('cyan')} baz`);
+- green().bold().underline('message');
++ green.bold.underline('message');
 ```
 
-If you uses chained methods then it requires a simple code modification.
-Just replace `().` with `.`:
-
 ```js
-green.bold.underline('this is a bold green underlined message');
-yellow(`foo ${red.bold('red')} bar ${cyan('cyan')} baz`);
+- yellow(`foo ${red().bold('red')} bar`);
++ yellow(`foo ${red.bold('red')} bar`);
 ```
 
-Optionally, you can rewrite the same code to make it even shorter and cleaner:
+Cleaner alternative:
 
 ```js
-yellow`foo ${red.bold`red`} bar ${cyan`cyan`} baz`;
+yellow`foo ${red.bold`red`} bar`;
+```
+
+Replace aliases:
+
+```diff
+- import { grey, bgGrey } from 'kleur';
++ import { gray, bgGray } from 'ansis';
+
+- grey('text')
++ gray('text')
+
+- bgGrey('text')
++ bgGray('text')
 ```
 
 #### [↑ top](#top)
@@ -1632,47 +1709,51 @@ yellow`foo ${red.bold`red`} bar ${cyan`cyan`} baz`;
 ### Migrating from [cli-color]
 
 ```diff
-- const clc = require('cli-color');
-+ const clc = require('ansis');
+- const c = require('cli-color');
++ const c = require('ansis');
 ```
 
-Ansis is compatible* with `cli-color` [styles and color names](https://github.com/medikoo/cli-color#colors):
+In common use cases Ansis is compatible with [cli-color](https://github.com/medikoo/cli-color#colors):
 
 ```js
-clc.red.bold('Error!');
+c.red.bold('Error!');
 
 // colorize "Error: file not found!"
-clc.red(`Error: ${c.cyan.bold('file')} not found!`);
+c.red(`Error: ${c.cyan.bold('file')} not found!`);
 ```
 
-> [!WARNING]
->
-> Ansis doesn't not support the `blink` style, because it's **not widely supported** and no one uses it.\
-> Check you code and remove the `blink` style:
->
-> ```diff
-> - clc.red.blink('text');
-> + clc.red('text');
-> ```
-
-If you use ANSI 256 color functions, replace `xterm` with `fg` and `bgXterm` replace `bg`:
+Remove unsupported styles like `blink`:
 
 ```diff
-- clc.xterm(202).bgXterm(236)('Orange text on dark gray background');
-+ clc.fg(202).bg(236)('Orange text on dark gray background');
+- c.red.blink('text');
++ c.red('text');
 ```
 
-Optionally, you can rewrite the same code to make it even shorter and cleaner:
+Replace ANSI 256 color methods:
+
+```diff
+- c.xterm(202).bgXterm(236)('Orange on dark gray');
++ c.fg(202).bg(236)('Orange on dark gray');
+```
+
+Cleaner alternative:
 
 ```js
 import { red, cyan, fg, bg } from 'ansis';
 
 red.bold`Error!`;
-
-// colorize "Error: file not found!"
 red`Error: ${cyan.bold`file`} not found!`;
+fg(202).bg(236)`Orange on dark gray`;
+```
 
-fg(202).bg(236)`Orange text on dark gray background`;
+Replace redundant aliases:
+
+```diff
+- c.blackBright('text')
++ c.gray('text')
+
+- c.bgBlackBright('text')
++ c.bgGray('text')
 ```
 
 ---
@@ -1709,6 +1790,8 @@ fg(202).bg(236)`Orange text on dark gray background`;
 [kolorist]: https://github.com/marvinhagemeister/kolorist
 
 [chalk]: https://github.com/chalk/chalk
+
+[yoctocolors]: https://github.com/sindresorhus/yoctocolors
 
 [ansis]: https://github.com/webdiscus/ansis
 

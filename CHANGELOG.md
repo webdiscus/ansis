@@ -1,37 +1,69 @@
 # Changelog
 
-## 4.0.0-beta.1 (2025-03-03)
+<a name="deprecations-in-v3"></a>
 
-- feat: add support for escape sequences in template literals.\
-  The template tag now returns the same result as the standard function call.
-  - Example `\n` without escape:
-    ```
-    red`prev\nnext`
-    ```
-    Output:
-    ```
-    prev
-    next
-    ```
-  - Example `\n` with escape:
-    ```
-    red`prev\\next`
-    ```
-    Output:
-    ```
-    prev\next
-    ```
-- feat(BREAKING CHANGE): remove of non-standard `strike` style (alias for `strikethrough`)
-  - No usage of `ansis.strike()` was found in public GitHub repositories.
-  - Most popular packages use the standard `strikethrough` style name.
+## Upcoming BREAKING CHANGES in v4.0.0
 
-### Migration to `v4`
+> [!NOTE]
+> To avoid a **Holywar**, next Ansis v4 is focused on a clean, minimal API by intentionally **_avoiding redundant aliases_**.
 
-If you still use `ansis.strike`, replace it with the standard `ansis.strikethrough`.
+The following DEPRECATED features will be removed in the next major release (v4.0.0):
 
-## 4.0.0-beta.0 (2025-03-02)
+- `strike` → use `strikethrough`
+- `grey`, `blackBright`  → use `gray`
+- `bgGrey`, `bgBlackBright` → use `bgGray`
+- `ansi256()` → use `fg()`
+- `bgAnsi256()` → use `bg()`
+- `AnsiColorsExtend` type → define it manually if needed
 
-Deprecated.
+If you're using `v3.x`, we recommend upgrading to the latest stable release (`v3.17.0`)
+and updating your code now to ensure a smooth [migrating to `v4`](https://github.com/webdiscus/ansis/discussions/36#migrating-to-v4).
+
+### 1) Replace `strike` with `strikethrough`
+
+```diff
+- ansis.strike('text')
++ ansis.strikethrough('text')
+```
+
+### 2) Replace `grey` and `blackBright` with `gray`
+
+```diff
+- ansis.grey('text')
+- ansis.blackBright('text')
++ ansis.gray('text')
+```
+
+### 3) Replace `bgGrey` and `bgBlackBright` with `bgGray`
+
+```diff
+- ansis.bgGrey('text')
+- ansis.bgBlackBright('text')
++ ansis.bgGray('text')
+```
+
+### 4) Replace `ansi256()` with  `fg()`
+
+```diff
+- ansis.ansi256(196)('Error')
++ ansis.fg(196)('Error')
+```
+
+### 5) Replace `bgAnsi256()` with `bg()`
+
+```diff
+- ansis.bgAnsi256(21)('Info')
++ ansis.bg(21)('Info')
+```
+
+### 6) Define `AnsiColorsExtend` type manually
+
+```diff
+- import ansis, { AnsiColorsExtend } from 'ansis';
++ import ansis, { AnsiColors } from 'ansis';
+
++ type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>);
+```
 
 ---
 

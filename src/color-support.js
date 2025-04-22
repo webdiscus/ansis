@@ -130,24 +130,23 @@ export const getColorSpace = (mockThis) => {
   let hasFlag = (regex) => argv.some((value) => regex.test(value));
 
   let _this = mockThis || globalThis;
-  let isDeno = !!_this.Deno;
   let proc = _this.process || {};
-
   let argv = proc.argv || [];
   let colorSpace = SPACE_UNDEFINED;
+  let env = proc.env || {};
+  let isDeno = !!_this.Deno;
 
-  let env;
+  // In deno 2.0+, the `process` is available globally
   if (isDeno) {
     try {
-      // Deno requires the permission for the access to env, use the `--allow-env` flag: deno run --allow-env ./app.js
-      env = proc.env;
-    } catch (e) {
-      // Deno: if interactive permission is not granted, do nothing, no colors
-      colorSpace = SPACE_BW;
+      // Trigger Deno request to env access, by deny permission throws an error
+      keys(env);
+    } catch (error) {
+      // if the permission is not granted, environment variables have no effect, even variables like FORCE_COLOR will be ignored
+      // env now points to a new empty object to avoid Deno requests for every env access in code below
       env = {};
+      colorSpace = SPACE_BW;
     }
-  } else {
-    env = proc.env || {};
   }
 
   // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
@@ -180,8 +179,7 @@ export const getColorSpace = (mockThis) => {
   // if FORCE_COLOR is present and is neither 'false' nor '0', OR has one of the flags: --color --color=true --color=always
   let isForceEnabled = (FORCE_COLOR in env && forceColor) || hasFlag(/^-{1,2}color=?(true|always)?$/);
 
-  // DON'T handle edge case for unsupported value, e.g. if value > 3
-  // if (isForceEnabled) colorSpace = forceColor > SPACE_TRUECOLOR ? SPACE_TRUECOLOR : forceColor;
+  // ignore edge case for unsupported value, e.g. if value > 3
   if (isForceEnabled) colorSpace = forceColor;
 
   // if color space is undefined attempt to detect one with additional method, returns 0, 1, 2 or 3

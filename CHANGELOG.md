@@ -5,9 +5,9 @@
 ## Upcoming BREAKING CHANGES in v4.0.0
 
 > [!NOTE]
-> To avoid a **Holywar**, next Ansis v4 is focused on a clean, minimal API by intentionally **_avoiding redundant aliases_**.
+> Next Ansis v4 is focused on a clean, minimal API by intentionally **_avoiding redundant aliases_**.
 
-The following DEPRECATED features will be removed in the next major release (v4.0.0):
+The following DEPRECATED rarely used duplicate aliases and unused redundant types will be removed in the next major release (v4.0.0):
 
 - `strike` → use `strikethrough`
 - `grey`, `blackBright`  → use `gray`
@@ -66,6 +66,11 @@ and updating your code now to ensure a smooth [migrating to `v4`](https://github
 ```
 
 ---
+
+## 3.18.0-beta.0 (2025-04-22)
+
+- feat: drop support for Deno 1.x (EOL) and add support for Deno 2.0+, #37
+- test: add Deno tests on GitHub
 
 ## 3.17.0 (2025-03-02)
 

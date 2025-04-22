@@ -35,7 +35,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 
 ## 💡 Highlights
 
-- Supports **ESM**, **CommonJS**, **Bun**, **Deno**, **Next.JS**
+- Supports **ESM**, **CommonJS**, **Bun**, **Deno 2.0+**, **Next.JS**
 - Works in [Chromium-based](#browsers-compatibility) browsers such as **Chrome**, **Edge**, **Opera**, **Brave**, **Vivaldi**
 - Default and [named import](#import): `import ansis, { red, green, bold, dim } from 'ansis'`
 - [Chained syntax](#chained-syntax): `red.bold.underline('text')`
@@ -53,8 +53,9 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - Reliable [CLI testing](#cli-testing) by forcing specific color levels: no color, 16, 256 or truecolor
 - [Replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors)
 
-<!--  - Chromium-based browsers can display truecolor text in console.
-  - Browsers that do not support ANSI codes will display black/white text in console. -->
+> [!NOTE]
+> - Ansis <= v3.17.0 supports Deno 1.x ([EOF on 9 Oct 2024](https://endoflife.date/deno))
+> - Ansis >= v3.18.0 supports Deno 2.x
 
 ## 🛠️ Usage
 

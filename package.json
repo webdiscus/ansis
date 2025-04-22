@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "4.0.0-beta.1",
+  "version": "3.18.0-beta.0",
   "description": "A small and fast library for applying ANSI colors in terminal or browser console",
   "keywords": [
     "ansi",
@@ -63,7 +63,10 @@
     "test:esm": "node ./test/package/esm/test.mjs",
     "test:tsc": "vitest run ./test/ts-compiler.test.js",
     "test:levels": "vitest run ./test/color-levels.test.js",
-    "test:stackoverflow": "node ./test/rangeErrorTest.js",
+    "test:range": "node ./test/rangeErrorTest.js",
+    "test:deno": "deno test --allow-env",
+    "test-deno:manual": "deno test ./test-deno/manual/nocolor-deny.test.js",
+    "test-deno:truecolor": "deno test ./test-deno/cases/truecolor.test.js --allow-env",
     "test:coverage": "vitest run --coverage",
     "publish:public": "(npm run build) && npm publish ./dist --access public",
     "publish:beta": "(npm run build) && npm publish ./dist --tag beta"

@@ -542,21 +542,6 @@ describe('FORCE_COLOR', () => {
     const expected = SPACE_TRUECOLOR;
     expect(received).toEqual(expected);
   });
-
-  test(`isTTY false, FORCE_COLOR=1`, () => {
-    const received = colorSpace({
-      Deno: {},
-      process: {
-        platform: 'linux',
-        env: { FORCE_COLOR: 1 },
-        argv: [],
-        stdout: { isTTY: false },
-        stderr: { isTTY: false },
-      },
-    });
-    const expected = SPACE_16COLORS;
-    expect(received).toEqual(expected);
-  });
 });
 
 describe('color space', () => {
@@ -943,7 +928,7 @@ describe('Node.JS different env', () => {
 });
 
 // Deno
-describe('Deno support', () => {
+describe('Deno 2.0+ support', () => {
   test(`env TERM`, () => {
     const received = colorSpace({
       Deno: {},
@@ -964,9 +949,13 @@ describe('Deno support', () => {
       Deno: {},
       process: {
         platform: 'linux',
-        get env() {
-          throw new Error('No permissions');
-        },
+        env: new Proxy({}, {
+          ownKeys(target) {
+            // simulate original Deno error if a request to env access was denied
+            // simulate an access with `Object.keys(env)`
+            throw new Error('NotCapable: Requires env access, run again with the --allow-env flag');
+          }
+        }),
         argv: [],
         stdout: { isTTY: true },
         stderr: { isTTY: true },
@@ -1003,6 +992,42 @@ describe('Deno support', () => {
       },
     });
     const expected = SPACE_TRUECOLOR;
+    expect(received).toEqual(expected);
+  });
+
+  test(`no permissions`, () => {
+    const received = colorSpace({
+      Deno: {},
+      process: {
+        platform: 'linux',
+        env: new Proxy({}, {
+          ownKeys(target) {
+            // simulate original Deno error if a request to env access was denied
+            // simulate an access with `Object.keys(env)`
+            throw new Error('NotCapable: Requires env access, run again with the --allow-env flag');
+          }
+        }),
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+    });
+    const expected = SPACE_BW;
+    expect(received).toEqual(expected);
+  });
+
+  test(`isTTY false, FORCE_COLOR=1`, () => {
+    const received = colorSpace({
+      Deno: {},
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: 1 },
+        argv: [],
+        stdout: { isTTY: false },
+        stderr: { isTTY: false },
+      },
+    });
+    const expected = SPACE_16COLORS;
     expect(received).toEqual(expected);
   });
 });

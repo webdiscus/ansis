@@ -35,7 +35,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 
 ## 💡 Highlights
 
-- Supports **ESM**, **CommonJS**, **Bun**, **Deno 2.0+**, **Next.JS**
+- Supports **ESM**, **CommonJS**, **Bun**, **Deno**, **Next.JS**
 - Works in [Chromium-based](#browsers-compatibility) browsers such as **Chrome**, **Edge**, **Opera**, **Brave**, **Vivaldi**
 - Default and [named import](#import): `import ansis, { red, green, bold, dim } from 'ansis'`
 - [Chained syntax](#chained-syntax): `red.bold.underline('text')`
@@ -54,8 +54,10 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - [Replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors)
 
 > [!NOTE]
-> - Ansis <= v3.17.0 supports Deno 1.x ([EOF on 9 Oct 2024](https://endoflife.date/deno))
-> - Ansis >= v3.18.0 supports Deno 2.x
+> - Ansis <= v3.17.0 supports Deno 1.x ([EOL - 9 Oct 2024](https://endoflife.date/deno))
+> - Ansis >= v4.0.0 supports Deno 2.x\
+>   Dropping support for Deno 1.x is a breaking change, so Deno 2.x support was first introduced in `v3.18.0-beta.0`.
+>   Use this version until v4 is officially released.
 
 ## 🛠️ Usage
 

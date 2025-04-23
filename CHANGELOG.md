@@ -69,7 +69,7 @@ and updating your code now to ensure a smooth [migrating to `v4`](https://github
 
 ## 3.18.0-beta.0 (2025-04-22)
 
-- feat: drop support for Deno 1.x (EOL) and add support for Deno 2.0+, #37
+- feat: drop support for Deno 1.x (EOL - 9 Oct 2024) and add support for Deno 2.0+, #37
 - test: add Deno tests on GitHub
 
 ## 3.17.0 (2025-03-02)

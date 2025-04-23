@@ -134,9 +134,9 @@ export const getColorSpace = (mockThis) => {
   let argv = proc.argv || [];
   let colorSpace = SPACE_UNDEFINED;
   let env = proc.env || {};
-  let isDeno = !!_this.Deno;
 
-  // In deno 2.0+, the `process` is available globally
+  // Note: In Deno 2.0+, the `process` is available globally
+  let isDeno = !!_this.Deno;
   if (isDeno) {
     try {
       // Trigger Deno request to env access, by deny permission throws an error

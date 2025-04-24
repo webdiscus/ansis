@@ -1,8 +1,11 @@
 import { LEVEL_UNDEFINED, LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS, LEVEL_TRUECOLOR } from './color-levels.js';
 import { keys, separator } from './misc.js';
 
+// Contains stringified keys of environment variables.
+let envKeys;
+
 /**
- * Detect color level.
+ * Auto detect color level.
  *
  * Truecolor is supported by:
  * - some CI (e.g. GitHub CI)
@@ -17,9 +20,8 @@ import { keys, separator } from './misc.js';
  * @param {boolean} isWin
  * @return {number}
  */
-let detectColors = (env, isTTY, isWin) => {
+let autoDetectLevel = (env, isTTY, isWin) => {
   let term = env.TERM;
-  let envKeys = separator + keys(env).join(separator);
 
   // Note: the order of checks is important!
 
@@ -112,26 +114,24 @@ export const getLevel = (mockThis) => {
    * @param {RegExp} regex The RegEx to match all possible flags.
    * @return {boolean}
    */
-  let hasFlag = (regex) => argv?.some((value) => regex.test(value));
+  let hasFlag = (regex) => argv.some((value) => regex.test(value));
 
-  let _this = mockThis ?? globalThis;
-  let Deno = _this.Deno;
-  let isDeno = !!Deno;
-  let proc = _this.process || Deno || {};
-
-  // Node -> `argv`, Deno -> `args`
-  let argv = proc.argv ?? proc.args;
+  // Note: In Deno 2.0+, the `process` is available globally
+  let thisRef = mockThis ?? globalThis;
+  let proc = thisRef.process ?? {};
+  let argv = proc.argv ?? [];
   let env = proc.env ?? {};
   let colorLevel = LEVEL_UNDEFINED;
 
-  if (isDeno) {
-    try {
-      // Deno requires the permission for the access to env, use the `--allow-env` flag: deno run --allow-env ./app.js
-      env = env.toObject();
-    } catch (e) {
-      // Deno: if interactive permission is not granted, do nothing, no colors
-      colorLevel = LEVEL_BW;
-    }
+  try {
+    // keys(env) triggers a Deno permission request; throws if access is denied
+    // stringify environment variable keys to check for specific ones using a RegExp
+    envKeys = separator + keys(env).join(separator);
+  } catch (error) {
+    // if the permission is not granted, environment variables have no effect, even variables like FORCE_COLOR will be ignored
+    // env now points to a new empty object to avoid Deno requests for every env access in code below
+    env = {};
+    colorLevel = LEVEL_BW;
   }
 
   // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
@@ -141,7 +141,7 @@ export const getLevel = (mockThis) => {
   // runtime values supported colors: `nodejs`, `edge`, `experimental-edge`
 
   // whether the output is supported
-  let isTTY = isPM2 || env.NEXT_RUNTIME?.includes('edge') || (isDeno ? Deno.isatty(1) : !!proc.stdout?.isTTY);
+  let isTTY = isPM2 || env.NEXT_RUNTIME?.includes('edge') || !!proc.stdout?.isTTY;
 
   // enforce a specific color support:
   // FORCE_COLOR=false   // disables colors
@@ -160,7 +160,7 @@ export const getLevel = (mockThis) => {
   let forceColorValue = env[FORCE_COLOR];
 
   // mapping FORCE_COLOR values to color level values
-  let forceLevel = {
+  let forcedLevel = {
     false: LEVEL_BW,
     0: LEVEL_BW,
     1: LEVEL_16COLORS,
@@ -169,25 +169,29 @@ export const getLevel = (mockThis) => {
   }[forceColorValue] ?? LEVEL_UNDEFINED;
 
   // if FORCE_COLOR is present and is neither 'false' nor '0', OR has one of the flags: --color --color=true --color=always
-  let isForceEnabled = (FORCE_COLOR in env && forceLevel) || hasFlag(/^--color=?(true|always)?$/);
+  let isForced = (FORCE_COLOR in env && forcedLevel) || hasFlag(/^--color=?(true|always)?$/);
 
-  if (isForceEnabled) colorLevel = forceLevel;
+  if (isForced) colorLevel = forcedLevel;
 
   // if colorLevel === LEVEL_UNDEFINED, attempt to detect color level, returns 0, 1, 2 or 3
-  if (!~colorLevel) colorLevel = detectColors(env, isTTY, (isDeno ? Deno.build.os : proc.platform) === 'win32');
+  if (!~colorLevel) colorLevel = autoDetectLevel(env, isTTY, proc.platform === 'win32');
 
   // if force disabled: FORCE_COLOR=0 or FORCE_COLOR=false
-  if (!forceLevel
+  if (!forcedLevel
     || !!env.NO_COLOR
     // --no-color --color=false --color=never
     || hasFlag(/^--(no-color|color=(false|never))$/)) return LEVEL_BW;
 
   // Detect browser support
-  if (!!_this.window?.chrome) return LEVEL_TRUECOLOR;
+  if (!!thisRef.window?.chrome) return LEVEL_TRUECOLOR;
 
   // API Rule: If color output is force enabled but the color level is detected as B&W (e.g., TERM is dumb),
   // enable truecolor since color depth support does not matter.
 
   // Optimisation: `!colorLevel` is equivalent to `colorLevel === LEVEL_BW`
-  return isForceEnabled && !colorLevel ? LEVEL_TRUECOLOR : colorLevel;
+  //return isForced && !colorLevel ? LEVEL_TRUECOLOR : colorLevel;
+
+  // If color output is forced but the environment doesn't support it, allow truecolor anyway,
+  // for example, when saving CLI output snapshots to a file.
+  return isForced && !colorLevel ? LEVEL_TRUECOLOR : colorLevel;
 };

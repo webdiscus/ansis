@@ -45,9 +45,6 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - Reliable [CLI testing](#cli-testing) by forcing specific [color levels](#color-levels): no color, 16, 256 or truecolor
 - [Replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors)
 
-<!--  - Chromium-based browsers can display truecolor text in console.
-  - Browsers that do not support ANSI codes will display black/white text in console. -->
-
 ## 🛠️ Usage
 
 ```js

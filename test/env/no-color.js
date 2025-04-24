@@ -1,4 +1,4 @@
-// set env variable to simulate no color
+// Set env variable to simulate no color
 process.env.NO_COLOR = '1';
 
 // FOR TEST ONLY!

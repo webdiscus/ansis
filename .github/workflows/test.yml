@@ -122,3 +122,25 @@ jobs:
         run: npx vitest
         env:
           NODE_OPTIONS: --unhandled-rejections=strict
+
+  deno:
+    name: Test Deno
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        deno-version: [ 2.0.x, 2.1.x, 2.2.x ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Deno ${{ matrix.deno-version }}
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ matrix.deno-version }}
+
+      - name: Run Deno tests
+        run: deno test --config=deno.json --allow-env

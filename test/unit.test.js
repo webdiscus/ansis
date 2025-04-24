@@ -4,9 +4,6 @@ import ansis from '../src/index.js';
 import { hexToRgb, rgbToAnsi256, ansi256To16, rgbToAnsi16 } from '../src/utils.js';
 import { getLevel } from '../src/color-support.js';
 import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS, LEVEL_TRUECOLOR } from '../src/color-levels.js';
-import { esc } from './utils/helpers.js';
-
-const colorSpace = (mock) => getLevel(mock);
 
 describe('convert HEX to RGB', () => {
   test(`hexToRgb('FFAA99')`, () => {
@@ -204,7 +201,7 @@ describe('convert RGB to ANSI 16', () => {
 
 describe('CI tools', () => {
   test(`GitHub CI`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { CI: true, GITHUB_ACTIONS: true },
@@ -217,7 +214,7 @@ describe('CI tools', () => {
   });
 
   test(`GitLab CI`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { CI: true, GITLAB_CI: true },
@@ -230,7 +227,7 @@ describe('CI tools', () => {
   });
 
   test(`Azure CI`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         env: { TF_BUILD: true },
         argv: [],
@@ -242,7 +239,7 @@ describe('CI tools', () => {
   });
 
   test(`TeamCity`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         env: { TEAMCITY_VERSION: '2020.1.1' },
         argv: [],
@@ -256,7 +253,7 @@ describe('CI tools', () => {
 
 describe('flags and options', () => {
   test(`--color`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: {},
@@ -269,7 +266,7 @@ describe('flags and options', () => {
   });
 
   test(`--color=true`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'dumb' },
@@ -284,7 +281,7 @@ describe('flags and options', () => {
   });
 
   test(`--color=false`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'xterm' },
@@ -299,7 +296,7 @@ describe('flags and options', () => {
   });
 
   test(`--color=never`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'xterm' },
@@ -314,7 +311,7 @@ describe('flags and options', () => {
   });
 
   test(`NO_COLOR=1`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { NO_COLOR: '1', TERM: 'xterm' },
@@ -332,7 +329,7 @@ describe('flags and options', () => {
 // FORCE_COLOR
 describe('FORCE_COLOR', () => {
   test(`not exists FORCE_COLOR`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: {},
@@ -344,7 +341,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR=false`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: 'false', TERM: 'xterm' },
@@ -358,7 +355,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR=0`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: '0', TERM: 'xterm' },
@@ -372,7 +369,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR true, no isTTY`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: 'true' },
@@ -384,7 +381,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR=3, TERM=xterm-256color, no isTTY`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: '3', TERM: 'xterm-256color' },
@@ -396,7 +393,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR unset, TERM=xterm-256color, isTTY`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         // equivalent to: env: { TERM: 'xterm-256color' },
@@ -411,7 +408,7 @@ describe('FORCE_COLOR', () => {
 
   // FORCE_COLOR= node -e "console.log(process.env.FORCE_COLOR)"
   test(`FORCE_COLOR=, COLORTERM=ansi256`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: '', COLORTERM: 'ansi256' },
@@ -424,7 +421,7 @@ describe('FORCE_COLOR', () => {
 
   // FORCE_COLOR= node -e "console.log(process.env.FORCE_COLOR)"
   test(`FORCE_COLOR=, TERM=dumb`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: '', TERM: 'dumb' },
@@ -436,7 +433,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR=true`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: 'true' },
@@ -448,7 +445,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR=true, TERM=dumb`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'dumb', FORCE_COLOR: 'true' },
@@ -460,7 +457,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR=true, COLORTERM=truecolor`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: 'true', COLORTERM: 'truecolor' },
@@ -472,7 +469,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR=true, COLORTERM=ansi256`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: 'true', COLORTERM: 'ansi256' },
@@ -484,7 +481,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR=true, COLORTERM=ansi`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: 'true', COLORTERM: 'ansi' },
@@ -496,7 +493,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR=1`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: '1' },
@@ -508,7 +505,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR=2`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: '2' },
@@ -520,7 +517,7 @@ describe('FORCE_COLOR', () => {
   });
 
   test(`FORCE_COLOR=3`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: '3' },
@@ -545,7 +542,7 @@ describe('FORCE_COLOR', () => {
   // });
 
   test(`FORCE_COLOR=something`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { FORCE_COLOR: 'something' },
@@ -555,28 +552,11 @@ describe('FORCE_COLOR', () => {
     const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
-
-  test(`isTTY false, FORCE_COLOR=1`, () => {
-    const received = colorSpace({
-      Deno: {
-        env: {
-          toObject: () => ({ FORCE_COLOR: 1 }),
-        },
-        args: [],
-        build: {
-          os: 'linux',
-        },
-        isatty: (rid) => false, // analog to process.stdout.isTTY in node
-      },
-    });
-    const expected = LEVEL_16COLORS;
-    expect(expected).toEqual(received);
-  });
 });
 
 describe('color level', () => {
   test(`Any unknown terminal should support 16 colors`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'unknown-term' },
@@ -592,7 +572,7 @@ describe('color level', () => {
 
 describe('COLORTERM', () => {
   test(`detect truecolor from COLORTERM`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'xterm', COLORTERM: 'truecolor' },
@@ -606,7 +586,7 @@ describe('COLORTERM', () => {
   });
 
   test(`detect truecolor for TERM=xterm-256color and COLORTERM=truecolor`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'xterm-256color', COLORTERM: 'truecolor' },
@@ -620,7 +600,7 @@ describe('COLORTERM', () => {
   });
 
   test(`detect 256 colors from COLORTERM`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'xterm', COLORTERM: 'ansi256' },
@@ -634,7 +614,7 @@ describe('COLORTERM', () => {
   });
 
   test(`detect 16 colors from COLORTERM`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'xterm-256color', COLORTERM: 'ansi' },
@@ -651,7 +631,7 @@ describe('COLORTERM', () => {
 
 describe('support colors in terminals', () => {
   test(`xterm`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'xterm' },
@@ -665,7 +645,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`xterm-16colour`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'xterm-16colour' },
@@ -679,7 +659,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`xterm-256`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'xterm-256' },
@@ -693,7 +673,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`xterm-256color`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'xterm-256color' },
@@ -707,7 +687,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`xterm-256colour`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'xterm-256colour' },
@@ -721,7 +701,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`xterm-kitty`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'xterm-kitty', COLORTERM: 'truecolor' },
@@ -735,7 +715,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`vt220`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'vt220' },
@@ -749,7 +729,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`vt320-w`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'vt320-w' },
@@ -763,7 +743,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`vt52`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'vt52' },
@@ -777,7 +757,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`vt525`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'vt525' },
@@ -791,7 +771,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`tmux`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'tmux' },
@@ -805,7 +785,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`mintty-direct`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'mintty-direct' },
@@ -819,7 +799,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`ansi.sysk`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { TERM: 'ansi.sysk' },
@@ -833,7 +813,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`Browser chromium`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       window: {
         chrome: {},
       },
@@ -843,7 +823,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`Browser others`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       window: {},
     });
     const expected = LEVEL_BW
@@ -851,7 +831,7 @@ describe('support colors in terminals', () => {
   });
 
   test(`Unknown system`, () => {
-    const received = colorSpace({});
+    const received = getLevel({});
     const expected = LEVEL_BW
     expect(expected).toEqual(received);
   });
@@ -865,7 +845,7 @@ describe('Node.JS different env', () => {
     const processOriginal = process;
     process = undefined;
 
-    const received = colorSpace(undefined);
+    const received = getLevel(undefined);
     const expected = LEVEL_BW;
     expect(expected).toEqual(received);
 
@@ -874,13 +854,13 @@ describe('Node.JS different env', () => {
   });
 
   test(`processMock {}`, () => {
-    const received = colorSpace({});
+    const received = getLevel({});
     const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 
   test(`colors on windows platform`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'win32',
         env: {},
@@ -895,7 +875,7 @@ describe('Node.JS different env', () => {
   });
 
   test(`no colors, unsupported terminal`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         env: { TERM: 'dumb' },
         argv: [],
@@ -909,7 +889,7 @@ describe('Node.JS different env', () => {
   });
 
   test(`no colors, simulate output in file > log.txt`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         env: { TERM: 'xterm' },
         argv: [],
@@ -921,7 +901,7 @@ describe('Node.JS different env', () => {
   });
 
   test(`COLORTERM: 'truecolor'`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         env: { COLORTERM: 'truecolor' },
         argv: [],
@@ -935,7 +915,7 @@ describe('Node.JS different env', () => {
   });
 
   test(`PM2: no isTTY but COLORTERM: 'truecolor'`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         env: {
           PM2_HOME: '/var/www/',
@@ -953,7 +933,7 @@ describe('Node.JS different env', () => {
   });
 
   test(`PM2: no isTTY and unsupported terminal`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         env: {
           PM2_HOME: '/var/www/',
@@ -972,89 +952,114 @@ describe('Node.JS different env', () => {
 });
 
 // Deno
-describe('Deno support', () => {
+describe('Deno 2.0+ support', () => {
   test(`env TERM`, () => {
-    const received = colorSpace({
-      Deno: {
-        env: {
-          toObject: () => ({ TERM: 'xterm-256color' }),
-        },
-        args: [],
-        build: {
-          os: 'linux', // win32
-        },
-        isatty: (rid) => rid === 1, // analog to process.stdout.isTTY in node
+    const received = getLevel({
+      Deno: {},
+      process: {
+        platform: 'linux',
+        env: { TERM: 'xterm-256color' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
-
     });
     const expected = LEVEL_256COLORS;
     expect(expected).toEqual(received);
   });
 
   test(`no permissions`, () => {
-    const received = colorSpace({
-      Deno: {
-        env: {
-          toObject: () => {
-            // throw error to simulate no permission
-            throw new Error('np permissions');
-          },
-        },
-        args: [],
-        build: {
-          os: 'linux',
-        },
-        isatty: (rid) => rid === 1, // analog to process.stdout.isTTY in node
+    const received = getLevel({
+      Deno: {},
+      process: {
+        platform: 'linux',
+        env: new Proxy({}, {
+          ownKeys(target) {
+            // simulate original Deno error if a request to env access was denied
+            // simulate an access with `Object.keys(env)`
+            throw new Error('NotCapable: Requires env access, run again with the --allow-env flag');
+          }
+        }),
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
-
     });
     const expected = LEVEL_BW;
     expect(expected).toEqual(received);
   });
 
   test(`platform win`, () => {
-    const received = colorSpace({
-      Deno: {
-        env: {
-          toObject: () => ({ TERM: '' }),
-        },
-        args: [],
-        build: {
-          os: 'win32',
-        },
-        isatty: (rid) => true, // analog to process.stdout.isTTY in node
+    const received = getLevel({
+      Deno: {},
+      process: {
+        platform: 'win32',
+        env: { TERM: '' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
       },
-
     });
     const expected = LEVEL_TRUECOLOR;
     expect(expected).toEqual(received);
   });
 
-
-
   test(`flag '--color'`, () => {
-    const received = colorSpace({
-      Deno: {
-        env: {
-          toObject: () => ({}),
-        },
-        args: ['--color'],
-        build: {
-          os: 'linux',
-        },
-        isatty: (rid) => false, // analog to process.stdout.isTTY in node
+    const received = getLevel({
+      Deno: {},
+      process: {
+        platform: 'linux',
+        env: {},
+        argv: ['--color'],
+        stdout: { isTTY: false },
+        stderr: { isTTY: false },
       },
-
     });
     const expected = LEVEL_TRUECOLOR;
+    expect(received).toEqual(expected);
+  });
+
+  test(`no permissions`, () => {
+    const received = getLevel({
+      Deno: {},
+      process: {
+        platform: 'linux',
+        env: new Proxy({}, {
+          ownKeys(target) {
+            // simulate original Deno error if a request to env access was denied
+            // simulate an access with `Object.keys(env)`
+            throw new Error('NotCapable: Requires env access, run again with the --allow-env flag');
+          }
+        }),
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+    });
+    const expected = LEVEL_BW;
     expect(expected).toEqual(received);
+  });
+
+  test(`isTTY false, FORCE_COLOR=1`, () => {
+    const received = getLevel({
+      Deno: {},
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: 1 },
+        argv: [],
+        stdout: { isTTY: false },
+        stderr: { isTTY: false },
+      },
+    });
+    const expected = LEVEL_16COLORS;
+    expect(received).toEqual(expected);
   });
 });
 
 // Next.JS
 describe('Next.JS support', () => {
   test(`runtime experimental-edge`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { NEXT_RUNTIME: 'experimental-edge', TERM: 'xterm-256color' },
@@ -1067,7 +1072,7 @@ describe('Next.JS support', () => {
   });
 
   test(`runtime edge`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { NEXT_RUNTIME: 'edge', TERM: 'xterm-256color' },
@@ -1080,7 +1085,7 @@ describe('Next.JS support', () => {
   });
 
   test(`runtime nodejs`, () => {
-    const received = colorSpace({
+    const received = getLevel({
       process: {
         platform: 'linux',
         env: { NEXT_RUNTIME: 'nodejs', TERM: 'xterm-256color' },

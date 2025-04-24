@@ -1,0 +1,11 @@
+{
+  "lint": {
+    "files": {
+      "exclude": ["node_modules", "test"]
+    }
+  },
+  "test": {
+    "include": ["test-deno/cases/**/*.test.js"],
+    "exclude": ["node_modules"]
+  }
+}

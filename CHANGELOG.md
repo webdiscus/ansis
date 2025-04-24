@@ -1,10 +1,16 @@
 # Changelog
 
-
 ## Pre release note: ✨ Ansis v4 - Smaller package, and cleaner API
 
 Ansis v4 drops legacy baggage and unused artifacts.
 This release brings a stable and more compact ANSI library.
+
+## 4.0.0-beta.21 (2025-04-24)
+
+### ⚠️ BREAKING CHANGE
+
+- feat: drop support for Deno 1.x (EOL - 9 Oct 2024) and add support for Deno 2.0+, #37
+  Backported from 3.18.0-beta.0
 
 ## 4.0.0-beta.20 (2025-04-21)
 
@@ -74,10 +80,10 @@ This change ensures compatibility with the latest version of Ansis, where `AnsiC
 
 The following legacy method aliases have been removed:
 
-| ❌ Removed Method  | ✅ Use Instead  |
-|-------------------|----------------|
-| `ansi256(code)`   | `fg(code)`     |
-| `bgAnsi256(code)` | `bg(code)`     |
+| ❌ Removed Method  | ✅ Use Instead |
+|-------------------|---------------|
+| `ansi256(code)`   | `fg(code)`    |
+| `bgAnsi256(code)` | `bg(code)`    |
 
 These aliases were originally added for compatibility with Chalk.
 Starting with this release, Ansis focuses on a cleaner and compact API, free from duplicated methods and legacy layers.
@@ -324,6 +330,11 @@ prev\next
 Deprecated.
 
 ---
+
+## 3.18.0-beta.0 (2025-04-22)
+
+- feat: drop support for Deno 1.x (EOL - 9 Oct 2024) and add support for Deno 2.0+, #37
+- test: add Deno tests on GitHub
 
 ## 3.17.0 (2025-03-02)
 

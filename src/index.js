@@ -182,12 +182,13 @@ const Ansis = function(level = detectedLevel) {
 
   let hasColors = level > LEVEL_BW;
   let esc = (open, close) => (hasColors ? { open: `[${open}m`, close: `[${close}m` } : mono);
+  let createHexFn = (fn) => (hex) => fn(...hexToRgb(hex));
+  let createRgbFn = (open, close) => (r, g, b) => esc(`${open}8;2;${r};${g};${b}`, close);
   let createRgb16Fn = (offset, closeCode) => (r, g, b) => esc(rgbToAnsi16(r, g, b) + offset, closeCode);
   let createRgb256Fn = (fn) => (r, g, b) => fn(rgbToAnsi256(r, g, b));
-  let createHexFn = (fn) => (hex) => fn(...hexToRgb(hex));
 
-  let fnRgb = (r, g, b) => esc(`38;2;${r};${g};${b}`, closeCode);
-  let fnBgRgb = (r, g, b) => esc(`48;2;${r};${g};${b}`, bgCloseCode);
+  let fnRgb = createRgbFn(3, closeCode);
+  let fnBgRgb = createRgbFn(4, bgCloseCode);
 
   let fnAnsi256 = (code) => esc(`38;5;${code}`, closeCode);
   let fnBgAnsi256 = (code) => esc(`48;5;${code}`, bgCloseCode);

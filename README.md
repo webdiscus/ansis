@@ -13,11 +13,16 @@
 [![downloads](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 [![install size](https://packagephobia.com/badge?p=ansis)](https://packagephobia.com/result?p=ansis)
 
-ANSI color library with support for CI, terminals, and Chromium-based browser consoles.\
+ANSI color library for use in CI environments, terminals, and Chromium-based browsers.\
 Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
+> [!WARNING]
+>
+> **Version 4 introduces** [new features](https://github.com/webdiscus/ansis/discussions/36#v4-features) and [breaking changes](https://github.com/webdiscus/ansis/discussions/36).\
+> Please follow the [migration guide](https://github.com/webdiscus/ansis/discussions/36#migrating-to-v4) to upgrade.
 
-### 🚀 [Getting Started](#install) ⚖️ [Alternatives](#alternatives) ✨[Why Ansis](#why-ansis)  🔄 [Switch from](#switch-to-ansis)  🔧[Compatibility](#compatibility)
+
+### 🚀 [Getting Started](#getting-started) ⚖️ [Alternatives](#alternatives) ✨[Why Ansis](#why-ansis)  🔄 [Switch from](#switch-to-ansis)  🔧[Compatibility](#compatibility)
 
 ![Ansis demo](docs/img/ansis-demo.png)
 
@@ -25,36 +30,48 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 
 <a id="features" name="features"></a>
 
-## 💡 Highlights
+## 💡 Features
 
-- Supports **ESM**, **CommonJS**, **Bun**, **Deno**, **Next.JS**
-- Works in [Chromium-based](#browsers-compatibility) browsers such as **Chrome**, **Edge**, **Opera**, **Brave**, **Vivaldi**
-- Default and [named import](#import): `import ansis, { red, green, bold, dim } from 'ansis'`
+- Supports **ESM**, **CommonJS**, **Bun**, **Deno**, and **Next.JS**
+- Works in [Chromium-based](#browsers-compatibility) browsers: **Chrome**, **Edge**, **Opera**, **Brave**, **Vivaldi**
+- Default and [named](#import) imports: `import ansis, { red, bold, dim } from 'ansis'`
 - [Chained syntax](#chained-syntax): `red.bold.underline('text')`
-- Nested [**tagged template strings**](#nested-syntax): ``` red`Error: ${blue`file.js`} not found!` ```
+- Nested [tagged template strings](#nested-syntax): ``` red`Error: ${blue`file.js`} not found!` ```
 - [ANSI styles](#base-colors): `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>
-- [ANSI 16 colors](#base-colors): ``` red`Error!` ``` ``` redBright`Error!` ``` ``` bgRed`Error!` ``` ``` bgRedBright`Error!` ```
-- [ANSI 256 colors](#256-colors): ``` fg(56)`violet` ``` ``` bg(208)`orange` ```
-- [Truecolor](#truecolor) (**RGB & HEX**): ``` rgb(224, 17, 95)`Ruby` ``` ``` hex('#96C')`Amethyst` ```
+- [ANSI 16 colors](#base-colors): `red`, `redBright`, `bgRed`, `bgRedBright`, ...
+- [ANSI 256 colors](#256-colors): `fg()`, `bg()`
+- [Truecolor](#truecolor) (**RGB & HEX**): `rgb()`, `bgRgb()`, `hex()`, `bgHex()`
 - Automatic [fallback](#fallback): Truecolor → 256 colors → 16 colors → no colors
-- [Extend base colors](#extend-colors) with named Truecolor
+- [Extend base colors](#extend-colors) with named Truecolor values
 - Raw ANSI escape codes: ``` `foo ${red.open}red{red.close} bar` ```
 - Strip ANSI escape codes with `ansis.strip()`
 - Auto-detects [color support](#color-support) across a wide range of [environments](#color-support)
 - Supports [ENV variables](#cli-vars) and [flags](#cli-flags): [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color), [`COLORTERM`](#using-env-colorterm), `--no-color`, `--color`
 - Reliable [CLI testing](#cli-testing) by forcing specific [color levels](#color-levels): no color, 16, 256 or truecolor
-- [Replacement](#why-ansis) for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors)
+- Replacement for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) and others [alternatives](#alternatives)
+
+<a id="install" name="install"></a>
+
+## Install
+
+```bash
+npm install ansis
+```
+
 
 ## 🛠️ Usage
 
 ```js
-import ansis, { red, cyan, fg, hex } from 'ansis';
+import ansis, { red, bold, fg, hex, rgb } from 'ansis';
 
-ansis.blueBright('file.txt')
-red`Error: ${cyan(file)} not found!`
-red.bgWhite`ERROR`
-fg(215)`ANSI 256 colors`
-hex('#E0115F').bold.underline('Truecolor')
+console.log(ansis.bold('file.txt'));
+console.log(red`Error: ${bold.cyan(file)} not found!`);
+console.log(bold.bgRed`ERROR`);
+console.log(fg(208)`Orange`);
+console.log(rgb(224, 17, 95)`Ruby`);
+console.log(hex('#FF75D1').bold.underline('Pink'));
+
+console.log(ansis.strip(red('Text'))); // Output plain text without ANSI codes
 ```
 
 <!--
@@ -88,7 +105,7 @@ Both are [recommended](https://github.com/es-tooling/module-replacements/blob/ma
 The package size in `node_modules` directory:
 
 - `picocolors`: [6.37 kB][npm-picocolors] (not minimized) - A micro library with basic features.
-- `аnsis`: [6.0 kB][npm-ansis] (minimized) - A powerful library containing all the features you need.
+- `аnsis`: [5.92 kB][npm-ansis] (minimized) - A powerful library containing all the features you need.
 - `chalk`:  [44.2 kB][npm-chalk] (not minimized) - Provides similar functionality to Ansis.
 
 ### ⚡ Performance
@@ -196,15 +213,15 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
   - ✅ Ansis: `ESM` and `CJS`
   - ☑️ Picocolors: `CJS` only
   - ☑️ Chalk: `ESM` only
+- Does it matter the unpacked size?
+  - ✅ [Ansis - 5.92 kB][npm-ansis]
+  - ✅ [Picocolors - 6.37 kB][npm-picocolors]
+  - ❌ [Chalk - 44.2 kB][npm-chalk]
 - Does it matter if a library performs [~60 million](#bench-simple) or [~100 million](#bench-simple) **ops/sec** when outputting to the terminal?
   Spoiler: All libraries are more than [fast enough](#bench-picocolors-complex).
   - ✅ Picocolors
-  - ☑️ Ansis
-  - ☑️ Chalk
-- Does it matter the unpacked size?
-  - ✅ [Ansis - 6.0 kB][npm-ansis]
-  - ✅ [Picocolors - 6.37 kB][npm-picocolors]
-  - ❌ [Chalk - 44.2 kB][npm-chalk]
+  - ✅ Ansis
+  - ✅ Chalk
 - Does support for [ANSI 256 colors](#256-colors) or [Truecolor](#truecolor) with [fallback](#fallback) matter?
   - ✅ Ansis
   - ✅ Chalk
@@ -253,26 +270,11 @@ pico.green(`Create ${pico.blue(pico.bold('React'))} app.`) // picocolors ❌ usa
 > [!TIP]
 > Ansis supports **nested template strings**, so you can colorize text without using parentheses.
 
-## [How to switch to Ansis](#switch-to-ansis)
-
-- [Migrating from `chalk`](#replacing-chalk)
-- [Migrating from `colorette`](#replacing-colorette)
-- [Migrating from `picocolors`](#replacing-picocolors)
-- [Migrating from `ansi-colors`](#replacing-ansi-colors)
-- [Migrating from `kleur`](#replacing-kleur)
-- [Migrating from `cli-color`](#replacing-cli-color)
-
 ---
 
 #### [↑ top](#top)
 
-<a id="install" name="install"></a>
-
-## Install
-
-```bash
-npm install ansis
-```
+<a name="getting-started"></a>
 
 <a id="import" name="import"></a>
 ## Default and named import
@@ -387,9 +389,9 @@ italic.bold.yellow.bgMagentaBright`text`;
 <a name="gray-naming-in-libs"></a>
 ### Color naming in libraries: `gray` vs `grey` vs `blackBright`
 
-The same ANSI codes `90` (_gray_) and `100` (_bgGray_) are referred to by different names and aliases in various libraries.
+The same ANSI codes `90` (_gray_) and `100` (_bgGray_) are named differently in various libraries.
 
-| Library                    | Standart<br>`gray`<br>`bgGray` | UK-spelling<br>`grey`<br>`bgGrey` | Spec-style<br>&nbsp;`blackBright`<br>`bgBlackBright` |
+| Library                    | Standard<br>`gray`<br>`bgGray` | UK spelling<br>`grey`<br>`bgGrey` | Spec-style<br>&nbsp;`blackBright`<br>`bgBlackBright` |
 |:---------------------------|:------------------------------:|:---------------------------------:|:----------------------------------------------------:|
 | [ansis][ansis]             |               ✅                |                 ❌                 |                          ❌                           |
 | [yoctocolors][yoctocolors] |               ✅                |                 ❌                 |                          ❌                           |
@@ -404,24 +406,7 @@ The same ANSI codes `90` (_gray_) and `100` (_bgGray_) are referred to by differ
 | [cli-color][cli-color]     |               ❌                |                 ❌                 |                          ✅                           |
 | [colors-cli][colors-cli]   |               ❌                |                 ❌                 |                          ✅                           |
 
-However, keeping three separate names for the same color is too much for a small library.
-
-### Holywar: Why `gray` only, without aliases?
-
-ANSI codes for the gray color:
-
-- &nbsp; `90` is officially "**bright black**" foreground (i.e., `gray`) in terminal specs.
-- `100` is officially "**bright black**" background (i.e., `bgGray`) in terminal specs.
-
-Ansis prefers the more intuitive and commonly used names: `gray` and `bgGray`.
-
-- ✅ `gray`, `bgGray` - Standard spelling, common used, and intuitive
-- ❌ `grey`, `bgGrey` - British spelling, uncommon, and a redundant alias for `gray` and `bgGray`
-- ❌ `blackBright`, `bgBlackBright` - Spec-style names for "bright black", less intuitive, rarely used, awkward for practical use
-
-> [!NOTE]
-> Supporting both `gray` and `grey` (or even worse, verbose aliases like `blackBright`) introduces unnecessary duplication.\
-> Ansis v4 is focused on a clean, minimal API by intentionally **_avoiding redundant aliases_**.
+Ansis prefers the more intuitive and commonly used names `gray` and `bgGray`,  **_avoiding redundant aliases_**.
 
 
 <a id="256-colors" name="256-colors"></a>
@@ -523,7 +508,8 @@ If you use the `hex()`, `rgb()` or `ansis256()` functions in a terminal not supp
 ## Extend with Custom Colors
 
 By default, the imported `ansis` instance includes a set of [base styles](#base-colors) and standard ANSI colors.
-To define additional named colors using Truecolor (24-bit RGB), use the `ansis.extend()` method.
+Define additional named colors using Truecolor hex code with the `extend()` method.
+Assign the result of `extend()` to a new variable (avoid reassigning the original instance).
 
 > [!TIP]
 > Need help picking a color name? Try the [Name that Color](https://chir.ag/projects/name-that-color/#FF681F) website - just enter a hex code.
@@ -531,7 +517,7 @@ To define additional named colors using Truecolor (24-bit RGB), use the `ansis.e
 Example:
 
 ```js
-import ansis from 'ansis';
+import { Ansis } from 'ansis';
 
 const myTheme = {
   orange: '#FFAB40',
@@ -539,12 +525,12 @@ const myTheme = {
 };
 
 // Create an instance with extended colors
-const colors = ansis.extend(myTheme);
+const ansis = new Ansis().extend(myTheme);
 
 // Destructure extended and base colors
-const { orange, pink, red } = colors;
+const { orange, pink, red } = ansis;
 
-console.log(colors.orange.bold('orange bold'));
+console.log(ansis.orange.bold('orange bold'));
 console.log(orange.italic`orange italic`);
 console.log(pink`pink color`);
 ```
@@ -732,7 +718,7 @@ you can explicitly set the desired color level using one of the supported enviro
 >
 > ```js
 > process.env.NO_COLOR = '1'; // ❌ Doesn't work
-> import { red } from 'ansis'; // <- Too late! NO_COLOR was undefined when ansis loaded
+> import { red } from 'ansis'; // <- Too late! NO_COLOR is undefined when ansis loaded
 > ```
 >
 > Instead, create a separate file to set the environment variable and import it first:
@@ -1168,19 +1154,19 @@ c.red(1/0)     // 'Infinity' in red
 
 ## Compare the size of most popular packages
 
-| Npm package                    |          Dependencies          | Is Minified         |                                            Unpacked Size |                                                           Tarball size |
-| :----------------------------- |:------------------------------:|---------------------|---------------------------------------------------------:|-----------------------------------------------------------------------:|
-| [`ansis`][ansis]               |         [0][npm-ansis]         | uglified & minified |                                      [6.0 kB][npm-ansis] |             [3.6 kB](https://arve0.github.io/npm-download-size/#ansis) |
-| [`picocolors`][picocolors]     |      [0][npm-picocolors]       | no                  |                                 [6.3 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |
-| [`tinyrainbow`][tinyrainbow]   |   [0][npm-tinyrainbow]         | uglified            |                                [8.1 kB][npm-tinyrainbow] |       [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |
-| [`colorette`][colorette]       |       [0][npm-colorette]       | no                  |                                 [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |
-| [`kleur`][kleur]               |         [0][npm-kleur]         | no                  |                                     [20.3 kB][npm-kleur] |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |
-| [`ansi-colors`][ansi-colors]   |      [0][npm-ansi-colors]      | no                  |                               [26.1 kB][npm-ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |
-| [`kolorist`][kolorist]         |       [0][npm-kolorist]        | no                  |                                  [51.0 kB][npm-kolorist] |          [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |
-| [`colors.js`][colors.js]       |       [0][npm-colors.js]       | no                  |                                 [41.5 kB][npm-colors.js] | [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |
-| [`chalk`][chalk]               |         [0][npm-chalk]         | no                  |                                     [43.7 kB][npm-chalk] |            [13.4 kB](https://arve0.github.io/npm-download-size/#chalk) |
-| [`cli-color`][cli-color]       |      [`5`][npm-cli-color]      | no                  | [754.0 kB](https://packagephobia.com/result?p=cli-color) |       [216.8 kB](https://arve0.github.io/npm-download-size/#cli-color) |
-| [`colors-cli`][colors-cli]     |      [0][npm-colors-cli]       | no                  |                               [511.0 kB][npm-colors-cli] |      [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |
+| Package                      |          Dependencies          | Minified         |                                            Unpacked Size |                                                           Tarball size |
+|:-----------------------------|:------------------------------:|------------------|---------------------------------------------------------:|-----------------------------------------------------------------------:|
+| [`ansis`][ansis]             |         [0][npm-ansis]         | uglified & minified |                                     [5.92 kB][npm-ansis] |             [3.5 kB](https://arve0.github.io/npm-download-size/#ansis) |
+| [`picocolors`][picocolors]   |      [0][npm-picocolors]       | no               |                                [6.37 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |
+| [`tinyrainbow`][tinyrainbow] |   [0][npm-tinyrainbow]         | uglified         |                                [8.1 kB][npm-tinyrainbow] |       [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |
+| [`colorette`][colorette]     |       [0][npm-colorette]       | no               |                                 [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |
+| [`kleur`][kleur]             |         [0][npm-kleur]         | no               |                                     [20.3 kB][npm-kleur] |             [6.0 kB](https://arve0.github.io/npm-download-size/#kleur) |
+| [`ansi-colors`][ansi-colors] |      [0][npm-ansi-colors]      | no               |                               [26.1 kB][npm-ansi-colors] |       [8.5 kB](https://arve0.github.io/npm-download-size/#ansi-colors) |
+| [`kolorist`][kolorist]       |       [0][npm-kolorist]        | no               |                                  [51.0 kB][npm-kolorist] |          [8.7 kB](https://arve0.github.io/npm-download-size/#kolorist) |
+| [`colors.js`][colors.js]     |       [0][npm-colors.js]       | no               |                                 [41.5 kB][npm-colors.js] | [11.1 kB](https://arve0.github.io/npm-download-size/#@colors%2fcolors) |
+| [`chalk`][chalk]             |         [0][npm-chalk]         | no               |                                     [44.2 kB][npm-chalk] |            [13.4 kB](https://arve0.github.io/npm-download-size/#chalk) |
+| [`cli-color`][cli-color]     |      [`5`][npm-cli-color]      | no               | [754.0 kB](https://packagephobia.com/result?p=cli-color) |       [216.8 kB](https://arve0.github.io/npm-download-size/#cli-color) |
+| [`colors-cli`][colors-cli]   |      [0][npm-colors-cli]       | no               |                               [511.0 kB][npm-colors-cli] |      [361.7 kB](https://arve0.github.io/npm-download-size/#colors-cli) |
 
 **Legend**
 
@@ -1221,18 +1207,19 @@ npm run demo
 
 Check the minimum version of your tool required for compatibility with the latest Ansis.
 
-| Tool              | Version   | Compatibility | Supports |
-|-------------------|-----------|---------------|----------|
-| **Node.js**       | **v14+**  | ✅ Full support | CJS, ESM |
-| **TypeScript/tsc**| **v5.0+** | ✅ Full support | CJS, ESM |
-| **esbuild**       | **v0.8+** | ✅ Full support | CJS, ESM |
-| **swc**           | **v1.2+** | ✅ Full support | CJS, ESM, FAUX |
-| **tsup**          | **v4.0+** | ✅ Full support | CJS, ESM, FAUX |
-| **tsx**           | **v3.0+** | ✅ Full support | CJS, ESM |
-| **Rollup**        | **v2.0+** | ✅ Full support | CJS, ESM |
-| **Vite**          | **v2.5+** | ✅ Full support | ESM |
-| **Turbo**         | **v1.0+** | ✅ Full support | CJS, ESM |
-| **Webpack**       | **v5.0+** | ✅ Full support | CJS, ESM |
+| Tool               | Version   | Compatibility | Supports |
+|--------------------|-----------|---------------|----------|
+| **Node.js**        | **v14+**  | ✅ Full support | CJS, ESM |
+| **Deno**           | **v2.0+** | ✅ Full support | CJS, ESM |
+| **TypeScript/tsc** | **v5.0+** | ✅ Full support | CJS, ESM |
+| **esbuild**        | **v0.8+** | ✅ Full support | CJS, ESM |
+| **swc**            | **v1.2+** | ✅ Full support | CJS, ESM, FAUX |
+| **tsup**           | **v4.0+** | ✅ Full support | CJS, ESM, FAUX |
+| **tsx**            | **v3.0+** | ✅ Full support | CJS, ESM |
+| **Rollup**         | **v2.0+** | ✅ Full support | CJS, ESM |
+| **Vite**           | **v2.5+** | ✅ Full support | ESM |
+| **Turbo**          | **v1.0+** | ✅ Full support | CJS, ESM |
+| **Webpack**        | **v5.0+** | ✅ Full support | CJS, ESM |
 
 **Supports:**
 - **CJS**: CommonJS module support.
@@ -1510,12 +1497,21 @@ c.red('Add plugin ' + c.cyan.underline('name') + ' to use time limit with ' + c.
 
 #### [↑ top](#top)
 
-<a id="switch-to-ansis" name="switch-to-ansis"></a>
+
+<a name="switch-to-ansis"></a>
 
 ## How to switch to Ansis
 
 Ansis is a powerful, small, and fast replacement for many similar libraries.\
 Just replace your `import ... from ...` or `require(...)` to `ansis`.
+
+- [Migrating from `chalk`](#replacing-chalk)
+- [Migrating from `colorette`](#replacing-colorette)
+- [Migrating from `picocolors`](#replacing-picocolors)
+- [Migrating from `ansi-colors`](#replacing-ansi-colors)
+- [Migrating from `kleur`](#replacing-kleur)
+- [Migrating from `cli-color`](#replacing-cli-color)
+
 
 <a id="replacing-chalk" name="replacing-chalk"></a>
 

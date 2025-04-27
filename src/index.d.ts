@@ -82,15 +82,19 @@ type L = (s: S) => A;
  */
 type R = (r: N, g: N, b: N) => A;
 
-/**
- * The ANSI escape sequences for starting and ending the current style.
- */
-type P = { open: S; close: S };
-
 // Short alias
 type A = Ansis;
 
 type Ansis = {
+  /**
+   * Opening ANSI escape code for a style or color.
+   */
+  open: S;
+  /**
+   * Closing ANSI escape code for a style or color.
+   */
+  close: S;
+
   /**
    * @param {unknown} v The value to be processed, can be of any type, which will be converted to a string.
    * @return {string} The resulting string.
@@ -167,24 +171,22 @@ type Ansis = {
    *
    * const custom = ansis.extend(myTheme);
    *
-   * @param c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
+   * @param {string | { open: string; close: string }} c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
    * @return {Ansis} Return extended instance.
    */
-  extend<U extends S>(c: Record<U, S | P>): A & Record<U, A>;
+  extend<U extends S>(c: Record<U, any>): A & Record<U, A>;
 }
   // Dynamic properties
-  & { [K in AnsiStyles | AnsiColors]: A }
-  // open|close properties
-  & P;
+  & { [K in AnsiStyles | AnsiColors]: A };
 
 // Note: define constants with only unique declarations,
 // E.g. the methods rgb and bgRgb have the same arguments and return, therefore we need it only once.
 
 declare const
   /**
-   * @param {number?} level The color level: 0 - no colors, 1 - 16 colors, 2 - 256 colors, 3 - truecolor. Defaults is auto detected.
+   * @param {number?} n The color level: 0 - no colors, 1 - 16 colors, 2 - 256 colors, 3 - truecolor. Defaults is auto detected.
    */
-  Ansis: new (level?: N) => A,
+  Ansis: new (n?: N) => A,
   // declare all styles and colors of type Ansis
   a: A,
   isSupported: () => B,

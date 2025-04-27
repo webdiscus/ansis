@@ -4,6 +4,7 @@
 
 Ansis v4 drops legacy baggage and unused artifacts.
 This release brings a stable and more compact ANSI library.
+v4.0.0 is 12.4% smaller than v3.17.0.
 
 ## 4.0.0-beta.21 (2025-04-24)
 

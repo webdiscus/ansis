@@ -56,28 +56,25 @@ let createStyle = ({ p: props }, { open, close }) => {
 
     // Detect nested styles
     // Note: on node >= 22, includes is 5x faster than ~indexOf
+    let pos;
     if (output.includes('')) {
-      while (props) {
+      for (; props; props = props.p) {
         // this implementation is over 30% faster than native String.replaceAll()
         // output = output.replaceAll(props.close, props.open);
         // -- begin replaceAll, inline the function here to reduce the bundle size
-        let search = props.close;
-        let replacement = props.open;
+        let { open: replacement, close: search } = props;
         let searchLength = search.length;
         let result = EMPTY_STRING;
         let lastPos = 0;
-        let pos;
 
         // the `visible` style has empty open/close properties
         if (searchLength) {
           for (; ~(pos = output.indexOf(search, lastPos)); lastPos = pos + searchLength) {
             result += output.slice(lastPos, pos) + replacement;
           }
-          output = result + output.slice(lastPos);
         }
+        output = result + output.slice(lastPos);
         // -- end replaceAll
-
-        props = props.p;
       }
     }
 
@@ -224,25 +221,26 @@ const Ansis = function(level = detectedLevel) {
 
   // Generate ANSI 16 colors dynamically to reduce the code size.
 
-  // code 30 - `black`, each subsequent color in the list increments sequentially.
-  // code 90 - `gray` is common used color name for "bright black".
-  let code = 30;
   let bright = 'Bright';
   let bgName;
 
-  'black,red,green,yellow,blue,magenta,cyan,white,gray'.split(separator).map((name) => {
+  // begin code 30 as `black`, each subsequent color in the list increments sequentially.
+  'black,red,green,yellow,blue,magenta,cyan,white,gray'.split(separator).map((name, offset) => {
     bgName = 'bg' + name[0].toUpperCase() + name.slice(1);
 
-    styleData[name] = esc(code, closeCode);
-    styleData[bgName] = esc(code + bgOffset, bgCloseCode);
-
-    // exclude for gray aliases
-    if (code < 38) {
-      styleData[name + bright] = esc(60 + code, closeCode);
-      styleData[bgName + bright] = esc(70 + code++, bgCloseCode);
+    // exclude bright colors for gray aliases as it is already "bright black"
+    if (offset < 8) {
+      styleData[name + bright] = esc(90 + offset, closeCode);
+      styleData[bgName + bright] = esc(100 + offset, bgCloseCode);
+    } else {
+      // set code offset for gray
+      // code  90 - `gray` is common used color name for "bright black" foreground
+      // code 100 - `bgGray` is common used color name for "bright black" background
+      offset = 60;
     }
 
-    if (code > 37) code = 90;
+    styleData[name] = esc(30 + offset, closeCode);
+    styleData[bgName] = esc(40 + offset, bgCloseCode);
   });
 
   // define base functions, colors and styles

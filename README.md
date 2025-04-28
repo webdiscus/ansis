@@ -105,8 +105,8 @@ Both are [recommended](https://github.com/es-tooling/module-replacements/blob/ma
 The package size in `node_modules` directory:
 
 - `picocolors`: [6.37 kB][npm-picocolors] (not minimized) - A micro library with basic features.
-- `аnsis`: [5.92 kB][npm-ansis] (minimized) - A powerful library containing all the features you need.
-- `chalk`:  [44.2 kB][npm-chalk] (not minimized) - Provides similar functionality to Ansis.
+- `аnsis`: [5.92 kB][npm-ansis] (minimized) - A powerful library with a rich set of features.
+- `chalk`: [44.2 kB][npm-chalk] (not minimized) - Provides similar functionality to Ansis.
 
 ### ⚡ Performance
 

@@ -4,6 +4,9 @@ import { keys, separator } from './misc.js';
 // Contains stringified keys of environment variables.
 let envKeys;
 
+// Optimisation: declare variables here for more compact code after compilation
+let term;
+
 /**
  * Auto detect color level.
  *
@@ -21,7 +24,7 @@ let envKeys;
  * @return {number}
  */
 let autoDetectLevel = (env, isTTY, isWin) => {
-  let term = env.TERM;
+  term = env.TERM;
 
   // Note: the order of checks is important!
 

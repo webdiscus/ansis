@@ -33,7 +33,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 
 <a id="features" name="features"></a>
 
-## 💡 Highlights
+## 💡 Features
 
 - Supports **ESM**, **CommonJS**, **Bun**, **Deno**, **Next.JS**
 - Works in [Chromium-based](#browsers-compatibility) browsers such as **Chrome**, **Edge**, **Opera**, **Brave**, **Vivaldi**
@@ -112,7 +112,7 @@ The package size in `node_modules` directory:
 - `chalk`: Slower than both **Ansis** and **Picocolors** in all use cases.
 
 > [!CAUTION]
-> **Picocolors** doesn't handle important **edge cases**, so it is the fastest and smallest.
+> **Picocolors** doesn't handle important **edge cases**, so it is the fastest.
 >
 > **Picocolors** is faster only in a [simple](#bench-simple) micro-benchmark, which does not reflect real world usage.\
 > In a more complex benchmark, **Ansis** is much [closer](#bench-picocolors-complex) to **Picocolors** results or even [faster](#bench-3-styles).
@@ -210,15 +210,15 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
   - ✅ Ansis: `ESM` and `CJS`
   - ☑️ Picocolors: `CJS` only
   - ☑️ Chalk: `ESM` only
-- Does it matter if a library performs [~60 million](#bench-simple) or [~100 million](#bench-simple) **ops/sec** when outputting to the terminal?
-  Spoiler: All libraries are more than [fast enough](#bench-picocolors-complex).
-  - ✅ Picocolors
-  - ☑️ Ansis
-  - ☑️ Chalk
 - Does it matter the unpacked size?
   - ✅ [Ansis - 6.7 kB][npm-ansis]
   - ✅ [Picocolors - 6.4 kB][npm-picocolors]
   - ❌ [Chalk - 44.4 kB][npm-chalk]
+- Does it matter if a library performs [~60 million](#bench-simple) or [~100 million](#bench-simple) **ops/sec** when outputting to the terminal?
+  Spoiler: All libraries are more than [fast enough](#bench-picocolors-complex).
+  - ✅ Picocolors
+  - ✅ Ansis
+  - ✅ Chalk
 - Does support for [ANSI 256 colors](#256-colors) or [Truecolor](#truecolor) with [fallback](#fallback) matter?
   - ✅ Ansis
   - ✅ Chalk
@@ -362,26 +362,26 @@ italic.bold.yellow.bgMagentaBright`text`;
 
 ## ANSI 16 colors
 
-| Standard Colors  | Bright Colors   | Standard Backgrounds | Bright Backgrounds |
-|:-----------------|:----------------|:---------------------|:-------------------|
-| `black`          | `gray`          | `bgBlack`            | `bgGray`           |
-| `red`            | `redBright`     | `bgRed`              | `bgRedBright`      |
-| `green`          | `greenBright`   | `bgGreen`            | `bgGreenBright`    |
-| `yellow`         | `yellowBright`  | `bgYellow`           | `bgYellowBright`   |
-| `blue`           | `blueBright`    | `bgBlue`             | `bgBlueBright`     |
-| `magenta`        | `magentaBright` | `bgMagenta`          | `bgMagentaBright`  |
-| `cyan`           | `cyanBright`    | `bgCyan`             | `bgCyanBright`     |
-| `white`          | `whiteBright`   | `bgWhite`            | `bgWhiteBright`    |
+There are 16 basic colors: 8 standard and 8 bright variants.
 
-> [!CAUTION]
-> The redundant `grey`, `bgGrey`, `blackBright` and `bgBlackBright` aliases for `gray` and `bgGray` are **deprecated**.
+|              Example              | Color          | Background          |             Bright Example              | Bright Color    | Bright Background |
+|:---------------------------------:|:---------------|:--------------------|:---------------------------------------:|:----------------|:------------------|
+|  ![](docs/img/colors/black.png)   | `black`        | `bgBlack`           |      ![](docs/img/colors/gray.png)      | `gray`          | `bgGray`          |
+|   ![](docs/img/colors/red.png)    | `red`          | `bgRed`             |   ![](docs/img/colors/redBright.png)    | `redBright`     | `bgRedBright`     |
+|  ![](docs/img/colors/green.png)   | `green`        | `bgGreen`           |  ![](docs/img/colors/greenBright.png)   | `greenBright`   | `bgGreenBright`   |
+|  ![](docs/img/colors/yellow.png)  | `yellow`       | `bgYellow`          |  ![](docs/img/colors/yellowBright.png)  | `yellowBright`  | `bgYellowBright`  |
+|   ![](docs/img/colors/blue.png)   | `blue`         | `bgBlue`            |   ![](docs/img/colors/blueBright.png)   | `blueBright`    | `bgBlueBright`    |
+| ![](docs/img/colors/magenta.png)  | `magenta`      | `bgMagenta`         | ![](docs/img/colors/magentaBright.png)  | `magentaBright` | `bgMagentaBright` |
+|   ![](docs/img/colors/cyan.png)   | `cyan`         | `bgCyan`            |   ![](docs/img/colors/cyanBright.png)   | `cyanBright`    | `bgCyanBright`    |
+|  ![](docs/img/colors/white.png)   | `white`        | `bgWhite`           |  ![](docs/img/colors/whiteBright.png)   | `whiteBright`   | `bgWhiteBright`   |
+
 
 <a name="gray-naming-in-libs"></a>
 ### Color naming in libraries: `gray` vs `grey` vs `blackBright`
 
-The same ANSI codes `90` (_gray_) and `100` (_bgGray_) are referred to by different names and aliases in various libraries.
+The same ANSI codes `90` (_gray_) and `100` (_bgGray_) are named differently in various libraries.
 
-| Library                    | Standard<br>`gray`<br>`bgGray` | UK-spelling<br>`grey`<br>`bgGrey` | Spec-style<br>&nbsp;`blackBright`<br>`bgBlackBright` |
+| Library                    | Standard<br>`gray`<br>`bgGray` | UK spelling<br>`grey`<br>`bgGrey` | Spec-style<br>&nbsp;`blackBright`<br>`bgBlackBright` |
 |:---------------------------|:------------------------------:|:---------------------------------:|:----------------------------------------------------:|
 | [ansis][ansis]             |               ✅                |                 ❌                 |                          ❌                           |
 | [yoctocolors][yoctocolors] |               ✅                |                 ❌                 |                          ❌                           |

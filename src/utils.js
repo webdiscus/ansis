@@ -15,13 +15,18 @@ let { round, max } = Math;
  * @return {[number, number, number]} The red, green, blue values in range [0, 255] .
  */
 export let hexToRgb = (value) => {
-  let color = /([a-f\d]{3,6})/i.exec(value)?.[1] ?? '';
-  let len = color.length;
+  let color = /([a-f\d]{3,6})/i.exec(value)?.[1];
+  let len = color?.length;
 
-  let hex = 3 === len
-    ? color[0] + color[0] + color[1] + color[1] + color[2] + color[2]
-    // faster than 6 !== len
-    : 6 ^ len ? '0': color;
+  // Optimisation: `n ^ 6` is faster then `n !== 6`
+  let hex =
+    // if len !== 6
+    6 ^ len
+      // if len !== 3
+      ? 3 ^ len
+        ? '0' // len !== 6 && len !== 3
+        : color[0] + color[0] + color[1] + color[1] + color[2] + color[2] // len === 3
+      : color // len === 6
 
   let decimal = parseInt(hex, 16);
 
@@ -30,7 +35,7 @@ export let hexToRgb = (value) => {
 
 /**
  * Convert RGB values to approximate code of ANSI 256 colors.
- * https://github.com/Qix-/color-convert/blob/master/conversions.js#L551
+ * Optimized version of https://github.com/Qix-/color-convert/blob/master/conversions.js#L551
  *
  * @param {number} r
  * @param {number} g
@@ -38,18 +43,20 @@ export let hexToRgb = (value) => {
  * @return {number}
  */
 export let rgbToAnsi256 = (r, g, b) => {
-  // grayscale
-  if (r === g && g === b) {
-    if (8 > r) return 16;
-    if (r > 248) return 231;
-    return round(((r - 8) * 24) / 247) + 232;
+  // r !== g || g !== b
+  if (r ^ g || g ^ b) {
+    return 16
+      // r / 255 * 5 => r / 51
+      + (36 * round(r / 51))
+      + (6 * round(g / 51))
+      + round(b / 51);
   }
 
-  return 16
-    // r / 255 * 5 => r / 51
-    + (36 * round(r / 51))
-    + (6 * round(g / 51))
-    + round(b / 51);
+  // grayscale
+
+  if (8 > r) return 16;
+  if (r > 248) return 231;
+  return round(((r - 8) * 24) / 247) + 232;
 };
 
 /**

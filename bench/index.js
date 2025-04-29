@@ -253,26 +253,31 @@ bench('Picocolors complex bench').
 // Check support of correct break style at new line
 
 // Break style at new line
-// const breakStyleAtNewLineFixture = `\nAnsis\nNEW LINE\nNEXT NEW LINE\n`;
-// bench('New Line').
-//   add('colors.js', () => colorsJs.bgGreen(breakStyleAtNewLineFixture)).
-//   add(packages['ansi-colors'], () => ansiColors.bgGreen(breakStyleAtNewLineFixture)).
-//   add(packages['chalk'], () => chalk.bgGreen(breakStyleAtNewLineFixture)).
-//   // 2x slower as chalk because chalk use own implementation, but ansis save 400 bytes and uses regexp, this speed is not critical
-//   add(packages['ansis'], () => ansis.bgGreen(breakStyleAtNewLineFixture)).
-//   run();
+const breakStyleAtNewLineFixture = `\nAnsis\nNEW LINE\nNEXT NEW LINE\n`;
+bench('New Line').
+  add('colors.js', () => colorsJs.bgGreen(breakStyleAtNewLineFixture)).
+  add(packages['ansi-colors'], () => ansiColors.bgGreen(breakStyleAtNewLineFixture)).
+  add(packages['chalk'], () => chalk.bgGreen(breakStyleAtNewLineFixture)).
+  // 2x slower as chalk because chalk use own implementation, but ansis save 400 bytes and uses regexp, this speed is not critical
+  add(packages['ansis'], () => ansis.bgGreen(breakStyleAtNewLineFixture)).
+  run();
 
-// bench('RGB colors').add(packages['chalk'], () => {
-//   for (let i = 0; i < 256; i++) chalk.rgb(i, 150, 200)('foo');
-// }).add(packages['ansis'], () => {
-//   for (let i = 0; i < 256; i++) rgb(i, 150, 200)('foo');
-// }).run();
-//
-// // HEX colors
+bench('RGB colors').add(packages['chalk'], () => {
+  for (let i = 0; i < 256; i++) chalk.rgb(i, 150, 200)('foo');
+}).add(packages['ansis'], () => {
+  for (let i = 0; i < 256; i++) rgb(i, 150, 200)('foo');
+}).run();
+
+// HEX colors
 // the hex(), rgb(), bgHex(), bgRgb() methods support only chalk and ansis
-bench('HEX colors').
+bench('HEX color: #FBA').
   add(packages['chalk'], () => chalk.hex('#FBA')('foo')).
   add(packages['ansis'], () => hex('#FBA')('foo')).
+  run();
+
+bench('HEX color: #FBAFBA').
+  add(packages['chalk'], () => chalk.hex('#FBAFBA')('foo')).
+  add(packages['ansis'], () => hex('#FBAFBA')('foo')).
   run();
 
 // // Spectrum HEX colors

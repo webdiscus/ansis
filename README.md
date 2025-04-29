@@ -105,7 +105,7 @@ Both are [recommended](https://github.com/es-tooling/module-replacements/blob/ma
 The package size in `node_modules` directory:
 
 - `picocolors`: [6.37 kB][npm-picocolors] (not minimized) - A micro library with basic features.
-- `аnsis`: [5.92 kB][npm-ansis] (minimized) - A powerful library with a rich set of features.
+- `аnsis`: [5.87 kB][npm-ansis] (minimized) - A powerful library with a rich set of features.
 - `chalk`: [44.2 kB][npm-chalk] (not minimized) - Provides similar functionality to Ansis.
 
 ### ⚡ Performance
@@ -115,7 +115,7 @@ The package size in `node_modules` directory:
 - `chalk`: Slower than both **Ansis** and **Picocolors** in all use cases.
 
 > [!CAUTION]
-> **Picocolors** doesn't handle important **edge cases**, so it is the fastest and smallest.
+> **Picocolors** doesn't handle important **edge cases**, so it is the fastest.
 >
 > **Picocolors** is faster only in a [simple](#bench-simple) micro-benchmark, which does not reflect real world usage.\
 > In a more complex benchmark, **Ansis** is much [closer](#bench-picocolors-complex) to **Picocolors** results or even [faster](#bench-3-styles).
@@ -214,7 +214,7 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
   - ☑️ Picocolors: `CJS` only
   - ☑️ Chalk: `ESM` only
 - Does it matter the unpacked size?
-  - ✅ [Ansis - 5.92 kB][npm-ansis]
+  - ✅ [Ansis - 5.87 kB][npm-ansis]
   - ✅ [Picocolors - 6.37 kB][npm-picocolors]
   - ❌ [Chalk - 44.2 kB][npm-chalk]
 - Does it matter if a library performs [~60 million](#bench-simple) or [~100 million](#bench-simple) **ops/sec** when outputting to the terminal?
@@ -374,16 +374,18 @@ italic.bold.yellow.bgMagentaBright`text`;
 
 ## ANSI 16 colors
 
-| Standard Colors  | Bright Colors   | Standard Backgrounds | Bright Backgrounds |
-|:-----------------|:----------------|:---------------------|:-------------------|
-| `black`          | `gray`          | `bgBlack`            | `bgGray`           |
-| `red`            | `redBright`     | `bgRed`              | `bgRedBright`      |
-| `green`          | `greenBright`   | `bgGreen`            | `bgGreenBright`    |
-| `yellow`         | `yellowBright`  | `bgYellow`           | `bgYellowBright`   |
-| `blue`           | `blueBright`    | `bgBlue`             | `bgBlueBright`     |
-| `magenta`        | `magentaBright` | `bgMagenta`          | `bgMagentaBright`  |
-| `cyan`           | `cyanBright`    | `bgCyan`             | `bgCyanBright`     |
-| `white`          | `whiteBright`   | `bgWhite`            | `bgWhiteBright`    |
+There are 16 basic colors: 8 standard and 8 bright variants.
+
+|              Example              | Color          | Background          |             Bright Example              | Bright Color    | Bright Background |
+|:---------------------------------:|:---------------|:--------------------|:---------------------------------------:|:----------------|:------------------|
+|  ![](docs/img/colors/black.png)   | `black`        | `bgBlack`           |      ![](docs/img/colors/gray.png)      | `gray`          | `bgGray`          |
+|   ![](docs/img/colors/red.png)    | `red`          | `bgRed`             |   ![](docs/img/colors/redBright.png)    | `redBright`     | `bgRedBright`     |
+|  ![](docs/img/colors/green.png)   | `green`        | `bgGreen`           |  ![](docs/img/colors/greenBright.png)   | `greenBright`   | `bgGreenBright`   |
+|  ![](docs/img/colors/yellow.png)  | `yellow`       | `bgYellow`          |  ![](docs/img/colors/yellowBright.png)  | `yellowBright`  | `bgYellowBright`  |
+|   ![](docs/img/colors/blue.png)   | `blue`         | `bgBlue`            |   ![](docs/img/colors/blueBright.png)   | `blueBright`    | `bgBlueBright`    |
+| ![](docs/img/colors/magenta.png)  | `magenta`      | `bgMagenta`         | ![](docs/img/colors/magentaBright.png)  | `magentaBright` | `bgMagentaBright` |
+|   ![](docs/img/colors/cyan.png)   | `cyan`         | `bgCyan`            |   ![](docs/img/colors/cyanBright.png)   | `cyanBright`    | `bgCyanBright`    |
+|  ![](docs/img/colors/white.png)   | `white`        | `bgWhite`           |  ![](docs/img/colors/whiteBright.png)   | `whiteBright`   | `bgWhiteBright`   |
 
 
 <a name="gray-naming-in-libs"></a>
@@ -1156,7 +1158,7 @@ c.red(1/0)     // 'Infinity' in red
 
 | Package                      |          Dependencies          | Minified         |                                            Unpacked Size |                                                           Tarball size |
 |:-----------------------------|:------------------------------:|------------------|---------------------------------------------------------:|-----------------------------------------------------------------------:|
-| [`ansis`][ansis]             |         [0][npm-ansis]         | uglified & minified |                                     [5.92 kB][npm-ansis] |             [3.5 kB](https://arve0.github.io/npm-download-size/#ansis) |
+| [`ansis`][ansis]             |         [0][npm-ansis]         | uglified & minified |                                     [5.87 kB][npm-ansis] |             [3.5 kB](https://arve0.github.io/npm-download-size/#ansis) |
 | [`picocolors`][picocolors]   |      [0][npm-picocolors]       | no               |                                [6.37 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |
 | [`tinyrainbow`][tinyrainbow] |   [0][npm-tinyrainbow]         | uglified         |                                [8.1 kB][npm-tinyrainbow] |       [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |
 | [`colorette`][colorette]     |       [0][npm-colorette]       | no               |                                 [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |

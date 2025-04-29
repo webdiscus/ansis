@@ -38,6 +38,7 @@ let createStyle = ({ p: props }, { open, close }) => {
   let styleFn = (arg, ...values) => {
     // If the argument is empty or null, return an empty string
     if (!arg) {
+      // reset
       if (open && open === close) return open;
       // null == arg || '' === arg
       if ((arg ?? EMPTY_STRING) === EMPTY_STRING) return EMPTY_STRING;
@@ -78,12 +79,10 @@ let createStyle = ({ p: props }, { open, close }) => {
       }
     }
 
-    // Detect new line
-    if (output.includes(LF)) {
-      output = output.replace(/(\r?\n)/g, closeStack + '$1' + openStack);
-    }
-
-    return openStack + output + closeStack;
+    return openStack
+      // Detect new line
+      + (output.includes(LF) ? output.replace(/(\r?\n)/g, closeStack + '$1' + openStack) : output)
+      + closeStack;
   };
 
   let openStack = open;

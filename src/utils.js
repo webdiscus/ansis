@@ -18,7 +18,7 @@ export let hexToRgb = (value) => {
   let color = /([a-f\d]{3,6})/i.exec(value)?.[1] ?? '';
   let len = color.length;
 
-  let hex = len === 3
+  let hex = 3 === len
     ? color[0] + color[0] + color[1] + color[1] + color[2] + color[2]
     // faster than 6 !== len
     : 6 ^ len ? '0': color;
@@ -40,7 +40,7 @@ export let hexToRgb = (value) => {
 export let rgbToAnsi256 = (r, g, b) => {
   // grayscale
   if (r === g && g === b) {
-    if (r < 8) return 16;
+    if (8 > r) return 16;
     if (r > 248) return 231;
     return round(((r - 8) * 24) / 247) + 232;
   }
@@ -61,13 +61,10 @@ export let rgbToAnsi256 = (r, g, b) => {
 export let ansi256To16 = (code) => {
   let r, g, b, value, remainder;
 
-  if (code < 8) return 30 + code;
-  if (code < 16) return 90 + (code - 8);
+  if (8 > code) return 30 + code;
+  if (16 > code) return 90 + (code - 8);
 
-  if (code >= 232) {
-    // grayscale
-    r = g = b = (((code - 232) * 10) + 8) / 255;
-  } else {
+  if (232 > code) {
     code -= 16;
     remainder = code % 36;
 
@@ -75,6 +72,9 @@ export let ansi256To16 = (code) => {
     r = (code / 36 | 0) / 5;
     g = (remainder / 6 | 0) / 5;
     b = (remainder % 6) / 5;
+  } else {
+    // grayscale
+    r = g = b = (((code - 232) * 10) + 8) / 255;
   }
 
   value = max(r, g, b) * 2;

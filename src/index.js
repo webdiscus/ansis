@@ -11,6 +11,7 @@ let bgOffset = 10;
 
 let styles = {};
 let stylePrototype;
+// @preserve
 let LF = '\n';
 
 /**
@@ -186,8 +187,8 @@ const Ansis = function(level = detectedLevel) {
   let fnRgb = createRgbFn(3, closeCode);
   let fnBgRgb = createRgbFn(4, bgCloseCode);
 
-  let fnAnsi256 = (code) => esc(`38;5;${code}`, closeCode);
-  let fnBgAnsi256 = (code) => esc(`48;5;${code}`, bgCloseCode);
+  let fnAnsi256 = (code) => esc(`38;5;` + code, closeCode);
+  let fnBgAnsi256 = (code) => esc(`48;5;` + code, bgCloseCode);
 
   if (level === LEVEL_256COLORS) {
     fnRgb = createRgb256Fn(fnAnsi256);
@@ -228,7 +229,7 @@ const Ansis = function(level = detectedLevel) {
     bgName = 'bg' + name[0].toUpperCase() + name.slice(1);
 
     // exclude bright colors for gray aliases as it is already "bright black"
-    if (offset < 8) {
+    if (8 > offset) {
       styleData[name + bright] = esc(90 + offset, closeCode);
       styleData[bgName + bright] = esc(100 + offset, bgCloseCode);
     } else {

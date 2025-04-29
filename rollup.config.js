@@ -10,19 +10,23 @@ import { minify } from 'terser';
 
 // last ECMA version compatible with node.js 12
 //const ecma = 2019;
-const ecma = 2021;
+const ecma = 2020;
 
 const terserOptions = {
   ecma,
   // https://github.com/terser/terser#compress-options
   compress: {
     ecma,
-    passes: 2,
+    passes: 3,
     inline: true,
     //module: true, // omit 'use strict'
+    pure_getters: true,
+    // use these options to find potential for optimisations in code
+    //unsafe: true,
+    //unsafe_comps: true,
   },
   toplevel: true,
-}
+};
 
 // use this options only for debugging
 const debugTerserOptions = {

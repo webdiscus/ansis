@@ -529,19 +529,6 @@ describe('FORCE_COLOR', () => {
     expect(expected).toEqual(received);
   });
 
-  // disable the test for unsupported value, whoever uses it has only himself to blame
-  // test(`FORCE_COLOR=5`, () => {
-  //   const received = colorSpace({
-  //     process: {
-  //       platform: 'linux',
-  //       env: { FORCE_COLOR: '5' },
-  //       argv: [],
-  //     },
-  //   });
-  //   const expected = LEVEL_TRUECOLOR;
-  //   expect(expected).toEqual(received);
-  // });
-
   test(`FORCE_COLOR=something`, () => {
     const received = getLevel({
       process: {
@@ -627,7 +614,6 @@ describe('COLORTERM', () => {
     const expected = LEVEL_16COLORS
     expect(expected).toEqual(received);
   });
-
 });
 
 describe('support colors in terminals', () => {
@@ -836,7 +822,6 @@ describe('support colors in terminals', () => {
     const expected = LEVEL_BW
     expect(expected).toEqual(received);
   });
-
 });
 
 // Node.JS
@@ -1124,5 +1109,4 @@ describe('strip ANSI codes', () => {
     const expected = 'foo red bar bold baz';
     expect(received).toEqual(expected);
   });
-
 });

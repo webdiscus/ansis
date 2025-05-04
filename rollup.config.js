@@ -21,7 +21,7 @@ const terserOptions = {
     inline: true,
     //module: true, // omit 'use strict'
     pure_getters: true,
-    // use these options to find potential for optimisations in code
+    // use these options to find a potential for optimisations in the code
     //unsafe: true,
     //unsafe_comps: true,
   },
@@ -36,8 +36,8 @@ const debugTerserOptions = {
 }
 
 function removeComments(string){
-  //Takes a string of code, not an actual function.
-  return string.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim();//Strip comments
+  // Takes a string of code, not an actual function.
+  return string.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim(); // Strip comments
 }
 
 export default [
@@ -72,7 +72,7 @@ export default [
             transform: async (contents, name) => (
               await minify(
                 contents.toString().
-                  // transform the extension of the source ESM file to output .cjs (it will be compiled to Common JS)
+                  // transform the extension of the source ESM file to output .cjs (it will be compiled to CommonJS)
                   replace('.js', '.cjs'), { ecma: 2015 }
               )
             ).code,

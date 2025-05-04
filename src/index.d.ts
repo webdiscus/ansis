@@ -23,7 +23,6 @@
  */
 type N = number;
 type S = string;
-type B = boolean;
 
 // BasicColors
 type C =  'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
@@ -143,20 +142,20 @@ type Ansis = {
    */
   bgHex: L;
 
-    /**
-     * Whether the output supports ANSI color and styles.
-     *
-     * @return {boolean}
-     */
-    isSupported(): B;
+  /**
+   * Whether the output supports ANSI color and styles.
+   *
+   * @return {boolean}
+   */
+  isSupported(): boolean;
 
-    /**
-     * Remove ANSI styling codes.
-     *
-     * @param {string} s
-     * @return {string}
-     */
-    strip(s: S): S;
+  /**
+   * Remove ANSI styling codes.
+   *
+   * @param {string} s
+   * @return {string}
+   */
+  strip(s: S): S;
 
     /**
    * Extends Ansis with additional colors.
@@ -234,7 +233,6 @@ export {
 
   // Background colors
   a as bgBlack,
-  a as bgGray,
   a as bgRed,
   a as bgGreen,
   a as bgYellow,
@@ -242,6 +240,7 @@ export {
   a as bgMagenta,
   a as bgCyan,
   a as bgWhite,
+  a as bgGray,
   a as bgRedBright,
   a as bgGreenBright,
   a as bgYellowBright,

@@ -109,20 +109,20 @@ export const executeTSFile = (testPath, compiler = 'tsc', script = null) => {
     this.result = { received, expected };
 
     expect(received).toEqual(expected);
-  });
+  })
   //debugging inner errors
-  // .catch((error) => {
-  //   let message;
-  //   //console.log('>> err: ', error);
-  //   if (typeof error === 'string') {
-  //     message = '\n' + error;
-  //   } else if('stdout' in error && 'stderr' in error) {
-  //     message = error.stdout + '\n' + error.stderr;
-  //   } else {
-  //     message = '\n' + error.toString();
-  //   }
-  //
-  //   expect.fail(testPath + message);
-  // });
+  .catch((error) => {
+    let message;
+    //console.log('>> err: ', error);
+    if (typeof error === 'string') {
+      message = '\n' + error;
+    } else if('stdout' in error && 'stderr' in error) {
+      message = error.stdout + '\n' + error.stderr;
+    } else {
+      message = '\n' + error.toString();
+    }
+
+    expect.fail(testPath + message);
+  });
 
 };

@@ -6,8 +6,6 @@
   "author": "webdiscus",
   "sideEffects": false,
   "type": "module",
-  "main": "./src/index.js",
-  "types": "./src/index.d.ts",
   "exports": {
     ".": {
       "types": "./src/index.d.ts",

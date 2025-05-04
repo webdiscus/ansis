@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "4.0.0-rc.4",
+  "version": "4.0.0-rc.5",
   "description": "A small and fast library for applying ANSI colors in terminal or browser console",
   "keywords": [
     "ansi",
@@ -36,13 +36,12 @@
   },
   "sideEffects": false,
   "type": "module",
-  "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "exports": {
     ".": {
       "types": "./src/index.d.ts",
       "import": "./src/index.mjs",
-      "require": "./src/index.js"
+      "require": "./src/index.cjs"
     }
   },
   "scripts": {
@@ -60,7 +59,7 @@
     "test:ansi256": "vitest run ./test/ansi256.test.js",
     "test:functional": "vitest run ./test/functional.test.js",
     "test:flags": "vitest run ./test/flags.test.js",
-    "test:package": "vitest run ./test/package.test.js",
+    "test:package": "vitest run ./test/package-mode.test.js",
     "test:cjs": "node ./test/package/cjs/test.cjs",
     "test:esm": "node ./test/package/esm/test.mjs",
     "test:tsc": "vitest run ./test/ts-compiler.test.js",

@@ -1,3 +1,5 @@
+// ESM wrapper
+
 import a from './index.js';
 
 // default export

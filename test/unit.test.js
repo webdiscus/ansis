@@ -1,6 +1,7 @@
 import { expect, describe, test } from 'vitest';
 
-import ansis from '../src/index.js';
+//import ansis from '../src/index.mjs'; // for debugging only
+import ansis from 'ansis';
 import { hexToRgb, rgbToAnsi256, ansi256To16, rgbToAnsi16 } from '../src/utils.js';
 import { getLevel } from '../src/color-support.js';
 import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS, LEVEL_TRUECOLOR } from '../src/color-levels.js';

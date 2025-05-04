@@ -85,15 +85,17 @@ type R = (r: N, g: N, b: N) => A;
 // Short alias
 type A = Ansis;
 
+type P = { open: S; close: S };
+
 type Ansis = {
   /**
    * Opening ANSI escape code for a style or color.
    */
-  open: S;
+  //open: S;
   /**
    * Closing ANSI escape code for a style or color.
    */
-  close: S;
+  //close: S;
 
   /**
    * @param {unknown} v The value to be processed, can be of any type, which will be converted to a string.
@@ -174,8 +176,9 @@ type Ansis = {
    * @param {string | { open: string; close: string }} c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
    * @return {Ansis} Return extended instance.
    */
-  extend<U extends S>(c: Record<U, any>): A & Record<U, A>;
-}
+  //extend<U extends S>(c: Record<U, any>): A & Record<U, A>;
+  extend<U extends S>(c: Record<U, S | P>): A & Record<U, A>;
+} & P
   // Dynamic properties
   & { [K in AnsiStyles | AnsiColors]: A };
 
@@ -189,9 +192,9 @@ declare const
   Ansis: new (n?: N) => A,
   // declare all styles and colors of type Ansis
   a: A,
-  isSupported: () => B,
-  strip: (s: S) => S,
-  extend: A['extend'],
+  //isSupported: () => B,
+  //strip: (s: S) => S,
+  //extend: A['extend'],
 
   fg: Q,
   rgb: R,
@@ -202,13 +205,14 @@ export {
   a as default,
   Ansis,
 
-  // Exporting these methods is required if the `module` compiler option is `node16,
-  // otherwise the TS compiler can't find they in default import:
+  // Named export of instance methods is a workaround for compatibility with various TypeScript module settings.
+  // It works under all tsconfig settings (ESNext, Node16, verbatimModuleSyntax, etc.).
+  // It is a hack for the `compilerOptions.module = "Node16"`, otherwise the TS compiler can't find they in default import:
   // import ansis from 'ansis';
   // ansis.strip(text); // <= TS2339: Property strip does not exist on type
-  isSupported,
-  strip,
-  extend,
+  //isSupported,
+  //strip,
+  //extend,
 
   fg,
   fg as bg,

@@ -105,7 +105,7 @@ Both are [recommended](https://github.com/es-tooling/module-replacements/blob/ma
 The package size in `node_modules` directory:
 
 - `picocolors`: [6.37 kB][npm-picocolors] (not minimized) - A micro library with basic features.
-- `аnsis`: [5.87 kB][npm-ansis] (minimized) - A powerful library with a rich set of features.
+- `аnsis`: [5.85 kB][npm-ansis] (minimized) - A powerful library with a rich set of features.
 - `chalk`: [44.2 kB][npm-chalk] (not minimized) - Provides similar functionality to Ansis.
 
 ### ⚡ Performance
@@ -214,7 +214,7 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
   - ☑️ Picocolors: `CJS` only
   - ☑️ Chalk: `ESM` only
 - Does it matter the unpacked size?
-  - ✅ [Ansis - 5.87 kB][npm-ansis]
+  - ✅ [Ansis - 5.85 kB][npm-ansis]
   - ✅ [Picocolors - 6.37 kB][npm-picocolors]
   - ❌ [Chalk - 44.2 kB][npm-chalk]
 - Does it matter if a library performs [~60 million](#bench-simple) or [~100 million](#bench-simple) **ops/sec** when outputting to the terminal?
@@ -1158,7 +1158,7 @@ c.red(1/0)     // 'Infinity' in red
 
 | Package                      |          Dependencies          | Minified         |                                            Unpacked Size |                                                           Tarball size |
 |:-----------------------------|:------------------------------:|------------------|---------------------------------------------------------:|-----------------------------------------------------------------------:|
-| [`ansis`][ansis]             |         [0][npm-ansis]         | uglified & minified |                                     [5.87 kB][npm-ansis] |             [3.5 kB](https://arve0.github.io/npm-download-size/#ansis) |
+| [`ansis`][ansis]             |         [0][npm-ansis]         | uglified & minified |                                     [5.85 kB][npm-ansis] |             [3.5 kB](https://arve0.github.io/npm-download-size/#ansis) |
 | [`picocolors`][picocolors]   |      [0][npm-picocolors]       | no               |                                [6.37 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |
 | [`tinyrainbow`][tinyrainbow] |   [0][npm-tinyrainbow]         | uglified         |                                [8.1 kB][npm-tinyrainbow] |       [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |
 | [`colorette`][colorette]     |       [0][npm-colorette]       | no               |                                 [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |
@@ -1209,19 +1209,20 @@ npm run demo
 
 Check the minimum version of your tool required for compatibility with the latest Ansis.
 
-| Tool               | Version   | Compatibility | Supports |
-|--------------------|-----------|---------------|----------|
-| **Node.js**        | **v14+**  | ✅ Full support | CJS, ESM |
-| **Deno**           | **v2.0+** | ✅ Full support | CJS, ESM |
-| **TypeScript/tsc** | **v5.0+** | ✅ Full support | CJS, ESM |
-| **esbuild**        | **v0.8+** | ✅ Full support | CJS, ESM |
-| **swc**            | **v1.2+** | ✅ Full support | CJS, ESM, FAUX |
-| **tsup**           | **v4.0+** | ✅ Full support | CJS, ESM, FAUX |
-| **tsx**            | **v3.0+** | ✅ Full support | CJS, ESM |
-| **Rollup**         | **v2.0+** | ✅ Full support | CJS, ESM |
-| **Vite**           | **v2.5+** | ✅ Full support | ESM |
-| **Turbo**          | **v1.0+** | ✅ Full support | CJS, ESM |
-| **Webpack**        | **v5.0+** | ✅ Full support | CJS, ESM |
+| Tool               | Version            | Compatibility | Supports |
+|--------------------|--------------------|---------------|----------|
+| **Node.js**        | **v14+**           | ✅ Full support | CJS, ESM |
+| **Deno**           | **v2.0+**          | ✅ Full support | CJS, ESM |
+| **TypeScript/tsc** | **v5.0+**          | ✅ Full support | CJS, ESM |
+| **esbuild**        | **v0.8+**          | ✅ Full support | CJS, ESM |
+| **swc**            | **v1.2+**          | ✅ Full support | CJS, ESM, FAUX |
+| **tsup**           | **v4.0+**          | ✅ Full support | CJS, ESM, FAUX |
+| **tsx**            | **v3.0+**          | ✅ Full support | CJS, ESM |
+| **Rollup**         | **v2.0+**          | ✅ Full support | CJS, ESM |
+| **Rolldown**       | **v1.0.0-beta.8+** | ✅ Full support | CJS, ESM |
+| **Vite**           | **v2.5+**          | ✅ Full support | ESM |
+| **Turbo**          | **v1.0+**          | ✅ Full support | CJS, ESM |
+| **Webpack**        | **v5.0+**          | ✅ Full support | CJS, ESM |
 
 **Supports:**
 - **CJS**: CommonJS module support.

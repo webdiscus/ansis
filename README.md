@@ -105,7 +105,7 @@ Both are [recommended](https://github.com/es-tooling/module-replacements/blob/ma
 The package size in `node_modules` directory:
 
 - `picocolors`: [6.37 kB][npm-picocolors] (not minimized) - A micro library with basic features.
-- `аnsis`: [5.85 kB][npm-ansis] (minimized) - A powerful library with a rich set of features.
+- `аnsis`: [5.76 kB][npm-ansis] (minimized) - A powerful library with a rich set of features.
 - `chalk`: [44.2 kB][npm-chalk] (not minimized) - Provides similar functionality to Ansis.
 
 ### ⚡ Performance
@@ -214,7 +214,7 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
   - ☑️ Picocolors: `CJS` only
   - ☑️ Chalk: `ESM` only
 - Does it matter the unpacked size?
-  - ✅ [Ansis - 5.85 kB][npm-ansis]
+  - ✅ [Ansis - 5.76 kB][npm-ansis]
   - ✅ [Picocolors - 6.37 kB][npm-picocolors]
   - ❌ [Chalk - 44.2 kB][npm-chalk]
 - Does it matter if a library performs [~60 million](#bench-simple) or [~100 million](#bench-simple) **ops/sec** when outputting to the terminal?
@@ -1158,7 +1158,7 @@ c.red(1/0)     // 'Infinity' in red
 
 | Package                      |          Dependencies          | Minified         |                                            Unpacked Size |                                                           Tarball size |
 |:-----------------------------|:------------------------------:|------------------|---------------------------------------------------------:|-----------------------------------------------------------------------:|
-| [`ansis`][ansis]             |         [0][npm-ansis]         | uglified & minified |                                     [5.85 kB][npm-ansis] |             [3.5 kB](https://arve0.github.io/npm-download-size/#ansis) |
+| [`ansis`][ansis]             |         [0][npm-ansis]         | uglified & minified |                                     [5.76 kB][npm-ansis] |             [3.4 kB](https://arve0.github.io/npm-download-size/#ansis) |
 | [`picocolors`][picocolors]   |      [0][npm-picocolors]       | no               |                                [6.37 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |
 | [`tinyrainbow`][tinyrainbow] |   [0][npm-tinyrainbow]         | uglified         |                                [8.1 kB][npm-tinyrainbow] |       [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |
 | [`colorette`][colorette]     |       [0][npm-colorette]       | no               |                                 [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |

@@ -36,7 +36,6 @@ type H = `${C}Bright`;
  */
 export type AnsiColors =
   | 'black' | C | 'gray' | H
-  //| 'bgBlack' | `bg${Capitalize<C> | Capitalize<H>}` | 'bgGray';
   | `bg${'Black' | Capitalize<C> | 'Gray' | Capitalize<H>}`;
 
 /**
@@ -85,17 +84,15 @@ type R = (r: N, g: N, b: N) => A;
 // Short alias
 type A = Ansis;
 
-type P = { open: S; close: S };
-
 type Ansis = {
   /**
    * Opening ANSI escape code for a style or color.
    */
-  //open: S;
+  open: S;
   /**
    * Closing ANSI escape code for a style or color.
    */
-  //close: S;
+  close: S;
 
   /**
    * @param {unknown} v The value to be processed, can be of any type, which will be converted to a string.
@@ -115,21 +112,6 @@ type Ansis = {
    * @return {string} The resulting string.
    */
   (s: TemplateStringsArray, ...v: any[]): S;
-
-  /**
-   * Whether the output supports ANSI color and styles.
-   *
-   * @return {boolean}
-   */
-  isSupported(): B;
-
-  /**
-   * Remove ANSI styling codes.
-   *
-   * @param {string} s
-   * @return {string}
-   */
-  strip(s: S): S;
 
   /**
    * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for foreground color.
@@ -161,7 +143,22 @@ type Ansis = {
    */
   bgHex: L;
 
-  /**
+    /**
+     * Whether the output supports ANSI color and styles.
+     *
+     * @return {boolean}
+     */
+    isSupported(): B;
+
+    /**
+     * Remove ANSI styling codes.
+     *
+     * @param {string} s
+     * @return {string}
+     */
+    strip(s: S): S;
+
+    /**
    * Extends Ansis with additional colors.
    *
    * For example:
@@ -176,9 +173,8 @@ type Ansis = {
    * @param {string | { open: string; close: string }} c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
    * @return {Ansis} Return extended instance.
    */
-  //extend<U extends S>(c: Record<U, any>): A & Record<U, A>;
-  extend<U extends S>(c: Record<U, S | P>): A & Record<U, A>;
-} & P
+  extend<U extends S>(c: Record<U, S | { open: S; close: S }>): A & Record<U, A>;
+}
   // Dynamic properties
   & { [K in AnsiStyles | AnsiColors]: A };
 
@@ -192,10 +188,6 @@ declare const
   Ansis: new (n?: N) => A,
   // declare all styles and colors of type Ansis
   a: A,
-  //isSupported: () => B,
-  //strip: (s: S) => S,
-  //extend: A['extend'],
-
   fg: Q,
   rgb: R,
   hex: L;
@@ -204,16 +196,6 @@ declare const
 export {
   a as default,
   Ansis,
-
-  // Named export of instance methods is a workaround for compatibility with various TypeScript module settings.
-  // It works under all tsconfig settings (ESNext, Node16, verbatimModuleSyntax, etc.).
-  // It is a hack for the `compilerOptions.module = "Node16"`, otherwise the TS compiler can't find they in default import:
-  // import ansis from 'ansis';
-  // ansis.strip(text); // <= TS2339: Property strip does not exist on type
-  //isSupported,
-  //strip,
-  //extend,
-
   fg,
   fg as bg,
   rgb,

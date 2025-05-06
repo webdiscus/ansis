@@ -45,22 +45,15 @@ let autoDetectLevel = (env, isTTY, isWin) => {
   // 2) Detect color support in CI.
   // Note: CI environments are not TTY and often advertise themselves as `dumb` terminals.
 
-  // Azure DevOps CI
-  // https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml
-  if (!!env.TF_BUILD) return LEVEL_16COLORS;
-
-  // JetBrains TeamCity support 256 colors since 2020.1.1 (2020-06-23), TEAMCITY_VERSION in env
-  if (/,TEAMCI/.test(envKeys)) return LEVEL_256COLORS;
-
   // CI tools
   // https://github.com/watson/ci-info/blob/master/vendors.json
   if (!!env.CI) {
-    // CI supports truecolor: GITHUB_ACTIONS, GITEA_ACTIONS
-    if (/,GIT(HUB|EA)/.test(envKeys)) return LEVEL_TRUECOLOR;
+    // CI supports truecolor: GITHUB_ACTIONS
+    if (/,GITHUB/.test(envKeys)) return LEVEL_TRUECOLOR;
 
     // others CI supports only 16 colors, e.g. when env contains:
     // - CI_NAME === codeship | sourcehut
-    // - GITLAB_CI | TRAVIS | CIRCLECI |APPVEYOR | BUILDKITE | DRONE
+    // - GITLAB_CI | CIRCLECI | TRAVIS | APPVEYOR | BUILDKITE | DRONE | BITBUCKET_BUILD_NUMBER | AZURE_HTTP_USER_AGENT
 
     return LEVEL_16COLORS;
   }
@@ -138,7 +131,8 @@ export const getLevel = (mockThis) => {
   }
 
   // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
-  let isPM2 = !!env.PM2_HOME && !!env.pm_id;
+  // PM2_HOME is always set by PM2, whether running in fork or cluster mode
+  let isPM2 = !!env.PM2_HOME;
 
   // when Next.JS runtime is `edge`, process.stdout is undefined, but colors output is supported
   // runtime values supported colors: `nodejs`, `edge`, `experimental-edge`

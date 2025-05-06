@@ -17,6 +17,15 @@
       "options": {
         "tabWidth": 4
       }
+    },
+    {
+      "files": [
+        "dist/**/*.*",
+        "package.npm.json"
+      ],
+      "options": {
+        "useTabs": true
+      }
     }
   ]
 }

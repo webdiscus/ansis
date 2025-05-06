@@ -226,30 +226,6 @@ describe('CI tools', () => {
     const expected = LEVEL_16COLORS;
     expect(expected).toEqual(received);
   });
-
-  test(`Azure CI`, () => {
-    const received = getLevel({
-      process: {
-        env: { TF_BUILD: true },
-        argv: [],
-      },
-
-    });
-    const expected = LEVEL_16COLORS;
-    expect(expected).toEqual(received);
-  });
-
-  test(`TeamCity`, () => {
-    const received = getLevel({
-      process: {
-        env: { TEAMCITY_VERSION: '2020.1.1' },
-        argv: [],
-      },
-
-    });
-    const expected = LEVEL_256COLORS;
-    expect(expected).toEqual(received);
-  });
 });
 
 describe('flags and options', () => {

@@ -105,7 +105,7 @@ Both are [recommended](https://github.com/es-tooling/module-replacements/blob/ma
 The package size in `node_modules` directory:
 
 - `picocolors`: [6.37 kB][npm-picocolors] (not minimized) - A micro library with basic features.
-- `аnsis`: [5.76 kB][npm-ansis] (minimized) - A powerful library with a rich set of features.
+- `аnsis`: [5.71 kB][npm-ansis] (minimized) - A powerful library with a rich set of features.
 - `chalk`: [44.2 kB][npm-chalk] (not minimized) - Provides similar functionality to Ansis.
 
 ### ⚡ Performance
@@ -214,7 +214,7 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
   - ☑️ Picocolors: `CJS` only
   - ☑️ Chalk: `ESM` only
 - Does it matter the unpacked size?
-  - ✅ [Ansis - 5.76 kB][npm-ansis]
+  - ✅ [Ansis - 5.71 kB][npm-ansis]
   - ✅ [Picocolors - 6.37 kB][npm-picocolors]
   - ❌ [Chalk - 44.2 kB][npm-chalk]
 - Does it matter if a library performs [~60 million](#bench-simple) or [~100 million](#bench-simple) **ops/sec** when outputting to the terminal?
@@ -229,10 +229,6 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
 - Does handling [edge cases](#handling-input-arguments) matter?
   - ✅ Ansis
   - ☑️ Chalk
-  - ❌ Picocolors
-- Does supporting a wide range of [environments](#color-support) matter?
-  - ✅ Ansis
-  - ✅ Chalk
   - ❌ Picocolors
 - Does keeping your code clean and readable matter?
   - ✅ Ansis ([default and named import](#import), [chained syntax](#chained-syntax), [nested **template strings**](#nested-syntax))
@@ -877,10 +873,20 @@ import ansis from 'ansis';
 console.log('Color output: ', ansis.isSupported());
 ```
 
-There is no standard way to detect which color level is supported.
-The most common way to detect color support is to check the `TERM` and `COLORTERM` environment variables.
-CI systems can be detected by checking for the existence of the `CI` and other specifically environment variables.
-Combine that with the knowledge about which operating system the program is running on, and we have a decent enough way to detect colors.
+There is no standard way to detect terminal color support.
+The most common method is to check the `TERM` and `COLORTERM` environment variables, which often indicate the supported color level.
+
+Most standard CI systems can be identified by the presence of the  `CI` environment variable.
+While some CI uses their own specific environment variables, they are inconsistent and not widely adopted.
+
+
+Ansis provides basic support for standard CI environments by checking the commonly used `CI` environment variable.
+In such cases, Ansis assumes support for at least 16 colors.
+If your code uses 256-color or truecolor, Ansis automatically [fallback](#fallback) to 16 colors, or to black and white if no color support is detected.
+
+> Ansis explicitly detects `GitHub Actions` as supporting `truecolor`, as most Ansis users rely on GitHub CI.
+
+Combined with information about the operating system, this approach provides a practical and lightweight method for detecting color support in most environments.
 
 | Terminal                         | ANSI 16<br>colors | ANSI 256<br>colors | True<br>Color |  env.<br>TERM   | env.<br>COLORTERM | Specifically ENV variables             |
 |:---------------------------------|-------------------|:-------------------|:--------------|:---------------:|:-----------------:|:---------------------------------------|
@@ -1158,7 +1164,7 @@ c.red(1/0)     // 'Infinity' in red
 
 | Package                      |          Dependencies          | Minified         |                                            Unpacked Size |                                                           Tarball size |
 |:-----------------------------|:------------------------------:|------------------|---------------------------------------------------------:|-----------------------------------------------------------------------:|
-| [`ansis`][ansis]             |         [0][npm-ansis]         | uglified & minified |                                     [5.76 kB][npm-ansis] |             [3.4 kB](https://arve0.github.io/npm-download-size/#ansis) |
+| [`ansis`][ansis]             |         [0][npm-ansis]         | uglified & minified |                                     [5.71 kB][npm-ansis] |             [3.4 kB](https://arve0.github.io/npm-download-size/#ansis) |
 | [`picocolors`][picocolors]   |      [0][npm-picocolors]       | no               |                                [6.37 kB][npm-picocolors] |        [2.6 kB](https://arve0.github.io/npm-download-size/#picocolors) |
 | [`tinyrainbow`][tinyrainbow] |   [0][npm-tinyrainbow]         | uglified         |                                [8.1 kB][npm-tinyrainbow] |       [3.2 kB](https://arve0.github.io/npm-download-size/#tinyrainbow) |
 | [`colorette`][colorette]     |       [0][npm-colorette]       | no               |                                 [17.0 kB][npm-colorette] |         [4.9 kB](https://arve0.github.io/npm-download-size/#colorette) |

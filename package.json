@@ -1,7 +1,7 @@
 {
   "name": "ansis",
-  "version": "4.0.0-rc.8",
-  "description": "A small and fast library for applying ANSI colors in terminal or browser console",
+  "version": "4.0.0",
+  "description": "A small and fast ANSI color library",
   "keywords": [
     "ansi",
     "color",
@@ -79,19 +79,19 @@
   "devDependencies": {
     "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
-    "@types/node": "^22.13.1",
+    "@types/node": "^22.15.17",
     "@vitest/coverage-v8": "^3.1.1",
     "ansis": "file:dist",
     "esbuild": "^0.25.2",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
-    "rollup": "^4.40.0",
+    "rollup": "^4.40.2",
     "rollup-plugin-copy": "^3.5.0",
     "swc": "^1.0.11",
     "terser": "^5.39.0",
     "tsup": "^8.3.6",
     "typescript": "5.4.5",
-    "vitest": "^3.1.1"
+    "vitest": "^3.1.3"
   },
   "overrides": {
     "rollup-plugin-copy": {

@@ -130,15 +130,22 @@ export const getLevel = (mockThis) => {
     colorLevel = LEVEL_BW;
   }
 
+  // Optimisation: The Terser inlines a function at use place, so we can split the logic on small parts in source code.
+
   // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
   // PM2_HOME is always set by PM2, whether running in fork or cluster mode
-  let isPM2 = !!env.PM2_HOME;
+  let isPM2 = () => !!env.PM2_HOME;
 
-  // when Next.JS runtime is `edge`, process.stdout is undefined, but colors output is supported
+  // When Next.JS runtime is `edge`, process.stdout is undefined, but colors output is supported
   // runtime values supported colors: `nodejs`, `edge`, `experimental-edge`
+  let isNextJs = () => env.NEXT_RUNTIME?.includes('edge');
 
-  // whether the output is supported
-  let isTTY = isPM2 || env.NEXT_RUNTIME?.includes('edge') || !!proc.stdout?.isTTY;
+  // Whether the output is supported
+  let isTTY = () => isPM2() || isNextJs() || !!proc.stdout?.isTTY;
+
+  let isWin = () => proc.platform === 'win32';
+
+  let isBrowser = () => !!thisRef.window?.chrome;
 
   // enforce a specific color support:
   // FORCE_COLOR=false   // disables colors
@@ -171,7 +178,7 @@ export const getLevel = (mockThis) => {
   if (isForced) colorLevel = forcedLevel;
 
   // if colorLevel === LEVEL_UNDEFINED, attempt to detect color level, returns 0, 1, 2 or 3
-  if (!~colorLevel) colorLevel = autoDetectLevel(env, isTTY, proc.platform === 'win32');
+  if (!~colorLevel) colorLevel = autoDetectLevel(env, isTTY(), isWin());
 
   // if force disabled: FORCE_COLOR=0 or FORCE_COLOR=false
   if (!forcedLevel
@@ -180,15 +187,13 @@ export const getLevel = (mockThis) => {
     || hasFlag(/^--(no-color|color=(false|never))$/)) return LEVEL_BW;
 
   // Detect browser support
-  if (!!thisRef.window?.chrome) return LEVEL_TRUECOLOR;
+  if (isBrowser()) return LEVEL_TRUECOLOR;
 
   // API Rule: If color output is force enabled but the color level is detected as B&W (e.g., TERM is dumb),
   // enable truecolor since color depth support does not matter.
 
-  // Optimisation: `!colorLevel` is equivalent to `colorLevel === LEVEL_BW`
-  //return isForced && !colorLevel ? LEVEL_TRUECOLOR : colorLevel;
-
   // If color output is forced but the environment doesn't support it, allow truecolor anyway,
   // for example, when saving CLI output snapshots to a file.
+  // Optimisation: `!colorLevel` is equivalent to `colorLevel === LEVEL_BW`
   return isForced && !colorLevel ? LEVEL_TRUECOLOR : colorLevel;
 };

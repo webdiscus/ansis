@@ -201,7 +201,7 @@ describe('handling numbers', () => {
   });
 });
 
-describe('style tests', () => {
+describe('color tests', () => {
   test(`visible with template literal`, () => {
     const received = ansis.visible`foo ${green`bar ${red`baz`} bar`} foo`;
     const expected = 'foo \x1b[32mbar \x1b[31mbaz\x1b[32m bar\x1b[39m foo';
@@ -247,6 +247,13 @@ describe('style tests', () => {
   test(`ansis.bgHex('#ABC123')`, () => {
     const received = ansis.bgHex('#ABC123')('foo');
     const expected = '\x1b[48;2;171;193;35mfoo\x1b[49m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`hex() Truecolor samples`, () => {
+    const received = `${hex('#FF701F')`Orange`}, ${hex('#FF007F')`Rose`}, ${hex('#5C0120')`Bordeaux`}`;
+    const expected = '\x1b[38;2;255;112;31mOrange\x1b[39m, \x1b[38;2;255;0;127mRose\x1b[39m, \x1b[38;2;92;1;32mBordeaux\x1b[39m';
+    console.log('Truecolor: ', received);
     expect(esc(received)).toEqual(esc(expected));
   });
 

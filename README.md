@@ -41,13 +41,13 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - [ANSI 16 colors](#base-colors): `red`, `redBright`, `bgRed`, `bgRedBright`, ...
 - [ANSI 256 colors](#256-colors): `fg()`, `bg()`
 - [Truecolor](#truecolor) (**RGB & HEX**): `rgb()`, `bgRgb()`, `hex()`, `bgHex()`
+- Auto-detects [color support](#color-support): Truecolor, 256 colors, 16 colors, no colors
 - Automatic [fallback](#fallback): Truecolor → 256 colors → 16 colors → no colors
-- [Extend base colors](#extend-colors) with named Truecolor values
+- Allows [extending base colors](#extend-colors) with named Truecolor values
 - Raw ANSI escape codes: ``` `foo ${red.open}red{red.close} bar` ```
 - Strip ANSI escape codes with `ansis.strip()`
-- Auto-detects [color support](#color-support) across a wide range of [environments](#color-support)
 - Supports [ENV variables](#cli-vars) and [flags](#cli-flags): [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color), [`COLORTERM`](#using-env-colorterm), `--no-color`, `--color`
-- Reliable [CLI testing](#cli-testing) by forcing specific [color levels](#color-levels): no color, 16, 256 or truecolor
+- Enables reliable [CLI testing](#cli-testing) with forced [color levels](#color-levels): no color, 16, 256 or Truecolor
 - Replacement for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) and others [alternatives](#alternatives)
 
 <a id="install" name="install"></a>
@@ -97,7 +97,7 @@ The most popular ANSI libraries, similar to Ansis:
 ## ✨ [Why use Ansis](#switch-to-ansis)
 
 As of 2025, two of the [smallest](#compare-size) and [fastest](#benchmark) ANSI libraries are **Ansis** and **Picocolors**.
-Both are [recommended](https://github.com/es-tooling/module-replacements/blob/main/docs/modules/chalk.md) by the [ES Tooling](https://github.com/es-tooling) community as modern replacements for older, larger libraries.
+Both are [recommended](https://github.com/es-tooling/module-replacements/blob/main/docs/modules/chalk.md) by the e18e community as modern replacements for older, larger libraries.
 
 
 ### 📦 Unpacked size
@@ -108,24 +108,25 @@ The package size in `node_modules` directory:
 - `аnsis`: [5.7 kB][npm-ansis] (minimized) - A powerful library with a rich set of features.
 - `chalk`: [44.2 kB][npm-chalk] (not minimized) - Provides similar functionality to Ansis.
 
+See [Compare package sizes](#compare-size).
+
 ### ⚡ Performance
 
 - `picocolors`: The [fastest](#bench-simple) when applying a single style (e.g., `red`) only.
 - `аnsis`: The [fastest](#bench-2-styles) when applying two or more styles (e.g., `red` + `bgWhite`).
 - `chalk`: Slower than both **Ansis** and **Picocolors** in all use cases.
 
+See [Benchmarks](#benchmark).
+
 > [!CAUTION]
-> **Picocolors** doesn't handle important **edge cases**, so it is the fastest.
->
-> **Picocolors** is faster only in a [simple](#bench-simple) micro-benchmark, which does not reflect real world usage.\
-> In a more complex benchmark, **Ansis** is much [closer](#bench-picocolors-complex) to **Picocolors** results or even [faster](#bench-3-styles).
+> **Picocolors** is the fastest in a [simple micro-benchmark](#bench-simple) because it doesn't handle important edge cases.
+> However, that benchmark doesn't reflect real-world usage.
+> In more complex and realistic benchmarks, Ansis performance is [comparable to Picocolors](#bench-picocolors-complex), or even [faster](#bench-3-styles).
 
 <a id="edge-cases" name="edge-cases"></a>
 ### 🧩 Edge cases
 
-#### Absent, `undefined` or `null` arguments
-
-**Ansis** handles these cases correctly.
+#### Handling falsy arguments
 
 ```js
 ansis.red()          // ✅ ''
@@ -140,23 +141,16 @@ ansis.red(null)      // ✅ ''
 chalk.red(null)      // ❌ \e[31mnull\e[39m
 pico.red(null)       // ❌ \e[31mnull\e[39m
 
+ansis.red('')        // ✅ ''
+chalk.red('')        // ✅ ''
+pico.red('')         // ❌ \e[31m\e[39m
+
 ansis.reset()        // ✅ \e[0m
 chalk.reset()        // ❌ ''
 pico.reset()         // ❌ \e[0mundefined\e[0m
 ```
 
 See more details about [handling input arguments](#handling-input-arguments) in various libraries.
-
-#### Empty string
-
-**Ansis** and **Chalk** handle this case and return an empty string without ANSI codes as expected.\
-However, **Picocolors** doesn't handle this case.
-
-```js
-ansis.red('')          // ✅ ''
-chalk.red('')          // ✅ ''
-pico.red('')           // ❌ \e[31m\e[39m
-```
 
 #### Break style at New Line
 
@@ -203,8 +197,7 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
 - If you only use a single style, e.g., `red('foo')`, **Picocolors** is the best solution.
 
 - However, if you need more, like combining multiple styles (e.g., `red` + `bold` + `bgWhite`),\
-  [256 colors](#256-colors), [Truecolor](#truecolor),
-  or support for a wide range of [environments](#color-support),
+  [256 colors](#256-colors) or [Truecolor](#truecolor)
   then **Ansis** is the better choice.
 
 #### Checklist:

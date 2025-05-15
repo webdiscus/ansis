@@ -1,0 +1,15 @@
+services:
+  ansis-test-node10:
+    build: .
+    stdin_open: true # enables TTY
+    tty: true        # enables terminal
+    working_dir: /app
+    volumes:
+      - ../dist:/dist:ro
+      - ../test/env:/app/env:ro
+      - ./test:/app/test:ro
+    # TODO: fix pm2 with @4.0.0-node10
+    #command: sh -c "node -v && npm i -g pm2@6.0.5 && pm2 ls && npm install && npm test"
+    command: sh -c "node -v && npm install && npm test"
+    environment:
+      - NODE_ENV=development

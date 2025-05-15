@@ -1,0 +1,20 @@
+{
+  "name": "ansis",
+  "description": "Special version for testing in Node.js v10 - v12",
+  "keywords": [],
+  "license": "ISC",
+  "author": "webdiscus",
+  "sideEffects": false,
+  "scripts": {
+    "test": "mocha \"test/**/*.test.js\""
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "devDependencies": {
+    "ansis": "file:../dist/node10",
+    "mocha": "^8.4.0",
+    "rimraf": "3.0.2",
+    "typescript": "4.5.5"
+  }
+}

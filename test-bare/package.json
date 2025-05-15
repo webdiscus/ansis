@@ -1,0 +1,10 @@
+{
+  "name": "test-bare",
+  "description": "Test Bare Runtime",
+  "scripts": {
+    "test:esm": "FORCE_COLOR=1 bare test.mjs"
+  },
+  "dependencies": {
+    "ansis": "file:../dist/node14"
+  }
+}

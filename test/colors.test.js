@@ -11,7 +11,7 @@ const ansis = new Ansis();
 
 ansis.extend({
   orange: '#FFAB40',
-})
+});
 
 const { orange, red, underline } = ansis;
 

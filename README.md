@@ -54,8 +54,18 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 
 ## Install
 
+### Recommended (Node.js 14+)
+
+Install the default version, optimized for modern environments:
 ```bash
 npm install ansis
+```
+
+### Legacy Support (Node.js 10+)
+
+Install the special build for outdated Node.js versions. Use this only if you need compatibility with Node.js v10–v12:
+```bash
+npm install ansis@node10
 ```
 
 

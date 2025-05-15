@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "description": "Special version of package.json for testing in Node.js v14 - v16",
+  "description": "Special version for testing in Node.js v14 - v16",
   "keywords": [],
   "license": "ISC",
   "author": "webdiscus",
@@ -30,7 +30,7 @@
     "node": ">=14"
   },
   "devDependencies": {
-    "ansis": "file:dist",
+    "ansis": "file:dist/node14",
     "esbuild": "0.17.19",
     "rimraf": "3.0.2",
     "swc": "1.0.11",

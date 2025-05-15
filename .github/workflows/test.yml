@@ -64,7 +64,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: built-package
-          path: ./dist/
+          path: ./dist/node14/
 
       - name: Install dependencies (without rebuilding)
         run: npm install --ignore-scripts
@@ -110,10 +110,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: built-package
-          path: ./dist/
+          path: ./dist/node14/
 
-      - name: Prepare package.json for Node.js <= 16
-        run: cp -f package.test-node16.json package.json
+      - name: Prepare package.json for Node.js v14 - v16
+        run: cp -f package.test-node14.json package.json
 
       - name: Install dependencies (without rebuilding)
         run: npm install -f # --force option is required to install tsup dependencies

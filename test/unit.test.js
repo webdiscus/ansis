@@ -6,6 +6,9 @@ import { hexToRgb, rgbToAnsi256, ansi256To16, rgbToAnsi16 } from '../src/utils.j
 import { getLevel } from '../src/color-support.js';
 import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS, LEVEL_TRUECOLOR } from '../src/color-levels.js';
 
+// output testing version
+import('./utils/version.js');
+
 describe('convert HEX to RGB', () => {
   test(`hexToRgb('FFAA99')`, () => {
     const received = hexToRgb('FFAA99');

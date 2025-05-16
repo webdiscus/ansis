@@ -13,7 +13,7 @@
 [![downloads](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 [![install size](https://packagephobia.com/badge?p=ansis)](https://packagephobia.com/result?p=ansis)
 
-ANSI color library for use in CI environments, terminals, and Chromium-based browsers.\
+ANSI color library for use in terminals, CI environments, and Chromium-based browsers.\
 Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
 > [!WARNING]
@@ -206,8 +206,8 @@ As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintaine
 
 - If you only use a single style, e.g., `red('foo')`, **Picocolors** is the best solution.
 
-- However, if you need more, like combining multiple styles (e.g., `red` + `bold` + `bgWhite`),\
-  [256 colors](#256-colors) or [Truecolor](#truecolor)
+- However, if you need more, like combining multiple styles (e.g., `red` + `bold` + `bgWhite`) with
+  chained syntax, named color imports, [256 colors](#256-colors) or [Truecolor](#truecolor)
   then **Ansis** is the better choice.
 
 #### Checklist:
@@ -244,7 +244,7 @@ Explore the list of [features](#compare), [package sizes](#compare-size), and [b
 > [!TIP]
 >
 > **To keep your code clean and readable:**
-> - Use the chained syntax provided by libraries like `ansis` and `chalk
+> - Use the chained syntax provided by libraries like `ansis` and `chalk`
 > - Avoid nested calls, as they are [much slower](#bench-3-styles) and less readable than the chained syntax.
 
 #### Usage examples
@@ -261,9 +261,9 @@ red.bold.bgWhite`Error`                    //      ansis ✅✅✅ fastest, shor
 chalk.red.bold.bgWhite('Error')            //      chalk ❌☑️✅ slower, short, readable
 pico.red(pico.bold(pico.bgWhite('Error'))) // picocolors ❌❌❌ slowest, long, unreadable
 
-green`Create ${blue.bold`React`} app.`                     //      ansis ✅ usability 😊
-chalk.green(`Create ${chalk.blue.bold('React')} app.`)     //      chalk ☑️ usability 🙂
-pico.green(`Create ${pico.blue(pico.bold('React'))} app.`) // picocolors ❌ usability 🥴
+green`Create ${blue.bold`React`} app.`                     //      ansis: usability 😊
+chalk.green(`Create ${chalk.blue.bold('React')} app.`)     //      chalk: usability 🙂
+pico.green(`Create ${pico.blue(pico.bold('React'))} app.`) // picocolors: usability 🥴
 ```
 
 > [!TIP]

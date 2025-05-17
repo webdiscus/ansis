@@ -699,6 +699,28 @@ const custom = new Ansis(1);
 console.log(custom.hex('#FFAB40')`Orange`); // Output: fallback to yellowBright
 ```
 
+**Example**
+
+```ts
+import { Ansis } from 'ansis';
+
+/**
+ * Ansis instance for CLI that can be initialized with no colors mode
+ * needed for outputs where we don't want to have colors.
+ *
+ * @param  {boolean} noColors Disable colors
+ * @return {Ansis} Default or custom instance
+ */
+const safeAnsis = function(noColors) {
+  return noColors
+    ? new Ansis(0) // disable colors
+    : new Ansis(); // auto detect color support
+}
+
+// Handle a special CLI flag to disable colors
+const ansis = safeAnsis(process.argv.includes('--save-to-log'))
+```
+
 ---
 
 #### [↑ top](#top)

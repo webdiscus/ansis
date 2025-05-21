@@ -56,18 +56,17 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 
 ### Recommended (Node.js 14+)
 
-Install the default version, optimized for modern environments:
+Install the default version, optimized for modern environments.
 ```bash
 npm install ansis
 ```
 
 ### Legacy Support (Node.js 10+)
 
-Install the special build for outdated Node.js versions. Use this only if you need compatibility with Node.js v10–v12:
+Install this special build only if you require compatibility with Node.js v10–v12 or newer.
 ```bash
 npm install ansis@node10
 ```
-
 
 ## 🛠️ Usage
 
@@ -83,12 +82,6 @@ console.log(hex('#FF75D1').bold.underline('Pink'));
 
 console.log(ansis.strip(red('Text'))); // Output plain text without ANSI codes
 ```
-
-<!--
-## 🌍 Used by
-
-[NestJS](https://github.com/nestjs/nest), [Sequelize](https://github.com/sequelize/sequelize), [TypeORM](https://github.com/typeorm/typeorm), [Salesforce](https://github.com/salesforcecli/cli), [Oclif](https://github.com/oclif/core)
--->
 
 <a id="alternatives" name="alternatives"></a>
 

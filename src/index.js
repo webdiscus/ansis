@@ -109,8 +109,24 @@ const Ansis = function(level = detectedLevel) {
     Ansis: Ansis,
 
     /**
+     * Color support level.
+     * Automatically detected by default.
+     *
+     * Levels:
+     * 0 – No color (black & white)
+     * 1 – Basic ANSI (16 colors)
+     * 2 – Extended ANSI (256 colors)
+     * 3 – Truecolor (24-bit RGB)
+     *
+     * @type {number}
+     * @readonly
+     */
+    level: level,
+
+    /**
      * Checks if ANSI colors are supported in the output.
-     * @return {boolean}
+     *
+     * @return {boolean|number}
      */
     isSupported: () => hasColors,
 

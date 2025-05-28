@@ -1,5 +1,17 @@
 # Changelog
 
+## 4.1.0 (2025-05-28)
+
+- feat: add readonly `level` property to get the detected color support level:
+  - 0 - no colors,
+  - 1 - 16 colors,
+  - 2 - 256 colors,
+  - 3 - truecolor.
+
+## 4.0.0 (2025-05-08)
+
+Release v4.
+
 ## Pre release note: ✨ Ansis v4 - Smaller package, and cleaner API
 
 Ansis v4 drops legacy baggage and unused artifacts.

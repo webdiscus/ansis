@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "A small and fast ANSI color library",
   "keywords": [
     "ansi",

@@ -13,6 +13,12 @@ describe('color level', () => {
     expect(received).toEqual(expected);
   });
 
+  test(`ansis.level`, () => {
+    const received = ansis.level;
+    const expected = 0;
+    expect(received).toEqual(expected);
+  });
+
   test(`red('foo')`, () => {
     const received = red`foo`;
     const expected = 'foo';

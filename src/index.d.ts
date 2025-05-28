@@ -25,7 +25,7 @@ type N = number;
 type S = string;
 
 // BasicColors
-type C =  'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
+type C = 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
 
 // BrightColors
 type H = `${C}Bright`;
@@ -84,96 +84,111 @@ type R = (r: N, g: N, b: N) => A;
 type A = Ansis;
 
 type Ansis = {
-  /**
-   * Opening ANSI escape code for a style or color.
-   */
-  open: S;
-  /**
-   * Closing ANSI escape code for a style or color.
-   */
-  close: S;
-
-  /**
-   * @param {unknown} v The value to be processed, can be of any type, which will be converted to a string.
-   * @return {string} The resulting string.
-   */
-  (v: unknown): S;
-
-  /**
-   * Processes a template string with embedded values and returns a string.
-   *
-   * This method allows you to use template strings with embedded expressions.
-   * It takes a `TemplateStringsArray` and an arbitrary number of `values`,
-   * which are interpolated into the string and returned as a result.
-   *
-   * @param {TemplateStringsArray} s The template literal string array.
-   * @param {any[]} v The values to be interpolated into the template string.
-   * @return {string} The resulting string.
-   */
-  (s: TemplateStringsArray, ...v: any[]): S;
-
-  /**
-   * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for foreground color.
-   */
-  fg: Q;
-
-  /**
-   * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for background color.
-   */
-  bg: Q;
-
-  /**
-   * Set RGB for foreground color.
-   */
-  rgb: R;
-
-  /**
-   * Set RGB for background color.
-   */
-  bgRgb: R;
-
-  /**
-   * Set HEX value for foreground color.
-   */
-  hex: L;
-
-  /**
-   * Set HEX value for background color.
-   */
-  bgHex: L;
-
-  /**
-   * Whether the output supports ANSI color and styles.
-   *
-   * @return {boolean}
-   */
-  isSupported(): boolean;
-
-  /**
-   * Remove ANSI styling codes.
-   *
-   * @param {string} s
-   * @return {string}
-   */
-  strip(s: S): S;
+    /**
+     * Color support level.
+     * Automatically detected by default.
+     *
+     * Levels:
+     * 0 – No color (black & white)
+     * 1 – Basic ANSI (16 colors)
+     * 2 – Extended ANSI (256 colors)
+     * 3 – Truecolor (24-bit RGB)
+     *
+     * @readonly
+     */
+    level: N;
 
     /**
-   * Extends Ansis with additional colors.
-   *
-   * For example:
-   *
-   * const myTheme = {
-   *   apple: '#4FA83D',
-   *   pink: '#FF75D1',
-   * };
-   *
-   * const custom = ansis.extend(myTheme);
-   *
-   * @param {string | { open: string; close: string }} c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
-   * @return {Ansis} Return extended instance.
-   */
-  extend<U extends S>(c: Record<U, S | { open: S; close: S }>): A & Record<U, A>;
-}
+     * Opening ANSI escape code for a style or color.
+     */
+    open: S;
+
+    /**
+     * Closing ANSI escape code for a style or color.
+     */
+    close: S;
+
+    /**
+     * @param {unknown} v The value to be processed, can be of any type, which will be converted to a string.
+     * @return {string} The resulting string.
+     */
+    (v: unknown): S;
+
+    /**
+     * Processes a template string with embedded values and returns a string.
+     *
+     * This method allows you to use template strings with embedded expressions.
+     * It takes a `TemplateStringsArray` and an arbitrary number of `values`,
+     * which are interpolated into the string and returned as a result.
+     *
+     * @param {TemplateStringsArray} s The template literal string array.
+     * @param {any[]} v The values to be interpolated into the template string.
+     * @return {string} The resulting string.
+     */
+    (s: TemplateStringsArray, ...v: any[]): S;
+
+    /**
+     * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for foreground color.
+     */
+    fg: Q;
+
+    /**
+     * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for background color.
+     */
+    bg: Q;
+
+    /**
+     * Set RGB for foreground color.
+     */
+    rgb: R;
+
+    /**
+     * Set RGB for background color.
+     */
+    bgRgb: R;
+
+    /**
+     * Set HEX value for foreground color.
+     */
+    hex: L;
+
+    /**
+     * Set HEX value for background color.
+     */
+    bgHex: L;
+
+    /**
+     * Whether the output supports ANSI color and styles.
+     *
+     * @return {boolean}
+     */
+    isSupported(): boolean;
+
+    /**
+     * Remove ANSI styling codes.
+     *
+     * @param {string} s
+     * @return {string}
+     */
+    strip(s: S): S;
+
+    /**
+     * Extends Ansis with additional colors.
+     *
+     * For example:
+     *
+     * const myTheme = {
+     *   apple: '#4FA83D',
+     *   pink: '#FF75D1',
+     * };
+     *
+     * const custom = ansis.extend(myTheme);
+     *
+     * @param {string | { open: string; close: string }} c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
+     * @return {Ansis} Return extended instance.
+     */
+    extend<U extends S>(c: Record<U, S | { open: S; close: S }>): A & Record<U, A>;
+  }
   // Dynamic properties
   & { [K in AnsiStyles | AnsiColors]: A };
 

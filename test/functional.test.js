@@ -13,6 +13,12 @@ describe('support colors', () => {
     const expected = true;
     expect(received).toEqual(expected);
   });
+
+  test(`ansis.level`, () => {
+    const received = ansis.level;
+    const expected = 3;
+    expect(received).toEqual(expected);
+  });
 });
 
 describe('convert function argument to string', () => {

@@ -40,21 +40,20 @@ import picocolors from 'picocolors';
 import { Ansis, cyan, green, red, yellow, hex, rgb } from 'ansis';
 
 import spectrum from '../examples/fixtures/spectrum.js';
-import { getLevel } from '../src/color-support.js';
 import { colorLevels, LEVEL_TRUECOLOR } from '../src/color-levels.js';
 
 import packages from './packages.js';
 
 // create a new instance of Ansis for correct measure in benchmark
 const ansis = new Ansis();
-const colorSpace = getLevel();
+const colorLevel = ansis.level;
 
 const log = console.log;
 
 log();
-log(cyan.inverse` Colors `, `Your terminal supports ${cyan(colorLevels[colorSpace])}.`);
+log(cyan.inverse` Colors `, `Your terminal supports ${cyan(colorLevels[colorLevel])}.`);
 
-if (colorSpace < LEVEL_TRUECOLOR) {
+if (colorLevel < LEVEL_TRUECOLOR) {
   log(red.inverse` WARNING `, yellow`Your terminal doesn't support Truecolor!`);
   log('The result of some tests can be NOT correct!\nChoose a modern terminal, e.g. iTerm.\n');
 }

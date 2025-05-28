@@ -4,9 +4,15 @@ import { expect, describe, test } from 'vitest';
 import './env/ansi256-colors.js';
 
 //import { Ansis, hex } from '../src/index.mjs'; // for debugging only
-import { Ansis, hex } from 'ansis';
+import ansis, { Ansis, hex } from 'ansis';
 
 describe('color level', () => {
+  test(`ansis.level`, () => {
+    const received = ansis.level;
+    const expected = 2;
+    expect(received).toEqual(expected);
+  });
+
   test(`fallback to 256 colors`, () => {
     const received = hex('#00c200')`foo`;
     const expected = '[38;5;40mfoo[39m';

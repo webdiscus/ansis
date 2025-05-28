@@ -878,25 +878,33 @@ Execute the script in a terminal:
 
 Ansis automatically detects the supported color level:
 
-- Truecolor
-- ANSI 256 colors
-- ANSI 16 colors
-- black & white (no colors)
+- `0` – No color (black & white)
+- `1` – Basic ANSI (16 colors)
+- `2` – Extended ANSI (256 colors)
+- `3` – Truecolor (24-bit RGB)
 
-Ansis has the method `isSupported()` that returns a `boolean` value whether the output supports ANSI color and styles.
+You can access the detected color level via the readonly `level` property:
 
 ```js
 import ansis from 'ansis';
 
-console.log('Color output: ', ansis.isSupported());
+console.log('Detected color level: ', ansis.level);
 ```
 
-There is no standard way to detect terminal color support.
-The most common method is to check the `TERM` and `COLORTERM` environment variables, which often indicate the supported color level.
+To check if ANSI color output is supported, use the `isSupported()` method:
+
+```js
+import ansis from 'ansis';
+
+console.log('Color output supported:', ansis.isSupported());
+```
+
+> [!NOTE]
+> There is no standard way to detect terminal color support.
+> The most common method is to check the `TERM` and `COLORTERM` environment variables, which often indicate the supported color level.
 
 Most standard CI systems can be identified by the presence of the  `CI` environment variable.
 While some CI uses their own specific environment variables, they are inconsistent and not widely adopted.
-
 
 Ansis provides basic support for standard CI environments by checking the commonly used `CI` environment variable.
 In such cases, Ansis assumes support for at least 16 colors.

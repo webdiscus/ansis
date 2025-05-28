@@ -1,5 +1,5 @@
 import Benchmark from 'benchmark';
-import { Ansis } from '../../src/index.js';
+import { Ansis } from 'ansis';
 
 const benchStyle = new Ansis();
 

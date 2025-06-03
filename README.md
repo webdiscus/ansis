@@ -446,7 +446,7 @@ bg(105)`Bright Magenta`;
 // function is chainable
 fg(96).bold`bold Bright Cyan`;
 
-// function is avaliable in each style
+// function is available in each style
 bold.fg(96).underline`bold underline Bright Cyan`;
 
 // you can combine the functions and styles in any order

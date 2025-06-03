@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { hex, bgHex } from '../src/index.mjs';
+import { hex } from '../src/index.mjs';
 import spectrum from './fixtures/spectrum.js';
 
 const log = console.log;

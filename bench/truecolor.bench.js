@@ -1,11 +1,17 @@
 'use strict';
 
+/**
+ * Note: the hex(), rgb(), bgHex(), bgRgb() methods support only chalk and ansis.
+ */
+
 import Bench from './lib/bench.js';
 
 import chalk from 'chalk';
 import { Ansis, cyan, red, yellow, hex } from 'ansis';
 
+import spectrum from '../examples/fixtures/spectrum.js';
 import { colorLevels, LEVEL_TRUECOLOR } from '../src/color-levels.js';
+import packages from './packages.js';
 
 const log = console.log;
 
@@ -36,13 +42,33 @@ log();
 log(hex('#F88').inverse.bold` -= Benchmark =- `);
 
 bench('RGB colors').
-  add('chalk', () => chalk.rgb(99, 150, 200)('foo')).
-  add('ansis', () => ansis.rgb(99, 150, 200)('foo')).
+  add(packages['chalk'], () => chalk.rgb(99, 150, 200)('foo')).
+  add(packages['ansis'], () => ansis.rgb(99, 150, 200)('foo')).
   run();
 
-bench('HEX colors').
-  add('chalk #FBA', () => chalk.hex('#FBA')('foo')).
-  add('ansis #FBA', () => ansis.hex('#FBA')('foo')).
-  add('chalk #FBA123', () => chalk.hex('#FBA123')('foo')).
-  add('ansis #FBA123', () => ansis.hex('#FBA123')('foo')).
+bench('HEX color: #FBA').
+  add(packages['chalk'], () => chalk.hex('#FBA')('foo')).
+  add(packages['ansis'], () => ansis.hex('#FBA')('foo')).
+  run();
+
+bench('HEX color: #FBAFBA').
+  add(packages['chalk'], () => chalk.hex('#FBAFBA')('foo')).
+  add(packages['ansis'], () => ansis.hex('#FBAFBA')('foo')).
+  run();
+
+bench('Spectrum HEX colors').
+  add(packages['chalk'], () => {
+    let str = '';
+    spectrum.forEach(color => {
+      str += chalk.hex(color)('█');
+    });
+    return str;
+  }).
+  add(packages['ansis'], () => {
+    let str = '';
+    spectrum.forEach(color => {
+      str += ansis.hex(color)('█');
+    });
+    return str;
+  }).
   run();

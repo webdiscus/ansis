@@ -25,8 +25,6 @@
 
 'use strict';
 
-import Bench from './lib/bench.js';
-
 // vendor libraries
 import chalk from 'chalk';
 import colorsJs from '@colors/colors';
@@ -37,12 +35,11 @@ import colorCli from 'colors-cli/safe.js';
 import kleur from 'kleur';
 import * as kolorist from 'kolorist';
 import picocolors from 'picocolors';
-import { Ansis, cyan, red, yellow, hex, rgb } from 'ansis';
+import { Ansis, cyan, red, yellow, hex } from 'ansis';
 
-import spectrum from '../examples/fixtures/spectrum.js';
-import { colorLevels, LEVEL_TRUECOLOR } from '../src/color-levels.js';
-
+import Bench from './lib/bench.js';
 import packages from './packages.js';
+import { colorLevels, LEVEL_256COLORS } from '../src/color-levels.js';
 
 // create a new instance of Ansis for correct measure in benchmark
 const ansis = new Ansis();
@@ -53,8 +50,8 @@ const log = console.log;
 log();
 log(cyan.inverse` Colors `, `Your terminal supports ${cyan(colorLevels[colorLevel])}.`);
 
-if (colorLevel < LEVEL_TRUECOLOR) {
-  log(red.inverse` WARNING `, yellow`Your terminal doesn't support Truecolor!`);
+if (colorLevel < LEVEL_256COLORS) {
+  log(red.inverse` WARNING `, yellow`Your terminal doesn't support 256 or Truecolor!`);
   log('The result of some tests can be NOT correct!\nChoose a modern terminal, e.g. iTerm.\n');
 }
 
@@ -261,43 +258,7 @@ bench('New Line').
   add(packages['ansis'], () => ansis.bgGreen(breakStyleAtNewLineFixture)).
   run();
 
-bench('RGB colors').add(packages['chalk'], () => {
-  for (let i = 0; i < 256; i++) chalk.rgb(i, 150, 200)('foo');
-}).add(packages['ansis'], () => {
-  for (let i = 0; i < 256; i++) rgb(i, 150, 200)('foo');
-}).run();
-
-// HEX colors
-// the hex(), rgb(), bgHex(), bgRgb() methods support only chalk and ansis
-bench('HEX color: #FBA').
-  add(packages['chalk'], () => chalk.hex('#FBA')('foo')).
-  add(packages['ansis'], () => hex('#FBA')('foo')).
+// Template literals, correctly works only with ansis
+bench('Template literals').
+  add(packages['ansis'], () => red`red ${yellow`yellow ${cyan`cyan`} yellow`} red`).
   run();
-
-bench('HEX color: #FBAFBA').
-  add(packages['chalk'], () => chalk.hex('#FBAFBA')('foo')).
-  add(packages['ansis'], () => hex('#FBAFBA')('foo')).
-  run();
-
-// // Spectrum HEX colors
-// bench('Spectrum HEX colors').
-//   add(packages['chalk'], () => {
-//     let str = '';
-//     spectrum.forEach(color => {
-//       str += chalk.hex(color)('█');
-//     });
-//     return str;
-//   }).
-//   add(packages['ansis'], () => {
-//     let str = '';
-//     spectrum.forEach(color => {
-//       str += hex(color)('█');
-//     });
-//     return str;
-//   }).
-//   run();
-
-// // Template literals
-// bench('Template literals').
-//   add(packages['ansis'], () => red`red ${yellow`yellow ${green`green`} yellow`} red`).
-//   run();

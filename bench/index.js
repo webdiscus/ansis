@@ -37,7 +37,7 @@ import colorCli from 'colors-cli/safe.js';
 import kleur from 'kleur';
 import * as kolorist from 'kolorist';
 import picocolors from 'picocolors';
-import { Ansis, cyan, green, red, yellow, hex, rgb } from 'ansis';
+import { Ansis, cyan, red, yellow, hex, rgb } from 'ansis';
 
 import spectrum from '../examples/fixtures/spectrum.js';
 import { colorLevels, LEVEL_TRUECOLOR } from '../src/color-levels.js';

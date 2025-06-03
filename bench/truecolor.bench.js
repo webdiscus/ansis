@@ -3,7 +3,7 @@
 import Bench from './lib/bench.js';
 
 import chalk from 'chalk';
-import { Ansis, cyan, green, red, yellow, hex } from 'ansis';
+import { Ansis, cyan, red, yellow, hex } from 'ansis';
 
 import { colorLevels, LEVEL_TRUECOLOR } from '../src/color-levels.js';
 

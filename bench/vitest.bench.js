@@ -8,10 +8,9 @@ import ansiColors from 'ansi-colors';
 import cliColor from 'cli-color';
 import colorCli from 'colors-cli/safe.js';
 import kleur from 'kleur';
-import * as kleurColors from 'kleur/colors';
 import picocolors from 'picocolors';
 import * as kolorist from 'kolorist';
-import { Ansis, green, red, yellow, hex, rgb } from 'ansis';
+import { Ansis } from 'ansis';
 
 // create a new instance of Ansis for correct measure in benchmark
 const ansis = new Ansis();

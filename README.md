@@ -1596,7 +1596,7 @@ chalk.bgHex('#96C')('Amethyst');
 
 > [!WARNING]
 >
-> Ansis support the common standard `gray` color name, not `grey` (UK spelling).
+> Ansis support the common standard [`gray` color name](#gray-naming-in-libs), not `grey` (UK spelling).
 >
 > ```diff
 > - chalk.grey('text');
@@ -1616,11 +1616,11 @@ chalk.bgHex('#96C')('Amethyst');
 > + ansis.hex('#ffa500')('text');
 > ```
 >
-> Alternatively you can extend Ansis with custom color names:
+> Alternatively you can [extend](#extend-colors) Ansis with custom color names:
 > ```js
 > import { Ansis } from 'ansis';
 >
-> const ansis = new Ansis.extend({ orange: '#ffa500' });
+> const ansis = new Ansis().extend({ orange: '#ffa500' });
 > ```
 >
 > Now you can use extended Ansis:

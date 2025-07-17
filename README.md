@@ -1591,7 +1591,7 @@ chalk.bgHex('#96C')('Amethyst');
 >
 > ```diff
 > - chalk.red.overline('text');
-> + chalk.red.underline('text');
+> + ansis.red.underline('text');
 > ```
 
 > [!WARNING]
@@ -1600,10 +1600,34 @@ chalk.bgHex('#96C')('Amethyst');
 >
 > ```diff
 > - chalk.grey('text');
-> + chalk.gray('text');
+> + ansis.gray('text');
 >
 > - chalk.bgGrey('text');
-> + chalk.bgGray('text');
+> + ansis.bgGray('text');
+> ```
+
+> [!WARNING]
+>
+> By migrating from Chalk v4, when used the `keyword` color model, e.g. `chalk.keyword('orange')`
+> just replace it with hex color model method, e.g. `ansis.hex('#ffa500')`.
+>
+> ```diff
+> - chalk.keyword('orange')('text');
+> + ansis.hex('#ffa500')('text');
+> ```
+>
+> Alternatively you can extend Ansis with custom color names:
+> ```js
+> import { Ansis } from 'ansis';
+>
+> const ansis = new Ansis.extend({ orange: '#ffa500' });
+> ```
+>
+> Now you can use extended Ansis:
+>
+> ```diff
+> - chalk.keyword('orange')('text');
+> + ansis.orange('text');
 > ```
 
 Optionally, you can rewrite the same code to make it even shorter and cleaner:

@@ -1587,11 +1587,23 @@ chalk.bgHex('#96C')('Amethyst');
 > [!WARNING]
 >
 > Ansis doesn't not support the `overline` style, because it's **not widely supported** and no one uses it.\
-> Check you code and remove the `overline` style:
+> Check you code and replace the `overline` style with standard `underline`:
 >
 > ```diff
 > - chalk.red.overline('text');
-> + chalk.red('text');
+> + chalk.red.underline('text');
+> ```
+
+> [!WARNING]
+>
+> Ansis support the common standard `gray` color name, not `grey` (UK spelling).
+>
+> ```diff
+> - chalk.grey('text');
+> + chalk.gray('text');
+>
+> - chalk.bgGrey('text');
+> + chalk.bgGray('text');
 > ```
 
 Optionally, you can rewrite the same code to make it even shorter and cleaner:

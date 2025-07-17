@@ -37,7 +37,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - Default and [named](#import) imports: `import ansis, { red, bold, dim } from 'ansis'`
 - [Chained syntax](#chained-syntax): `red.bold.underline('text')`
 - Nested [tagged template strings](#nested-syntax): ``` red`Error: ${blue`file.js`} not found!` ```
-- [ANSI styles](#base-colors): `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>
+- [ANSI styles](#styles): `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>
 - [ANSI 16 colors](#base-colors): `red`, `redBright`, `bgRed`, `bgRedBright`, ...
 - [ANSI 256 colors](#256-colors): `fg()`, `bg()`
 - [Truecolor](#truecolor) (**RGB & HEX**): `rgb()`, `bgRgb()`, `hex()`, `bgHex()`
@@ -357,13 +357,14 @@ italic.bold.yellow.bgMagentaBright`text`;
 
 #### [↑ top](#top)
 
-<a id="base-colors" name="base-colors"></a>
+<a name="styles"></a>
 
 ## ANSI Styles
 
 `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s> `inverse` `visible` `hidden` `reset`
 
 
+<a name="base-colors"></a>
 ## ANSI 16 colors
 
 There are 16 basic colors: 8 standard and 8 bright variants.

@@ -1609,7 +1609,7 @@ chalk.bgHex('#96C')('Amethyst');
 > [!WARNING]
 >
 > By migrating from Chalk v4, when used the `keyword` color model, e.g. `chalk.keyword('orange')`
-> just replace it with hex color model method, e.g. `ansis.hex('#ffa500')`.
+> just replace it with hex color model, e.g. `ansis.hex('#ffa500')`.
 >
 > ```diff
 > - chalk.keyword('orange')('text');

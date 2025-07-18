@@ -54,7 +54,7 @@ export type AnsiStyles =
 /**
  * Set ANSI code.
  *
- * @param {number} n in range [0, 255].
+ * @param {number} n The number in range [0, 255].
  *
  * @return {Ansis}
  */

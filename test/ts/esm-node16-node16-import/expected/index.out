@@ -1,0 +1,24 @@
+isSupported:  [38;5;192mtrue[39m
+bgAnsi256:  [48;5;127m1993[49m
+bgAnsi256:  [48;5;21mtrue[49m
+[38;2;255;255;0mHello[39m, [31mWorld[39m!
+[31mred[39m
+Hello World!
+[31mdefault: red[39m
+[96mdefault: cyanBright[39m
+[38;2;255;117;209mextended: pink[39m
+[38;2;255;171;64mextended: orange[39m
+[31mformatValue [92m[string][31m[39m
+[38;2;79;168;61m[3mextended color: apple italic[23m[39m
+[31mdestructured default color: red[39m
+[38;2;255;117;209mdestructured extended color: pink[39m
+[38;2;255;171;64m[3mdestructured extended color: orange italic[23m[39m
+[38;2;255;117;209m[4mextended chained color: pink underline[24m[39m
+[38;2;255;117;209m[4mdestructured extended chained color: pink underline[24m[39m
+[90mgray[39m
+[100m bgGray [49m
+[106m[93m bgCyanBright [39m[49m
+[107m[3m bgWhiteBright [23m[49m
+[31mtrue[39m
+[31mfalse[39m
+[31mtrue,false[39m

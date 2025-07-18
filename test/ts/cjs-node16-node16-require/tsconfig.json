@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+
+    "module": "Node16",
+    // this is incompatible resolution, use `node`
+    "moduleResolution": "Node16",
+    // works well:
+    //"moduleResolution": "node",
+  }
+}

@@ -12,44 +12,43 @@ beforeAll(() => {
 describe('imports', () => {
   // test various compiler for the default import
 
-  // type=commonjs
-  test('import ansis; tsc', () => executeTSFile('ts/default-import', 'tsc'));
-  test('import ansis; swc', () => executeTSFile('ts/default-import', 'swc'));
-  test('import ansis; esbuild', () => executeTSFile('ts/default-import', 'esbuild'));
+  test('CJS, default import, tsc', () => executeTSFile('ts/cjs-default-import', 'tsc'));
+  test('CJS, default import, swc', () => executeTSFile('ts/cjs-default-import', 'swc'));
+  test('CJS, default import, esbuild', () => executeTSFile('ts/cjs-default-import', 'esbuild'));
 
-  // type=commonjs
-  test('import * as ansis; tsc', () => executeTSFile('ts/default-import-as', 'tsc'));
-  test('import * as ansis; swc', () => executeTSFile('ts/default-import-as', 'swc'));
-  test('import * as ansis; esbuild', () => executeTSFile('ts/default-import-as', 'esbuild'));
+  test('CJS, import * as ansis; tsc', () => executeTSFile('ts/cjs-default-import-as', 'tsc'));
+  test('CJS, import * as ansis; swc', () => executeTSFile('ts/cjs-default-import-as', 'swc'));
+  test('CJS, import * as ansis; esbuild', () => executeTSFile('ts/cjs-default-import-as', 'esbuild'));
 
-  test('import { red }, type=commonjs', () => executeTSFile('ts/named-import-simple'));
-  test('import { red }, type=module', () => executeTSFile('ts/named-import-simple-module'));
-  test('import { red }, type=module, tsup', () => executeTSFile('ts/named-import-simple-module', 'tsup_esm'));
+  test('CJS, named import', () => executeTSFile('ts/cjs-named-import-simple'));
+  test('ESM, named import', () => executeTSFile('ts/esm-named-import-simple'));
+  test('ESM, named import, tsup', () => executeTSFile('ts/esm-named-import-simple', 'tsup_esm'));
 
-  // type=commonjs
-  test('import { red, ansi256 }; tsc', () => executeTSFile('ts/named-import-color-func', 'tsc'));
-  test('import { red, ansi256 }; swc', () => executeTSFile('ts/named-import-color-func', 'swc'));
-  test('import { red, ansi256 }; esbuild', () => executeTSFile('ts/named-import-color-func', 'esbuild'));
+  test('CJS, named import fn, tsc', () => executeTSFile('ts/cjs-named-import-color-func', 'tsc'));
+  test('CJS, named import fn, swc', () => executeTSFile('ts/cjs-named-import-color-func', 'swc'));
+  test('CJS, named import fn, esbuild', () => executeTSFile('ts/cjs-named-import-color-func', 'esbuild'));
 
-  // type=commonjs
-  test('import ansis, { Ansis, red }; tsc', () => executeTSFile('ts/mix-import', 'tsc'));
-  test('import ansis, { Ansis, red }; swc', () => executeTSFile('ts/mix-import', 'swc'));
-  test('import ansis, { Ansis, red }; esbuild', () => executeTSFile('ts/mix-import', 'esbuild'));
+  test('CJS, import ansis, { Ansis, red }; tsc', () => executeTSFile('ts/cjs-mix-import', 'tsc'));
+  test('CJS, import ansis, { Ansis, red }; swc', () => executeTSFile('ts/cjs-mix-import', 'swc'));
+  test('CJS, import ansis, { Ansis, red }; esbuild', () => executeTSFile('ts/cjs-mix-import', 'esbuild'));
 
-  // type=commonjs
-  test('extend colors; tsc', () => executeTSFile('ts/extend-colors', 'tsc'));
-  test('extend colors; swc', () => executeTSFile('ts/extend-colors', 'swc'));
-  test('extend colors; esbuild', () => executeTSFile('ts/extend-colors', 'esbuild'));
+  test('CJS, extend colors; tsc', () => executeTSFile('ts/cjs-extend-colors', 'tsc'));
+  test('CJS, extend colors; swc', () => executeTSFile('ts/cjs-extend-colors', 'swc'));
+  test('CJS, extend colors; esbuild', () => executeTSFile('ts/cjs-extend-colors', 'esbuild'));
 });
 
-// type=module
-describe('imports from package with type module', () => {
-  test('module ESNext', () => executeTSFile('ts/module-import-esnext', 'tsc'));
-  test('module Node16', () => executeTSFile('ts/module-import-node16', 'tsc'));
-  test('module ESNext, tsup', () => executeTSFile('ts/module-import-esnext', 'tsup_esm'));
-  test('module Node16, tsup', () => executeTSFile('ts/module-import-node16', 'tsup_esm_node16'));
+describe('limit for legacy settings', () => {
+  test(`CJS, require, module:node16, moduleResolution:node16, tsc`, () => executeTSFile('ts/cjs-node16-node16-require', 'tsc'));
+  test(`ESM, import, module:node16, moduleResolution:node16, tsc`, () => executeTSFile('ts/esm-node16-node16-import', 'tsc'));
+});
+
+describe('ESM, imports', () => {
+  test('ESNext, tsc', () => executeTSFile('ts/esm-esnext', 'tsc'));
+  test('Node16, tsc', () => executeTSFile('ts/esm-node16', 'tsc'));
+  test('ESNext, tsup', () => executeTSFile('ts/esm-esnext', 'tsup_esm'));
+  test('Node16, tsup', () => executeTSFile('ts/esm-node16', 'tsup_esm_node16'));
 });
 
 describe('typescript = 5.4', () => {
-  test('method extend Node16', () => executeTSFile('ts/extend-colors-ts5.4', 'tsc'));
+  test('method extend, ES6', () => executeTSFile('ts/cjs-extend-colors-ts5.4', 'tsc'));
 });

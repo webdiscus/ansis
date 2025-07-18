@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "scripts": {
+    "check": "rimraf --glob dist/*.* && tsc",
+    "build": "rimraf --glob dist/*.* && tsc && node dist/index.js --color=true > dist/index.out",
+    "build:swc": "rimraf --glob dist/*.* && swc ./src -d dist && node dist/index.js --color=true > dist/index.out",
+    "build:esbuild": "rimraf --glob dist/*.* && esbuild src/index.ts --bundle --outfile=dist/index.js && node dist/index.js --color=true > dist/index.out",
+    "build:tsup_esm": "rimraf --glob dist/*.* && tsup src/index.ts --out-dir=dist/ --format esm --target esnext && node dist/index.js --color=true > dist/index.out",
+    "view": "node ./dist/index.js"
+  }
+}

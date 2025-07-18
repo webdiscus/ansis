@@ -22,7 +22,8 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 > Please follow the [migration guide](https://github.com/webdiscus/ansis/discussions/36#migrating-to-v4) to upgrade.
 
 
-### 🚀 [Getting Started](#getting-started) ⚖️ [Alternatives](#alternatives) ✨[Why Ansis](#why-ansis)  🔄 [Switch from](#switch-to-ansis)  🔧[Compatibility](#compatibility)
+### 🚀 [Getting Started](#getting-started) ✨[Why Ansis](#why-ansis) 🔧[Compatibility](#compatibility) ⚙️ [Troubleshooting](#troubleshooting)
+### ⚖️ [Alternatives](#alternatives) ✅ [Compare features](#compare) 📊 [Benchmarks](#benchmark) 🔄 [Migrating from](#switch-to-ansis)
 
 ![Ansis demo](docs/img/ansis-demo.png)
 
@@ -32,7 +33,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 
 ## 💡 Features
 
-- Supports **ESM**, **CommonJS**, **Bun**, **Deno**, and **Next.JS**
+- Supports **ESM**, **CommonJS**, **TypeScript**, **Bun**, **Deno**, **Next.JS**
 - Works in [Chromium-based](#browsers-compatibility) browsers: **Chrome**, **Edge**, **Opera**, **Brave**, **Vivaldi**
 - Default and [named](#import) imports: `import ansis, { red, bold, dim } from 'ansis'`
 - [Chained syntax](#chained-syntax): `red.bold.underline('text')`
@@ -277,15 +278,28 @@ pico.green(`Create ${pico.blue(pico.bold('React'))} app.`) // picocolors: usabil
 import ansis from 'ansis';
 // Named imports
 import { red, green, bold, dim } from 'ansis';
+// Default and named import in the same statement
+import ansis, { red, green, bold, dim } from 'ansis';
 ```
 
 **CommonJS**
 ```js
 // Default import
 const ansis = require('ansis');
-// Named imports
+// Destructuring styles
 const { red, green, bold, dim } = require('ansis');
 ```
+
+> [!WARNING]
+> CommonJS (`require`) does not support destructuring and default import in the same statement like ES Modules.
+>
+> ```js
+> const ansis = require('ansis');
+> const { red, green, bold, dim } = ansis;
+>
+> let out = red('text');
+> console.log(ansis.strip(out));
+> ```
 
 <a id="template-literals" name="template-literals"></a>
 
@@ -1236,7 +1250,7 @@ npm run demo
 ```
 
 #### [↑ top](#top)
-<a id="compatibility" name="compatibility"></a>
+<a name="compatibility"></a>
 
 ## Compatibility Check
 
@@ -1277,6 +1291,67 @@ Check the minimum version of your tool required for compatibility with the lates
 
 > [!WARNING]
 > **Firefox** doesn't natively support ANSI codes in the developer console.
+
+#### [↑ top](#top)
+<a name="troubleshooting"></a>
+
+## ⚙️ Troubleshooting
+
+### TS1479: The current file is a CommonJS module whose imports will produce require calls
+
+If you're using TypeScript with the following `tsconfig.json` settings:
+
+```json
+{
+  "compilerOptions": {
+    "module": "Node16",
+    "moduleResolution": "Node16"
+  }
+}
+```
+
+Then TypeScript will treat `.ts` files as either ESM or CommonJS based on the file extension or the `type` field in package.json:
+- `.mts` - always ES module
+- `.cts` - always CommonJS
+- `.ts` - ESM only if `"type": "module"` is set in `package.json`
+
+Using `import` or `import type` in a file that is treated as CommonJS causes the error:
+```
+TS1479: The current file is a CommonJS module whose imports will produce require calls.
+```
+
+#### Solutions
+
+- Use `.mts` file extension. This forces the file to be treated as an ES module.
+- Set `"type": "module"` in your `package.json` to tread a `.ts` file as an ES module:
+  ```json
+  {
+    "type": "module"
+  }
+  ```
+  Then this works:
+  ```ts
+  import ansis, { type AnsiColors, Ansis, red, greenBright, hex } from 'ansis';
+  ```
+- Use CommonJS `require()` (no type imports)
+  ```ts
+  const ansis = require('ansis');
+  const { Ansis, red, greenBright, hex } = ansis;
+  ```
+  > [!CAUTION]
+  > You cannot use `import type` in CommonJS files under `"moduleResolution": "Node16"`
+- Switch to `"moduleResolution": "node"` (if possible)\
+  With `"moduleResolution": "node"` you can use `import` and `import type` in CommonJS files without errors:
+  ```json
+  {
+    "compilerOptions": {
+      "module": "Node16",
+      "moduleResolution": "node"
+    }
+  }
+  ```
+  Use this only if your project doesn't rely on the strict behavior of `"Node16"`.
+
 
 #### [↑ top](#top)
 <a id="benchmark" name="benchmark"></a>

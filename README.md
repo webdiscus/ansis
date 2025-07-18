@@ -1299,7 +1299,7 @@ Check the minimum version of your tool required for compatibility with the lates
 
 ### TS1479: The current file is a CommonJS module whose imports will produce require calls
 
-If you're using TypeScript with the following `tsconfig.json` settings:
+If you're using TypeScript in CommonJS project with the following `tsconfig.json` settings:
 
 ```json
 {
@@ -1320,6 +1320,11 @@ Using `import` or `import type` in a file that is treated as CommonJS causes the
 TS1479: The current file is a CommonJS module whose imports will produce require calls.
 ```
 
+> [!WARNING]
+> When using `"moduleResolution": "Node16"` or `"NodeNext"`, TypeScript enforces strict ESM rules.\
+> If your project is in CommonJS mode (`"type": "commonjs"`),
+> it does not allow importing `ansis` using `import ansis from 'ansis'`, even with `esModuleInterop` enabled.
+
 #### Solutions
 
 - Use `.mts` file extension. This forces the file to be treated as an ES module.
@@ -1339,14 +1344,15 @@ TS1479: The current file is a CommonJS module whose imports will produce require
   const { Ansis, red, greenBright, hex } = ansis;
   ```
 > [!CAUTION]
-> You cannot use `import type` in CommonJS files under `"moduleResolution": "Node16"`
+> You cannot use `import type` in CommonJS files under `"moduleResolution": "Node16"` or `"NodeNext"`
 - Switch to `"moduleResolution": "node"` (if possible)\
   With `"moduleResolution": "node"` you can use `import` and `import type` in CommonJS files without errors:
   ```json
   {
     "compilerOptions": {
       "module": "Node16",
-      "moduleResolution": "node"
+      "moduleResolution": "node",
+      "esModuleInterop": true
     }
   }
   ```

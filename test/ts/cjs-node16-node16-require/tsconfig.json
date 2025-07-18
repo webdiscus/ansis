@@ -5,9 +5,12 @@
     "outDir": "dist",
 
     "module": "Node16",
-    // this is incompatible resolution, use `node`
-    "moduleResolution": "Node16",
-    // works well:
-    //"moduleResolution": "node",
+    // strict module resolution
+    "moduleResolution": "Node16"
+    // the same behaviour as with 'Node16'
+    //"moduleResolution": "NodeNext"
+
+    // works well, because it is permissive, legacy-compatible behavior
+    //"moduleResolution": "node"
   }
 }

@@ -1339,6 +1339,7 @@ TS1479: The current file is a CommonJS module whose imports will produce require
   const { Ansis, red, greenBright, hex } = ansis;
   ```
   > [!CAUTION]
+  >
   > You cannot use `import type` in CommonJS files under `"moduleResolution": "Node16"`
 - Switch to `"moduleResolution": "node"` (if possible)\
   With `"moduleResolution": "node"` you can use `import` and `import type` in CommonJS files without errors:
@@ -1359,6 +1360,7 @@ TS1479: The current file is a CommonJS module whose imports will produce require
 ## Benchmarks
 
 > [!CAUTION]
+>
 > The benchmark results are meaningless numbers intended purely to promote the library and increase its popularity.
 > All libraries are more than fast enough.
 > These results only to show the effectiveness of micro-optimizations in the code, which does not impact on real-world usage.

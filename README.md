@@ -1338,9 +1338,8 @@ TS1479: The current file is a CommonJS module whose imports will produce require
   const ansis = require('ansis');
   const { Ansis, red, greenBright, hex } = ansis;
   ```
-  > [!CAUTION]
-  >
-  > You cannot use `import type` in CommonJS files under `"moduleResolution": "Node16"`
+> [!CAUTION]
+> You cannot use `import type` in CommonJS files under `"moduleResolution": "Node16"`
 - Switch to `"moduleResolution": "node"` (if possible)\
   With `"moduleResolution": "node"` you can use `import` and `import type` in CommonJS files without errors:
   ```json

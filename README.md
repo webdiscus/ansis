@@ -37,7 +37,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - Works in [Chromium-based](#browsers-compatibility) browsers: **Chrome**, **Edge**, **Opera**, **Brave**, **Vivaldi**
 - Default and [named](#import) imports: `import ansis, { red, bold, dim } from 'ansis'`
 - [Chained syntax](#chained-syntax): `red.bold.underline('text')`
-- Nested [tagged template strings](#nested-syntax): ``` red`Error: ${blue`file.js`} not found!` ```
+- Nested [tagged template strings](#template-literals): ``` red`Error: ${blue`file.js`} not found!` ```
 - [ANSI styles](#styles): `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>
 - [ANSI 16 colors](#base-colors): `red`, `redBright`, `bgRed`, `bgRedBright`, ...
 - [ANSI 256 colors](#256-colors): `fg()`, `bg()`
@@ -301,7 +301,7 @@ const { red, green, bold, dim } = require('ansis');
 > console.log(ansis.strip(out));
 > ```
 
-<a id="template-literals" name="template-literals"></a>
+<a name="template-literals"></a>
 
 ## Tagged template literals
 

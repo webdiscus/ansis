@@ -51,6 +51,10 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - Enables reliable [CLI testing](#cli-testing) with forced [color levels](#color-levels): no color, 16, 256 or Truecolor
 - Replacement for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) and others [alternatives](#alternatives)
 
+
+> 🚀 **You might also like** [`flaget`](https://github.com/webdiscus/flaget) - a smaller (5 kB) and faster alternative to [`yargs-parser`](https://www.npmjs.com/package/yargs-parser) (85 kB) for CLI argument parsing.
+
+
 <a id="install" name="install"></a>
 
 ## Install
@@ -1361,6 +1365,8 @@ TS1479: The current file is a CommonJS module whose imports will produce require
   }
   ```
   Use this only if your project doesn't rely on the strict behavior of `"Node16"`.
+
+#### [↑ top](#top)
 
 <a name="troubleshooting-eslint-named-export"></a>
 ### 🟡 ESLint: Caution: `ansis` also has a named export

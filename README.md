@@ -1295,9 +1295,13 @@ Check the minimum version of your tool required for compatibility with the lates
 #### [↑ top](#top)
 <a name="troubleshooting"></a>
 
-## ⚙️ Troubleshooting
+# ⚙️ Troubleshooting
 
-### TS1479: The current file is a CommonJS module whose imports will produce require calls
+1. [🔴 TS1479: The current file is a CommonJS module whose imports will produce require calls](#troubleshooting-ts1479)
+2. [🟡 ESLint: Caution: `ansis` also has a named export](#troubleshooting-eslint-named-export)
+
+<a name="troubleshooting-ts1479"></a>
+### 🔴 TS1479: The current file is a CommonJS module whose imports will produce require calls
 
 If you're using TypeScript in CommonJS project with the following `tsconfig.json` settings:
 
@@ -1358,6 +1362,60 @@ TS1479: The current file is a CommonJS module whose imports will produce require
   ```
   Use this only if your project doesn't rely on the strict behavior of `"Node16"`.
 
+<a name="troubleshooting-eslint-named-export"></a>
+### 🟡 ESLint: Caution: `ansis` also has a named export
+
+If you use a default import:
+
+```ts
+import ansis from 'ansis';
+
+console.log(ansis.red('Error!'));
+```
+
+ESLint may show this warning:
+
+> ESLint: Caution: `ansis` also has a named export `red`. Check if you meant to write `import {red} from 'ansis'` instead. (import/no-named-as-default-member)
+
+> [!NOTE]
+> This warning is shown because `ansis` is a **dual** package: it provides both a default export and named exports.
+> ESLint's `import/no-named-as-default-member` rule is triggered when you import the default export and use its named properties,
+> to help catch possible mistakes with import syntax in dual-export modules.
+
+#### Solutions
+
+- Use named import (**preferred**):
+  ```ts
+  import { red } from 'ansis';
+
+  console.log(red('Error!'));
+  ```
+
+- If you want to keep existing code unchanged, use a namespace import (**alternative**):
+  ```ts
+  import * as ansis from 'ansis';
+
+  console.log(ansis.red('Error!'));
+  ```
+
+- Disable the rule for a single line:
+  ```ts
+  // eslint-disable-next-line import/no-named-as-default-member
+  import ansis from 'ansis';
+
+  console.log(ansis.red('Error!'));
+  ```
+
+- Disable the rule globally in your ESLint config (**not recommended**):
+  ```js
+  // .eslintrc.js
+  module.exports = {
+    // ...
+    rules: {
+      'import/no-named-as-default-member': 'off'
+    }
+  }
+  ```
 
 #### [↑ top](#top)
 <a id="benchmark" name="benchmark"></a>

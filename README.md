@@ -45,7 +45,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - Auto-detects [color support](#color-support): Truecolor, 256 colors, 16 colors, no colors
 - Automatic [fallback](#fallback): Truecolor → 256 colors → 16 colors → no colors
 - Allows [extending base colors](#extend-colors) with named Truecolor values
-- Raw ANSI escape codes: ``` `foo ${red.open}red{red.close} bar` ```
+- Raw ANSI escape codes: ``` `foo ${red.open}red${red.close} bar` ```
 - Strip ANSI escape codes with `ansis.strip()`
 - Supports [ENV variables](#cli-vars) and [flags](#cli-flags): [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color), [`COLORTERM`](#using-env-colorterm), `--no-color`, `--color`
 - Enables reliable [CLI testing](#cli-testing) with forced [color levels](#color-levels): no color, 16, 256 or Truecolor

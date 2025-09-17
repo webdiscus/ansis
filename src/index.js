@@ -39,7 +39,7 @@ let createStyle = ({ p: props }, { open, close }) => {
   let styleFn = (arg, ...values) => {
     // If the argument is empty or null, return an empty string
     if (!arg) {
-      // reset
+      // style reset
       if (open && open === close) return open;
       // null == arg || '' === arg
       if ((arg ?? EMPTY_STRING) === EMPTY_STRING) return EMPTY_STRING;
@@ -57,11 +57,11 @@ let createStyle = ({ p: props }, { open, close }) => {
     let closeStack = props.c;
 
     // Detect nested styles
-    // Note: on node >= 22, includes is 5x faster than ~indexOf
+    // Note: on Node.js >= 22, includes() is ~5x faster than using ~indexOf()
     let pos;
     if (output.includes('')) {
       for (; props; props = props.p) {
-        // this implementation is over 30% faster than native String.replaceAll()
+        // This implementation runs ~30% faster than String.replaceAll()
         // output = output.replaceAll(props.close, props.open);
         // -- begin replaceAll, inline the function here to reduce the bundle size
         let { open: replacement, close: search } = props;
@@ -174,7 +174,7 @@ const Ansis = function(level = detectedLevel) {
             get() {
               let style = createStyle(this, styleProps);
 
-              // performance impact: up to 5x faster;
+              // performance optimisation: up to 5x faster;
               // V8 optimizes access to properties defined via `defineProperty`,
               // the `style` becomes a cached value on the object with direct access, w/o lookup for prototype chain
               defineProperty(this, name, { value: style });
@@ -235,12 +235,12 @@ const Ansis = function(level = detectedLevel) {
     strikethrough: esc(9, 29),
   };
 
-  // Generate ANSI 16 colors dynamically to reduce the code size.
+  // Generate ANSI 16 colors dynamically to reduce the code size
 
   let bright = 'Bright';
   let bgName;
 
-  // begin code 30 as `black`, each subsequent color in the list increments sequentially.
+  // begin code 30 as `black`, each subsequent color in the list increments sequentially
   'black,red,green,yellow,blue,magenta,cyan,white,gray'.split(separator).map((name, offset) => {
     bgName = 'bg' + name[0].toUpperCase() + name.slice(1);
 

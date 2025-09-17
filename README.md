@@ -16,10 +16,8 @@
 ANSI color library for use in terminals, CI environments, and Chromium-based browsers.\
 Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
-> [!WARNING]
->
-> **Version 4 introduces** [new features](https://github.com/webdiscus/ansis/discussions/36#v4-features) and [breaking changes](https://github.com/webdiscus/ansis/discussions/36).\
-> Please follow the [migration guide](https://github.com/webdiscus/ansis/discussions/36#migrating-to-v4) to upgrade.
+> [!TIP]
+> Migration [guide](https://github.com/webdiscus/ansis/discussions/36#migrating-to-v4) to v4, note the  [new features](https://github.com/webdiscus/ansis/discussions/36#v4-features) and [breaking changes](https://github.com/webdiscus/ansis/discussions/36).
 
 
 ### 🚀 [Getting Started](#getting-started) ✨[Why Ansis](#why-ansis) 🔧[Compatibility](#compatibility) ⚙️ [Troubleshooting](#troubleshooting)
@@ -42,10 +40,10 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - [ANSI 16 colors](#base-colors): `red`, `redBright`, `bgRed`, `bgRedBright`, ...
 - [ANSI 256 colors](#256-colors): `fg()`, `bg()`
 - [Truecolor](#truecolor) (**RGB & HEX**): `rgb()`, `bgRgb()`, `hex()`, `bgHex()`
+- [Extend](#extend-colors) base colors with [**named truecolor**](https://drafts.csswg.org/css-color/#named-colors) via `ansis.extend()`, then use colors by name, e.g. `ansis.pink()`
 - Auto-detects [color support](#color-support): Truecolor, 256 colors, 16 colors, no colors
 - Automatic [fallback](#fallback): Truecolor → 256 colors → 16 colors → no colors
-- Allows [extending base colors](#extend-colors) with named Truecolor values
-- Raw ANSI escape codes: ``` `foo ${red.open}red{red.close} bar` ```
+- Raw ANSI escape codes: ``` `File ${red.open}not found${red.close} in directory` ```
 - Strip ANSI escape codes with `ansis.strip()`
 - Supports [ENV variables](#cli-vars) and [flags](#cli-flags): [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color), [`COLORTERM`](#using-env-colorterm), `--no-color`, `--color`
 - Enables reliable [CLI testing](#cli-testing) with forced [color levels](#color-levels): no color, 16, 256 or Truecolor
@@ -518,69 +516,99 @@ If you use the `hex()`, `rgb()` or `ansis256()` functions in a terminal not supp
 
 <a id="extend-colors" name="extend-colors"></a>
 
-## Extend with Custom Colors
+## Named truecolor
 
-By default, the imported `ansis` instance includes a set of [base styles](#base-colors) and standard ANSI colors.
-Define additional named colors using Truecolor hex code with the `extend()` method.
-Assign the result of `extend()` to a new variable (avoid reassigning the original instance).
+Ansis supports full 24-bit color via `ansis.rgb(r, g, b)` and `ansis.hex('#rrggbb')`.\
+If you prefer [**named colors**](http://dev.w3.org/csswg/css-color/#named-colors) (e.g. `beige`, `orange`, `pink`, `royalblue`, etc.) instead of writing hex or RGB values by hand,
+resolve color names in your app and register them as extended styles on an Ansis instance via `ansis.extend()`.
+Then you can call `color.pink()` rather than using `ansis.hex()` or `ansis.rgb()` directly.
+
+> [!NOTE]
+> To keep Ansis small, it doesn't bundle large color name tables.\
+> Use any mapping package you like, e.g. [css-color-names](https://www.npmjs.com/package/css-color-names) (~6 kB).
+
+```bash
+npm i css-color-names
+```
+
+**Example (extend with all color names)**
+
+```js
+import ansis from 'ansis';
+import colorNames from 'css-color-names';
+
+// `colorNames` is an object like { pink: '#ffc0cb', orange: '#ffa500', ... }
+// `extend()` registers each key as a chainable style on the returned instance
+const color = ansis.extend(colorNames);
+
+// All color names are now avaliable as chainable methods on the extended instance:
+console.log(color.pink('Pink color'));
+console.log(color.pink.underline('Pink color underlined'));
+
+// You can achieve the same result without extend():
+console.log(ansis.hex(colorNames.pink).underline('Pink color via hex'));
+```
+
+Of course, you can define a custom subset with only the names you actually use.
 
 > [!TIP]
-> Need help picking a color name? Try the [Name that Color](https://chir.ag/projects/name-that-color/#FF681F) website - just enter a hex code.
+> Need help picking a color name? Try the [Name that Color](https://chir.ag/projects/name-that-color/#FF681F) tool - paste a hex and get its closest color name.
 
-Example:
+**Example (custom subset)**
 
 ```js
 import { Ansis } from 'ansis';
 
 const myTheme = {
-  orange: '#FFAB40',
-  pink: '#FF75D1',
+  orange: '#ffa500',
+  pink: '#ffc0cb',
 };
 
-// Create an instance with extended colors
+// Create a new instance and extend it with only your custom names
 const ansis = new Ansis().extend(myTheme);
 
-// Destructure extended and base colors
+// You can still use base styles together with extended ones
 const { orange, pink, red } = ansis;
 
-console.log(ansis.orange.bold('orange bold'));
-console.log(orange.italic`orange italic`);
-console.log(pink`pink color`);
+console.log(ansis.orange.bold('orange bold')); // extended + base
+console.log(orange.italic`orange italic`);     // tagged-template syntax
+console.log(pink`pink color`);                 // extended as a tag
+console.log(red('built-in red still works'));  // built-in remains intact
 ```
 
-TypeScript example:
+**TypeScript example**
 
 ```ts
 import ansis, { AnsiColors } from 'ansis';
 
-// Extends the built-in `AnsiColors` type with custom user defined color names.
+// Extends the built-in `AnsiColors` type with custom user defined color names
 type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>);
 
 const myTheme = {
-  orange: '#FFAB40',
-  pink: '#FF75D1',
+  orange: '#ffa500',
+  pink: '#ffc0cb',
 };
 
-// Extend ansis with custom colors
-const colors = ansis.extend(myTheme);
+// Extend and get back a typed instance (includes built-ins + your colors)
+const color = ansis.extend(myTheme);
 
-// Custom logger supporting both built-in and extended styles
+// A tiny logger that accepts both built-in and extended styles
 const log = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) => {
-  console.log(colors[style](message));
+  console.log(color[style](message));
 }
 
-log('red', 'message'); // ✅ base color OK
-log('orange', 'message'); // ✅ extended color OK
-log('unknown', 'message'); // ❌ TypeScript Error
+log('red', 'base color OK');  // ✅ built-in
+log('orange', 'extended OK'); // ✅ extended
+// log('unknown', 'nope');    // ❌ TypeScript error
 ```
 
 > [!WARNING]
 >
-> Extended colors must be used as the first item in the style chain:
+> Order in the call chain matters. Put **extended colors** first in the chain:
 >
 > ```js
-> colors.orange.bold('orange bold'); // ✅ works as expected
-> colors.bold.orange('bold orange'); // ❌ won't work: extended color used as a subchain
+> color.orange.bold('orange bold'); // ✅ works: extended first, then built-ins
+> color.bold.orange('bold orange'); // ❌ won't work: extended is on a sub-chain
 > ```
 
 ---
@@ -625,7 +653,7 @@ The behavior of `FORCE_COLOR` in Ansis follows the Node.js convention, with a fe
 
 > [!IMPORTANT]
 > In [Node.js](https://nodejs.org/api/cli.html#force_color1-2-3) `FORCE_COLOR` values of `1`, `true`,
-> and and an empty string (`''`) are treated as enabling 16 colors.
+> and an empty string (`''`) are treated as enabling 16 colors.
 >
 > In Ansis:
 > - `1` - enables exactly 16 colors
@@ -1753,30 +1781,6 @@ chalk.bgHex('#96C')('Amethyst');
 > + ansis.bgGray('text');
 > ```
 
-> [!WARNING]
->
-> By migrating from Chalk v4, when used the `keyword` color model, e.g. `chalk.keyword('orange')`
-> just replace it with hex color model, e.g. `ansis.hex('#ffa500')`.
->
-> ```diff
-> - chalk.keyword('orange')('text');
-> + ansis.hex('#ffa500')('text');
-> ```
->
-> Alternatively you can [extend](#extend-colors) Ansis with custom color names:
-> ```js
-> import { Ansis } from 'ansis';
->
-> const ansis = new Ansis().extend({ orange: '#ffa500' });
-> ```
->
-> Now you can use extended Ansis:
->
-> ```diff
-> - chalk.keyword('orange')('text');
-> + ansis.orange('text');
-> ```
-
 Optionally, you can rewrite the same code to make it even shorter and cleaner:
 
 ```js
@@ -1798,6 +1802,29 @@ rgb(123, 45, 67).underline`Underlined reddish color`;
 bgHex('#E0115F')`Ruby`;
 bgHex('#96C')`Amethyst`;
 ```
+
+**Migrating from Chalk v4**
+
+When used the `keyword` color model, e.g. `chalk.keyword('orange')`
+extend ansis instance with [named colors](#extend-colors).
+
+```js
+import ansis from 'ansis';
+import colorNames from 'css-color-names'; // install color names package (~6 kB)
+
+const color = ansis.extend(colorNames);
+
+// alternatively define a custom subset with only the names you actually use:
+//const color = ansis.extend({ orange: '#ffa500' });
+```
+
+Now you can use named color on extended `color` instance:
+
+```diff
+- chalk.keyword('orange')('text');
++ color.orange('text');
+```
+
 
 #### [↑ top](#top)
 

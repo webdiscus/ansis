@@ -660,56 +660,55 @@ describe('base ANSI 16 colors', () => {
 describe('styles', () => {
   test(`dim`, () => {
     const received = ansis.dim('foo');
-    console.log(received);
     const expected = '\x1b[2mfoo\x1b[22m';
     expect(esc(received)).toEqual(esc(expected));
   });
 
   test(`bold`, () => {
     const received = ansis.bold('foo');
-    console.log(received);
     const expected = '\x1b[1mfoo\x1b[22m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`nesting dim and bold`, () => {
+    const received = ansis.bold('bold ' + ansis.dim('bold and dim') + ' bold');
+    console.log(received);
+    const expected = '\x1b[1mbold \x1b[2mbold and dim\x1b[1m bold\x1b[22m';
     expect(esc(received)).toEqual(esc(expected));
   });
 
   test(`italic`, () => {
     const received = ansis.italic('foo');
-    console.log(received);
     const expected = '\x1b[3mfoo\x1b[23m';
     expect(esc(received)).toEqual(esc(expected));
   });
 
   test(`underline`, () => {
     const received = ansis.underline('foo');
-    console.log(received);
     const expected = '\x1b[4mfoo\x1b[24m';
     expect(esc(received)).toEqual(esc(expected));
   });
 
   test(`strikethrough`, () => {
     const received = ansis.strikethrough('foo');
-    console.log(received);
     const expected = '\x1b[9mfoo\x1b[29m';
     expect(esc(received)).toEqual(esc(expected));
   });
 
   test(`inverse`, () => {
     const received = ansis.inverse('foo');
-    console.log(received);
     const expected = '\x1b[7mfoo\x1b[27m';
     expect(esc(received)).toEqual(esc(expected));
   });
 
   test(`visible`, () => {
     const received = ansis.visible('foo');
-    console.log(received);
     const expected = 'foo';
     expect(esc(received)).toEqual(esc(expected));
   });
 
   test(`hidden`, () => {
     const received = ansis.hidden('foo');
-    console.log(received);
     const expected = '\x1b[8mfoo\x1b[28m';
     expect(esc(received)).toEqual(esc(expected));
   });

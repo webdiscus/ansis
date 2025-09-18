@@ -3,8 +3,8 @@ import { expect, describe, test } from 'vitest';
 // import env variables to simulate 256 colors (auto detecting)
 import './env/ansi256-colors.js';
 
-//import { Ansis, hex } from '../src/index.mjs'; // for debugging only
-import ansis, { Ansis, hex } from 'ansis';
+//import ansis, { Ansis } from '../src/index.mjs'; // for debugging only
+import ansis, { Ansis } from 'ansis';
 
 describe('color level', () => {
   test(`ansis.level`, () => {
@@ -14,39 +14,39 @@ describe('color level', () => {
   });
 
   test(`fallback to 256 colors`, () => {
-    const received = hex('#00c200')`foo`;
+    const received = ansis.hex('#00c200')`foo`;
     const expected = '[38;5;40mfoo[39m';
     expect(received).toEqual(expected);
   });
 
   test(`force use truecolor`, () => {
-    const { hex } = new Ansis(3);
+    const ansis = new Ansis(3);
 
-    const received = hex('#00c200')`foo`;
+    const received = ansis.hex('#00c200')`foo`;
     const expected = '[38;2;0;194;0mfoo[39m';
     expect(received).toEqual(expected);
   });
 
   test(`force use 256 colors`, () => {
-    const { hex } = new Ansis(2);
+    const ansis = new Ansis(2);
 
-    const received = hex('#00c200')`foo`;
+    const received = ansis.hex('#00c200')`foo`;
     const expected = '[38;5;40mfoo[39m';
     expect(received).toEqual(expected);
   });
 
   test(`force use 16 colors`, () => {
-    const { hex } = new Ansis(1);
+    const ansis = new Ansis(1);
 
-    const received = hex('#00c200')`foo`;
+    const received = ansis.hex('#00c200')`foo`;
     const expected = '[32mfoo[39m';
     expect(received).toEqual(expected);
   });
 
   test(`force disable colors`, () => {
-    const { hex } = new Ansis(0);
+    const ansis = new Ansis(0);
 
-    const received = hex('#00c200')`foo`;
+    const received = ansis.hex('#00c200')`foo`;
     const expected = 'foo';
     expect(received).toEqual(expected);
   });

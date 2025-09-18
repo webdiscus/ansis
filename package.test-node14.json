@@ -30,7 +30,9 @@
     "node": ">=14"
   },
   "devDependencies": {
+    "@types/node": "^14",
     "ansis": "file:dist/node14",
+    "css-color-names": "1.0.1",
     "esbuild": "0.17.19",
     "rimraf": "3.0.2",
     "swc": "1.0.11",

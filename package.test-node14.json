@@ -38,8 +38,5 @@
     "tsup": "6.6.3",
     "typescript": "5.0.4",
     "vitest": "0.29.8"
-  },
-  "overrides": {
-    "@types/node": "^16"
   }
 }

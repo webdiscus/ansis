@@ -40,45 +40,45 @@ jobs:
           path: ./dist/ # build output
           retention-days: 1 # keep the artifact for 1 day
 
-#  test:
-#    name: Test LTS
-#    needs: build
-#    strategy:
-#      fail-fast: false # doesn't stop on first failure
-#      matrix:
-#        os: [ubuntu-latest, windows-latest]
-#        node-version: [18, 20, 22]
-#    runs-on: ${{ matrix.os }}
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 1
-#
-#      - name: Set up Node.js ${{ matrix.node-version }}
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: ${{ matrix.node-version }}
-#
-#      - name: Download built package
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: built-package
-#          path: ./dist/
-#
-#      - name: Install dependencies (without rebuilding)
-#        run: npm install --ignore-scripts
-#
-#      - name: Run tests
-#        run: npx vitest
-#        env:
-#          NODE_OPTIONS: --unhandled-rejections=strict
-#
-#      - name: Submit coverage data to codecov
-#        uses: codecov/codecov-action@v3
-#        with:
-#          flags: test
-#          token: ${{ secrets.CODECOV_TOKEN }}
+  test:
+    name: Test LTS
+    needs: build
+    strategy:
+      fail-fast: false # doesn't stop on first failure
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [18, 20, 22]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Download built package
+        uses: actions/download-artifact@v4
+        with:
+          name: built-package
+          path: ./dist/
+
+      - name: Install dependencies (without rebuilding)
+        run: npm install --ignore-scripts
+
+      - name: Run tests
+        run: npx vitest
+        env:
+          NODE_OPTIONS: --unhandled-rejections=strict
+
+      - name: Submit coverage data to codecov
+        uses: codecov/codecov-action@v3
+        with:
+          flags: test
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   legacy-node-compatibility:
     name: Test legacy
@@ -91,6 +91,12 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
+      # Debug CI environment
+      - name: Show environment (env)
+        run: |
+          echo "== env =="
+          env | sort
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -118,24 +124,24 @@ jobs:
         env:
           NODE_OPTIONS: --unhandled-rejections=strict
 
-#  deno:
-#    name: Test Deno
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        deno-version: [ 2.0.x, 2.1.x, 2.2.x ]
-#
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 1
-#
-#      - name: Set up Deno ${{ matrix.deno-version }}
-#        uses: denoland/setup-deno@v1
-#        with:
-#          deno-version: ${{ matrix.deno-version }}
-#
-#      - name: Run Deno tests
-#        run: deno test --config=deno.json --allow-env
+  deno:
+    name: Test Deno
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        deno-version: [ 2.0.x, 2.1.x, 2.2.x ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Deno ${{ matrix.deno-version }}
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ matrix.deno-version }}
+
+      - name: Run Deno tests
+        run: deno test --config=deno.json --allow-env

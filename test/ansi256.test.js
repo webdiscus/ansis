@@ -3,7 +3,7 @@ import { expect, describe, test } from 'vitest';
 // import env variables to simulate 256 colors (auto detecting)
 import './env/ansi256-colors.js';
 
-//import { Ansis, hex } from '../src/index.mjs'; // for debugging only
+//import ansis, { Ansis } from '../src/index.mjs'; // for debugging only
 import ansis, { Ansis } from 'ansis';
 
 describe('color level', () => {

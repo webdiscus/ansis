@@ -30,6 +30,7 @@
     "node": ">=14"
   },
   "devDependencies": {
+    "@types/node": "^16",
     "ansis": "file:dist/node14",
     "esbuild": "0.17.19",
     "rimraf": "3.0.2",
@@ -37,5 +38,8 @@
     "tsup": "6.6.3",
     "typescript": "5.0.4",
     "vitest": "0.29.8"
+  },
+  "overrides": {
+    "@types/node": "^16"
   }
 }

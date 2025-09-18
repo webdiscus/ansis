@@ -111,7 +111,7 @@ jobs:
         run: cp -f package.test-node14.json package.json
 
       - name: Install dependencies (without rebuilding)
-        run: npm ci -f # --force option is required to install tsup dependencies
+        run: npm install -f # --force option is required to install tsup dependencies
 
       - name: Run tests
         run: npx vitest

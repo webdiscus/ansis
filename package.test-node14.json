@@ -30,6 +30,7 @@
     "node": ">=14"
   },
   "devDependencies": {
+    "@types/node": "^14",
     "ansis": "file:dist/node14",
     "esbuild": "0.17.19",
     "rimraf": "3.0.2",

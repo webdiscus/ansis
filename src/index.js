@@ -25,11 +25,11 @@ let LF = '\n';
 
 /**
  * Creates a style function that applies ANSI codes to a string.
- * @param {AnsisProps} p
+ * @param {{p: AnsisProps}} self
  * @param {{ open: string, close: string }} style
  * @return {Ansis}
  */
-let createStyle = ({ p: props }, { open, close }) => {
+let createStyle = ({ p: props}, { open, close }) => {
   /**
    * Decorates a string with ANSI escape sequences.
    * @param {unknown} arg The input value, can be any or a template string.
@@ -103,10 +103,10 @@ let createStyle = ({ p: props }, { open, close }) => {
   return styleFn;
 };
 
-const Ansis = function(level = detectedLevel) {
+function Ansis(level = detectedLevel) {
   let self = {
     // Named export of the function to create new instance
-    Ansis: Ansis,
+    Ansis,
 
     /**
      * Color support level.
@@ -121,7 +121,7 @@ const Ansis = function(level = detectedLevel) {
      * @type {number}
      * @readonly
      */
-    level: level,
+    level,
 
     /**
      * Checks if ANSI colors are supported in the output.
@@ -154,33 +154,16 @@ const Ansis = function(level = detectedLevel) {
      */
     extend(colors) {
       for (let name in colors) {
-        let color = colors[name];
-        // can be: f - function, s - string, o - object
-        let type = (typeof color)[0];
+        let value = colors[name];
+        // can be: s - string, f - function, o - object
+        let type = (typeof value)[0];
 
-        // detect whether the value is object {open, close} or hex string
-        // type === 'string' for extend colors, e.g. ansis.extend({ pink: '#FF75D1' })
-        let styleProps = type === 's' ? fnRgb(...hexToRgb(color)) : color;
-
-        // type === 'function'
-        if (type === 'f') {
-          styles[name] = {
-            get() {
-              return (...args) => createStyle(this, color(...args));
-            },
-          };
+        if (type === 's') {
+          // the value is string hex -> create both fg and bg variants
+          createMethod(name, fnRgb(...hexToRgb(value)));
+          createMethod(getBgName(name), fnBgRgb(...hexToRgb(value)));
         } else {
-          styles[name] = {
-            get() {
-              let style = createStyle(this, styleProps);
-
-              // performance optimisation: up to 5x faster;
-              // V8 optimizes access to properties defined via `defineProperty`,
-              // the `style` becomes a cached value on the object with direct access, w/o lookup for prototype chain
-              defineProperty(this, name, { value: style });
-              return style;
-            },
-          };
+          createMethod(name, value, type === 'f');
         }
       }
 
@@ -189,6 +172,32 @@ const Ansis = function(level = detectedLevel) {
 
       return self;
     },
+  };
+
+  /**
+   * Create dynamically getter for a style.
+   *
+   * @param {string} name The color name.
+   * @param {{ open: string, close: string } | Function} extension
+   * @param {boolean} [isFunction] Whether the extension is a function.
+   * @return {{get(): Ansis}}
+   */
+  let createMethod = (name, extension, isFunction) => {
+    // collect styles into global object
+    styles[name] = {
+      get() {
+        let value = isFunction
+          ? (...args) => createStyle(this, extension(...args))
+          : createStyle(this, extension);
+
+        // optimisation: up to 5x faster.
+        // lazy getter: compute once, then memoize.
+        // replace the accessor with a data property on this object,
+        // so subsequent reads are direct (no prototype lookup).
+        defineProperty(this, name, { value });
+        return value;
+      },
+    };
   };
 
   // Generate ANSI codes by color level
@@ -203,9 +212,10 @@ const Ansis = function(level = detectedLevel) {
   let fnRgb = createRgbFn(3, closeCode);
   let fnBgRgb = createRgbFn(4, bgCloseCode);
 
-  let fnAnsi256 = (code) => esc(`38;5;` + code, closeCode);
-  let fnBgAnsi256 = (code) => esc(`48;5;` + code, bgCloseCode);
+  let fnAnsi256 = (code) => esc('38;5;' + code, closeCode);
+  let fnBgAnsi256 = (code) => esc('48;5;' + code, bgCloseCode);
 
+  // fallback
   if (level === LEVEL_256COLORS) {
     fnRgb = createRgb256Fn(fnAnsi256);
     fnBgRgb = createRgb256Fn(fnBgAnsi256);
@@ -235,6 +245,9 @@ const Ansis = function(level = detectedLevel) {
     strikethrough: esc(9, 29),
   };
 
+  // Build background method name, e.g. "pink" -> "bgPink"
+  let getBgName = (name) => 'bg' + name[0].toUpperCase() + name.slice(1);
+
   // Generate ANSI 16 colors dynamically to reduce the code size
 
   let bright = 'Bright';
@@ -242,9 +255,9 @@ const Ansis = function(level = detectedLevel) {
 
   // begin code 30 as `black`, each subsequent color in the list increments sequentially
   'black,red,green,yellow,blue,magenta,cyan,white,gray'.split(separator).map((name, offset) => {
-    bgName = 'bg' + name[0].toUpperCase() + name.slice(1);
+    bgName = getBgName(name);
 
-    // exclude bright colors for gray aliases as it is already "bright black"
+    // no bright for gray (bright black)
     if (8 > offset) {
       styleData[name + bright] = esc(90 + offset, closeCode);
       styleData[bgName + bright] = esc(100 + offset, bgCloseCode);

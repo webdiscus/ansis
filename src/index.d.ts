@@ -34,8 +34,8 @@ type H = `${C}Bright`;
  * Base ANSI Colors
  */
 export type AnsiColors =
-  | 'black' | C | 'gray' | H
-  | `bg${'Black' | Capitalize<C> | 'Gray' | Capitalize<H>}`;
+  | 'black' | 'gray' | C  | H
+  | `bg${'Black' | 'Gray' | Capitalize<C | H>}`;
 
 /**
  * Base ANSI Styles
@@ -182,12 +182,15 @@ type Ansis = {
      *   pink: '#FF75D1',
      * };
      *
-     * const custom = ansis.extend(myTheme);
+     * const color = ansis.extend(myTheme);
+     * color.pink('Pink foreground')
+     * color.bgPink('Pink background')
      *
      * @param {string | { open: string; close: string }} c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
-     * @return {Ansis} Return extended instance.
+     * @return {Ansis} Return extended instance contained both variants: foreground and background color names.
      */
-    extend<U extends S>(c: Record<U, S | { open: S; close: S }>): A & Record<U, A>;
+    extend<U extends S>(c: Record<U, S | { open: S; close: S }>): A & Record<U | `bg${Capitalize<U>}`, A>;
+
   }
   // Dynamic properties
   & { [K in AnsiStyles | AnsiColors]: A };

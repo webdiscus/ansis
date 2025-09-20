@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.2.0 (2025-09-20)
+
+- feat: add support extending with named truecolor HEX values.
+  Foreground methods are created from the provided color names, and matching background methods `bg*` are generated automatically.
+  Example:
+  ```js
+  import ansis from 'ansis';
+  import colorNames from 'css-color-names';
+
+  const color = ansis.extend(colorNames);
+
+  console.log(color.pink('Pink foreground'));
+  console.log(color.bgPink('Pink background')); // auto-generated from "pink"
+  ```
+
 ## 4.1.0 (2025-05-28)
 
 - feat: add readonly `level` property to get the detected color support level:

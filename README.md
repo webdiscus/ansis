@@ -519,17 +519,19 @@ If you use the `hex()`, `rgb()` or `ansis256()` functions in a terminal not supp
 ## Named truecolor
 
 Ansis supports full 24-bit color via `ansis.rgb(r, g, b)` and `ansis.hex('#rrggbb')`.\
-If you prefer [**named colors**](http://dev.w3.org/csswg/css-color/#named-colors) (e.g. `beige`, `orange`, `pink`, `royalblue`, etc.) instead of writing hex or RGB values by hand,
-resolve color names in your app and register them as extended styles on an Ansis instance via `ansis.extend()`.
-Then you can call `color.pink()` rather than using `ansis.hex()` or `ansis.rgb()` directly.
+If you prefer [**named colors**](http://dev.w3.org/csswg/css-color/#named-colors) (e.g. `beige`, `orange`, `pink`, `royalblue`, etc.)
+instead of writing hex or RGB values by hand, resolve color names in your app and register them as extended styles on an Ansis instance via `ansis.extend()`.
+Then you can call e.g., `color.pink()` or `color.bgPink()` rather than using `ansis.hex('#ffc0cb')` or `ansis.bgHex('#ffc0cb')` directly.
+
+> [!IMPORTANT]
+> Foreground methods are created from the provided color names, and matching background methods `bg*` are generated automatically.
 
 > [!NOTE]
-> To keep Ansis small, it doesn't bundle large color name tables.\
+> To keep Ansis small, it doesn't bundle large truecolor name tables.\
 > Use any mapping package you like, e.g. [css-color-names](https://www.npmjs.com/package/css-color-names) (~6 kB).
-
-```bash
-npm i css-color-names
-```
+> ```bash
+> npm i css-color-names
+> ```
 
 **Example (extend with all color names)**
 
@@ -542,11 +544,8 @@ import colorNames from 'css-color-names';
 const color = ansis.extend(colorNames);
 
 // All color names are now avaliable as chainable methods on the extended instance:
-console.log(color.pink('Pink color'));
-console.log(color.pink.underline('Pink color underlined'));
-
-// You can achieve the same result without extend():
-console.log(ansis.hex(colorNames.pink).underline('Pink color via hex'));
+console.log(color.pink('Pink foreground'));
+console.log(color.bgPink('Pink background')); // auto-generated from "pink"
 ```
 
 Of course, you can define a custom subset with only the names you actually use.
@@ -568,12 +567,14 @@ const myTheme = {
 const ansis = new Ansis().extend(myTheme);
 
 // You can still use base styles together with extended ones
-const { orange, pink, red } = ansis;
+const { orange, pink, bgPink, red } = ansis;
 
-console.log(ansis.orange.bold('orange bold')); // extended + base
-console.log(orange.italic`orange italic`);     // tagged-template syntax
-console.log(pink`pink color`);                 // extended as a tag
-console.log(red('built-in red still works'));  // built-in remains intact
+console.log(ansis.orange('orange foreground'));   // extended foreground
+console.log(ansis.bgOrange('orange background')); // extended background
+console.log(orange.italic`orange italic`);        // extended + base style
+console.log(pink`pink foreground`);               // extended as a tag
+console.log(bgPink`pink background`);             // extended as a tag
+console.log(red('built-in red still works'));     // built-in remains intact
 ```
 
 **TypeScript example**
@@ -581,8 +582,9 @@ console.log(red('built-in red still works'));  // built-in remains intact
 ```ts
 import ansis, { AnsiColors } from 'ansis';
 
-// Extends the built-in `AnsiColors` type with custom user defined color names
-type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>);
+// Extends the built-in `AnsiColors` type with truecolor names
+// and their auto-generated bg* color names
+type AnsiColorsExtend<T extends string> = AnsiColors | T | `bg${Capitalize<T>}`;
 
 const myTheme = {
   orange: '#ffa500',
@@ -597,9 +599,15 @@ const log = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) => 
   console.log(color[style](message));
 }
 
-log('red', 'base color OK');  // ✅ built-in
-log('orange', 'extended OK'); // ✅ extended
-// log('unknown', 'nope');    // ❌ TypeScript error
+log('red', 'base color OK');          // ✅ built-in
+log('bgRed', 'base background OK');   // ✅ built-in background
+log('orange', 'extended OK');         // ✅ extended
+log('bgOrange', 'extended bg OK');    // ✅ auto-generated background from extended
+log('pink', 'extended OK');           // ✅ extended
+log('bgPink', 'extended bg OK');      // ✅ auto-generated background from extended
+
+// log('unknown', 'nope');            // ❌ TypeScript error
+// log('bgUnknown', 'nope');          // ❌ TypeScript error
 ```
 
 > [!WARNING]

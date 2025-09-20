@@ -45,6 +45,8 @@ import { colorLevels, LEVEL_256COLORS } from '../src/color-levels.js';
 const ansis = new Ansis();
 const colorLevel = ansis.level;
 
+const useShortBench = true;
+
 const log = console.log;
 
 log();
@@ -70,6 +72,20 @@ const bench = new Bench({
 log();
 log(hex('#F88').inverse.bold` -= Benchmark =- `);
 
+// RGB colors
+bench('RGB colors').add('chalk', () => {
+  for (let i = 0; i < 256; i++) chalk.rgb(i, 150, 200)('foo');
+}).add('ansis', () => {
+  for (let i = 0; i < 256; i++) ansis.rgb(i, 150, 200)('foo');
+}).run();
+
+// HEX colors
+// the hex(), rgb(), bgHex(), bgRgb() methods support only chalk and ansis
+bench('HEX colors').
+  add('chalk', () => chalk.hex('#FBA')('foo')).
+  add('ansis', () => ansis.hex('#FBA')('foo')).
+  run();
+
 const text3 = 'foo';
 const text60 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed.';
 
@@ -81,26 +97,26 @@ bench('Simple short text, 3 chars, using 1 style').
   add(packages['chalk'], () => chalk.red(text3)).
   add(packages['ansis'], () => ansis.red(text3)).
   add(packages['picocolors'], () => picocolors.red(text3)).
-  add(packages['colorette'], () => colorette.red(text3)).
-  add(packages['kleur'], () => kleur.red(text3)).
-  add(packages['ansi-colors'], () => ansiColors.red(text3)).
-  add(packages['kolorist'], () => kolorist.red(text3)).
-  add(packages['cli-color'], () => cliColor.red(text3)).
-  add(packages['colors-cli'], () => colorCli.red(text3)).
-  add(packages['@colors/colors'], () => colorsJs.red(text3)).
+  // add(packages['colorette'], () => colorette.red(text3)).
+  // add(packages['kleur'], () => kleur.red(text3)).
+  // add(packages['ansi-colors'], () => ansiColors.red(text3)).
+  // add(packages['kolorist'], () => kolorist.red(text3)).
+  // add(packages['cli-color'], () => cliColor.red(text3)).
+  // add(packages['colors-cli'], () => colorCli.red(text3)).
+  // add(packages['@colors/colors'], () => colorsJs.red(text3)).
   run();
 
 bench('Simple long text, 60 chars, using 1 style').
   add(packages['chalk'], () => chalk.red(text60)).
   add(packages['ansis'], () => ansis.red(text60)).
   add(packages['picocolors'], () => picocolors.red(text60)).
-  add(packages['colorette'], () => colorette.red(text60)).
-  add(packages['kleur'], () => kleur.red(text60)).
-  add(packages['ansi-colors'], () => ansiColors.red(text60)).
-  add(packages['kolorist'], () => kolorist.red(text60)).
-  add(packages['cli-color'], () => cliColor.red(text60)).
-  add(packages['colors-cli'], () => colorCli.red(text60)).
-  add(packages['@colors/colors'], () => colorsJs.red(text60)).
+  // add(packages['colorette'], () => colorette.red(text60)).
+  // add(packages['kleur'], () => kleur.red(text60)).
+  // add(packages['ansi-colors'], () => ansiColors.red(text60)).
+  // add(packages['kolorist'], () => kolorist.red(text60)).
+  // add(packages['cli-color'], () => cliColor.red(text60)).
+  // add(packages['colors-cli'], () => colorCli.red(text60)).
+  // add(packages['@colors/colors'], () => colorsJs.red(text60)).
   run();
 
 
@@ -109,13 +125,13 @@ bench(`Use 2 styles`).
   add(packages['chalk'], () => chalk.red.bold('foo')).
   add(packages['ansis'], () => ansis.red.bold('foo')).
   add(packages['picocolors'], () => picocolors.red(picocolors.bold('foo'))).
-  add(packages['colorette'], () => colorette.red(colorette.bold('foo'))).
-  add(packages['kleur'], () => kleur.red().bold('foo')).
-  add(packages['ansi-colors'], () => ansiColors.red.bold('foo')).
-  add(packages['kolorist'], () => kolorist.red(kolorist.bold('foo'))).
-  add(packages['cli-color'], () => cliColor.red.bold('foo')).
-  add(packages['colors-cli'], () => colorCli.red.bold('foo')).
-  add(packages['@colors/colors'], () => colorsJs.red.bold('foo')).
+  // add(packages['colorette'], () => colorette.red(colorette.bold('foo'))).
+  // add(packages['kleur'], () => kleur.red().bold('foo')).
+  // add(packages['ansi-colors'], () => ansiColors.red.bold('foo')).
+  // add(packages['kolorist'], () => kolorist.red(kolorist.bold('foo'))).
+  // add(packages['cli-color'], () => cliColor.red.bold('foo')).
+  // add(packages['colors-cli'], () => colorCli.red.bold('foo')).
+  // add(packages['@colors/colors'], () => colorsJs.red.bold('foo')).
   run();
 
 // Fastest way for 3 styles
@@ -123,13 +139,13 @@ bench('Use 3 styles').
   add(packages['chalk'], () => chalk.red.bold.bgWhite('foo')).
   add(packages['ansis'], () => ansis.red.bold.bgWhite('foo')).
   add(packages['picocolors'], () => picocolors.red(picocolors.bold(picocolors.bgWhite('foo')))).
-  add(packages['colorette'], () => colorette.red(colorette.bold(colorette.bgWhite('foo')))).
-  add(packages['kleur'], () => kleur.red().bold().bgWhite('foo')).
-  add(packages['ansi-colors'], () => ansiColors.red.bold.bgWhite('foo')).
-  add(packages['kolorist'], () => kolorist.red(kolorist.bold(kolorist.bgWhite('foo')))).
-  add(packages['cli-color'], () => cliColor.red.bold.bgWhite('foo')).
-  add(packages['colors-cli'], () => colorCli.red.bold.white_bt('foo')).
-  add(packages['@colors/colors'], () => colorsJs.red.bold.bgWhite('foo')).
+  // add(packages['colorette'], () => colorette.red(colorette.bold(colorette.bgWhite('foo')))).
+  // add(packages['kleur'], () => kleur.red().bold().bgWhite('foo')).
+  // add(packages['ansi-colors'], () => ansiColors.red.bold.bgWhite('foo')).
+  // add(packages['kolorist'], () => kolorist.red(kolorist.bold(kolorist.bgWhite('foo')))).
+  // add(packages['cli-color'], () => cliColor.red.bold.bgWhite('foo')).
+  // add(packages['colors-cli'], () => colorCli.red.bold.white_bt('foo')).
+  // add(packages['@colors/colors'], () => colorsJs.red.bold.bgWhite('foo')).
   run();
 
 // Fastest way for 4 styles
@@ -137,13 +153,13 @@ bench('Use 4 styles').
   add(packages['chalk'], () => chalk.red.bold.underline.bgWhite('foo')).
   add(packages['ansis'], () => ansis.red.bold.underline.bgWhite('foo')).
   add(packages['picocolors'], () => picocolors.red(picocolors.bold(picocolors.underline(picocolors.bgWhite('foo'))))).
-  add(packages['colorette'], () => colorette.red(colorette.bold(colorette.underline(colorette.bgWhite('foo'))))).
-  add(packages['kleur'], () => kleur.red().bold().underline().bgWhite('foo')).
-  add(packages['ansi-colors'], () => ansiColors.red.bold.underline.bgWhite('foo')).
-  add(packages['kolorist'], () => kolorist.red(kolorist.bold(kolorist.underline(kolorist.bgWhite('foo'))))).
-  add(packages['cli-color'], () => cliColor.red.bold.underline.bgWhite('foo')).
-  add(packages['colors-cli'], () => colorCli.red.bold.underline.white_bt('foo')).
-  add(packages['@colors/colors'], () => colorsJs.red.bold.underline.bgWhite('foo')).
+  // add(packages['colorette'], () => colorette.red(colorette.bold(colorette.underline(colorette.bgWhite('foo'))))).
+  // add(packages['kleur'], () => kleur.red().bold().underline().bgWhite('foo')).
+  // add(packages['ansi-colors'], () => ansiColors.red.bold.underline.bgWhite('foo')).
+  // add(packages['kolorist'], () => kolorist.red(kolorist.bold(kolorist.underline(kolorist.bgWhite('foo'))))).
+  // add(packages['cli-color'], () => cliColor.red.bold.underline.bgWhite('foo')).
+  // add(packages['colors-cli'], () => colorCli.red.bold.underline.white_bt('foo')).
+  // add(packages['@colors/colors'], () => colorsJs.red.bold.underline.bgWhite('foo')).
   run();
 
 // Chained syntax
@@ -151,10 +167,10 @@ bench('Chained syntax').
   add(packages['chalk'], () => chalk.red.bold.underline.bgWhite('foo')).
   add(packages['ansis'], () => ansis.red.bold.underline.bgWhite('foo')).
   add(packages['kleur'], () => kleur.red().bold().underline().bgWhite('foo')).
-  add(packages['ansi-colors'], () => ansiColors.red.bold.underline.bgWhite('foo')).
-  add(packages['cli-color'], () => cliColor.red.bold.underline.bgWhite('foo')).
-  add(packages['colors-cli'], () => colorCli.red.bold.underline.white_bt('foo')).
-  add(packages['@colors/colors'], () => colorsJs.red.bold.underline.bgWhite('foo')).
+  // add(packages['ansi-colors'], () => ansiColors.red.bold.underline.bgWhite('foo')).
+  // add(packages['cli-color'], () => cliColor.red.bold.underline.bgWhite('foo')).
+  // add(packages['colors-cli'], () => colorCli.red.bold.underline.white_bt('foo')).
+  // add(packages['@colors/colors'], () => colorsJs.red.bold.underline.bgWhite('foo')).
   // colorette - (not supported)
   // picocolors - (not supported)
   // kolorist - (not supported)
@@ -165,13 +181,13 @@ bench('Nested calls').
   add(packages['chalk'], () => chalk.red(chalk.bold(chalk.underline(chalk.bgWhite('foo'))))).
   add(packages['ansis'], () => ansis.red(ansis.bold(ansis.underline(ansis.bgWhite('foo'))))).
   add(packages['picocolors'], () => picocolors.red(picocolors.bold(picocolors.underline(picocolors.bgWhite('foo'))))).
-  add(packages['colorette'], () => colorette.red(colorette.bold(colorette.underline(colorette.bgWhite('foo'))))).
-  add(packages['kleur'], () => kleur.red(kleur.bold(kleur.underline(kleur.bgWhite('foo'))))).
-  add(packages['ansi-colors'], () => ansiColors.red(ansiColors.bold(ansiColors.underline(ansiColors.bgWhite('foo'))))).
-  add(packages['kolorist'], () => kolorist.red(kolorist.bold(kolorist.underline(kolorist.bgWhite('foo'))))).
-  add(packages['cli-color'], () => cliColor.red(cliColor.bold(cliColor.underline(cliColor.bgWhite('foo'))))).
-  add(packages['colors-cli'], () => colorCli.red(colorCli.bold(colorCli.underline(colorCli.white_bt('foo'))))).
-  add(packages['@colors/colors'], () => colorsJs.red(colorsJs.bold(colorsJs.underline(colorsJs.bgWhite('foo'))))).
+  // add(packages['colorette'], () => colorette.red(colorette.bold(colorette.underline(colorette.bgWhite('foo'))))).
+  // add(packages['kleur'], () => kleur.red(kleur.bold(kleur.underline(kleur.bgWhite('foo'))))).
+  // add(packages['ansi-colors'], () => ansiColors.red(ansiColors.bold(ansiColors.underline(ansiColors.bgWhite('foo'))))).
+  // add(packages['kolorist'], () => kolorist.red(kolorist.bold(kolorist.underline(kolorist.bgWhite('foo'))))).
+  // add(packages['cli-color'], () => cliColor.red(cliColor.bold(cliColor.underline(cliColor.bgWhite('foo'))))).
+  // add(packages['colors-cli'], () => colorCli.red(colorCli.bold(colorCli.underline(colorCli.white_bt('foo'))))).
+  // add(packages['@colors/colors'], () => colorsJs.red(colorsJs.bold(colorsJs.underline(colorsJs.bgWhite('foo'))))).
   run();
 
 // Deep nested styles
@@ -191,13 +207,13 @@ bench('Deep nested styles').
   add(packages['chalk'], () => deepNestedBench(chalk)).
   add(packages['ansis'], () => deepNestedBench(ansis)).
   add(packages['picocolors'], () => deepNestedBench(picocolors)).
-  add(packages['colorette'], () => deepNestedBench(colorette)).
-  add(packages['kleur'], () => deepNestedBench(kleur)).
-  add(packages['ansi-colors'], () => deepNestedBench(ansiColors)).
-  add(packages['kolorist'], () => deepNestedBench(kolorist)).
-  add(packages['cli-color'], () => deepNestedBench(cliColor)).
-  add(packages['colors-cli'], () => deepNestedBench(colorCli)).
-  add(packages['@colors/colors'], () => deepNestedBench(colorsJs)).
+  // add(packages['colorette'], () => deepNestedBench(colorette)).
+  // add(packages['kleur'], () => deepNestedBench(kleur)).
+  // add(packages['ansi-colors'], () => deepNestedBench(ansiColors)).
+  // add(packages['kolorist'], () => deepNestedBench(kolorist)).
+  // add(packages['cli-color'], () => deepNestedBench(cliColor)).
+  // add(packages['colors-cli'], () => deepNestedBench(colorCli)).
+  // add(packages['@colors/colors'], () => deepNestedBench(colorsJs)).
   run();
 
 // Colorette bench
@@ -208,13 +224,13 @@ bench('Colorette bench').
   add(packages['chalk'], () => coloretteBanch(chalk)).
   add(packages['ansis'], () => coloretteBanch(ansis)).
   add(packages['picocolors'], () => coloretteBanch(picocolors)).
-  add(packages['colorette'], () => coloretteBanch(colorette)).
-  add(packages['kleur'], () => coloretteBanch(kleur)).
-  add(packages['ansi-colors'], () => coloretteBanch(ansiColors)).
-  add(packages['kolorist'], () => coloretteBanch(kolorist)).
-  add(packages['cli-color'], () => coloretteBanch(cliColor)).
-  add(packages['colors-cli'], () => coloretteBanch(colorCli)).
-  add(packages['@colors/colors'], () => coloretteBanch(colorsJs)).
+  // add(packages['colorette'], () => coloretteBanch(colorette)).
+  // add(packages['kleur'], () => coloretteBanch(kleur)).
+  // add(packages['ansi-colors'], () => coloretteBanch(ansiColors)).
+  // add(packages['kolorist'], () => coloretteBanch(kolorist)).
+  // add(packages['cli-color'], () => coloretteBanch(cliColor)).
+  // add(packages['colors-cli'], () => coloretteBanch(colorCli)).
+  // add(packages['@colors/colors'], () => coloretteBanch(colorsJs)).
   run();
 
 // Picocolors complex bench, slightly modified
@@ -237,13 +253,13 @@ bench('Picocolors complex bench').
   add(packages['ansis'], () => picoComplex(ansis)).
   add(packages['ansis'], () => ansisComplex(ansis)).
   add(packages['picocolors'], () => picoComplex(picocolors)).
-  add(packages['colorette'], () => picoComplex(colorette)).
-  add(packages['kleur'], () => picoComplex(kleur)).
-  add(packages['kolorist'], () => picoComplex(kolorist)).
-  add(packages['ansi-colors'], () => ansisComplex(ansiColors)).
-  add(packages['cli-color'], () => ansisComplex(cliColor)).
-  add(packages['colors-cli'], () => ansisComplex(colorCli)).
-  add(packages['@colors/colors'], () => ansisComplex(colorsJs)).
+  // add(packages['colorette'], () => picoComplex(colorette)).
+  // add(packages['kleur'], () => picoComplex(kleur)).
+  // add(packages['kolorist'], () => picoComplex(kolorist)).
+  // add(packages['ansi-colors'], () => ansisComplex(ansiColors)).
+  // add(packages['cli-color'], () => ansisComplex(cliColor)).
+  // add(packages['colors-cli'], () => ansisComplex(colorCli)).
+  // add(packages['@colors/colors'], () => ansisComplex(colorsJs)).
   run();
 
 // Check support of correct break style at new line

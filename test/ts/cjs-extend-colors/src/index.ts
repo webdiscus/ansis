@@ -4,7 +4,8 @@ type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>
 
 const log = console.log;
 
-// color names by hex: https://chir.ag/projects/name-that-color/
+// npm package for CSS color names: https://chir.ag/projects/name-that-color/
+// tools to get name by hex: https://www.npmjs.com/package/css-color-names
 const myTheme = {
   pink: '#FF75D1',
   orange: '#FFAB40',
@@ -22,10 +23,10 @@ const myLog2 = (style: AnsiColorsExtend<'pink' | 'apple'>, message: string) => {
 };
 
 // Extend base colors
-const themed = ansis.extend(myTheme);
+const color = ansis.extend(myTheme);
 
 // Access extended colors
-const { pink, orange, red } = themed;
+const { pink, orange, red } = color;
 
 myLog('red', 'default: red'); // default style, OK
 myLog('cyanBright', 'default: cyanBright'); // default style, OK
@@ -37,13 +38,17 @@ myLog2('apple', 'extended: apple'); // OK
 //myLog('unknown', 'message');
 
 //log(customAnsis.apple.italic`extended color: apple italic`);
-log(themed.apple.italic`extended color: apple italic`);
+log(color.apple.italic`extended color: apple italic`);
 log(red`destructured default color: red`);
 log(pink`destructured extended color: pink`);
 log(orange.italic`destructured extended color: orange italic`);
 
-log(themed.pink.underline('extended chained color: pink underline'));
+log(color.pink.underline('extended chained color: pink underline'));
 log(pink.underline('destructured extended chained color: pink underline'));
+
+// test in TS both extended variants: normal and background color names
+log(color.orange('Orange foreground'));
+log(color.bgOrange('Orange background'));
 
 // Usage test: This should simulate what you'd get in TS validation
 

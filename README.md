@@ -38,16 +38,16 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - Nested [tagged template strings](#template-literals): ``` red`Error: ${blue`file.js`} not found!` ```
 - [ANSI styles](#styles): `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s>
 - [ANSI 16 colors](#base-colors): `red`, `redBright`, `bgRed`, `bgRedBright`, ...
-- [ANSI 256 colors](#256-colors): `fg()`, `bg()`
-- [Truecolor](#truecolor) (**RGB & HEX**): `rgb()`, `bgRgb()`, `hex()`, `bgHex()`
-- [Extend](#extend-colors) base colors with [**named truecolor**](https://drafts.csswg.org/css-color/#named-colors) via `ansis.extend()`, then use colors by name, e.g. `ansis.pink()`
+- [ANSI 256 colors](#256-colors) via methods: `fg(num)`, `bg(num)`
+- [Truecolor](#truecolor) via methods: `rgb(r,g,b)`, `bgRgb(r,g,b)`, `hex('#rrggbb')`, `bgHex('#rrggbb')`
+- [Named truecolor](#extend-colors) (extendable with colors such as [pink, indigo, navy, ...](https://drafts.csswg.org/css-color/#named-colors)): `ansis.pink()`, `ansis.bgPink()`, ...
 - Auto-detects [color support](#color-support): Truecolor, 256 colors, 16 colors, no colors
 - Automatic [fallback](#fallback): Truecolor → 256 colors → 16 colors → no colors
 - Raw ANSI escape codes: ``` `File ${red.open}not found${red.close} in directory` ```
 - Strip ANSI escape codes with `ansis.strip()`
 - Supports [ENV variables](#cli-vars) and [flags](#cli-flags): [`NO_COLOR`](using-env-no-color), [`FORCE_COLOR`](#using-env-force-color), [`COLORTERM`](#using-env-colorterm), `--no-color`, `--color`
-- Enables reliable [CLI testing](#cli-testing) with forced [color levels](#color-levels): no color, 16, 256 or Truecolor
-- Replacement for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) and others [alternatives](#alternatives)
+- Reliable [CLI testing](#cli-testing) with forced [color levels](#color-levels): no color, 16, 256 or Truecolor
+- Drop-in replacement for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) and others [alternatives](#alternatives)
 
 
 > 🚀 **You might also like** [`flaget`](https://github.com/webdiscus/flaget) - a smaller (5 kB) and faster alternative to [`yargs-parser`](https://www.npmjs.com/package/yargs-parser) (85 kB) for CLI argument parsing.
@@ -519,7 +519,7 @@ If you use the `hex()`, `rgb()` or `ansis256()` functions in a terminal not supp
 ## Named truecolor
 
 Ansis supports full 24-bit color via `ansis.rgb(r, g, b)` and `ansis.hex('#rrggbb')`.\
-If you prefer [**named colors**](http://dev.w3.org/csswg/css-color/#named-colors) (e.g. `beige`, `orange`, `pink`, `royalblue`, etc.)
+If you prefer [**named colors**](http://dev.w3.org/csswg/css-color/#named-colors) (e.g. `pink`, `orange`, `indigo`, etc.)
 instead of writing hex or RGB values by hand, resolve color names in your app and register them as extended styles on an Ansis instance via `ansis.extend()`.
 Then you can call e.g., `color.pink()` or `color.bgPink()` rather than using `ansis.hex('#ffc0cb')` or `ansis.bgHex('#ffc0cb')` directly.
 
@@ -548,7 +548,7 @@ console.log(color.pink('Pink foreground'));
 console.log(color.bgPink('Pink background')); // auto-generated from "pink"
 ```
 
-Of course, you can define a custom subset with only the names you actually use.
+Of course, you can define a custom subset with only the colors you actually use.
 
 > [!TIP]
 > Need help picking a color name? Try the [Name that Color](https://chir.ag/projects/name-that-color/#FF681F) tool - paste a hex and get its closest color name.
@@ -563,7 +563,7 @@ const myTheme = {
   pink: '#ffc0cb',
 };
 
-// Create a new instance and extend it with only your custom names
+// Create a new instance and extend it with only your colors
 const ansis = new Ansis().extend(myTheme);
 
 // You can still use base styles together with extended ones
@@ -599,15 +599,15 @@ const log = (style: AnsiColorsExtend<keyof typeof myTheme>, message: string) => 
   console.log(color[style](message));
 }
 
-log('red', 'base color OK');          // ✅ built-in
-log('bgRed', 'base background OK');   // ✅ built-in background
-log('orange', 'extended OK');         // ✅ extended
-log('bgOrange', 'extended bg OK');    // ✅ auto-generated background from extended
-log('pink', 'extended OK');           // ✅ extended
-log('bgPink', 'extended bg OK');      // ✅ auto-generated background from extended
+log('red', 'red color');              // ✅ built-in
+log('bgRed', 'red background');       // ✅ built-in background
+log('orange', 'orange color');        // ✅ extended
+log('bgOrange', 'orange background'); // ✅ auto-generated background from extended
+
+console.log(color.pink`pink foreground`);   // ✅ extended
+console.log(color.bgPink`pink background`); // ✅ auto-generated background from extended
 
 // log('unknown', 'nope');            // ❌ TypeScript error
-// log('bgUnknown', 'nope');          // ❌ TypeScript error
 ```
 
 > [!WARNING]

@@ -76,14 +76,17 @@ class Bench {
   name = 'Bench';
   benchNames = [];
   maxNameWidth = 0;
+  enabledBenchmarks = null;
 
   /**
    * @param {BenchOptions} options
    * @returns {function(suiteName: string): Bench}
    */
-  constructor(options = {}) {
+  constructor(options = {}, enabledBenchmarks) {
     this.options = Object.assign(defaultOptions, options);
     showResult = showResult.bind(this);
+
+    this.enabledBenchmarks = new Set([...enabledBenchmarks]);
 
     return (suiteName) => {
       if (suiteName) this.name = suiteName;
@@ -101,6 +104,10 @@ class Bench {
    * @returns {Bench}
    */
   add(name, fn) {
+    if (!this.enabledBenchmarks.has(name)) {
+      return this;
+    }
+
     this.benchNames.push(name);
     this.suite.add(name, {
       onStart: () => {},

@@ -43,6 +43,7 @@ let createStyle = ({ p: props}, { open, close }) => {
       if (open && open === close) return open;
       // null == arg || '' === arg
       if ((arg ?? EMPTY_STRING) === EMPTY_STRING) return EMPTY_STRING;
+      // fall-through to stringify the args: `false`, `0` or `NaN`
     }
 
     let output = arg.raw
@@ -81,7 +82,7 @@ let createStyle = ({ p: props}, { open, close }) => {
     }
 
     return openStack
-      // Detect new line
+      // Wrap each line with the current open/close codes so multi-line output remains correctly styled
       + (output.includes(LF) ? output.replace(/(\r?\n)/g, closeStack + '$1' + openStack) : output)
       + closeStack;
   };

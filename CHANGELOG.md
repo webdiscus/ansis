@@ -2,7 +2,7 @@
 
 ## 4.2.0 (2025-09-20)
 
-- feat: add support extending with named truecolor HEX values.
+- feat: add support named truecolor via `ansis.extend()`.
   Foreground methods are created from the provided color names, and matching background methods `bg*` are generated automatically.
   Example:
   ```js
@@ -11,9 +11,11 @@
 
   const color = ansis.extend(colorNames);
 
-  console.log(color.pink('Pink foreground'));
-  console.log(color.bgPink('Pink background')); // auto-generated from "pink"
+  console.log(color.orange('Orange foreground'));
+  console.log(color.bgOrange('Orange background')); // auto-generated from "orange"
   ```
+  This release removes the last barrier for projects migrating from Chalk v4 that used named truecolor, e.g.
+  `chalk.keyword('orange')('text')`. Ansis now provides this feature with a simpler, more intuitive API.
 
 ## 4.1.0 (2025-05-28)
 

@@ -40,7 +40,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - [ANSI 16 colors](#base-colors): `red`, `redBright`, `bgRed`, `bgRedBright`, ...
 - [ANSI 256 colors](#256-colors) via methods: `fg(num)`, `bg(num)`
 - [Truecolor](#truecolor) via methods: `rgb(r,g,b)`, `bgRgb(r,g,b)`, `hex('#rrggbb')`, `bgHex('#rrggbb')`
-- [Named truecolor](#extend-colors) (extendable with colors such as [pink, indigo, navy, ...](https://drafts.csswg.org/css-color/#named-colors)): `ansis.pink()`, `ansis.bgPink()`, ...
+- [Named truecolors](#extend-colors) (extend with colors such as [orange, pink, navy, ...](https://drafts.csswg.org/css-color/#named-colors)): `ansis.pink()`, `ansis.bgPink()`, ...
 - Auto-detects [color support](#color-support): Truecolor, 256 colors, 16 colors, no colors
 - Automatic [fallback](#fallback): Truecolor → 256 colors → 16 colors → no colors
 - Raw ANSI escape codes: ``` `File ${red.open}not found${red.close} in directory` ```
@@ -449,7 +449,7 @@ If a terminal supports only 16 colors then ANSI 256 colors will be interpolated 
   </a>
 </div>
 
-#### Usage example
+#### Example
 
 ```js
 import { bold, fg, bg } from 'ansis';
@@ -512,14 +512,16 @@ If you use the `hex()`, `rgb()` or `ansis256()` functions in a terminal not supp
 
 ![output](https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-fallback.png?raw=true "Fallback to ANSI colors")
 
+See also [fallback for named truecolors](#fallback-for-named-truecolors).
+
 #### [↑ top](#top)
 
 <a id="extend-colors" name="extend-colors"></a>
 
-## Named truecolor
+## Named truecolors
 
 Ansis supports full 24-bit color via `ansis.rgb(r, g, b)` and `ansis.hex('#rrggbb')`.\
-If you prefer [**named colors**](http://dev.w3.org/csswg/css-color/#named-colors) (e.g. `pink`, `orange`, `indigo`, etc.)
+If you prefer [**named colors**](http://dev.w3.org/csswg/css-color/#named-colors) (e.g. `orange`, `pink`, `navy`, etc.)
 instead of writing hex or RGB values by hand, resolve color names in your app and register them as extended styles on an Ansis instance via `ansis.extend()`.
 Then you can call e.g., `color.pink()` or `color.bgPink()` rather than using `ansis.hex('#ffc0cb')` or `ansis.bgHex('#ffc0cb')` directly.
 
@@ -527,13 +529,13 @@ Then you can call e.g., `color.pink()` or `color.bgPink()` rather than using `an
 > Foreground methods are created from the provided color names, and matching background methods `bg*` are generated automatically.
 
 > [!NOTE]
-> To keep Ansis small, it doesn't bundle large truecolor name tables.\
+> To keep Ansis small, it doesn't bundle large truecolors name table.\
 > Use any mapping package you like, e.g. [css-color-names](https://www.npmjs.com/package/css-color-names) (~6 kB).
 > ```bash
 > npm i css-color-names
 > ```
 
-**Example (extend with all color names)**
+**Example (extend with all [CSS color names](http://dev.w3.org/csswg/css-color/#named-colors) )**
 
 ```js
 import ansis from 'ansis';
@@ -548,6 +550,18 @@ console.log(color.pink('Pink foreground'));
 console.log(color.bgPink('Pink background')); // auto-generated from "pink"
 ```
 
+If you prefer to keep the `ansis` namespace:
+
+```js
+import { Ansis } from 'ansis';
+import colorNames from 'css-color-names';
+
+// Create a new instance and extend it with colors
+const ansis = new Ansis().extend(colorNames);
+console.log(ansis.pink('Pink foreground'));
+console.log(ansis.bgPink('Pink background'));
+```
+
 Of course, you can define a custom subset with only the colors you actually use.
 
 > [!TIP]
@@ -556,21 +570,21 @@ Of course, you can define a custom subset with only the colors you actually use.
 **Example (custom subset)**
 
 ```js
-import { Ansis } from 'ansis';
+import ansis from 'ansis';
 
 const myTheme = {
   orange: '#ffa500',
   pink: '#ffc0cb',
 };
 
-// Create a new instance and extend it with only your colors
-const ansis = new Ansis().extend(myTheme);
+// Extend with only your colors
+const color = ansis.extend(myTheme);
 
 // You can still use base styles together with extended ones
-const { orange, pink, bgPink, red } = ansis;
+const { orange, pink, bgPink, red } = color;
 
-console.log(ansis.orange('orange foreground'));   // extended foreground
-console.log(ansis.bgOrange('orange background')); // extended background
+console.log(color.orange('orange foreground'));   // extended foreground
+console.log(color.bgOrange('orange background')); // extended background
 console.log(orange.italic`orange italic`);        // extended + base style
 console.log(pink`pink foreground`);               // extended as a tag
 console.log(bgPink`pink background`);             // extended as a tag
@@ -618,6 +632,32 @@ console.log(color.bgPink`pink background`); // ✅ auto-generated background fro
 > color.orange.bold('orange bold'); // ✅ works: extended first, then built-ins
 > color.bold.orange('bold orange'); // ❌ won't work: extended is on a sub-chain
 > ```
+
+
+<a id="fallback-for-named-truecolors"></a>
+### Fallback for named truecolors
+
+Ansis automatically interpolates named truecolors to the highest available color level supported by the current environment.
+So you can safely use named truecolors anywhere without worrying about compatibility.
+
+Example:
+```js
+import ansis from 'ansis';
+import colorNames from 'css-color-names';
+
+const color = ansis.extend(colorNames);
+
+console.log(color.orange('Text'));
+```
+
+Output depending on terminal color support:
+
+| Color level        | Result                             | Example output                     |
+|--------------------|------------------------------------|------------------------------------|
+| Truecolor / 24-bit | `rgb(255,165,0)` (orange)          | `\x1b[38;2;255;165;0mText\x1b[39m` |
+| 256 colors         | [palette index](#256-colors) `214` | `\x1b[38;5;214mText\x1b[39m`       |
+| 16 colors          | code `93` (bright yellow)          | `\x1b[93mText\x1b[39m`             |
+| No color           | plain text                         | `Text`                             |
 
 ---
 

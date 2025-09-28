@@ -543,7 +543,7 @@ npm i
 npm run named-truecolors
 ```
 
-![output](https://github.com/webdiscus/ansis/raw/master/docs/img/named-truecolors.png?raw=true "Fallback to ANSI colors")
+![output](https://github.com/webdiscus/ansis/raw/master/docs/img/named-truecolors.png?raw=true "Named truecolors")
 
 **Example (extend with all [CSS color names](http://dev.w3.org/csswg/css-color/#named-colors) )**
 

@@ -396,6 +396,7 @@ There are 16 basic colors: 8 standard and 8 bright variants.
 |   ![](docs/img/colors/cyan.png)   | `cyan`         | `bgCyan`            |   ![](docs/img/colors/cyanBright.png)   | `cyanBright`    | `bgCyanBright`    |
 |  ![](docs/img/colors/white.png)   | `white`        | `bgWhite`           |  ![](docs/img/colors/whiteBright.png)   | `whiteBright`   | `bgWhiteBright`   |
 
+See also [named truecolors](#extend-colors).
 
 <a name="gray-naming-in-libs"></a>
 ### Color naming in libraries: `gray` vs `grey` vs `blackBright`
@@ -534,6 +535,15 @@ Then you can call e.g., `color.pink()` or `color.bgPink()` rather than using `an
 > ```bash
 > npm i css-color-names
 > ```
+
+View named colors example:
+```bash
+cd ./examples
+npm i
+npm run named-truecolors
+```
+
+![output](https://github.com/webdiscus/ansis/raw/master/docs/img/named-truecolors.png?raw=true "Fallback to ANSI colors")
 
 **Example (extend with all [CSS color names](http://dev.w3.org/csswg/css-color/#named-colors) )**
 
@@ -1871,6 +1881,9 @@ Now you can use named color on extended `color` instance:
 ```diff
 - chalk.keyword('orange')('text');
 + color.orange('text');
+
+- chalk.bgKeyword('orange')('text');
++ color.bgOrange('text');
 ```
 
 

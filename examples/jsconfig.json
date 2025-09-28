@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "ansis": ["../dist/node14"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}

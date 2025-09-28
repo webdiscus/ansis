@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "demo": "node ./",
+    "named-truecolors": "node ./named-truecolors.js",
     "spectrum": "node ./spectrum.js",
     "stylex": "node ./StyleX.js"
   }

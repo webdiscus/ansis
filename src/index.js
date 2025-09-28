@@ -29,7 +29,7 @@ let LF = '\n';
  * @param {{ open: string, close: string }} style
  * @return {Ansis}
  */
-let createStyle = ({ p: props}, { open, close }) => {
+let createStyle = ({ p: props }, { open, close }) => {
   /**
    * Decorates a string with ANSI escape sequences.
    * @param {unknown} arg The input value, can be any or a template string.

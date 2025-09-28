@@ -41,6 +41,22 @@ import Bench from './lib/bench.js';
 import packages from './packages.js';
 import { colorLevels, LEVEL_256COLORS } from '../src/color-levels.js';
 
+// Single source of truth: which libs to run
+// - Edit the DEFAULT_ENABLED array, OR
+// - override via env: BENCH_LIBS="chalk,ansis,picocolors" node bench.js
+const DEFAULT_ENABLED = [
+  ...Object.keys(packages),
+];
+
+const ENABLED = (process.env.BENCH_LIBS || DEFAULT_ENABLED.join(',')).split(',').map(s => packages[s.trim()]).filter(Boolean);
+
+// test only this libs
+// const ENABLED = [
+//   packages['chalk'],
+//   packages['ansis'],
+//   packages['picocolors'],
+// ];
+
 // create a new instance of Ansis for correct measure in benchmark
 const ansis = new Ansis();
 const colorLevel = ansis.level;
@@ -65,10 +81,21 @@ const bench = new Bench({
   rmeColor: benchStyle.cyan,
   statUnitColor: benchStyle.dim,
   failColor: benchStyle.red.bold,
-});
+}, ENABLED);
 
 log();
 log(hex('#F88').inverse.bold` -= Benchmark =- `);
+
+// RGB colors
+bench('RGB colors').
+  add(packages['chalk'], () => { for (let i = 0; i < 256; i++) chalk.rgb(i, 150, 200)('foo'); }).
+  add(packages['ansis'], () => { for (let i = 0; i < 256; i++) ansis.rgb(i, 150, 200)('foo'); }).
+  run();
+
+// HEX colors (only chalk & ansis support hex()/rgb()/bgHex()/bgRgb())
+bench('HEX colors').
+  add(packages['chalk'], () => chalk.hex('#FBA')('foo')).
+  add(packages['ansis'], () => ansis.hex('#FBA')('foo')).run();
 
 const text3 = 'foo';
 const text60 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed.';
@@ -102,7 +129,6 @@ bench('Simple long text, 60 chars, using 1 style').
   add(packages['colors-cli'], () => colorCli.red(text60)).
   add(packages['@colors/colors'], () => colorsJs.red(text60)).
   run();
-
 
 // Fastest way for 2 styles
 bench(`Use 2 styles`).
@@ -247,11 +273,9 @@ bench('Picocolors complex bench').
   run();
 
 // Check support of correct break style at new line
-
-// Break style at new line
 const breakStyleAtNewLineFixture = `\nAnsis\nNEW LINE\nNEXT NEW LINE\n`;
 bench('New Line').
-  add('colors.js', () => colorsJs.bgGreen(breakStyleAtNewLineFixture)).
+  add(packages['@colors/colors'], () => colorsJs.bgGreen(breakStyleAtNewLineFixture)).
   add(packages['ansi-colors'], () => ansiColors.bgGreen(breakStyleAtNewLineFixture)).
   add(packages['chalk'], () => chalk.bgGreen(breakStyleAtNewLineFixture)).
   // 2x slower as chalk because chalk use own implementation, but ansis save 400 bytes and uses regexp, this speed is not critical

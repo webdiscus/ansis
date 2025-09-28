@@ -1,6 +1,6 @@
 {
 "name":"ansis",
-"version":"4.1.0-node10",
+"version":"4.2.0-node10",
 "description":"ANSI color lib",
 "keywords":["ansi","colors","cli"],
 "license":"ISC",

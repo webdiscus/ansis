@@ -28,6 +28,7 @@ const babelOptions = {
 // https://github.com/terser/terser#compress-options
 const terserOptions = (ecma) => ({
   ecma,
+  toplevel: true,
   compress: {
     ecma,
     passes: 3,
@@ -37,7 +38,6 @@ const terserOptions = (ecma) => ({
     //unsafe: true,
     //unsafe_comps: true,
   },
-  toplevel: true,
 });
 
 /**

@@ -545,6 +545,8 @@ npm run named-truecolors
 
 ![output](https://github.com/webdiscus/ansis/raw/master/docs/img/named-truecolors.png?raw=true "Named truecolors")
 
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/ansi-named-truecolors?file=index.js)
+
 **Example (extend with all [CSS color names](http://dev.w3.org/csswg/css-color/#named-colors) )**
 
 ```js

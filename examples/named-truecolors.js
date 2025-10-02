@@ -1,48 +1,52 @@
 import ansis from 'ansis';
 import colorNames from 'css-color-names' with { type: 'json' };
 
-// columns from CLI arg (default 3): `node named-truecolors.js 4`
-const COLS = Math.max(1, Number(process.argv[2]) || 3);
-const GAP = 2; // spaces between columns
+// columns from CLI arg (default 3): `node named-truecolors.js 2`
+const columns = Math.max(1, Number(process.argv[2]) || 3);
+// spaces between columns
+const columnGap = 2;
 
+// extended instance containing named truecolors
 const color = ansis.extend(colorNames);
+
+// sorted color names
 const names = Object.keys(colorNames).sort((a, b) => a.localeCompare(b));
 
 const getBgName = (name) => 'bg' + name[0].toUpperCase() + name.slice(1);
 
-// prebuild raw colored parts (no trailing cell padding yet)
+// prebuild colored raw parts
 const items = names.map((name) => {
   const bgName = getBgName(name);
   return {
-    name,
-    left: color[name](`${name} `),
-    right: color[bgName].black(` ${bgName} `),
+    left: color[name](`${name} `), // colorized foreground
+    right: color[bgName].black(` ${bgName} `), // colorized background
   };
 });
 
 // compute max visible widths for left/right blocks
-const maxLeftVis = Math.max(...items.map((x) => ansis.strip(x.left).length));
-const maxRightVis = Math.max(...items.map((x) => ansis.strip(x.right).length));
-const cellWidth = maxLeftVis + maxRightVis; // visible chars, without GAP
+const maxLeftWidth = Math.max(...items.map((item) => ansis.strip(item.left).length));
+const maxRightWidth = Math.max(...items.map((item) => ansis.strip(item.right).length));
+const cellWidth = maxLeftWidth + maxRightWidth;
 
-// build cells: pad inside (after left), then pad after entire cell to fixed width
-const cells = items.map((x) => {
-  const leftVis = ansis.strip(x.left).length;
-  const padLeft = ' '.repeat(maxLeftVis - leftVis);
-  const core = x.left + padLeft + x.right; // colored cell content
-  const coreVis = ansis.strip(core).length; // visible width of the cell (no GAP)
-  const padAfter = ' '.repeat(cellWidth - coreVis + GAP); // pad to fixed width + gap
+// build cells: pad inside (between left and right blocks), then pad after entire cell to fixed width
+const cells = items.map((item) => {
+  const leftWidth = ansis.strip(item.left).length;
+  const padLeft = ' '.repeat(maxLeftWidth - leftWidth);
+  const columnContent = item.left + padLeft + item.right;
+  const columnWidth = ansis.strip(columnContent).length;
+  const padAfter = ' '.repeat(cellWidth - columnWidth + columnGap);
 
-  return core + padAfter;
+  return columnContent + padAfter;
 });
 
-// lay out in column-major order: top->bottom, then next column
-const rows = Math.ceil(cells.length / COLS);
+// layout: top->bottom, then next column
+const rows = Math.ceil(cells.length / columns);
 let out = '';
-for (let r = 0; r < rows; r++) {
+
+for (let row = 0; row < rows; row++) {
   let line = '';
-  for (let c = 0; c < COLS; c++) {
-    const i = r + c * rows;
+  for (let col = 0; col < columns; col++) {
+    const i = row + col * rows;
     if (i < cells.length) line += cells[i];
   }
   out += line.replace(/\s+$/, '') + '\n';

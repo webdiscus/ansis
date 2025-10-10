@@ -20,7 +20,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 > Migration [guide](https://github.com/webdiscus/ansis/discussions/36#migrating-to-v4) to v4, note the  [new features](https://github.com/webdiscus/ansis/discussions/36#v4-features) and [breaking changes](https://github.com/webdiscus/ansis/discussions/36).
 
 
-### 🚀 [Getting Started](#getting-started) ✨[Why Ansis](#why-ansis) 🔧[Compatibility](#compatibility) ⚙️ [Troubleshooting](#troubleshooting)
+### 🚀 [Getting Started](#getting-started) ✨[Why Ansis](#why-ansis) 📌 [Ansis vs styleText](#ansis-vs-styleText) 🔧[Compatibility](#compatibility) ⚙️ [Troubleshooting](#troubleshooting)
 ### ⚖️ [Alternatives](#alternatives) ✅ [Compare features](#compare) 📊 [Benchmarks](#benchmark) 🔄 [Migrating from](#switch-to-ansis)
 
 ![Ansis demo](docs/img/ansis-demo.png)
@@ -264,6 +264,127 @@ pico.green(`Create ${pico.blue(pico.bold('React'))} app.`) // picocolors: usabil
 
 > [!TIP]
 > Ansis supports **nested template strings**, so you can colorize text without using parentheses.
+
+---
+
+#### [↑ top](#top)
+
+<a name="ansis-vs-styleText"></a>
+
+## Ansis vs `styleText()`
+
+Since **Node v22**, the built-in [`util.styleText()`](https://nodejs.org/api/util.html#utilstyletextformat-text-options)
+has been officially introduced, supporting [standard modifiers](https://nodejs.org/api/util.html#modifiers) - the basic 16 colors and styles.
+
+### Where it works
+
+**Ansis**
+
+✅ Works on **Node v10+**\
+✅ Works in Chromium-based browsers and Safari (useful for shared utils)\
+⚠️ **Firefox DevTools** don't render ANSI escape sequences.
+
+**styleText**
+
+✅ Available since **Node v22+** (v21.7 requires the flag `--experimental-util-style-text`)\
+❌ Node only - it doesn't work in browsers
+
+### Color support detection
+
+**Ansis**
+
+- Detects terminal, TTY, CI, or browser color capability and automatically falls back to the supported level (truecolor → 256 → 16 → no color).
+- Supports common flags and environment variables:\
+  `NO_COLOR`, `FORCE_COLOR`, `COLORTERM`, `--no-color`, `--color`.
+- The property `ansis.level` returns supported [color level](https://github.com/webdiscus/ansis#color-support).
+
+**styleText**
+
+- Detects terminal color support automatically.
+- Supports only environment variables:\
+    `NO_COLOR`, `FORCE_COLOR`, `NODE_DISABLE_COLORS`.
+
+### Simple styling
+
+**Ansis** has a compact and elegant syntax:
+
+```js
+import ansis, { green } from 'ansis';
+
+console.log(ansis.green('Success!'));
+// or even shortly using named import
+console.log(green`Success!`);
+console.log(green.bold`Success!`);
+```
+
+The same example with **styleText** is more verbose:
+
+```js
+const { styleText } = require('node:util');
+
+console.log(styleText('green', 'Success!'));
+console.log(styleText(['green', 'bold'], 'Success!'));
+```
+
+### Nested styling
+
+**Ansis** keeps your code short and readable:
+
+```js
+import { red, cyan } from 'ansis';
+
+console.log(red`Error: ${cyan.bold`file.js`} not found!`);
+```
+Ansis' tagged templates read like prose. Reviewers see the message, not a tangle of function calls.
+Refactors and code reviews are faster and less error-prone.
+
+Using **styleText** becomes awkward and verbose for nested or combined styles:
+
+```js
+const { styleText } = require('node:util');
+
+console.log(styleText('red', `Error: ${styleText(['cyan', 'bold'], 'file.js')} not found!`));
+```
+
+### Truecolor
+
+**Ansis**
+
+- Supports 16-color, 256-color, and truecolor output.
+- Truecolor methods `hex()` and `rgb()`:
+  ```js
+  console.log(ansis.hex('#ffa500')('orange text'));
+  console.log(ansis.rgb(255, 165, 0)('orange text'));
+  ```
+- Supports [named truecolors](https://github.com/webdiscus/ansis?tab=readme-ov-file#named-truecolors) (via extension):
+  ```js
+  console.log(ansis.orange('Orange foreground'));
+  console.log(ansis.bgPink('Pink background'));
+  ```
+
+**styleText**
+
+- Limited to the 16 ANSI colors and standard styles.
+- No support for hex, rgb, or named truecolors.
+
+### TypeScript & IDE support
+
+**Ansis** includes `d.ts` type definitions for seamless **TypeScript** integration.\
+Color names, methods, and style chains are fully typed, enabling **autocomplete** and **type checking** in IDEs like VS Code.
+
+## Which one?
+
+If you only need basic 16 colors, simple single-style text, and Node-only,
+`styleText()` is perfectly fine and dependency free.
+
+> [!TIP]
+> You can easily migrate from `picocolors`, `colorette` or `kleur` to `styleText`.
+
+If you need truecolor, multi-style chaining, nested templates, complex compositions, or browser compatibility,\
+**Ansis** remains the more elegant, expressive, and future-proof solution.\
+It's built to work reliably across a wide range of environments:
+terminals, TTY, CI pipelines, and modern browsers, automatically adapting to the available color capabilities.
+
 
 ---
 

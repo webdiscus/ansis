@@ -3,6 +3,9 @@
   "private": true,
   "type": "module",
   "types": "lib/bench.d.ts",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "bench": "node ./index.js",
     "bench:truecolor": "node truecolor.bench.js"

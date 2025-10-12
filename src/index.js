@@ -58,7 +58,7 @@ let createStyle = ({ p: props }, { open, close }) => {
     let closeStack = props.c;
 
     // Detect nested styles
-    // Note: on Node.js >= 22, includes() is ~5x faster than using ~indexOf()
+    // Note: on Node.js >= 22, includes() is a tick faster than using ~indexOf()
     let pos;
     if (output.includes('')) {
       for (; props; props = props.p) {
@@ -275,7 +275,7 @@ function Ansis(level = detectedLevel) {
 
   // define base functions, colors and styles
   return self.extend(styleData);
-};
+}
 
 const ansis = new Ansis();
 

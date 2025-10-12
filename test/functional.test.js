@@ -4,8 +4,8 @@ import { esc } from './utils/helpers.js';
 // import env variables to simulate truecolor in CLI
 import './env/truecolor.js';
 
-//import ansis, { Ansis, red, yellow, green, gray, bold, italic, underline, hex } from '../src/index.mjs'; //  // for debugging only
-import ansis, { Ansis, red, gray, green, yellow, bold, italic, underline, hex } from 'ansis'; // test npm package
+import ansis, { Ansis, red, yellow, green, gray, bold, italic, underline, hex } from '../src/index.mjs'; //  // for debugging only
+//import ansis, { Ansis, red, gray, green, yellow, bold, italic, underline, hex } from 'ansis'; // test npm package
 
 describe('support colors', () => {
   test(`ansis.isSupported()`, () => {
@@ -441,26 +441,41 @@ describe('advanced features tests', () => {
 });
 
 describe('template literals tests', () => {
-  test('ansis.red`red color`', () => {
-    const received = ansis.red`red color`;
-    const expected = '\x1b[31mred color\x1b[39m';
+  test('ansis.red`red`', () => {
+    const received = ansis.red`red`;
+    const expected = '\x1b[31mred\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test('red.underline`foo`', () => {
+    const received = red.underline`foo`;
+    const expected = '\x1b[31m\x1b[4mfoo\x1b[24m\x1b[39m';
+    console.log(received); // visual control
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test('red`red ${green`green`} red`', () => {
+    const received = red`red ${green`green`} red`;
+    const expected = '\x1b[31mred \x1b[32mgreen\x1b[31m red\x1b[39m';
+    console.log(received); // visual control
     expect(esc(received)).toEqual(esc(expected));
   });
 
   test('red`red ${yellow`yellow ${green`green`} yellow`} red`', () => {
     const received = red`red ${yellow`yellow ${green`green`} yellow`} red`;
     const expected = '\x1b[31mred \x1b[33myellow \x1b[32mgreen\x1b[33m yellow\x1b[31m red\x1b[39m';
+    console.log(received); // visual control
     expect(esc(received)).toEqual(esc(expected));
   });
 
-  test('nested gray and gray', () => {
+  test('nested gray.underline and gray', () => {
     const received = red`red ${gray.underline`gray ${yellow`yellow ${gray.italic`gray ${green`green`} gray`} yellow`} gray`} red`;
     const expected = '\x1b[31mred \x1b[90m\x1b[4mgray \x1b[33myellow \x1b[90m\x1b[3mgray \x1b[32mgreen\x1b[90m gray\x1b[23m\x1b[33m yellow\x1b[90m gray\x1b[24m\x1b[31m red\x1b[39m';
     console.log(received); // visual control
     expect(esc(received)).toEqual(esc(expected));
   });
 
-  test('nested gray and gray 2', () => {
+  test('nested underline.gray and gray', () => {
     const received = red`red ${underline.gray`gray ${yellow`yellow ${italic.gray`gray ${green`green`} gray`} yellow`} gray`} red`;
     const expected = '\x1b[31mred \x1b[4m\x1b[90mgray \x1b[33myellow \x1b[3m\x1b[90mgray \x1b[32mgreen\x1b[90m gray\x1b[33m\x1b[23m yellow\x1b[90m gray\x1b[31m\x1b[24m red\x1b[39m';
     console.log(received); // visual control

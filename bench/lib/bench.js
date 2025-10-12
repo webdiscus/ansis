@@ -10,12 +10,12 @@ const benchStyle = new Ansis();
  *   The name string pads with space until the resulting string reaches the given width.
  * @property {number?} minOpsWidth Minimal width of the ops (Operations Pro Seconds).
  *   The ops string pads with space until the resulting string reaches the given width.
- * @property {StyleFunction?} suiteNameColor The color of suite name.
- * @property {StyleFunction?} benchNameColor The color of benchmark name.
- * @property {StyleFunction?} statUnitColor The color of statistic units.
- * @property {StyleFunction?} opsColor The color of ops value.
- * @property {StyleFunction?} rmeColor The color of relative margin of error (expressed as a percentage of the mean) value.
- * @property {StyleFunction?} failColor The color of fail string.
+ * @property {StyleFunction} [suiteNameColor] The color of suite name.
+ * @property {StyleFunction} [benchNameColor] The color of benchmark name.
+ * @property {StyleFunction} [statUnitColor] The color of statistic units.
+ * @property {StyleFunction} [opsColor] The color of ops value.
+ * @property {StyleFunction} [rmeColor] The color of relative margin of error (expressed as a percentage of the mean) value.
+ * @property {StyleFunction} [failColor] The color of fail string.
  */
 const defaultOptions = {
   minNameWidth: 15,
@@ -101,10 +101,11 @@ class Bench {
    *
    * @param {string} name The name of benchmark.
    * @param {Function} fn The function of benchmark.
+   * @param {boolean} force Force add the bench.
    * @returns {Bench}
    */
-  add(name, fn) {
-    if (!this.enabledBenchmarks.has(name)) {
+  add(name, fn, force = false) {
+    if (!force && !this.enabledBenchmarks.has(name)) {
       return this;
     }
 

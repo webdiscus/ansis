@@ -25,6 +25,9 @@
 
 'use strict';
 
+// Node.js >= 22
+import { styleText } from 'node:util';
+
 // vendor libraries
 import chalk from 'chalk';
 import colorsJs from '@colors/colors';
@@ -86,6 +89,27 @@ const bench = new Bench({
 log();
 log(hex('#F88').inverse.bold` -= Benchmark =- `);
 
+// For inner perf test only
+// bench('Simple short text 3 bytes, ansis').add(packages['ansis'], () => ansis.red(text3)).run();
+// bench('Simple long text 60 bytes, ansis').add(packages['ansis'], () => ansis.red(text60)).run();
+// bench(`red('foo')`).
+//   add(packages['chalk'], () => chalk.red('foo')).
+//   add(packages['ansis'], () => ansis.red('foo')).
+//   add(packages['picocolors'], () => picocolors.red('foo')).
+//   run();
+// bench('red(`red ${green(`green`)} red`)').
+//   add(packages['chalk'], () => chalk.red(`red ${chalk.green(`green`)} red`)).
+//   add(packages['ansis'], () => ansis.red(`red ${ansis.green(`green`)} red`)).
+//   add(packages['picocolors'], () => picocolors.red(`red ${picocolors.green(`green`)} red`)).
+//   run();
+
+// Node tests
+const stringWithEscape = 'foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo\x1b[31m red\x1b[39m';
+bench('indexOf vs includes').
+  add('indexOf', () => ~stringWithEscape.indexOf(''), true).
+  add('includes', () => stringWithEscape.includes(''), true).
+  run();
+
 // RGB colors
 bench('RGB colors').
   add(packages['chalk'], () => { for (let i = 0; i < 256; i++) chalk.rgb(i, 150, 200)('foo'); }).
@@ -100,11 +124,9 @@ bench('HEX colors').
 const text3 = 'foo';
 const text60 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed.';
 
-bench('Simple short text 3 bytes, ansis').add(packages['ansis'], () => ansis.red(text3)).run();
-bench('Simple long text 60 bytes, ansis').add(packages['ansis'], () => ansis.red(text60)).run();
-
 // Simple bench
 bench('Simple short text, 3 chars, using 1 style').
+  add('styleText', () => styleText('red', text3), true).
   add(packages['chalk'], () => chalk.red(text3)).
   add(packages['ansis'], () => ansis.red(text3)).
   add(packages['picocolors'], () => picocolors.red(text3)).
@@ -118,6 +140,7 @@ bench('Simple short text, 3 chars, using 1 style').
   run();
 
 bench('Simple long text, 60 chars, using 1 style').
+  add('styleText', () => styleText('red', text60), true).
   add(packages['chalk'], () => chalk.red(text60)).
   add(packages['ansis'], () => ansis.red(text60)).
   add(packages['picocolors'], () => picocolors.red(text60)).
@@ -132,6 +155,7 @@ bench('Simple long text, 60 chars, using 1 style').
 
 // Fastest way for 2 styles
 bench(`Use 2 styles`).
+  add('styleText', () => styleText(['red', 'bold'], 'foo'), true).
   add(packages['chalk'], () => chalk.red.bold('foo')).
   add(packages['ansis'], () => ansis.red.bold('foo')).
   add(packages['picocolors'], () => picocolors.red(picocolors.bold('foo'))).
@@ -146,6 +170,7 @@ bench(`Use 2 styles`).
 
 // Fastest way for 3 styles
 bench('Use 3 styles').
+  add('styleText', () => styleText(['red', 'bold', 'bgWhite'], 'foo'), true).
   add(packages['chalk'], () => chalk.red.bold.bgWhite('foo')).
   add(packages['ansis'], () => ansis.red.bold.bgWhite('foo')).
   add(packages['picocolors'], () => picocolors.red(picocolors.bold(picocolors.bgWhite('foo')))).
@@ -160,6 +185,7 @@ bench('Use 3 styles').
 
 // Fastest way for 4 styles
 bench('Use 4 styles').
+  add('styleText', () => styleText(['red', 'bold', 'underline', 'bgWhite'], 'foo'), true).
   add(packages['chalk'], () => chalk.red.bold.underline.bgWhite('foo')).
   add(packages['ansis'], () => ansis.red.bold.underline.bgWhite('foo')).
   add(packages['picocolors'], () => picocolors.red(picocolors.bold(picocolors.underline(picocolors.bgWhite('foo'))))).
@@ -181,6 +207,7 @@ bench('Chained syntax').
   add(packages['cli-color'], () => cliColor.red.bold.underline.bgWhite('foo')).
   add(packages['colors-cli'], () => colorCli.red.bold.underline.white_bt('foo')).
   add(packages['@colors/colors'], () => colorsJs.red.bold.underline.bgWhite('foo')).
+  // styleText - (not supported)
   // colorette - (not supported)
   // picocolors - (not supported)
   // kolorist - (not supported)
@@ -188,6 +215,7 @@ bench('Chained syntax').
 
 // Nested calls, like colorette recursion
 bench('Nested calls').
+  add('styleText', () => styleText('red', styleText('bold', styleText('underline', styleText('bgWhite', 'foo')))), true).
   add(packages['chalk'], () => chalk.red(chalk.bold(chalk.underline(chalk.bgWhite('foo'))))).
   add(packages['ansis'], () => ansis.red(ansis.bold(ansis.underline(ansis.bgWhite('foo'))))).
   add(packages['picocolors'], () => picocolors.red(picocolors.bold(picocolors.underline(picocolors.bgWhite('foo'))))).
@@ -198,6 +226,21 @@ bench('Nested calls').
   add(packages['cli-color'], () => cliColor.red(cliColor.bold(cliColor.underline(cliColor.bgWhite('foo'))))).
   add(packages['colors-cli'], () => colorCli.red(colorCli.bold(colorCli.underline(colorCli.white_bt('foo'))))).
   add(packages['@colors/colors'], () => colorsJs.red(colorsJs.bold(colorsJs.underline(colorsJs.bgWhite('foo'))))).
+  run();
+
+// Nested styles
+bench('red(`red ${green(`green`)} red`)').
+  add('styleText', () => styleText('red', `red ${styleText('green', 'green')} red`), true).
+  add(packages['chalk'], () => chalk.red(`red ${chalk.green(`green`)} red`)).
+  add(packages['ansis'], () => ansis.red(`red ${ansis.green(`green`)} red`)).
+  add(packages['picocolors'], () => picocolors.red(`red ${picocolors.green(`green`)} red`)).
+  add(packages['colorette'], () => colorette.red(`red ${colorette.green(`green`)} red`)).
+  add(packages['kleur'], () => kleur.red(`red ${kleur.green(`green`)} red`)).
+  add(packages['ansi-colors'], () => ansiColors.red(`red ${ansiColors.green(`green`)} red`)).
+  add(packages['kolorist'], () => kolorist.red(`red ${kolorist.green(`green`)} red`)).
+  add(packages['cli-color'], () => cliColor.red(`red ${cliColor.green(`green`)} red`)).
+  add(packages['colors-cli'], () => colorCli.red(`red ${colorCli.green(`green`)} red`)).
+  add(packages['@colors/colors'], () => colorsJs.red(`red ${colorsJs.green(`green`)} red`)).
   run();
 
 // Deep nested styles
@@ -224,6 +267,7 @@ bench('Deep nested styles').
   add(packages['cli-color'], () => deepNestedBench(cliColor)).
   add(packages['colors-cli'], () => deepNestedBench(colorCli)).
   add(packages['@colors/colors'], () => deepNestedBench(colorsJs)).
+  // using styleText the code is very awkward
   run();
 
 // Colorette bench

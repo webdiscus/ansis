@@ -286,7 +286,7 @@ has been officially introduced, supporting [standard modifiers](https://nodejs.o
 
 **styleText**
 
-✅ Available since **Node v22+** (v21.7 requires the flag `--experimental-util-style-text`)\
+✅ Official available since **Node v22+**\
 ❌ Node only - it doesn't work in browsers
 
 

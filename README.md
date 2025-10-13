@@ -1,7 +1,7 @@
 <a id="top" name="top"></a>
 <div align="center">
   <a href="https://www.npmjs.com/package/ansis">
-    <img width="323" src="https://github.com/webdiscus/ansis/raw/master/docs/img/logo.png" alt="ansis">
+    <img width="322" src="https://github.com/webdiscus/ansis/raw/master/docs/img/logo2.png" alt="ansis">
   </a>
   <br>
   <i>Make your terminal a little more colorful 🌈</i>

@@ -45,6 +45,25 @@ const logo = {
   ],
 };
 
-let out = colorizeASCII(logo, 5);
+const logo2 = {
+  ascii: `
+ █████╗ ███╗   ██╗███████╗██╗███████╗
+██╔══██╗████╗  ██║██╔════╝██║██╔════╝
+███████║██╔██╗ ██║███████╗██║███████╗
+██╔══██║██║╚██╗██║╚════██║██║╚════██║
+██║  ██║██║ ╚████║███████║██║███████║
+╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝╚══════╝
+`,
+  data: [
+    { width: 8, codes: [88, 124, 160, 196, 197, 198]  },
+    { width: 10, codes: 220 },
+    { width: 8, codes: [76, 77, 78, 79, 80, 81] },
+    { width: 3, codes: [26, 27, 32, 33, 39, 45] },
+    { width: 8, codes: [129, 129, 164, 165, 200, 201] },
+  ],
+};
 
-export { out as ansisLogo };
+let ansisLogo = colorizeASCII(logo, 5);
+let ansisLogo2 = colorizeASCII(logo2, 5);
+
+export { ansisLogo, ansisLogo2 };

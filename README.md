@@ -4,7 +4,7 @@
     <img width="322" src="https://github.com/webdiscus/ansis/raw/master/docs/img/logo2.png" alt="ansis">
   </a>
   <br>
-  <i>Make your terminal a little more colorful 🌈</i>
+  <i>Make terminals a little more colorful 🌈</i>
   <h1 align="center">[ANSI S]tyles</h1>
 </div>
 

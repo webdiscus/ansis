@@ -18,16 +18,18 @@
 ANSI color library for use in terminals, CI environments, and Chromium-based browsers.\
 Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
-> [!TIP]
+> [!NOTE]
 > Migration [guide](https://github.com/webdiscus/ansis/discussions/36#migrating-to-v4) to v4, note the  [new features](https://github.com/webdiscus/ansis/discussions/36#v4-features) and [breaking changes](https://github.com/webdiscus/ansis/discussions/36).
 
-
-### 🚀 [Getting Started](#getting-started) ✨[Why Ansis](#why-ansis) 📌 [Ansis vs styleText](#ansis-vs-styleText) 🔧[Compatibility](#compatibility) ⚙️ [Troubleshooting](#troubleshooting)
-### ⚖️ [Alternatives](#alternatives) ✅ [Compare features](#compare) 📊 [Benchmarks](#benchmark) 🔄 [Migrating from](#switch-to-ansis)
-
-![Ansis demo](docs/img/ansis-demo.png)
+![Ansis demo](https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-demo.png)
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/stackblitz-starters-gs2gve?file=index.js)
+
+## 🔗 Shortcuts
+
+#### 🚀 [Getting Started](#getting-started) ✨[Why Ansis](#why-ansis) 📌 [Ansis vs `util.styleText()`](#ansis-vs-styleText) ⚙️ [Compatibility](#compatibility) 🔧[Troubleshooting](#troubleshooting)
+#### ⚖️ [Alternatives](#alternatives) ✅ [Compare alternatives](#compare) 📊 [Benchmarks](#benchmark) 🔄 [Migrating from](#switch-to-ansis)
+
 
 <a id="features" name="features"></a>
 
@@ -42,7 +44,7 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - [ANSI 16 colors](#base-colors): `red`, `redBright`, `bgRed`, `bgRedBright`, ...
 - [ANSI 256 colors](#256-colors) via methods: `fg(num)`, `bg(num)`
 - [Truecolor](#truecolor) via methods: `rgb(r,g,b)`, `bgRgb(r,g,b)`, `hex('#rrggbb')`, `bgHex('#rrggbb')`
-- [Named truecolors](#extend-colors) (extend with colors such as [orange, pink, navy, ...](https://drafts.csswg.org/css-color/#named-colors)): `ansis.pink()`, `ansis.bgPink()`, ...
+- [Named truecolors](#extend-colors), like [orange, pink, tomato, seegreen](https://drafts.csswg.org/css-color/#named-colors), etc.: `ansis.orange()`, `ansis.bgOrange()`, ...
 - Auto-detects [color support](#color-support): Truecolor, 256 colors, 16 colors, no colors
 - Automatic [fallback](#fallback): Truecolor → 256 colors → 16 colors → no colors
 - Raw ANSI escape codes: ``` `File ${red.open}not found${red.close} in directory` ```
@@ -288,7 +290,7 @@ has been officially introduced, supporting [standard modifiers](https://nodejs.o
 
 **styleText**
 
-✅ Official available since **Node v22+**\
+✅ Native since **Node v22+**\
 ❌ Node only - it doesn't work in browsers
 
 
@@ -349,8 +351,7 @@ import { red, cyan } from 'ansis';
 
 console.log(red`Error: ${cyan.bold`file.js`} not found!`);
 ```
-Ansis' tagged templates read like prose. Reviewers see the message, not a tangle of function calls.
-Refactors and code reviews are faster and less error-prone.
+With Ansis tagged templates, your code reads like prose - clear messages instead of verbose, nested calls and brackets.
 
 Using **styleText** becomes awkward and verbose for nested or combined styles:
 

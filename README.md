@@ -53,8 +53,11 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - Reliable [CLI testing](#cli-testing) with forced [color levels](#color-levels): no color, 16, 256 or Truecolor
 - Drop-in replacement for [`chalk`](#replacing-chalk) [`ansi-colors`](#replacing-ansi-colors) [`colorette`](#replacing-colorette) [`picocolors`](#replacing-picocolors) and others [alternatives](#alternatives)
 
+> 🎯 **You might also like** [`flaget`](https://github.com/webdiscus/flaget) - a smaller (5 kB) and faster alternative to [`yargs-parser`](https://www.npmjs.com/package/yargs-parser) (85 kB) for CLI argument parsing.
 
-> 🚀 **You might also like** [`flaget`](https://github.com/webdiscus/flaget) - a smaller (5 kB) and faster alternative to [`yargs-parser`](https://www.npmjs.com/package/yargs-parser) (85 kB) for CLI argument parsing.
+## 🎨 Recipes
+
+- [Use `util.styleText()` syntax today with support for Node < 22](#ansis-as-styleText)
 
 
 <a id="install" name="install"></a>
@@ -399,7 +402,6 @@ If you need truecolor, multi-style chaining, nested templates, complex compositi
 **Ansis** remains the more elegant, expressive, and future-proof solution.\
 It's built to work reliably across a wide range of environments:
 terminals, TTY, CI pipelines, and modern browsers, automatically adapting to the available color capabilities.
-
 
 ---
 
@@ -1333,6 +1335,16 @@ npm run compare
 <td style="text-align:left"><code>NO_COLOR</code><br><code>FORCE_COLOR</code></td>
 </tr>
 
+<tr>
+<td style="text-align:left"><a href="https://nodejs.org/api/util.html#utilstyletextformat-text-options"><code>util.styleText()</code></a><br><code>Node ≥ 22</code><br><nobr><code>❌ named import</code></nobr><br><code>✅ standard</code></td>
+<td style="text-align:center">✅ ❌ ❌ 🛑</td>
+<td>→b&amp;w</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">?</td>
+<td style="text-align:left"><code>NO_COLOR</code><br><code>FORCE_COLOR</code></td>
+</tr>
+
 </table>
 
 
@@ -1478,9 +1490,60 @@ npm run demo
 ```
 
 #### [↑ top](#top)
+
+# Recipes
+
+<a name="ansis-as-styleText"></a>
+
+## Use `styleText()` syntax with support for Node < 22
+
+Since **Node.js v22**, a built-in [`util.styleText()`](https://nodejs.org/api/util.html#utilstyletextformat-text-options) function was introduced to colorize terminal output without external dependencies.\
+This is a great step forward, it helps to reduce dependencies and keeps apps lighter.
+
+However, many projects still run on Node < 22, where `styleText` is not available.
+If you want to start using this new syntax already today but keep backward compatibility,
+you can use a small adapter powered by Ansis.
+
+### Create `styleText.js` file
+```js
+import ansis from 'ansis';
+
+export const styleText = (format, text) =>
+  (Array.isArray(format)
+      ? format.reduce((style, name) => style[name], ansis)
+      : ansis[format]
+  )(text);
+```
+
+### Use the `styleText` syntax
+
+```js
+import { styleText } from './styleText.js';
+
+console.log(styleText('red', 'Error!'));
+console.log(styleText(['red', 'bold'], 'Error!'));
+```
+
+This works identically to the native `util.styleText()` API, but under the hood uses Ansis,
+ensuring full color and style support across actual Node versions.
+
+
+### Migration to Node ≥ 22
+
+When your codebase drops support for legacy Node versions, you can switch instantly:
+
+```diff
+- import { styleText } from './styleText.js';
++ import { styleText } from 'utils';
+```
+
+See also [Ansis vs `util.styleText()`](#ansis-vs-styleText) for a deeper comparison and performance benchmarks.
+
+#### [↑ top](#top)
+
 <a name="compatibility"></a>
 
-## Compatibility Check
+# Compatibility Check
 
 Check the minimum version of your tool required for compatibility with the latest Ansis.
 
@@ -1521,6 +1584,7 @@ Check the minimum version of your tool required for compatibility with the lates
 > **Firefox** doesn't natively support ANSI codes in the developer console.
 
 #### [↑ top](#top)
+
 <a name="troubleshooting"></a>
 
 # ⚙️ Troubleshooting

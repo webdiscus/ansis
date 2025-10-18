@@ -4,8 +4,8 @@ import { esc } from './utils/helpers.js';
 // import env variables to simulate truecolor in CLI
 import './env/truecolor.js';
 
-import ansis, { Ansis, red, yellow, green, gray, bold, italic, underline, hex } from '../src/index.mjs'; //  // for debugging only
-//import ansis, { Ansis, red, gray, green, yellow, bold, italic, underline, hex } from 'ansis'; // test npm package
+//import ansis, { Ansis, red, yellow, green, gray, bold, italic, underline, hex } from '../src/index.mjs'; //  // for debugging only
+import ansis, { Ansis, red, gray, green, yellow, bold, italic, underline, hex } from 'ansis'; // test npm package
 
 describe('support colors', () => {
   test(`ansis.isSupported()`, () => {
@@ -778,6 +778,32 @@ describe('custom theme', () => {
   test(`theme.error('error')`, () => {
     const received = theme.error('error');
     const expected = '\x1b[31merror\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+});
+
+describe('styleText syntax', () => {
+  const styleText = (format, text) =>
+    (Array.isArray(format)
+        ? format.reduce((style, name) => style[name], ansis)
+        : ansis[format]
+    )(text);
+
+  test(`single style`, () => {
+    const received = styleText('red', 'foo');
+    const expected = '\x1b[31mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`single style as array`, () => {
+    const received = styleText(['red'], 'foo');
+    const expected = '\x1b[31mfoo\x1b[39m';
+    expect(esc(received)).toEqual(esc(expected));
+  });
+
+  test(`multiple style`, () => {
+    const received = styleText(['red', 'bold'], 'foo');
+    const expected = '\x1b[31m\x1b[1mfoo\x1b[22m\x1b[39m';
     expect(esc(received)).toEqual(esc(expected));
   });
 });

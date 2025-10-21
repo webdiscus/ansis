@@ -252,21 +252,21 @@ Explore the list of [features](#compare), [package sizes](#compare-size), and [b
 
 #### Usage examples
 ```js
-import ansis, { red, green, cyan } from 'ansis' // ✅✅ supports both default and named imports
-import chalk from 'chalk'                       // ✅❌ doesn't support named import
-import pico from 'picocolors'                   // ✅❌ doesn't support named import
+import ansis, { red, green, cyan } from 'ansis' // supports both default and named imports
+import chalk from 'chalk'                       // doesn't support named import
+import pico from 'picocolors'                   // doesn't support named import
 
-ansis.red('Error')                         //      ansis ❌ slower than picocolors
-chalk.red('Error')                         //      chalk ❌ slower than ansis
-pico.red('Error')                          // picocolors ✅ fastest
+ansis.red('Error')                         //      ansis: slower than picocolors
+chalk.red('Error')                         //      chalk: slower than ansis
+pico.red('Error')                          // picocolors: fastest
 
-red.bold.bgWhite`Error`                    //      ansis ✅✅✅ fastest, short, readable
-chalk.red.bold.bgWhite('Error')            //      chalk ❌☑️✅ slower, short, readable
-pico.red(pico.bold(pico.bgWhite('Error'))) // picocolors ❌❌❌ slowest, long, unreadable
+red.bold.bgWhite`Error`                    //      ansis: fastest, clean
+chalk.red.bold.bgWhite('Error')            //      chalk: a bit slower, short
+pico.red(pico.bold(pico.bgWhite('Error'))) // picocolors: 2x slower than ansis, verbose
 
-green`Create ${blue.bold`React`} app.`                     //      ansis: usability 😊
-chalk.green(`Create ${chalk.blue.bold('React')} app.`)     //      chalk: usability 🙂
-pico.green(`Create ${pico.blue(pico.bold('React'))} app.`) // picocolors: usability 🥴
+green`Create ${blue.bold`React`} app.`                     // ansis
+chalk.green(`Create ${chalk.blue.bold('React')} app.`)     // chalk
+pico.green(`Create ${pico.blue(pico.bold('React'))} app.`) // picocolors
 ```
 
 > [!TIP]
@@ -541,20 +541,21 @@ See also [named truecolors](#extend-colors).
 
 The same ANSI codes `90` (_gray_) and `100` (_bgGray_) are named differently in various libraries.
 
-| Library                    | Standard<br>`gray`<br>`bgGray` | UK spelling<br>`grey`<br>`bgGrey` | Spec-style<br>&nbsp;`blackBright`<br>`bgBlackBright` |
-|:---------------------------|:------------------------------:|:---------------------------------:|:----------------------------------------------------:|
-| [ansis][ansis]             |               ✅                |                 ❌                 |                          ❌                           |
-| [yoctocolors][yoctocolors] |               ✅                |                 ❌                 |                          ❌                           |
-| [kolorist][kolorist]       |               ✅                |                 ❌                 |                          ❌                           |
-| [colors.js][colors.js]     |               ✅                |                 ✅                 |                          ❌                           |
-| [picocolors][picocolors]   |               ✅                |                 ❌                 |                          ✅                           |
-| [tinyrainbow][tinyrainbow] |               ✅                |                 ❌                 |                          ✅                           |
-| [colorette][colorette]     |               ✅                |                 ❌                 |                          ✅                           |
-| [chalk][chalk]             |               ✅                |                 ✅                 |                          ✅                           |
-| [ansi-colors][ansi-colors] |               ✅                |                 ✅                 |                          ✅                           |
-| [kleur][kleur] (8 colors)  |               ✅                |                 ✅                 |                          -                           |
-| [cli-color][cli-color]     |               ❌                |                 ❌                 |                          ✅                           |
-| [colors-cli][colors-cli]   |               ❌                |                 ❌                 |                          ✅                           |
+| Library                     | Standard<br>`gray`<br>`bgGray` | UK spelling<br>`grey`<br>`bgGrey` | Spec-style<br>&nbsp;`blackBright`<br>`bgBlackBright` |
+|:----------------------------|:------------------------------:|:---------------------------------:|:----------------------------------------------------:|
+| [ansis][ansis]              |               ✅                |                 ❌                 |                          ❌                           |
+| [yoctocolors][yoctocolors]  |               ✅                |                 ❌                 |                          ❌                           |
+| [kolorist][kolorist]        |               ✅                |                 ❌                 |                          ❌                           |
+| [colors.js][colors.js]      |               ✅                |                 ✅                 |                          ❌                           |
+| [picocolors][picocolors]    |               ✅                |                 ❌                 |                          ✅                           |
+| [tinyrainbow][tinyrainbow]  |               ✅                |                 ❌                 |                          ✅                           |
+| [colorette][colorette]      |               ✅                |                 ❌                 |                          ✅                           |
+| [chalk][chalk]              |               ✅                |                 ✅                 |                          ✅                           |
+| [ansi-colors][ansi-colors]  |               ✅                |                 ✅                 |                          ✅                           |
+| [kleur][kleur] (8 colors)   |               ✅                |                 ✅                 |                          -                           |
+| [cli-color][cli-color]      |               ❌                |                 ❌                 |                          ✅                           |
+| [colors-cli][colors-cli]    |               ❌                |                 ❌                 |                          ✅                           |
+| [styleText][styleText-mods] |               ✅                |                 ✅                 |                          ✅                           |
 
 Ansis prefers the more intuitive and commonly used names `gray` and `bgGray`,  **_avoiding redundant aliases_**.
 
@@ -1769,8 +1770,8 @@ npm run bench
 > For example:
 >
 > ```js
-> lib.red.bold.bgWhite(' ERROR ')           // ✅ faster, shorter, readable
-> lib.red(lib.bold(lib.bgWhite(' ERROR '))) // ❌ slower, longer, unreadable
+> lib.red.bold.bgWhite(' ERROR ')           // fast and short
+> lib.red(lib.bold(lib.bgWhite(' ERROR '))) // slower and verbose
 > ```
 
 <a id="bench-simple" name="bench-simple"></a>
@@ -1805,7 +1806,7 @@ styleText('red', 'foo')
 <a id="bench-2-styles" name="bench-2-styles"></a>
 ### Using 2 styles
 
-Using only 2 styles, picocolors is already a bit slower, because using the [chained syntax](#chained-syntax) is faster than nested calls.
+Using only 2 styles, picocolors is already a bit slower, because applying multiple colours at once via [chained syntax](#chained-syntax) is faster than nested calls.
 
 ```js
 ansis.red.bold('foo')
@@ -2359,3 +2360,7 @@ fg(202).bg(236)`Orange text on dark gray background`;
 [npm-ansis]: https://www.npmjs.com/package/ansis
 
 [npm-tinyrainbow]: https://www.npmjs.com/package/tinyrainbow
+
+[styleText]: https://nodejs.org/api/util.html#utilstyletextformat-text-options
+
+[styleText-mods]: https://nodejs.org/api/util.html#modifiers

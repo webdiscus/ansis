@@ -354,7 +354,6 @@ import { red, cyan } from 'ansis';
 
 console.log(red`Error: ${cyan.bold`file.js`} not found!`);
 ```
-With Ansis tagged templates, your code reads like prose - clear messages instead of verbose, nested calls and brackets.
 
 Using **styleText** becomes awkward and verbose for nested or combined styles:
 
@@ -669,7 +668,7 @@ Then you can call e.g., `color.pink()` or `color.bgPink()` rather than using `an
 > Foreground methods are created from the provided color names, and matching background methods `bg*` are generated automatically.
 
 > [!NOTE]
-> To keep Ansis small, it doesn't bundle large truecolors name table.\
+> To keep Ansis small, it doesn't bundle a large list of truecolor names.\
 > Use any mapping package you like, e.g. [css-color-names](https://www.npmjs.com/package/css-color-names) (~6 kB).
 > ```bash
 > npm i css-color-names
@@ -926,16 +925,16 @@ Disable colors:
 ```ts
 import { Ansis } from 'ansis';
 
-const custom = new Ansis(0);
-console.log(custom.red`foo`); // Output: plain string, no ANSI codes
+const color = new Ansis(0);
+console.log(color.red`foo`); // Output: plain string, no ANSI codes
 ```
 
 Use only basic colors:
 ```ts
 import { Ansis } from 'ansis';
 
-const custom = new Ansis(1);
-console.log(custom.hex('#FFAB40')`Orange`); // Output: fallback to yellowBright
+const color = new Ansis(1);
+console.log(color.hex('#FFAB40')`Orange`); // Output: fallback to yellowBright
 ```
 
 **Example**
@@ -950,13 +949,13 @@ import { Ansis } from 'ansis';
  * @param  {boolean} noColors Disable colors
  * @return {Ansis} Default or custom instance
  */
-const safeAnsis = function(noColors) {
+function safeAnsis(noColors) {
   return noColors
     ? new Ansis(0) // disable colors
     : new Ansis(); // auto detect color support
 }
 
-// Handle a special CLI flag to disable colors
+// handle a special CLI flag to disable colors
 const ansis = safeAnsis(process.argv.includes('--save-to-log'))
 ```
 

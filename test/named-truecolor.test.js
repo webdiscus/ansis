@@ -107,4 +107,25 @@ describe('extend with named colors', () => {
 
     expect(received).toMatchSnapshot();
   });
+
+  test('open/close properties in extended colorNames', async () => {
+    const ansis = new Ansis(level).extend(colorNames);
+    const style = ansis.pink;
+    const received = style.open + 'Pink' + style.close;
+
+    const expected = '[38;2;255;192;203mPink[39m';
+    console.log(received);
+    expect(received).toEqual(expected);
+  });
+
+  test('open/close properties in extended colorNames, chained', async () => {
+    const ansis = new Ansis(level).extend(colorNames);
+    const style = ansis.pink.underline;
+    const received = style.open + 'Pink' + style.close;
+
+    const expected = '[38;2;255;192;203m[4mPink[24m[39m';
+    console.log(received);
+    expect(received).toEqual(expected);
+  });
+
 });

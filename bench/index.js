@@ -104,11 +104,11 @@ log(hex('#F88').inverse.bold` -= Benchmark =- `);
 //   run();
 
 // Node tests
-const stringWithEscape = 'foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo\x1b[31m red\x1b[39m';
-bench('indexOf vs includes').
-  add('indexOf', () => ~stringWithEscape.indexOf(''), true).
-  add('includes', () => stringWithEscape.includes(''), true).
-  run();
+// const stringWithEscape = 'foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo\x1b[31m red\x1b[39m';
+// bench('indexOf vs includes').
+//   add('indexOf', () => ~stringWithEscape.indexOf(''), true).
+//   add('includes', () => stringWithEscape.includes(''), true).
+//   run();
 
 // RGB colors
 bench('RGB colors').

@@ -109,7 +109,7 @@ The most popular ANSI libraries, similar to Ansis:
 
 ## ✨ [Why use Ansis](#switch-to-ansis)
 
-As of 2025, two of the [smallest](#compare-size) and [fastest](#benchmark) ANSI libraries are **Ansis** and **Picocolors**.
+As of 2026, two of the [smallest](#compare-size) and [fastest](#benchmark) ANSI libraries are **Ansis** and **Picocolors**.
 Both are [recommended](https://github.com/es-tooling/module-replacements/blob/main/docs/modules/chalk.md) by the e18e community as modern replacements for older, larger libraries.
 
 
@@ -190,18 +190,6 @@ pico.red`R ${pico.green`G ${pico.blue`B`} G`} R`    // ❌
 ```
 
 ![Nested template strings](docs/img/nested-template-strings-compare.png)
-
-
-### 🔧 Maintenance
-
-As of 2025, only **Ansis**, **Chalk**, and **Picocolors** are actively maintained, unlike many other libraries:
-
-- `colorette`: Last updated [2 years ago][npm-colorette]
-- `ansi-colors`: Last updated [3 years ago][npm-ansi-colors]
-- `kleur`: Last updated [3 years ago][npm-kleur]
-- `colors.js`: Last updated [2 years ago][npm-colors.js]
-- `cli-color`: Last updated [1 year ago][npm-cli-color]
-- `colors-cli`: Last updated [1 year ago][npm-colors-cli]
 
 
 <a id="checklist-lib-choice" name="checklist-lib-choice"></a>

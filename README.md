@@ -18,18 +18,19 @@
 ANSI color library for use in terminals, CI environments, and Chromium-based browsers.\
 Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while providing rich [functionality](#compare) and handling [edge cases](#handling-input-arguments).
 
-> [!NOTE]
-> Migration [guide](https://github.com/webdiscus/ansis/discussions/36#migrating-to-v4) to v4, note the  [new features](https://github.com/webdiscus/ansis/discussions/36#v4-features) and [breaking changes](https://github.com/webdiscus/ansis/discussions/36).
-
 ![Ansis demo](https://github.com/webdiscus/ansis/raw/master/docs/img/ansis-demo.png)
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/stackblitz-starters-gs2gve?file=index.js)
 
 ## 🔗 Shortcuts
 
-#### 🚀 [Getting Started](#getting-started) ✨[Why Ansis](#why-ansis) 📌 [Ansis vs `util.styleText()`](#ansis-vs-styleText) ⚙️ [Compatibility](#compatibility) 🔧[Troubleshooting](./docs/troubleshooting.md)
-#### ⚖️ [Alternatives](#alternatives) ✅ [Compare alternatives](#compare) 📊 [Benchmarks](#benchmark) 🔄 [Migrating from](./docs/migrating.md)
+#### 🚀 [Getting Started](#getting-started) ✨[Why Ansis](#why-ansis) 📌 [Ansis vs `styleText()`](#ansis-vs-styleText) ⭐️ [Star History](#star-istory)
 
+#### ⚖️ [Alternatives](#alternatives) ✅ [Compare alternatives](#compare) 📊 [Benchmarks](#benchmark)
+
+#### 🔄 [Migrating from](./docs/migrating.md) ⚙️ [Compatibility](#compatibility) 🔧[Troubleshooting](./docs/troubleshooting.md)
+
+> [Migration guide](https://github.com/webdiscus/ansis/discussions/36#migrating-to-v4) to v4, note the  [new features](https://github.com/webdiscus/ansis/discussions/36#v4-features) and [breaking changes](https://github.com/webdiscus/ansis/discussions/36).
 
 <a id="features" name="features"></a>
 
@@ -46,10 +47,10 @@ Ansis is focused on [small size](#compare-size) and [speed](#benchmark) while pr
 - [Truecolor](#truecolor) via methods: `rgb(r,g,b)`, `bgRgb(r,g,b)`, `hex('#rrggbb')`, `bgHex('#rrggbb')`
 - [Named truecolors](#extend-colors), like [orange, pink, tomato, seegreen](https://drafts.csswg.org/css-color/#named-colors), etc.: `ansis.orange()`, `ansis.bgOrange()`, ...
 - [OSC 8 hyperlink](#hyperlink): `link(text, url)`
+- Strip ANSI escape codes with `ansis.strip()`
+- Raw ANSI escape codes: ``` `File ${red.open}not found${red.close} in directory` ```
 - Auto-detects [color support](#color-support): Truecolor, 256 colors, 16 colors, no colors
 - Automatic [fallback](#fallback): Truecolor → 256 colors → 16 colors → no colors
-- Raw ANSI escape codes: ``` `File ${red.open}not found${red.close} in directory` ```
-- Strip ANSI escape codes with `ansis.strip()`
 - Supports [ENV variables](#cli-vars) and [flags](#cli-flags): [`NO_COLOR`](#using-env-no-color), [`FORCE_COLOR`](#using-env-force-color), [`COLORTERM`](#using-env-colorterm), `--no-color`, `--color`
 - Reliable [CLI testing](#cli-testing) with forced [color levels](#color-levels): no color, 16, 256 or Truecolor
 - Drop-in replacement for [`chalk`](./docs/migrating.md#replacing-chalk) [`ansi-colors`](./docs/migrating.md#replacing-ansi-colors) [`colorette`](./docs/migrating.md#replacing-colorette) [`picocolors`](./docs/migrating.md#replacing-picocolors) and others [alternatives](#alternatives)
@@ -78,7 +79,7 @@ See [`styleText()` limitations](#ansis-vs-styleText).
 ### Why use Ansis
 
 Ansis is the [smallest](#compare-size) and one of the [fastest](#benchmark) ANSI libraries.
-It supports [truecolor](#truecolor), robust [edge-case handling](#edge-cases), and automatic [color support](#color-support) detection.
+It provides clean, readable and compact [chained syntax](#chained-syntax), tagged [template literals](#template-literals), [truecolor](#truecolor) with automatic fallback, robust [edge-case handling](#edge-cases), automatic [color support](#color-support) detection, and it works everywhere.
 
 #### 📦 Unpacked size
 
@@ -110,11 +111,26 @@ npm install ansis
 npm install ansis@node10
 ```
 
-## 🛠️ Usage
+<a name="getting-started"></a>
+## Usage
 
+<a id="import" name="import"></a>
+**ESM**
 ```js
+// Default and named import
 import ansis, { red, bold, fg, hex, rgb } from 'ansis';
+```
 
+**CommonJS**
+```js
+// Default import
+const ansis = require('ansis');
+// Destructuring styles
+const { red, bold, fg, hex, rgb } = require('ansis');
+```
+
+**Examples**
+```js
 console.log(ansis.bold('file.txt'));
 console.log(red`Error: ${bold.cyan(file)} not found!`);
 console.log(bold.bgRed`ERROR`);
@@ -125,39 +141,26 @@ console.log(hex('#FF75D1').bold.underline('Pink'));
 console.log(ansis.strip(red('Text'))); // Output plain text without ANSI codes
 ```
 
----
+<a id="chained-syntax" name="chained-syntax"></a>
 
+## Chained syntax
 
-<a name="getting-started"></a>
+All colors, styles and functions are chainable. Each color or style can be combined in any order.
 
-
-<a id="import" name="import"></a>
-## Default and named import
-
-**ESM**
 ```js
-// Default and named import
-import ansis, { red, green, bold, dim } from 'ansis';
+import { red, bold, italic, hex } from 'ansis';
+
+red.bold`text`;
+hex('#FF75D1').bgCyan.bold`text`;
+bold.bgHex('#FF75D1').cyan`text`;
+italic.bold.yellow.bgMagentaBright`text`;
 ```
-
-**CommonJS**
-```js
-// Default import
-const ansis = require('ansis');
-// Destructuring styles
-const { red, green, bold, dim } = require('ansis');
-```
-
----
-
-#### [↑ top](#top)
-
 
 <a name="template-literals"></a>
 
-## Tagged template literals
+## Template literals
 
-Using [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) you can omit parentheses ``` red(`error`) ``` → ``` red`error` ``` to keep your code readable.
+Using [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) you can omit parentheses ``` red(`error`) ``` → ``` red`error` ``` to keep your code clean.
 
 ```js
 import { cyan, red } from 'ansis';
@@ -167,9 +170,17 @@ let file = '/path/to/file.txt';
 red`Error: File ${cyan(file)} not found!`;
 ```
 
-### Using sequences
+<a id="nested-syntax" name="nested-syntax"></a>
 
-Ansis processes tagged template literals the same way as normal strings.
+Ansis correctly renders **nested template strings**:
+
+```js
+import { green, red, yellow } from 'ansis';
+
+red`Red ${yellow`Yellow ${green`Green`} Yellow`} Red`;
+```
+
+Ansis processes **escape sequences** in template strings the same way as in regular strings:
 
 ```js
 red('Hello\nWorld');
@@ -191,34 +202,6 @@ Output (one line in red):
 prev\next
 ```
 
-<a id="nested-syntax" name="nested-syntax"></a>
-
-## Nested template literals
-
-Ansis correctly renders nested tagged template strings.
-
-```js
-import { green, red, yellow } from 'ansis';
-
-red`Red ${yellow`Yellow ${green`Green`} Yellow`} Red`;
-red`Error: ${yellow`Module ${green`ansis`} is missing!`} Installation required.`;
-```
-
-<a id="chained-syntax" name="chained-syntax"></a>
-
-## Chained syntax
-
-All colors, styles and functions are chainable. Each color or style can be combined in any order.
-
-```js
-import { red, bold, italic, hex } from 'ansis';
-
-red.bold`text`;
-hex('#FF75D1').bgCyan.bold`text`;
-bold.bgHex('#FF75D1').cyan`text`;
-italic.bold.yellow.bgMagentaBright`text`;
-```
-
 #### [↑ top](#top)
 
 <a name="styles"></a>
@@ -226,39 +209,6 @@ italic.bold.yellow.bgMagentaBright`text`;
 ## ANSI Styles
 
 `dim` **`bold`** _`italic`_ <u>`underline`</u> <s>`strikethrough`</s> `inverse` `visible` `hidden` `reset`
-
-
-<a id="hyperlink" name="hyperlink"></a>
-
-## Hyperlink
-
-Create terminal hyperlinks via OSC 8 using `link(text, url)`.
-
-Syntax:
-- `link(text, url)` - custom link text + target URL
-- `link(url)` - URL is used as both link text and target URL
-
-```js
-import ansis, { blue, link } from 'ansis';
-
-console.log(ansis.link('Click here', 'https://example.com'));
-// text and URL are the same
-console.log(link('https://example.com'));
-// link with styling
-console.log(blue.underline.link('Click here', 'https://example.com'));
-```
-
-> [!IMPORTANT]
-> When combining styles with hyperlinks, call `link()` last in the chain.
-> ```js
-> blue.underline.link('Click here', 'https://example.com'); // ✅ correct
-> blue.link('Click here', 'https://example.com').underline; // ❌ error
-> ```
-
-> [!WARNING]
-> OSC 8 hyperlinks are not widely supported.\
-> In unsupported terminals, the text is shown without a clickable link.
-
 
 <a name="base-colors"></a>
 ## ANSI 16 colors
@@ -527,6 +477,38 @@ Output depending on terminal color support:
 | 256 colors         | [palette index](#256-colors) `214` | `\x1b[38;5;214mText\x1b[39m`       |
 | 16 colors          | code `93` (bright yellow)          | `\x1b[93mText\x1b[39m`             |
 | No color           | plain text                         | `Text`                             |
+
+
+<a id="hyperlink" name="hyperlink"></a>
+
+## Hyperlink
+
+Create terminal hyperlinks via OSC 8 using `link(text, url)`.
+
+Syntax:
+- `link(text, url)` - custom link text + target URL
+- `link(url)` - URL is used as both link text and target URL
+
+```js
+import ansis, { blue, link } from 'ansis';
+
+console.log(ansis.link('Click here', 'https://example.com'));
+// text and URL are the same
+console.log(link('https://example.com'));
+// link with styling
+console.log(blue.underline.link('Click here', 'https://example.com'));
+```
+
+> [!IMPORTANT]
+> When combining styles with hyperlinks, call `link()` last in the chain.
+> ```js
+> blue.underline.link('Click here', 'https://example.com'); // ✅ correct
+> blue.link('Click here', 'https://example.com').underline; // ❌ error
+> ```
+
+> [!WARNING]
+> OSC 8 hyperlinks are not widely supported.\
+> In unsupported terminals, the text is shown without a clickable link.
 
 ---
 
@@ -1554,6 +1536,7 @@ npm run demo
 
 ---
 
+<a name="star-istory"></a>
 ## ⭐️ Star History
 
 If you find this useful, please ⭐️ the repo.

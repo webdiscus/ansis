@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.0-beta.1 (2026-03-06)
+
+- feat: add support for OSC 8 hyperlink: `link(text, url)`
+
 ## 4.2.0 (2025-09-20)
 
 - feat: add support named truecolor via `ansis.extend()`.

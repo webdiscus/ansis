@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build": "rimraf --glob dist/*.* && tsc && node dist/index.js --color=true > dist/index.out"
+  },
+  "devDependencies": {
+    "typescript": "=5.4.5"
+  }
+}

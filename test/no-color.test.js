@@ -26,3 +26,23 @@ describe('color level', () => {
     expect(received).toEqual(expected);
   });
 });
+
+describe('link without color support', () => {
+  test(`link('https://example.com')`, () => {
+    const received = ansis.link('https://example.com');
+    const expected = 'https://example.com';
+    expect(received).toEqual(expected);
+  });
+
+  test(`link('Click here', 'https://example.com')`, () => {
+    const received = ansis.link('Click here', 'https://example.com');
+    const expected = 'Click here (​https://example.com​)';
+    expect(received).toEqual(expected);
+  });
+
+  test(`blue.link('Click here', 'https://example.com')`, () => {
+    const received = ansis.blue.link('Click here', 'https://example.com');
+    const expected = 'Click here (​https://example.com​)';
+    expect(received).toEqual(expected);
+  });
+});

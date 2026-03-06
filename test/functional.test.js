@@ -4,8 +4,8 @@ import { esc } from './utils/helpers.js';
 // import env variables to simulate truecolor in CLI
 import './env/truecolor.js';
 
-//import ansis, { Ansis, red, yellow, green, gray, bold, italic, underline, hex } from '../src/index.mjs'; //  // for debugging only
-import ansis, { Ansis, red, gray, green, yellow, bold, italic, underline, hex } from 'ansis'; // test npm package
+//import ansis, { Ansis, red, blue, yellow, green, gray, bold, italic, underline, hex, link } from '../src/index.mjs'; //  // for debugging only
+import ansis, { Ansis, red, blue, gray, green, yellow, bold, italic, underline, hex, link } from 'ansis'; // test npm package
 
 describe('support colors', () => {
   test(`ansis.isSupported()`, () => {
@@ -751,6 +751,38 @@ describe('styles', () => {
     console.log(received);
     const expected = '\x1b[31mred \x1b[31m\x1b[0m\x1b[4munderline\x1b[24m\x1b[0m\x1b[31m red\x1b[39m';
 
+    expect(received).toEqual(expected);
+  });
+});
+
+describe('link', () => {
+  test(`ansis.link('https://example.com')`, () => {
+    const received = ansis.link('https://example.com');
+    const expected = ']8;;https://example.comhttps://example.com]8;;';
+    expect(received).toEqual(expected);
+  });
+
+  test(`ansis.link('Click here', 'https://example.com')`, () => {
+    const received = ansis.link('Click here', 'https://example.com');
+    const expected = ']8;;https://example.comClick here]8;;';
+    expect(received).toEqual(expected);
+  });
+
+  test(`ansis.blue.link('Click here', 'https://example.com')`, () => {
+    const received = ansis.blue.link('Click here', 'https://example.com');
+    const expected = '[34m]8;;https://example.comClick here]8;;[39m';
+    expect(received).toEqual(expected);
+  });
+
+  test(`link('https://example.com')`, () => {
+    const received = link('https://example.com');
+    const expected = ']8;;https://example.comhttps://example.com]8;;';
+    expect(received).toEqual(expected);
+  });
+
+  test(`blue.link('Click here', 'https://example.com')`, () => {
+    const received = blue.link('Click here', 'https://example.com');
+    const expected = '[34m]8;;https://example.comClick here]8;;[39m';
     expect(received).toEqual(expected);
   });
 });

@@ -80,6 +80,16 @@ type L = (s: S) => A;
  */
 type R = (r: N, g: N, b: N) => A;
 
+/**
+ * Create a terminal hyperlink escape sequence.
+ *
+ * @param {string} text The visible text of the link. If `url` is omitted, `text` is used as both the text and URL.
+ * @param {string} [url] The target URL.
+ *
+ * @return {string}
+ */
+type W = (text: S, url?: S) => S;
+
 // Short alias
 type A = Ansis;
 
@@ -158,6 +168,15 @@ type Ansis = {
     bgHex: L;
 
     /**
+     * Create OSC 8 hyperlink.
+     *
+     * @param {string} text The link text or URL.
+     * @param {string} [url] The target URL. If omitted, `text` is used as URL.
+     * @return {string}
+     */
+    link: W;
+
+    /**
      * Whether the output supports ANSI color and styles.
      *
      * @return {boolean}
@@ -207,7 +226,8 @@ declare const
   a: A,
   fg: Q,
   rgb: R,
-  hex: L;
+  hex: L,
+  link: W;
 
 // Named exports
 export {
@@ -219,6 +239,7 @@ export {
   rgb as bgRgb,
   hex,
   hex as bgHex,
+  link,
 
   // Base styles
   a as reset,

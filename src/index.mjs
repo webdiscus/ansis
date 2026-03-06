@@ -8,6 +8,7 @@ export default a;
 // named exports
 export const {
   Ansis,
+
   // color functions
   fg,
   bg,
@@ -21,6 +22,9 @@ export const {
   inverse,
   hidden,
   visible,
+
+  // additional terminal funcitons
+  link,
 
   // styles
   bold,

@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+
+    "module": "Node16",
+    // strict module resolution
+    "moduleResolution": "Node16"
+    // the same behaviour as with 'Node16'
+    //"moduleResolution": "NodeNext"
+
+    // works well, because it is permissive, legacy-compatible behavior
+    //"moduleResolution": "node"
+  }
+}

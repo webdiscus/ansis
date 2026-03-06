@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+
+    "module": "Node16",
+
+    // import works only with "type": "module"
+    "moduleResolution": "Node16",
+  }
+}

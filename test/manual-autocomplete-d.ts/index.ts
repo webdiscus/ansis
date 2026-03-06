@@ -37,3 +37,5 @@ log(yellow.italic(`yellow using ${str} variable`));
 log(red.bgCyan.underline.hex('#fce')('text underline'));
 log(styledText);
 log(ansis.strip(styledText));
+
+log(ansis.link('click', 'http://example.com/'));

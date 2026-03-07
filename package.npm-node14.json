@@ -1,6 +1,6 @@
 {
 "name":"ansis",
-"version":"4.3.0-beta.1",
+"version":"4.3.0-beta.2",
 "description":"ANSI color lib",
 "keywords":["ansi","colors","cli"],
 "license":"ISC",

@@ -27,7 +27,6 @@ let LF = '\n';
  * @property {string} close
  * @property {string?} o The open stack.
  * @property {string?} c The close stack.
- * @property {FormatterFn?} f Formatter renderer.
  * @property {null | AnsisProps} p The properties.
  */
 
@@ -37,7 +36,7 @@ let LF = '\n';
  * @param {StyleFormatter} style
  * @return {Ansis}
  */
-let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f }) => {
+let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f: formatter }) => {
   /**
    * Decorates a string with ANSI escape sequences.
    * @param {unknown} arg The input value, can be any or a template string.
@@ -57,9 +56,6 @@ let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f 
     let props = styleFn.p;
     let openStack = props.o;
     let closeStack = props.c;
-
-    // formatter inherited through chain (if an extension is a function)
-    let formatter = props.f;
 
     // Render string
     let output = formatter
@@ -103,9 +99,6 @@ let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f 
   let openStack = open;
   let closeStack = close;
 
-  // inherit formatter from parent unless overridden
-  let formatter = f || (props && props.f);
-
   if (props) {
     openStack = props.o + open;
     closeStack = close + props.c;
@@ -113,7 +106,7 @@ let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f 
 
   setPrototypeOf(styleFn, stylePrototype);
 
-  styleFn.p = { open, close, o: openStack, c: closeStack, f: formatter, p: props };
+  styleFn.p = { open, close, o: openStack, c: closeStack, p: props };
   styleFn.open = openStack;
   styleFn.close = closeStack;
 
@@ -257,7 +250,8 @@ function Ansis(level = detectedLevel) {
 
   // OSC 8 hyperlinks
   let link = {
-    f: (label, url = label) => (hasColors ? `]8;;${url}${label}]8;;` : label === url ? label : `${label} (​${url}​)`), // zero-width spaces to prevent auto-linking while keeping copy/paste intact
+    // zero-width spaces to prevent auto-linking while keeping copy/paste intact
+    f: (text, url = text) => (hasColors ? `]8;;${url}${text}]8;;` : text === url ? text : `${text} (​${url}​)`),
   };
 
   let styleData = {

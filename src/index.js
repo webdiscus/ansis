@@ -1,5 +1,5 @@
 import { create, defineProperty, setPrototypeOf, separator, EMPTY_STRING } from './misc.js';
-import { hexToRgb, rgbToAnsi256, rgbToAnsi16, ansi256To16 } from './utils.js';
+import { hexToRgb, rgbToAnsi256, ansi256To16 } from './utils.js';
 import { getLevel } from './color-support.js';
 import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS } from './color-levels.js';
 

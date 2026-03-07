@@ -106,9 +106,7 @@ let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f:
 
   setPrototypeOf(styleFn, stylePrototype);
 
-  styleFn.p = { open, close, o: openStack, c: closeStack, p: props };
-  styleFn.open = openStack;
-  styleFn.close = closeStack;
+  styleFn.p = { open, close, o: styleFn.open = openStack, c: styleFn.close = closeStack, p: props };
 
   return styleFn;
 };
@@ -184,8 +182,8 @@ function Ansis(level = detectedLevel) {
         if (type === 's') {
           // user theme strings are always treated as hex colors,
           // from this hex color both `fg` and `bg` variants are created: `name` and `bgName`
-          createMethod(name, fnRgb(...hexToRgb(value)));
-          createMethod(getBgName(name), fnBgRgb(...hexToRgb(value)));
+          createMethod(name, rgbFn(...hexToRgb(value)));
+          createMethod(getBgName(name), bgRgbFn(...hexToRgb(value)));
         } else {
           createMethod(name, value, type === 'f');
         }
@@ -210,9 +208,7 @@ function Ansis(level = detectedLevel) {
     // collect styles into global object
     styles[name] = {
       get() {
-        let value = isFunction
-          ? (...args) => createStyle(this, extension(...args))
-          : createStyle(this, extension);
+        let value = isFunction ? (...args) => createStyle(this, extension(...args)) : createStyle(this, extension);
 
         // optimisation: up to 5x faster.
         // lazy getter: compute once, then memoize as an own data property for direct subsequent access
@@ -228,41 +224,34 @@ function Ansis(level = detectedLevel) {
   let esc = (open, close) => (hasColors ? { open: `[${open}m`, close: `[${close}m` } : visible);
   let createHexFn = (fn) => (hex) => fn(...hexToRgb(hex));
   let createRgbFn = (open, close) => (r, g, b) => esc(`${open}8;2;${r};${g};${b}`, close);
-  let createRgb16Fn = (offset, closeCode) => (r, g, b) => esc(rgbToAnsi16(r, g, b) + offset, closeCode);
+
+  let createRgb16Fn = (offset, closeCode) => (r, g, b) => esc(/* rgbToAnsi16 */ ansi256To16(rgbToAnsi256(r, g, b)) + offset, closeCode);
   let createRgb256Fn = (fn) => (r, g, b) => fn(rgbToAnsi256(r, g, b));
 
-  let fnRgb = createRgbFn(3, closeCode);
-  let fnBgRgb = createRgbFn(4, bgCloseCode);
+  let rgbFn = createRgbFn(3, closeCode);
+  let bgRgbFn = createRgbFn(4, bgCloseCode);
 
-  let fnAnsi256 = (code) => esc('38;5;' + code, closeCode);
-  let fnBgAnsi256 = (code) => esc('48;5;' + code, bgCloseCode);
+  let ansi256Fn = (code) => esc('38;5;' + code, closeCode);
+  let bgAnsi256Fn = (code) => esc('48;5;' + code, bgCloseCode);
 
   // fallback
   if (level === LEVEL_256COLORS) {
-    fnRgb = createRgb256Fn(fnAnsi256);
-    fnBgRgb = createRgb256Fn(fnBgAnsi256);
+    rgbFn = createRgb256Fn(ansi256Fn);
+    bgRgbFn = createRgb256Fn(bgAnsi256Fn);
   } else if (level === LEVEL_16COLORS) {
-    fnRgb = createRgb16Fn(0, closeCode);
-    fnBgRgb = createRgb16Fn(bgOffset, bgCloseCode);
-    fnAnsi256 = (code) => esc(ansi256To16(code), closeCode);
-    fnBgAnsi256 = (code) => esc(ansi256To16(code) + bgOffset, bgCloseCode);
+    rgbFn = createRgb16Fn(0, closeCode);
+    bgRgbFn = createRgb16Fn(bgOffset, bgCloseCode);
+    ansi256Fn = (code) => esc(ansi256To16(code), closeCode);
+    bgAnsi256Fn = (code) => esc(ansi256To16(code) + bgOffset, bgCloseCode);
   }
 
-  // OSC 8 hyperlinks
-  let link = {
-    // zero-width spaces to prevent auto-linking while keeping copy/paste intact
-    f: (text, url = text) => (hasColors ? `]8;;${url}${text}]8;;` : text === url ? text : `${text} (​${url}​)`),
-  };
-
   let styleData = {
-    fg: fnAnsi256,
-    bg: fnBgAnsi256,
-    rgb: fnRgb,
-    bgRgb: fnBgRgb,
-    hex: createHexFn(fnRgb),
-    bgHex: createHexFn(fnBgRgb),
-
-    link: link,
+    fg: ansi256Fn,
+    bg: bgAnsi256Fn,
+    rgb: rgbFn,
+    bgRgb: bgRgbFn,
+    hex: createHexFn(rgbFn),
+    bgHex: createHexFn(bgRgbFn),
 
     visible: visible,
     reset: esc(0, 0),
@@ -273,6 +262,12 @@ function Ansis(level = detectedLevel) {
     inverse: esc(7, 27),
     hidden: esc(8, 28),
     strikethrough: esc(9, 29),
+
+    // OSC 8 hyperlinks
+    link: {
+      // zero-width spaces to prevent auto-linking while keeping copy/paste intact
+      f: (text, url = text) => (hasColors ? `]8;;${url}${text}]8;;` : text === url ? text : `${text} (​${url}​)`),
+    },
   };
 
   // Build background method name, e.g. "pink" -> "bgPink"
@@ -309,7 +304,6 @@ function Ansis(level = detectedLevel) {
 const ansis = new Ansis();
 
 // For distribution code, the export will be replaced (via @rollup/plugin-replace) with the following export:
-// module.exports = ansis;
-// ansis.default = ansis; // needs for tsc
+// module.exports = ansis.default = ansis; // `default` is required for tsc
 
 export { ansis as default, Ansis };

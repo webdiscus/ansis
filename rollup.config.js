@@ -106,21 +106,19 @@ function buildConfig({ output, ecma }) {
     plugins: [
       ...(ecma < 2020
         ? [
-          inject({
-            filter: id => path.resolve(id).endsWith('src/index.js'),
-            code: `typeof globalThis === 'undefined' && (global.globalThis = global);`,
-          })
-        ]
+            inject({
+              filter: (id) => path.resolve(id).endsWith('src/index.js'),
+              code: `typeof globalThis === 'undefined' && (global.globalThis = global);`,
+            }),
+          ]
         : []),
       replace({
         // allow modifying exports
         preventAssignment: false,
-        // the order of exports is other than is needed
-        // firstly must be defined default export
-        'exports.Ansis = Ansis': 'module.exports = ansis',
-        // then on the next line can be named and default export,
-        // `ansis.default = ansis` is needed for tsc using default import, e.g. `import ansis from 'ansis'`
-        'exports.default = ansis': 'ansis.default = ansis',
+
+        // define default export for tsc using default import, e.g. `import ansis from 'ansis'`
+        'exports.Ansis = Ansis': 'module.exports = ansis.default = ansis',
+        'exports.default = ansis': '',
 
         // required for Node.js 10
         //'/* @node10:polyfills */': "typeof globalThis === 'undefined' && (global.globalThis = global);"
@@ -136,13 +134,14 @@ function buildConfig({ output, ecma }) {
           {
             src: 'src/index.mjs',
             dest: `dist/${output}/`,
-            transform: async (contents) => (
-              await minify(
-                // transform the extension of the source ESM file to output .cjs (it will be compiled to CommonJS)
-                contents.toString().replace('.js', '.cjs'),
-                { ecma }
-              )
-            ).code,
+            transform: async (contents) =>
+              (
+                await minify(
+                  // transform the extension of the source ESM file to output .cjs (it will be compiled to CommonJS)
+                  contents.toString().replace('.js', '.cjs'),
+                  { ecma }
+                )
+              ).code,
           },
           {
             src: 'src/index.d.ts',

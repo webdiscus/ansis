@@ -18,13 +18,25 @@ let term;
  *
  * See console programs supporting TrueColor https://github.com/termstandard/colors#truecolor-support-in-output-devices
  *
- * @param {object} env
- * @param {boolean} isTTY
- * @param {boolean} isWin
+ * @param {object} env The node environment.
+ * @param {object} proc The node process.
  * @return {number}
  */
-let autoDetectLevel = (env, isTTY, isWin) => {
-  term = env.TERM;
+let autoDetectLevel = (env, proc) => {
+  // Optimisation: The Terser inlines a function at use place, so we can split the logic on small functions.
+
+  // PM2 does not set process.stdout.isTTY, but color output may still be supported, depends on the actual terminal.
+  // PM2 always sets PM2_HOME to a non-empty (truthy) value when running in either fork or cluster mode.
+  let detectPM2 = () => env.PM2_HOME;
+
+  // In the Next.js `edge` runtime, process.stdout is undefined, but colored output is still supported.
+  // Runtime values that support colors: `nodejs`, `edge`, `experimental-edge`.
+  let detectNextJs = () => env.NEXT_RUNTIME?.includes('edge');
+
+  // Size optimization: intentionally returns a falsy/truthy value instead of a boolean.
+  let isTTY = () => detectPM2() || detectNextJs() || proc.stdout?.isTTY;
+
+  let isWin = () => proc.platform === 'win32';
 
   // Note: the order of checks is important!
 
@@ -38,7 +50,9 @@ let autoDetectLevel = (env, isTTY, isWin) => {
     truecolor: LEVEL_TRUECOLOR,
     ansi256: LEVEL_256COLORS,
     ansi: LEVEL_16COLORS,
-  }[env.COLORTERM]
+  }[env.COLORTERM];
+
+  term = env.TERM;
 
   if (level) return level;
 
@@ -47,7 +61,7 @@ let autoDetectLevel = (env, isTTY, isWin) => {
 
   // CI tools
   // https://github.com/watson/ci-info/blob/master/vendors.json
-  if (!!env.CI) {
+  if (env.CI) {
     // CI supports truecolor: GITHUB_ACTIONS
     if (/,GITHUB/.test(envKeys)) return LEVEL_TRUECOLOR;
 
@@ -59,10 +73,10 @@ let autoDetectLevel = (env, isTTY, isWin) => {
   }
 
   // 3) Detect unknown output or colors are not supported
-  if (!isTTY || term === 'dumb') return LEVEL_BW;
+  if (!isTTY() || term === 'dumb') return LEVEL_BW;
 
-  // 4) Truecolor support starts from Windows 10 build 14931 (2016-09-21), in 2025 we assume modern Windows is used
-  if (isWin) return LEVEL_TRUECOLOR;
+  // 4) Truecolor support starts from Windows 10 build 14931 (2016-09-21), in 2026 we assume modern Windows is used
+  if (isWin()) return LEVEL_TRUECOLOR;
 
   // 5) Detect terminals supporting 256 colors
 
@@ -130,23 +144,6 @@ export const getLevel = (mockThis) => {
     colorLevel = LEVEL_BW;
   }
 
-  // Optimisation: The Terser inlines a function at use place, so we can split the logic on small parts in source code.
-
-  // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
-  // PM2_HOME is always set by PM2, whether running in fork or cluster mode
-  let isPM2 = () => !!env.PM2_HOME;
-
-  // When Next.JS runtime is `edge`, process.stdout is undefined, but colors output is supported
-  // runtime values supported colors: `nodejs`, `edge`, `experimental-edge`
-  let isNextJs = () => env.NEXT_RUNTIME?.includes('edge');
-
-  // Whether the output is supported
-  let isTTY = () => isPM2() || isNextJs() || !!proc.stdout?.isTTY;
-
-  let isWin = () => proc.platform === 'win32';
-
-  let isBrowser = () => !!thisRef.window?.chrome;
-
   // enforce a specific color support:
   // FORCE_COLOR=false   // disables colors
   // FORCE_COLOR=0       // disables colors
@@ -178,7 +175,7 @@ export const getLevel = (mockThis) => {
   if (isForced) colorLevel = forcedLevel;
 
   // if colorLevel === LEVEL_UNDEFINED, attempt to detect color level, returns 0, 1, 2 or 3
-  if (!~colorLevel) colorLevel = autoDetectLevel(env, isTTY(), isWin());
+  if (!~colorLevel) colorLevel = autoDetectLevel(env, proc);
 
   // if force disabled: FORCE_COLOR=0 or FORCE_COLOR=false
   if (!forcedLevel
@@ -186,8 +183,8 @@ export const getLevel = (mockThis) => {
     // --no-color --color=false --color=never
     || hasFlag(/^--(no-color|color=(false|never))$/)) return LEVEL_BW;
 
-  // Detect browser support
-  if (isBrowser()) return LEVEL_TRUECOLOR;
+  // Detect chromium browser support
+  if (thisRef.window?.chrome) return LEVEL_TRUECOLOR;
 
   // API Rule: If color output is force enabled but the color level is detected as B&W (e.g., TERM is dumb),
   // enable truecolor since color depth support does not matter.

@@ -704,8 +704,8 @@ has been officially introduced, supporting [standard modifiers](https://nodejs.o
 In practical benchmarks, `styleText()` is dramatically slower, **100x slower** than Ansis:
 
 ```js
-styleText('red', 'text'); //    579.832 ops/sec
 ansis.red('text');        // 59.646.465 ops/sec
+styleText('red', 'text'); //    579.832 ops/sec
 ```
 
 See [full benchmarks](./docs/benchmarks.md).
@@ -723,53 +723,32 @@ See [full benchmarks](./docs/benchmarks.md).
 
 ### Simple styling
 
-**Ansis**
 ```js
 import { green } from 'ansis';
+import { styleText } from 'node:util';
 
-green`Success!`;
-green.bold`Success!`;
-```
-
-**styleText**
-```js
-const { styleText } = require('node:util');
-
+green`Success!`; // ansis
 styleText('green', 'Success!');
+
+green.bold`Success!`; // ansis
 styleText(['green', 'bold'], 'Success!');
 ```
+
 ### Nested styling
 
-**Ansis**
 ```js
 import { red, cyan } from 'ansis';
+import { styleText } from 'node:util';
 
-red`Error: ${cyan.bold`file.js`} not found!`;
-```
-
-**styleText**
-```js
-const { styleText } = require('node:util');
-
+red`Error: ${cyan.bold`file.js`} not found!`; // ansis
 styleText('red', `Error: ${styleText(['cyan', 'bold'], 'file.js')} not found!`);
 ```
 
 ### Truecolor
 
-**Ansis**
-```js
-import { hex, rgb } from 'ansis';
+**Ansis**: `hex()` `rgb()`
 
-const color = ansis.extend({ orange: '#ffa500' });
-
-hex('#ffa500')`orange`;
-rgb(255, 165, 0)`orange`;
-color.orange`named truecolor`; // via extend()
-```
-
-**styleText**
-
-❌ Limited to 16 ANSI colors
+**styleText**: Limited to 16 ANSI colors.
 
 ---
 

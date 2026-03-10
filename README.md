@@ -59,12 +59,12 @@ console.log(rgb(224, 17, 95).italic`Ruby`);
 
 Ansis is the fastest when using 2 or more styles, which is the common real-world use case.
 
-| Library          | 1 style         | 2+ styles      |
-|------------------|-----------------|----------------|
-| `ansis`          | 60M ops/sec     | 🏆 60M ops/sec |
-| `picocolors`     | 🏆 109M ops/sec | 58M ops/sec   |
-| `chalk`          | 55M ops/sec     | 47M ops/sec    |
-| `util.styleText` | 0.5M ops/sec    | 0.5M ops/sec   |
+| Library          |          1 style |       2+ styles |
+|------------------|-----------------:|----------------:|
+| `ansis`          |      60M ops/sec |  🏆 60M ops/sec |
+| `picocolors`     |  🏆 109M ops/sec |     58M ops/sec |
+| `chalk`          |      55M ops/sec |     47M ops/sec |
+| `util.styleText` |     0.5M ops/sec |    0.5M ops/sec |
 
 
 [📊 Full benchmarks →](./docs/benchmarks.md)

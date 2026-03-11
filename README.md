@@ -270,7 +270,7 @@ Truecolor → 256 colors → 16 colors → no colors (b&w)
 
 ## Named truecolors
 
-Register any hex color as a named chainable style via `extend()`.
+Register any hex color as a named style via `extend()`.
 Background methods `bg*` are generated automatically.
 ```js
 import ansis from 'ansis';
@@ -299,7 +299,7 @@ color.red`built-in red still works`;  // built-in remains intact
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/ansi-named-truecolors?file=index.js)
 
-**Example (extend with all [CSS color names](http://dev.w3.org/csswg/css-color/#named-colors) )**
+**Example:** extend with [CSS color names](http://dev.w3.org/csswg/css-color/#named-colors)
 
 ```js
 import ansis from 'ansis';
@@ -345,159 +345,42 @@ blue.underline.link('Click here', 'https://example.com');
 
 #### [↑ top](#top)
 
-<a name="cli-vars"></a>
+<a name="color-support"></a>
 
-## CLI environment variables
+## Color support
 
-To force enable or disable colored output, you can use the `NO_COLOR` and `FORCE_COLOR` environment variables.
-
-<a name="using-env-no-color"></a>
-### NO_COLOR
-
-Setting the `NO_COLOR` variable to any non-empty value will disable color output. For example:
-```sh
-NO_COLOR=1      # Disable colors
-NO_COLOR=true   # Disable colors
-```
-
-Refer to the [`NO_COLOR` standard](https://no-color.org/) for more details.
-
-<a name="using-env-force-color"></a>
-### FORCE_COLOR
-
-The [`FORCE_COLOR` standard](https://force-color.org/) variable is used to control the color output in the terminal.
-The behavior of `FORCE_COLOR` in Ansis follows the Node.js convention, with a few adaptations:
-
-| Value                   | Description                                                        |
-|-------------------------|--------------------------------------------------------------------|
-| `FORCE_COLOR=false`     | Disables colors                                                    |
-| `FORCE_COLOR=0`         | Disables colors                                                    |
-| `FORCE_COLOR=true`      | Auto-detects supported colors; enforces truecolor if none detected |
-| `FORCE_COLOR=`_(unset)_ | Auto-detects supported colors; enforces truecolor if none detected |
-| `FORCE_COLOR=1`         | Enables 16 colors                                                  |
-| `FORCE_COLOR=2`         | Enables 256 colors                                                 |
-| `FORCE_COLOR=3`         | Enables truecolor                                                  |
-
-
-> [!IMPORTANT]
-> In [Node.js](https://nodejs.org/api/cli.html#force_color1-2-3) `FORCE_COLOR` values of `1`, `true`,
-> and an empty string (`''`) are treated as enabling 16 colors.
->
-> In Ansis:
-> - `1` - enables exactly 16 colors
-> - `true` - and an empty string trigger automatic color detection (16, 256, or truecolor).\
->    If no colors are detected, `truecolor` is enforced.
-
-See:
-- [Node.js getColorDepth](https://nodejs.org/api/tty.html#writestreamhascolorscount-env)
-- [Node.js FORCE_COLOR=[1, 2, 3]](https://nodejs.org/api/cli.html#force_color1-2-3)
-
-For example, _app.js_:
-
-```js
-import { red } from 'ansis';
-
-console.log(red`red color`);
-```
-
-You can test the following behaviors by executing the script in the terminal:
-
-```sh
-node app.js           # Colored output in terminal
-node app.js > log.txt # Output in file without ANSI codes
-
-NO_COLOR=1 node app.js              # Force disable colors
-FORCE_COLOR=0 node app.js           # Force disable colors
-FORCE_COLOR=1 node app.js > log.txt # Force enable 16 colors
-FORCE_COLOR=2 node app.js > log.txt # Force enable 256 colors
-FORCE_COLOR=3 node app.js > log.txt # Force enable truecolor
-```
-
-<a name="using-env-colorterm"></a>
-
-### COLORTERM
-
-The `COLORTERM`  environment variable indicates color support in terminal emulators.
-Its value depends on the terminal and its level of color support. Common values supported by Ansis are:
-
-- `truecolor` or `24bit` - 16 million colors
-- `ansi256` - 256 colors
-- `ansi` - 16 colors
-
-To force a specific color level, you can set the `COLORTERM` variable before running the Node script:
-
-```sh
-COLORTERM=ansi      node script.js  # Force enable 16 colors
-COLORTERM=ansi256   node script.js  # Force enable 256 colors
-COLORTERM=truecolor node script.js  # Force enable truecolor
-```
-
-<a name="cli-flags"></a>
-
-### CLI arguments
-
-Use cmd arguments `--no-color` to disable colors and `--color` to enable ones.
-
-For example, an executable script _app.js_:
-
-```js
-#!/usr/bin/env node
-import { red } from 'ansis';
-
-console.log(red`text`);
-```
-
-Execute the script in a terminal:
-
-```
-./app.js                        # colored output in terminal
-./app.js --no-color             # non colored output in terminal
-
-./app.js > log.txt              # output in file without ANSI codes
-./app.js --color > log.txt      # output in file with ANSI codes
-```
-
-> [!NOTE]
->
-> Command-line arguments take precedence over environment variables.
-
----
-
-#### [↑ top](#top)
+Ansis automatically detects the supported color level:
 
 <a name="color-levels"></a>
 
-## Color levels
+- `0` – No color
+- `1` – Basic ANSI (16 colors)
+- `2` – Extended ANSI (256 colors)
+- `3` – Truecolor (16 million colors)
 
-Ansis automatically detects color support, but you can manually set the color level.
+Check the detected level at runtime:
 
-| Level | Description                          |
-|:-----:|:-------------------------------------|
-|  `0`  | No colors (all colors disabled)      |
-|  `1`  | Basic colors (16 colors)             |
-|  `2`  | 256 colors                           |
-|  `3`  | Truecolor (16 million colors)        |
+```js
+import ansis from 'ansis';
 
-You can create a new instance of `Ansis` with the desired color level.
-
-Disable colors:
-```ts
-import { Ansis } from 'ansis';
-
-const color = new Ansis(0);
-console.log(color.red`foo`); // Output: plain string, no ANSI codes
+console.log(ansis.level);         // 0 | 1 | 2 | 3
+console.log(ansis.isSupported()); // true -> level >= 1 (at least 16 colors supported)
 ```
 
-Use only basic colors:
+To override the detected level, create an instance of `Ansis` directly with the desired level:
 ```ts
 import { Ansis } from 'ansis';
 
-const color = new Ansis(1);
-console.log(color.hex('#FFAB40')`Orange`); // Output: fallback to yellowBright
+const noColor  = new Ansis(0);  // always plain text, no ANSI codes
+const basic    = new Ansis(1);  // 16 colors; hex/rgb fall back to nearest
+const auto     = new Ansis();   // auto-detect (same as default import)
+
+console.log(noColor.red`foo`);              // plain text, no ANSI codes
+console.log(basic.hex('#FFAB40')`Orange`);  // falls back to yellowBright
 ```
 
 <details>
-<summary><b>Example:</b> disable colors via custom CLI flag</summary>
+<summary><b>Example:</b> disable colors via custom CLI flag, e.g. <code>--save-to-log</code></summary>
 
 ```ts
 import { Ansis } from 'ansis';
@@ -520,35 +403,13 @@ const ansis = safeAnsis(process.argv.includes('--save-to-log'))
 ```
 </details>
 
----
+### Auto-detection
 
-#### [↑ top](#top)
+Ansis detects color support from the terminal environment automatically:
 
-<a name="color-support"></a>
-
-## Color support
-
-Ansis automatically detects the supported color level:
-
-- `0` – No color (black & white)
-- `1` – Basic ANSI (16 colors)
-- `2` – Extended ANSI (256 colors)
-- `3` – Truecolor (24-bit RGB)
-
- Check the detected level in your app:
-
-```js
-import ansis from 'ansis';
-
-console.log(ansis.level);        // 0 | 1 | 2 | 3
-console.log(ansis.isSupported()); // true | false
-```
-
-> [!NOTE]
-> - Color support detection relies on `TERM` and `COLORTERM` environment variables.
-> - In CI environments, Ansis checks the `CI` variable and assumes at least 16 colors.
-> - GitHub Actions is explicitly detected as truecolor.
-
+- Reads `TERM` and `COLORTERM` environment variables
+- In CI environments, checks `CI` and assumes at least 16 colors
+- `GitHub Actions` is explicitly detected as truecolor
 
 <details>
 <summary>Supported terminals and CI environments</summary>
@@ -571,8 +432,8 @@ console.log(ansis.isSupported()); // true | false
 | Kitty                            | ✅                 | ✅                  | ✅             |   xterm-kitty   |     truecolor     |                                        |
 | KDE Konsole                      | ✅                 | ✅                  | ✅             | xterm-256color  |     truecolor     |                                        |
 
-[^1]: Colors supported depends on actual terminal.\
-[^2]: The Windows terminal supports true color since Windows 10 revision 14931 (2016-09-21).
+- ^1 Colors supported depends on actual terminal.
+- ^2: The Windows terminal supports true color since Windows 10 revision 14931 (2016-09-21).
 
 See also:
 
@@ -580,6 +441,84 @@ See also:
 - [So you want to render colors in your terminal](https://marvinh.dev/blog/terminal-colors/).
 
 </details>
+
+## Environment & CLI options
+
+Ansis supports the following environment variables and CLI flags.
+
+<a name="cli-vars"></a>
+### Environment variables
+
+<a name="using-env-no-color"></a>
+#### `NO_COLOR`
+
+Set to any non-empty value (`1`, `true`) to disable color output ([no-color.org](https://no-color.org/)):
+
+```sh
+NO_COLOR=1 node app.js
+```
+
+<a name="using-env-force-color"></a>
+#### `FORCE_COLOR`
+
+Force a specific color level regardless of terminal support ([force-color.org](https://force-color.org/)):
+
+| Value               | Behavior                                                   |
+|---------------------|------------------------------------------------------------|
+| `0` or `false`      | Disable colors (level 0)                                   |
+| `1`                 | Enable 16 colors (level 1)                                 |
+| `2`                 | Enable 256 colors (level 2)                                |
+| `3`                 | Enable truecolor (level 3)                                 |
+| `true` or (_unset_) | Auto-detect with fallback to 16 colors if nothing detected |
+
+> [!IMPORTANT]
+> In [Node.js](https://nodejs.org/api/cli.html#force_color1-2-3) `FORCE_COLOR=true` and `FORCE_COLOR=1` both enable 16 colors.\
+> In Ansis, the value `1` means `level 1` and strictly set 16 colors, while `true` triggers auto-detection.
+
+<a name="using-env-colorterm"></a>
+#### `COLORTERM`
+
+Hint the color level via terminal emulator convention:
+
+| Value                  |                  Level |
+|------------------------|-----------------------:|
+| `ansi`                 |    16 colors (level 1) |
+| `ansi256`              |   256 colors (level 2) |
+| `truecolor` or `24bit` |    Truecolor (level 3) |
+
+
+<a name="cli-flags"></a>
+
+### CLI flags
+
+Pass `--no-color` or `--color` directly to your script:
+
+```sh
+./app.js              # auto-detect
+./app.js --no-color   # disable colors
+./app.js --color      # force colors (useful when piping output)
+```
+
+> [!NOTE]
+>
+> CLI flags take precedence over environment variables.
+
+### Quick reference
+
+```sh
+node app.js                          # auto-detect
+node app.js > log.txt                # no colors (non-TTY)
+
+NO_COLOR=1 node app.js               # force off
+FORCE_COLOR=0 node app.js            # force off
+
+FORCE_COLOR=1 node app.js > log.txt  # force 16 colors
+FORCE_COLOR=2 node app.js > log.txt  # force 256 colors
+FORCE_COLOR=3 node app.js > log.txt  # force truecolor
+
+node app.js --no-color               # disable via flag
+node app.js --color > log.txt        # enable via flag
+```
 
 ---
 

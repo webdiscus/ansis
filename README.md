@@ -284,7 +284,7 @@ const color = ansis.extend(myTheme);
 color.orange.bold`orange bold`;       // extended first in chain
 color.bgOrange`orange background`;    // auto-generated bg
 color.pink`pink foreground`;
-color.bgPink`pink background`;        // auto-generated bg tag
+color.bgPink`pink background`;        // auto-generated bg
 color.red`built-in red still works`;  // built-in remains intact
 ```
 

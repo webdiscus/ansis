@@ -94,125 +94,123 @@ type W = (text: S, url?: S) => S;
 type A = Ansis;
 
 type Ansis = {
-    /**
-     * Color support level.
-     * Automatically detected by default.
-     *
-     * Levels:
-     * 0 – No color (black & white)
-     * 1 – Basic ANSI (16 colors)
-     * 2 – Extended ANSI (256 colors)
-     * 3 – Truecolor (24-bit RGB)
-     *
-     * @readonly
-     */
-    level: N;
+  /**
+   * Color support level.
+   * Automatically detected by default.
+   *
+   * Levels:
+   * 0 – No color (black & white)
+   * 1 – Basic ANSI (16 colors)
+   * 2 – Extended ANSI (256 colors)
+   * 3 – Truecolor (24-bit RGB)
+   *
+   * @readonly
+   */
+  level: N;
 
-    /**
-     * Opening ANSI escape code for a style or color.
-     */
-    open: S;
+  /**
+   * Opening ANSI escape code for a style or color.
+   */
+  open: S;
 
-    /**
-     * Closing ANSI escape code for a style or color.
-     */
-    close: S;
+  /**
+   * Closing ANSI escape code for a style or color.
+   */
+  close: S;
 
-    /**
-     * @param {unknown} v The value to be processed, can be of any type, which will be converted to a string.
-     * @return {string} The resulting string.
-     */
-    (v: unknown): S;
+  /**
+   * @param {unknown} v The value to be processed, can be of any type, which will be converted to a string.
+   * @return {string} The resulting string.
+   */
+  (v: unknown): S;
 
-    /**
-     * Processes a template string with embedded values and returns a string.
-     *
-     * This method allows you to use template strings with embedded expressions.
-     * It takes a `TemplateStringsArray` and an arbitrary number of `values`,
-     * which are interpolated into the string and returned as a result.
-     *
-     * @param {TemplateStringsArray} s The template literal string array.
-     * @param {any[]} v The values to be interpolated into the template string.
-     * @return {string} The resulting string.
-     */
-    (s: TemplateStringsArray, ...v: any[]): S;
+  /**
+   * Processes a template string with embedded values and returns a string.
+   *
+   * This method allows you to use template strings with embedded expressions.
+   * It takes a `TemplateStringsArray` and an arbitrary number of `values`,
+   * which are interpolated into the string and returned as a result.
+   *
+   * @param {TemplateStringsArray} s The template literal string array.
+   * @param {any[]} v The values to be interpolated into the template string.
+   * @return {string} The resulting string.
+   */
+  (s: TemplateStringsArray, ...v: any[]): S;
 
-    /**
-     * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for foreground color.
-     */
-    fg: Q;
+  /**
+   * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for foreground color.
+   */
+  fg: Q;
 
-    /**
-     * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for background color.
-     */
-    bg: Q;
+  /**
+   * Set [256-color ANSI code](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) for background color.
+   */
+  bg: Q;
 
-    /**
-     * Set RGB for foreground color.
-     */
-    rgb: R;
+  /**
+   * Set RGB for foreground color.
+   */
+  rgb: R;
 
-    /**
-     * Set RGB for background color.
-     */
-    bgRgb: R;
+  /**
+   * Set RGB for background color.
+   */
+  bgRgb: R;
 
-    /**
-     * Set HEX value for foreground color.
-     */
-    hex: L;
+  /**
+   * Set HEX value for foreground color.
+   */
+  hex: L;
 
-    /**
-     * Set HEX value for background color.
-     */
-    bgHex: L;
+  /**
+   * Set HEX value for background color.
+   */
+  bgHex: L;
 
-    /**
-     * Create OSC 8 hyperlink.
-     *
-     * @param {string} text The link text or URL.
-     * @param {string} [url] The target URL. If omitted, `text` is used as URL.
-     * @return {string}
-     */
-    link: W;
+  /**
+   * Create OSC 8 hyperlink.
+   *
+   * @param {string} url The target URL.
+   * @param {string} [text] The link text.
+   * @return {string}
+   */
+  link: W;
 
-    /**
-     * Whether the output supports ANSI color and styles.
-     *
-     * @return {boolean}
-     */
-    isSupported(): boolean;
+  /**
+   * Whether the output supports ANSI color and styles.
+   *
+   * @return {boolean}
+   */
+  isSupported(): boolean;
 
-    /**
-     * Remove ANSI styling codes.
-     *
-     * @param {string} s
-     * @return {string}
-     */
-    strip(s: S): S;
+  /**
+   * Remove ANSI styling codes.
+   *
+   * @param {string} s
+   * @return {string}
+   */
+  strip(s: S): S;
 
-    /**
-     * Extends Ansis with additional colors.
-     *
-     * For example:
-     *
-     * const myTheme = {
-     *   apple: '#4FA83D',
-     *   pink: '#FF75D1',
-     * };
-     *
-     * const color = ansis.extend(myTheme);
-     * color.pink('Pink foreground')
-     * color.bgPink('Pink background')
-     *
-     * @param {string | { open: string; close: string }} c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
-     * @return {Ansis} Return extended instance contained both variants: foreground and background color names.
-     */
-    extend<U extends S>(c: Record<U, S | { open: S; close: S }>): A & Record<U | `bg${Capitalize<U>}`, A>;
-
-  }
-  // Dynamic properties
-  & { [K in AnsiStyles | AnsiColors]: A };
+  /**
+   * Extends Ansis with additional colors.
+   *
+   * For example:
+   *
+   * const myTheme = {
+   *   apple: '#4FA83D',
+   *   pink: '#FF75D1',
+   * };
+   *
+   * const color = ansis.extend(myTheme);
+   * color.pink('Pink foreground')
+   * color.bgPink('Pink background')
+   *
+   * @param {string | { open: string; close: string }} c A record of new colors to add, with either a string or an object containing `open` and `close` sequences.
+   * @return {Ansis} Return extended instance contained both variants: foreground and background color names.
+   */
+  extend<U extends S>(c: Record<U, S | { open: S; close: S }>): A & Record<U | `bg${Capitalize<U>}`, A>;
+} & // Dynamic properties
+{ [K in AnsiStyles | AnsiColors]: A };
 
 // Note: define constants with only unique declarations,
 // E.g. the methods rgb and bgRgb have the same arguments and return, therefore we need it only once.

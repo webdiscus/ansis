@@ -38,4 +38,4 @@ log(red.bgCyan.underline.hex('#fce')('text underline'));
 log(styledText);
 log(ansis.strip(styledText));
 
-log(ansis.link('click', 'http://example.com/'));
+log(ansis.link('http://example.com/', 'click'));

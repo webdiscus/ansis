@@ -266,7 +266,7 @@ function Ansis(level = detectedLevel) {
     // OSC 8 hyperlinks
     link: {
       // zero-width spaces to prevent auto-linking while keeping copy/paste intact
-      f: (text, url = text) => (hasColors ? `]8;;${url}${text}]8;;` : text === url ? text : `${text} (​${url}​)`),
+      f: (url, text = url) => (hasColors ? `]8;;${url}${text}]8;;` : text != url ? `${text} (​${url}​)` : url),
     },
   };
 

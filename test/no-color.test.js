@@ -34,14 +34,14 @@ describe('link without color support', () => {
     expect(received).toEqual(expected);
   });
 
-  test(`link('Click here', 'https://example.com')`, () => {
-    const received = ansis.link('Click here', 'https://example.com');
+  test(`link('https://example.com', 'Click here')`, () => {
+    const received = ansis.link('https://example.com', 'Click here');
     const expected = 'Click here (​https://example.com​)';
     expect(received).toEqual(expected);
   });
 
-  test(`blue.link('Click here', 'https://example.com')`, () => {
-    const received = ansis.blue.link('Click here', 'https://example.com');
+  test(`blue.link(''https://example.com', Click here')`, () => {
+    const received = ansis.blue.link('https://example.com', 'Click here');
     const expected = 'Click here (​https://example.com​)';
     expect(received).toEqual(expected);
   });

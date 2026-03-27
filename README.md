@@ -318,16 +318,16 @@ color.bgPink('Pink background'); // auto-generated bg
 <a name="hyperlink"></a>
 ## Hyperlink
 
-Create terminal hyperlinks via OSC 8 using `link(text, url)`.
+Create terminal hyperlinks via OSC 8 using `link(url, text?)`.
 
-- `link(text, url)` - custom link text + target URL
-- `link(url)` - URL as both text and target
+- `link(url, text)` - link URL + optional link text
+- `link(url)` - URL as both target and text
 
 ```js
 import { blue, link } from 'ansis';
 
-link('https://example.com'); // text and URL are the same
-blue.underline.link('Click here', 'https://example.com');
+link('https://example.com'); //  URL and text are the same
+blue.underline.link('https://example.com', 'Click here');
 ```
 
 > [!IMPORTANT]

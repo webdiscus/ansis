@@ -86,7 +86,7 @@ Ansis is the fastest when using 2 or more styles, which is the common real-world
 
 **🛠️ Utilities**
 - [Strip ANSI codes](#strip): `ansis.strip(red('text'))` → plain `'text'`
-- [Hyperlinks](#hyperlink): `blue.link('Click here', 'https://...')`, `link('https://...')`
+- [Hyperlinks](#hyperlink): `blue.link('https://...', 'Click here')`, `link('https://...')`
 - Raw escape codes: `open` / `close` - `` `${red.open}Error${red.close} file not found` ``
 
 **💻 Environment**

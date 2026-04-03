@@ -364,19 +364,19 @@ Check the detected level at runtime:
 import ansis from 'ansis';
 
 console.log(ansis.level);         // 0 | 1 | 2 | 3
-console.log(ansis.isSupported()); // true -> level >= 1 (at least 16 colors supported)
+console.log(ansis.isSupported()); // true -> level > 0 (at least 16 colors supported)
 ```
 
 To override the detected level, create an instance of `Ansis` directly with the desired level:
 ```ts
 import { Ansis } from 'ansis';
 
-const noColor  = new Ansis(0);  // always plain text, no ANSI codes
-const basic    = new Ansis(1);  // 16 colors; hex/rgb fall back to nearest
-const auto     = new Ansis();   // auto-detect (same as default import)
+const noColor    = new Ansis(0);  // always plain text, no ANSI codes
+const basicColor = new Ansis(1);  // 16 colors; hex/rgb fall back to nearest
+const autoColor  = new Ansis();   // auto-detect (same as default import)
 
-console.log(noColor.red`foo`);              // plain text, no ANSI codes
-console.log(basic.hex('#FFAB40')`Orange`);  // falls back to yellowBright
+console.log(noColor.red`foo`);                  // plain text, no ANSI codes
+console.log(basicColor.hex('#FFAB40')`Orange`); // falls back to yellowBright
 ```
 
 <details>
@@ -635,12 +635,12 @@ has been officially introduced, supporting [standard modifiers](https://nodejs.o
 **styleText**
 
 ✅ Node v22+ (native)\
-❌ Node only - no browser support
+❌ No browser support (Node only)
 
 
 ### Performance
 
-In practical benchmarks, `styleText()` is dramatically slower, **100x slower** than Ansis:
+In practical benchmarks, `styleText()` is **100x slower** than Ansis:
 
 ```js
 ansis.red('text');        // 59.646.465 ops/sec

@@ -18,13 +18,25 @@ let term;
  *
  * See console programs supporting TrueColor https://github.com/termstandard/colors#truecolor-support-in-output-devices
  *
- * @param {object} env
- * @param {boolean} isTTY
- * @param {boolean} isWin
+ * @param {object} env The node environment.
+ * @param {object} proc The node process.
  * @return {number}
  */
-let autoDetectLevel = (env, isTTY, isWin) => {
-  term = env.TERM;
+let autoDetectLevel = (env, proc) => {
+  // Optimisation: The Terser inlines a function at use place, so we can split the logic on small functions.
+
+  // PM2 does not set process.stdout.isTTY, but color output may still be supported, depends on the actual terminal.
+  // PM2 always sets PM2_HOME to a non-empty (truthy) value when running in either fork or cluster mode.
+  let detectPM2 = () => env.PM2_HOME;
+
+  // In the Next.js `edge` runtime, process.stdout is undefined, but colored output is still supported.
+  // Runtime values that support colors: `nodejs`, `edge`, `experimental-edge`.
+  let detectNextJs = () => env.NEXT_RUNTIME?.includes('edge');
+
+  // Size optimization: intentionally returns a falsy/truthy value instead of a boolean.
+  let isTTY = () => detectPM2() || detectNextJs() || proc.stdout?.isTTY;
+
+  let isWin = () => proc.platform === 'win32';
 
   // Note: the order of checks is important!
 
@@ -38,7 +50,9 @@ let autoDetectLevel = (env, isTTY, isWin) => {
     truecolor: LEVEL_TRUECOLOR,
     ansi256: LEVEL_256COLORS,
     ansi: LEVEL_16COLORS,
-  }[env.COLORTERM]
+  }[env.COLORTERM];
+
+  term = env.TERM;
 
   if (level) return level;
 
@@ -47,7 +61,7 @@ let autoDetectLevel = (env, isTTY, isWin) => {
 
   // CI tools
   // https://github.com/watson/ci-info/blob/master/vendors.json
-  if (!!env.CI) {
+  if (env.CI) {
     // CI supports truecolor: GITHUB_ACTIONS
     if (/,GITHUB/.test(envKeys)) return LEVEL_TRUECOLOR;
 
@@ -59,10 +73,10 @@ let autoDetectLevel = (env, isTTY, isWin) => {
   }
 
   // 3) Detect unknown output or colors are not supported
-  if (!isTTY || term === 'dumb') return LEVEL_BW;
+  if (!isTTY() || term === 'dumb') return LEVEL_BW;
 
-  // 4) Truecolor support starts from Windows 10 build 14931 (2016-09-21), in 2025 we assume modern Windows is used
-  if (isWin) return LEVEL_TRUECOLOR;
+  // 4) Truecolor support starts from Windows 10 build 14931 (2016-09-21), today we assume modern Windows is used
+  if (isWin()) return LEVEL_TRUECOLOR;
 
   // 5) Detect terminals supporting 256 colors
 
@@ -100,100 +114,77 @@ let autoDetectLevel = (env, isTTY, isWin) => {
 };
 
 /**
- * @param {Object?} mockThis The mock object of globalThis, used by unit test only.
+ * @param {Object?} thisRef The globalThis or mock object used by unit tests.
  * @return {number}
  */
-export const getLevel = (mockThis) => {
-  /**
-   * Detect whether flags exist in command-line arguments.
-   *
-   * @param {RegExp} regex The RegEx to match all possible flags.
-   * @return {boolean}
-   */
-  let hasFlag = (regex) => argv.some((value) => regex.test(value));
-
+export const getLevel = (thisRef) => {
   // Note: In Deno 2.0+, the `process` is available globally
-  let thisRef = mockThis ?? globalThis;
   let proc = thisRef.process ?? {};
   let argv = proc.argv ?? [];
   let env = proc.env ?? {};
-  let colorLevel = LEVEL_UNDEFINED;
+  let colorLevel = LEVEL_BW;
 
   try {
     // keys(env) triggers a Deno permission request; throws if access is denied
     // stringify environment variable keys to check for specific ones using a RegExp
     envKeys = separator + keys(env).join(separator);
+    colorLevel = autoDetectLevel(env, proc);
   } catch (error) {
     // if the permission is not granted, environment variables have no effect, even variables like FORCE_COLOR will be ignored
     // env now points to a new empty object to avoid Deno requests for every env access in code below
     env = {};
-    colorLevel = LEVEL_BW;
   }
 
-  // Optimisation: The Terser inlines a function at use place, so we can split the logic on small parts in source code.
+  // Auto-detected color level, fallback to 16 colors if detection fails.
+  let enabledColorLevel = colorLevel || LEVEL_16COLORS;
 
-  // PM2 does not set process.stdout.isTTY, but colors may be supported (depends on actual terminal)
-  // PM2_HOME is always set by PM2, whether running in fork or cluster mode
-  let isPM2 = () => !!env.PM2_HOME;
-
-  // When Next.JS runtime is `edge`, process.stdout is undefined, but colors output is supported
-  // runtime values supported colors: `nodejs`, `edge`, `experimental-edge`
-  let isNextJs = () => env.NEXT_RUNTIME?.includes('edge');
-
-  // Whether the output is supported
-  let isTTY = () => isPM2() || isNextJs() || !!proc.stdout?.isTTY;
-
-  let isWin = () => proc.platform === 'win32';
-
-  let isBrowser = () => !!thisRef.window?.chrome;
-
-  // enforce a specific color support:
-  // FORCE_COLOR=false   // disables colors
-  // FORCE_COLOR=0       // disables colors
-  // FORCE_COLOR=true    // auto detects the supported colors (if no color detected, enforce truecolor)
-  // FORCE_COLOR=(unset) // auto detects the supported colors (if no color detected, enforce truecolor)
-  // FORCE_COLOR=1       // 16 colors
-  // FORCE_COLOR=2       // 256 colors
-  // FORCE_COLOR=3       // truecolor
-  // See:
+  // FORCE_COLOR=false        // disables colors
+  // FORCE_COLOR=0            // disables colors
+  // FORCE_COLOR=1            // 16 colors
+  // FORCE_COLOR=2            // 256 colors
+  // FORCE_COLOR=3            // truecolor
+  // FORCE_COLOR=true         // auto-detect, fallback to 16 colors if detection fails
+  // FORCE_COLOR=''           // auto-detect, fallback to 16 colors if detection fails
+  // FORCE_COLOR=<any other string> // auto-detect, fallback to 16 colors if detection fails
+  // See also:
   //  - https://force-color.org
   //  - https://nodejs.org/api/tty.html#writestreamhascolorscount-env
   //  - https://nodejs.org/api/cli.html#force_color1-2-3
 
+  // Resolve FORCE_COLOR to a final color level.
   let FORCE_COLOR = 'FORCE_COLOR';
   let forceColorValue = env[FORCE_COLOR];
+  let forcedLevel =
+    {
+      false: LEVEL_BW,
+      0: LEVEL_BW,
+      1: LEVEL_16COLORS,
+      2: LEVEL_256COLORS,
+      3: LEVEL_TRUECOLOR,
+    }[forceColorValue] ?? enabledColorLevel;
 
-  // mapping FORCE_COLOR values to color level values
-  let forcedLevel = {
-    false: LEVEL_BW,
-    0: LEVEL_BW,
-    1: LEVEL_16COLORS,
-    2: LEVEL_256COLORS,
-    3: LEVEL_TRUECOLOR,
-  }[forceColorValue] ?? LEVEL_UNDEFINED;
-
-  // if FORCE_COLOR is present and is neither 'false' nor '0', OR has one of the flags: --color --color=true --color=always
-  let isForced = (FORCE_COLOR in env && forcedLevel) || hasFlag(/^--color=?(true|always)?$/);
-
-  if (isForced) colorLevel = forcedLevel;
-
-  // if colorLevel === LEVEL_UNDEFINED, attempt to detect color level, returns 0, 1, 2 or 3
-  if (!~colorLevel) colorLevel = autoDetectLevel(env, isTTY(), isWin());
-
-  // if force disabled: FORCE_COLOR=0 or FORCE_COLOR=false
-  if (!forcedLevel
-    || !!env.NO_COLOR
-    // --no-color --color=false --color=never
-    || hasFlag(/^--(no-color|color=(false|never))$/)) return LEVEL_BW;
+  // If multiple color flags are present, the last one wins.
+  let colorFlag = LEVEL_UNDEFINED;
+  let value;
+  for (value of argv) {
+    if (/^--color=?(true|always)?$/.test(value)) colorFlag = enabledColorLevel;
+    if (/^--(no-color|color=(false|never))$/.test(value)) colorFlag = LEVEL_BW;
+  }
 
   // Detect browser support
-  if (isBrowser()) return LEVEL_TRUECOLOR;
+  if (thisRef.window?.chrome) return LEVEL_TRUECOLOR;
 
-  // API Rule: If color output is force enabled but the color level is detected as B&W (e.g., TERM is dumb),
-  // enable truecolor since color depth support does not matter.
+  // Priority rule: auto-detected color < NO_COLOR < CLI flags < FORCE_COLOR
 
-  // If color output is forced but the environment doesn't support it, allow truecolor anyway,
-  // for example, when saving CLI output snapshots to a file.
-  // Optimisation: `!colorLevel` is equivalent to `colorLevel === LEVEL_BW`
-  return isForced && !colorLevel ? LEVEL_TRUECOLOR : colorLevel;
+  // 1) FORCE_COLOR has highest priority.
+  if (FORCE_COLOR in env) return forcedLevel;
+
+  // 2) CLI flags override NO_COLOR.
+  if (~colorFlag) return colorFlag;
+
+  // 3) NO_COLOR disables colors when set to a non-empty value. Empty string '' has no effect.
+  if (env.NO_COLOR) return LEVEL_BW;
+
+  // 4) Auto-detected color.
+  return colorLevel;
 };

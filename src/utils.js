@@ -69,26 +69,24 @@ export let ansi256To16 = (code) => {
   let r, g, b, value, remainder;
 
   if (8 > code) return 30 + code;
-  if (16 > code) return 90 + (code - 8);
+  if (16 > code) return 82 + code;
 
   if (232 > code) {
     code -= 16;
     remainder = code % 36;
 
     // (number | 0) is equivalent to Math.floor(number), we are sure that the code is >= 0
-    r = (code / 36 | 0) / 5;
-    g = (remainder / 6 | 0) / 5;
+    r = ((code / 36) | 0) / 5;
+    g = ((remainder / 6) | 0) / 5;
     b = (remainder % 6) / 5;
   } else {
     // grayscale
-    r = g = b = (((code - 232) * 10) + 8) / 255;
+    r = g = b = ((code - 232) * 10 + 8) / 255;
   }
 
   value = max(r, g, b) * 2;
 
   return value
-    ? 30 + (round(b) << 2 | round(g) << 1 | round(r)) + ( 2 ^ value ? 0 : 60) // equivalent to 2 !== value
+    ? 30 + ((round(b) << 2) | (round(g) << 1) | round(r)) + (2 ^ value ? 0 : 60) // equivalent to 2 !== value
     : 30;
 };
-
-export let rgbToAnsi16 = (r, g, b) => ansi256To16(rgbToAnsi256(r, g, b));

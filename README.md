@@ -86,6 +86,7 @@ Ansis is the fastest when using 2 or more styles, which is the common real-world
 
 **🛠️ Utilities**
 - [Strip ANSI codes](#strip): `ansis.strip(red('text'))` → plain `'text'`
+- [Hyperlinks](#hyperlink): `blue.link('https://...', 'Click here')`, `link('https://...')`
 - Raw escape codes: `open` / `close` - `` `${red.open}Error${red.close} file not found` ``
 
 **💻 Environment**
@@ -282,9 +283,9 @@ const myTheme = {
 const color = ansis.extend(myTheme);
 
 color.orange.bold`orange bold`;       // extended first in chain
-color.bgOrange`orange background`;    // auto-generated bg
+color.bgOrange`orange background`;    // auto-generated bg tag
 color.pink`pink foreground`;
-color.bgPink`pink background`;        // auto-generated bg
+color.bgPink`pink background`;        // auto-generated bg tag
 color.red`built-in red still works`;  // built-in remains intact
 ```
 
@@ -313,6 +314,33 @@ color.bgPink('Pink background'); // auto-generated bg
 > [!TIP]
 > Need help picking a color name? Try the [Name that Color](https://chir.ag/projects/name-that-color/#FF681F) tool - paste a hex and get its closest color name.
 
+
+<a name="hyperlink"></a>
+## Hyperlink
+
+Create terminal hyperlinks via OSC 8 using `link(url, text?)`.
+
+- `link(url, text)` - link URL + optional link text
+- `link(url)` - URL as both target and text
+
+```js
+import { blue, link } from 'ansis';
+
+link('https://example.com'); //  URL and text are the same
+blue.underline.link('https://example.com', 'Click here');
+```
+
+> [!IMPORTANT]
+> Call `link()` last in the chain:
+> ```js
+> blue.underline.link(...); // ✅
+> blue.link(...).underline; // ❌
+> ```
+
+> [!WARNING]
+>
+> OSC 8 hyperlinks are not widely supported. In unsupported terminals text is shown without a link.
+
 ---
 
 #### [↑ top](#top)
@@ -336,19 +364,19 @@ Check the detected level at runtime:
 import ansis from 'ansis';
 
 console.log(ansis.level);         // 0 | 1 | 2 | 3
-console.log(ansis.isSupported()); // true -> level >= 1 (at least 16 colors supported)
+console.log(ansis.isSupported()); // true -> level > 0 (at least 16 colors supported)
 ```
 
 To override the detected level, create an instance of `Ansis` directly with the desired level:
 ```ts
 import { Ansis } from 'ansis';
 
-const noColor  = new Ansis(0);  // always plain text, no ANSI codes
-const basic    = new Ansis(1);  // 16 colors; hex/rgb fall back to nearest
-const auto     = new Ansis();   // auto-detect (same as default import)
+const noColor    = new Ansis(0);  // always plain text, no ANSI codes
+const basicColor = new Ansis(1);  // 16 colors; hex/rgb fall back to nearest
+const autoColor  = new Ansis();   // auto-detect (same as default import)
 
-console.log(noColor.red`foo`);              // plain text, no ANSI codes
-console.log(basic.hex('#FFAB40')`Orange`);  // falls back to yellowBright
+console.log(noColor.red`foo`);                  // plain text, no ANSI codes
+console.log(basicColor.hex('#FFAB40')`Orange`); // falls back to yellowBright
 ```
 
 <details>
@@ -416,7 +444,16 @@ See also:
 
 ## Environment & CLI options
 
-Ansis supports the following environment variables and CLI flags.
+Ansis detects color support automatically, but you can override it with environment variables and CLI flags.
+
+> [!NOTE]
+>
+> Priority order, from lowest to highest:
+>
+> 1. auto-detection
+> 2. `NO_COLOR`
+> 3. CLI color flags
+> 4. `FORCE_COLOR`
 
 <a name="cli-vars"></a>
 ### Environment variables
@@ -424,7 +461,7 @@ Ansis supports the following environment variables and CLI flags.
 <a name="using-env-no-color"></a>
 #### `NO_COLOR`
 
-Set to any non-empty value (`1`, `true`) to disable color output ([no-color.org](https://no-color.org/)):
+Set to any non-empty value (`1`, `true`) to disable color output (see [no-color.org](https://no-color.org/)):
 
 ```sh
 NO_COLOR=1 node app.js
@@ -433,24 +470,32 @@ NO_COLOR=1 node app.js
 <a name="using-env-force-color"></a>
 #### `FORCE_COLOR`
 
-Force a specific color level regardless of terminal support ([force-color.org](https://force-color.org/)):
+Force or override color support via environment variable (see [force-color.org](https://force-color.org/)).
 
-| Value               | Behavior                                                   |
-|---------------------|------------------------------------------------------------|
-| `0` or `false`      | Disable colors (level 0)                                   |
-| `1`                 | Enable 16 colors (level 1)                                 |
-| `2`                 | Enable 256 colors (level 2)                                |
-| `3`                 | Enable truecolor (level 3)                                 |
-| `true` or (_unset_) | Auto-detect with fallback to 16 colors if nothing detected |
+| Value                      | Behavior                                              |
+|----------------------------|-------------------------------------------------------|
+| `0` or `false`             | Disable colors (level 0)                              |
+| `1`                        | Force 16 colors (level 1)                             |
+| `2`                        | Force 256 colors (level 2)                            |
+| `3`                        | Force truecolor (level 3)                             |
+| `true` or any other string | Auto-detect, fallback to 16 colors if detection fails |
 
 > [!IMPORTANT]
-> In [Node.js](https://nodejs.org/api/cli.html#force_color1-2-3) `FORCE_COLOR=true` and `FORCE_COLOR=1` both enable 16 colors.\
-> In Ansis, the value `1` means `level 1` and strictly set 16 colors, while `true` triggers auto-detection.
+>
+> Ansis differs from the original [force-color.org](https://force-color.org/) rule in a few cases:
+>
+> - **`FORCE_COLOR=0` disables colors.**\
+>   This matches [Node.js](https://nodejs.org/docs/latest/api/tty.html#writestreamhascolorscount-env),
+>   but the original [force-color.org](https://force-color.org/) rule enables colors when the value is non-empty string, regardless of its value.
+>
+> - **`FORCE_COLOR=true` and an empty value enable colors.**\
+>   This matches [Node.js](https://nodejs.org/api/cli.html#force_color1-2-3),
+>   but the original [force-color.org](https://force-color.org/) rule ignores an empty string.
 
 <a name="using-env-colorterm"></a>
 #### `COLORTERM`
 
-Hint the color level via terminal emulator convention:
+Hint the color level for auto-detection using terminal emulator conventions:
 
 | Value                  |                  Level |
 |------------------------|-----------------------:|
@@ -468,28 +513,31 @@ Pass `--no-color` or `--color` directly to your script:
 ```sh
 ./app.js              # auto-detect
 ./app.js --no-color   # disable colors
-./app.js --color      # force colors (useful when piping output)
+./app.js --color      # enable colors (useful when piping output)
 ```
 
 > [!NOTE]
+> If multiple CLI color flags are present, the last one wins:
 >
-> CLI flags take precedence over environment variables.
+> - `--color --no-color` -> `--no-color`
+> - `--no-color --color` -> `--color`
 
 ### Quick reference
 
 ```sh
-node app.js                          # auto-detect
-node app.js > log.txt                # no colors (non-TTY)
+node app.js                             # auto-detect
+node app.js > log.txt                   # no colors (non-TTY)
 
-NO_COLOR=1 node app.js               # force off
-FORCE_COLOR=0 node app.js            # force off
+NO_COLOR=1 node app.js                  # force off
+FORCE_COLOR=0 node app.js               # force off
 
-FORCE_COLOR=1 node app.js > log.txt  # force 16 colors
-FORCE_COLOR=2 node app.js > log.txt  # force 256 colors
-FORCE_COLOR=3 node app.js > log.txt  # force truecolor
+FORCE_COLOR=1 node app.js > log.txt     # force 16 colors
+FORCE_COLOR=2 node app.js > log.txt     # force 256 colors
+FORCE_COLOR=3 node app.js > log.txt     # force truecolor
+FORCE_COLOR=true node app.js > log.txt  # auto-detect, fallback to 16 colors
 
-node app.js --no-color               # disable via flag
-node app.js --color > log.txt        # enable via flag
+node app.js --no-color                  # disable via flag
+node app.js --color > log.txt           # auto-detect via flag, fallback to 16 colors
 ```
 
 ---
@@ -607,12 +655,12 @@ has been officially introduced, supporting [standard modifiers](https://nodejs.o
 **styleText**
 
 ✅ Node v22+ (native)\
-❌ Node only - no browser support
+❌ No browser support (Node only)
 
 
 ### Performance
 
-In practical benchmarks, `styleText()` is dramatically slower, **100x slower** than Ansis:
+In practical benchmarks, `styleText()` is **100x slower** than Ansis:
 
 ```js
 ansis.red('text');        // 59.646.465 ops/sec

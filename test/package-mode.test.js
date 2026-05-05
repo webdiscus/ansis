@@ -2,15 +2,12 @@ import path from 'path';
 import { expect, describe, test } from 'vitest';
 import { esc, execScriptSync } from './utils/helpers.js';
 
-// import env variables to simulate truecolor in CLI
-import './env/truecolor.js';
-
 const TEST_PATH = path.resolve('./test/');
 
 describe('Usage `ansis` npm package', () => {
   test(`CommonJS mode`, () => {
     const filename = path.join(TEST_PATH, './package/cjs/test.cjs');
-    const received = execScriptSync(filename, ['--color']);
+    const received = execScriptSync(filename, [], { COLORTERM: 'truecolor' });
     const expected =
       '\x1b[38;5;227m\x1b[7m -= [ansis package] CommonJS =- \x1b[27m\x1b[39m\n' +
       '\x1b[31m\x1b[1m\x1b[4mred.bold.underline(\'red\')\x1b[24m\x1b[22m\x1b[39m\n' +
@@ -30,7 +27,7 @@ describe('Usage `ansis` npm package', () => {
 
   test(`ESM mode`, () => {
     const filename = path.join(TEST_PATH, './package/esm/test.mjs');
-    const received = execScriptSync(filename, ['--color']);
+    const received = execScriptSync(filename, [], { COLORTERM: 'truecolor' });
     const expected =
       '\x1b[38;5;208m\x1b[7m -= [ansis package] ESM =- \x1b[27m\x1b[39m\n' +
       '\x1b[31m\x1b[1m\x1b[4mred.bold.underline(\'red\')\x1b[24m\x1b[22m\x1b[39m\n' +

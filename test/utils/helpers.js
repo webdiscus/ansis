@@ -1,4 +1,4 @@
-import { exec, execSync } from 'child_process';
+import { exec, execFileSync } from 'child_process';
 import util from 'util';
 import { expect } from 'vitest';
 
@@ -14,6 +14,38 @@ const isWin = process.platform === 'win32';
 
 // Promisify exec for ease of testing
 const execPromise = util.promisify(exec);
+
+/**
+ * Build a minimal environment for child processes used in CLI tests.
+ *
+ * This avoids inheriting unrelated parent environment variables such as
+ * `VITEST_*`, IDE-specific variables, and user shell settings,
+ * so external environment state does not affect test results.
+ *
+ * @returns {Record<string, string>}
+ */
+const getDefaultProcessEnv = () => {
+  let defaults = isWin
+    ? {
+      SystemRoot: process.env.SystemRoot,
+      SYSTEMROOT: process.env.SYSTEMROOT,
+      ComSpec: process.env.ComSpec,
+      PATHEXT: process.env.PATHEXT,
+      TEMP: process.env.TEMP,
+      TMP: process.env.TMP,
+      USERPROFILE: process.env.USERPROFILE,
+      HOME: process.env.HOME,
+    }
+    : {
+      HOME: process.env.HOME,
+      LANG: process.env.LANG,
+      TMPDIR: process.env.TMPDIR,
+      TMP: process.env.TMP,
+      TEMP: process.env.TEMP,
+    };
+
+  return Object.fromEntries(Object.entries(defaults).filter(([, value]) => value != null));
+};
 
 /**
  * Escape the slash `\` in ESC-symbol.
@@ -41,32 +73,43 @@ export const readTextFileSync = (file) => {
 };
 
 /**
- * Return output of javascript file.
+ * Execute a JavaScript file synchronously and return its stdout output.
  *
- * @param {string} file The file path to execute.
- * @param {Array<string>} flags The CLI flags.
- * @param {Object} env The environment variables.
- * @return {string} CLI output as result of execution.
+ * @param {string} file The file path to execute with `node`.
+ * @param {string[]} [flags=[]] CLI flags passed to the script.
+ * @param {Record<string, string | number | boolean>} [env={}] Environment variables merged into the minimal child process environment.
+ * @param {{ isTTY?: boolean }} [options={}] Child process runtime overrides.
+ * @returns {string} Stdout output with the trailing newline removed.
  */
-export const execScriptSync = (file, flags = [], env = {}) => {
+export const execScriptSync = (file, flags = [], env = {}, options = {}) => {
   let output = '';
+  let { isTTY = true } = options;
+
+  const bootstrap = `
+    import { pathToFileURL } from 'url';
+
+    const [file, ...flags] = process.argv.slice(1);
+    process.argv = ['node', file, ...flags];
+    if (${isTTY}) {
+      process.stdout.isTTY = true;
+      process.stderr.isTTY = true;
+    }
+    await import(pathToFileURL(file));
+  `;
 
   try {
-    output = execSync(`node ${file} ${flags.join(' ')}`, {
+    output = execFileSync(process.execPath, ['--input-type=module', '-e', bootstrap, file, ...flags], {
       env: {
-        ...process.env, // preserve existing environment variables
+        ...getDefaultProcessEnv(),
         ...env,
       },
-      args: flags,
-      //stdio: 'inherit', // pass stdout/stderr directly to the console
     });
-
   } catch (error) {
     console.error('Error executing command:', error.message);
   }
 
   // replace last newline in result
-  return output.toString().replace(/\n$/, '');
+  return output.toString().replace(/\r?\n$/, '');
 };
 
 export const getCompareFileContents = function(
@@ -99,9 +142,6 @@ export const executeTSFile = (testPath, compiler = 'tsc', script = null) => {
 
   const cmd = `cd ./test/${testPath} && npm run ${buildCompiler}`;
   return execPromise(cmd).then((result) => {
-    // execution result
-    //console.log('>> result: ', result);
-
     const receivedFile = join(__testDirname, testPath, 'dist/index.out');
     const expectedFile = join(__testDirname, testPath, 'expected/index.out');
     const { received, expected } = getCompareFileContents(receivedFile, expectedFile);

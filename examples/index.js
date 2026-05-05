@@ -29,7 +29,7 @@ const style = 'green';
  * Showing in readme.
  */
 
-console.log(inverse`ANSIS logo:`);
+log(inverse`ANSIS logo:`);
 log();
 log(ansisLogo);
 
@@ -259,3 +259,14 @@ DISK: ${hex('#FFAB40')`${disk}%`}
 // RAM:  {green ${ram}%}
 // DISK: {hex('#FFAB40') ${disk}%}
 // `);
+
+/**
+ * OSC 8 hyperlinks
+ */
+log();
+log(inverse`OSC 8 hyperlinks`);
+log();
+
+log(`link('https://example.com'); =>`, ansis.link('https://example.com'));
+log(`link('Click here', 'https://example.com'); =>`, ansis.link('Click here', 'https://example.com'));
+log(`blueBright.underline.link('Click here', 'https://example.com'); =>`, ansis.blueBright.underline.link('Click here', 'https://example.com'));

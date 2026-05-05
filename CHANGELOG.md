@@ -1,5 +1,19 @@
 # Changelog
 
+## 4.3.0 (2026-05-05)
+
+- feat: add support for OSC 8 hyperlink: `link(url, text)`
+- fix(color-support): correctly handle edge cases using ENV variables and CLI flags
+
+| Fixed edge case                   | Old behavior (bug) | New behavior (correct)                                                                           |
+|:----------------------------------|--------------------|------------------------------------------------------------------------------------------|
+| `FORCE_COLOR=1`, `NO_COLOR=1`     | disable color      | enable color ([`FORCE_COLOR`](https://force-color.org) takes precedence over `NO_COLOR`) |
+| `NO_COLOR=1`, `--color`           | disable color      | enable color (CLI color flags take precedence over `NO_COLOR`)                           |
+| `FORCE_COLOR=1`, `--no-color`     | disable color      | enable color (`FORCE_COLOR` has the highest priority)                                    |
+| `--no-color --color`              | disable color      | enable color (last flag wins)                                                            |
+| `--color` with no detected colors | truecolor          | 16 colors (auto-detect fallback uses the minimum color level, not truecolor)             |
+
+
 ## 4.2.0 (2025-09-20)
 
 - feat: add support named truecolor via `ansis.extend()`.

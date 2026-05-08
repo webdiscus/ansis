@@ -1,7 +1,7 @@
 import { expect, describe, test } from 'vitest';
 
-import { getLevel } from '../src/color-support.js';
-import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS, LEVEL_TRUECOLOR } from '../src/color-levels.js';
+import { getLevel } from '../../../src/color-support.js';
+import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS, LEVEL_TRUECOLOR } from '../../../src/color-levels.js';
 
 describe('color level', () => {
   test(`Any unknown terminal should support 16 colors`, () => {

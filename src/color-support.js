@@ -1,10 +1,7 @@
 import { LEVEL_UNDEFINED, LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS, LEVEL_TRUECOLOR } from './color-levels.js';
 import { keys, separator } from './misc.js';
 
-// Contains stringified keys of environment variables.
-let envKeys;
-
-// Optimisation: declare variables here for more compact code after compilation
+// Optimisation: declare variables here for more compact code shape after compilation
 let term;
 
 /**
@@ -18,11 +15,12 @@ let term;
  *
  * See console programs supporting TrueColor https://github.com/termstandard/colors#truecolor-support-in-output-devices
  *
- * @param {object} env The node environment.
  * @param {object} proc The node process.
+ * @param {object} env The node environment.
+ * @param {string} envKeys All env keys squashed to string.
  * @return {number}
  */
-let autoDetectLevel = (env, proc) => {
+let autoDetectLevel = (proc, env,  envKeys) => {
   // Optimisation: The Terser inlines a function at use place, so we can split the logic on small functions.
 
   // PM2 does not set process.stdout.isTTY, but color output may still be supported, depends on the actual terminal.
@@ -31,7 +29,7 @@ let autoDetectLevel = (env, proc) => {
 
   // In the Next.js `edge` runtime, process.stdout is undefined, but colored output is still supported.
   // Runtime values that support colors: `nodejs`, `edge`, `experimental-edge`.
-  let detectNextJs = () => env.NEXT_RUNTIME?.includes('edge');
+  let detectNextJs = () => /edge/.test(env.NEXT_RUNTIME);
 
   // Size optimization: intentionally returns a falsy/truthy value instead of a boolean.
   let isTTY = () => detectPM2() || detectNextJs() || proc.stdout?.isTTY;
@@ -127,8 +125,8 @@ export const getLevel = (thisRef) => {
   try {
     // keys(env) triggers a Deno permission request; throws if access is denied
     // stringify environment variable keys to check for specific ones using a RegExp
-    envKeys = separator + keys(env).join(separator);
-    colorLevel = autoDetectLevel(env, proc);
+    let envKeys = separator + keys(env).join(separator);
+    colorLevel = autoDetectLevel(proc, env, envKeys);
   } catch (error) {
     // if the permission is not granted, environment variables have no effect, even variables like FORCE_COLOR will be ignored
     // env now points to a new empty object to avoid Deno requests for every env access in code below

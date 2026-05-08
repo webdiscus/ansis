@@ -31,12 +31,19 @@ const terserOptions = (ecma) => ({
   toplevel: true,
   compress: {
     ecma,
-    passes: 3,
-    inline: true,
+    passes: 5,
+    inline: 3,
     pure_getters: true,
     // use these options to find a potential for optimisations in the code
     //unsafe: true,
     //unsafe_comps: true,
+  },
+  mangle: {
+    toplevel: true,
+    properties: {
+      regex: /^_/,
+      // reserved: ['__esModule'],
+    },
   },
 });
 

@@ -1,6 +1,6 @@
 import path from 'path';
 import { expect, describe, test } from 'vitest';
-import { esc, execScriptSync } from './utils/helpers.js';
+import { esc, execScriptSync } from '../utils/helpers.js';
 
 const TEST_PATH = path.resolve('./test/');
 

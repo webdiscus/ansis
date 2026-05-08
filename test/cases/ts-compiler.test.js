@@ -1,8 +1,8 @@
 import { describe, test, beforeAll } from 'vitest';
-import { executeTSFile } from './utils/helpers.js';
+import { executeTSFile } from '../utils/helpers.js';
 
 // import env variables to simulate truecolor in CLI
-import './env/truecolor.js';
+import '../env/truecolor.js';
 
 beforeAll(() => {
   // increase the default timeout (5000 ms) to avoid occasional timeouts on GitHub CI

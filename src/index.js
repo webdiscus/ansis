@@ -3,7 +3,6 @@ import { hexToRgb, rgbToAnsi256, ansi256To16 } from './utils.js';
 import { getLevel } from './color-support.js';
 import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS } from './color-levels.js';
 
-let detectedLevel = getLevel(globalThis);
 let visible = { open: EMPTY_STRING, close: EMPTY_STRING };
 
 let closeCode = 39;
@@ -72,7 +71,7 @@ let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f:
         // This implementation runs ~30% faster than String.replaceAll()
         // output = output.replaceAll(props.close, props.open);
         // -- begin replaceAll, inline the function here to reduce the bundle size
-        let { open: replacement, close: search } = props;
+        let { _o: replacement, _c: search } = props;
         let searchLength = search.length;
         let result = EMPTY_STRING;
         let lastPos = 0;
@@ -106,12 +105,25 @@ let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f:
 
   setPrototypeOf(styleFn, stylePrototype);
 
-  styleFn.p = { open, close, o: styleFn.open = openStack, c: styleFn.close = closeStack, p: props };
+  // Style function anatomy
+  // styleFn                   - style function (returned by the getter)
+  //   ├─ .open     public API - full cumulative open sequence
+  //   ├─ .close    public API - full cumulative close sequence
+  //   └─ .p        internal parent chain object
+  //        ├─ ._o  internal   - raw open of this level  <- mangled with terser
+  //        ├─ ._c  internal   - raw close of this level <- mangled with terser
+  //        ├─ .o   internal   - cumulative open stack
+  //        ├─ .c   internal   - cumulative close stack
+  //        └─ .p   internal   - parent reference
+  styleFn.p = { _o: open, _c: close, o: (styleFn.open = openStack), c: (styleFn.close = closeStack), p: props };
 
   return styleFn;
 };
 
-function Ansis(level = detectedLevel) {
+function Ansis(option = globalThis) {
+  // Number option is a strict color level; object option is treated as mock globalThis.
+  let level = typeof option == 'number' ? option : getLevel(option);
+
   let self = {
     // Named export of the function to create new instance
     Ansis,
@@ -129,7 +141,7 @@ function Ansis(level = detectedLevel) {
      * @type {number}
      * @readonly
      */
-    level,
+    level: level,
 
     /**
      * Checks if ANSI colors are supported in the output.

@@ -1,12 +1,27 @@
 # Changelog
 
-## 4.3.0 (2026-05-05)
+## 4.3.0 (2026-05-08)
 
 - feat: add support for OSC 8 hyperlink: `link(url, text)`
+- feat: add constructor overload to pass a mock `globalThis` object for controlled color auto-detection
+  ```js
+  import { Ansis } from 'ansis';
+
+  const color = new Ansis({
+    process: {
+      env: { FORCE_COLOR: '1' },
+      argv: ['node', 'app.js'],
+      stdout: { isTTY: false },
+      platform: 'linux',
+    },
+  });
+
+  console.log(color.level); // 1
+  ```
 - fix(color-support): correctly handle edge cases using ENV variables and CLI flags
 
 | Fixed edge case                   | Old behavior (bug) | New behavior (correct)                                                                           |
-|:----------------------------------|--------------------|------------------------------------------------------------------------------------------|
+|:----------------------------------|--------------------|--------------------------------------------------------------------------------------------------|
 | `FORCE_COLOR=1`, `NO_COLOR=1`     | disable color      | enable color ([`FORCE_COLOR`](https://force-color.org) takes precedence over `NO_COLOR`) |
 | `NO_COLOR=1`, `--color`           | disable color      | enable color (CLI color flags take precedence over `NO_COLOR`)                           |
 | `FORCE_COLOR=1`, `--no-color`     | disable color      | enable color (`FORCE_COLOR` has the highest priority)                                    |

@@ -9,7 +9,6 @@
 </div>
 
 [![npm](https://img.shields.io/npm/v/ansis?logo=npm&color=brightgreen "npm package")](https://www.npmjs.com/package/ansis "download npm package")
-[![node](https://img.shields.io/node/v/ansis)](https://nodejs.org)
 [![Test](https://github.com/webdiscus/ansis/actions/workflows/test.yml/badge.svg)](https://github.com/webdiscus/ansis/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
 [![downloads](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
@@ -37,9 +36,9 @@ console.log(rgb(224, 17, 95).italic`Ruby`);
 
 ## 🔗 Shortcuts
 
-#### 🚀 [Getting Started](#getting-started) 📌 [Ansis vs `styleText()`](#ansis-vs-styleText) 🔄 [Migrating from](./docs/migrating.md) ⚖️ [Alternatives](#alternatives)
+#### 🚀 [Getting Started](#getting-started) 📌 [Ansis vs `styleText()`](#ansis-vs-styleText) 🔄 [Migrating from](./docs/migrating.md) ⚖️ [Alternatives](#alternatives) ✅ [Compare features](./docs/compare.md)
 
-#### ⚙️ [Compatibility](#compatibility) 🔧[Troubleshooting](./docs/troubleshooting.md) 🧪 [CLI Testing](./docs/testing.md)
+#### 💻 [CLI Environment](#cli-vars-and-flags) 🧪 [CLI Testing](./docs/testing.md) ⚙️ [Compatibility](#compatibility) 🔧[Troubleshooting](./docs/troubleshooting.md)
 
 #### 🔔 [Upgrading to v4](https://github.com/webdiscus/ansis/discussions/36#migrating-to-v4) · [New features](https://github.com/webdiscus/ansis/discussions/36#v4-features) · [Breaking changes](https://github.com/webdiscus/ansis/discussions/36)
 
@@ -367,16 +366,31 @@ console.log(ansis.level);         // 0 | 1 | 2 | 3
 console.log(ansis.isSupported()); // true -> level > 0 (at least 16 colors supported)
 ```
 
-To override the detected level, create an instance of `Ansis` directly with the desired level:
+Create an `Ansis` instance directly when you need to override color detection:
 ```ts
 import { Ansis } from 'ansis';
 
 const noColor    = new Ansis(0);  // always plain text, no ANSI codes
 const basicColor = new Ansis(1);  // 16 colors; hex/rgb fall back to nearest
-const autoColor  = new Ansis();   // auto-detect (same as default import)
+const autoColor  = new Ansis();   // auto-detect using globalThis
 
 console.log(noColor.red`foo`);                  // plain text, no ANSI codes
 console.log(basicColor.hex('#FFAB40')`Orange`); // falls back to yellowBright
+```
+
+The constructor also accepts a mock `globalThis` object to control auto-detection in custom runtimes:
+
+```ts
+const color = new Ansis({
+  process: {
+    env: { FORCE_COLOR: '1' }, // COLORTERM, TERM, CI, NO_COLOR, FORCE_COLOR
+    argv: ['node', 'app.js'],  // --no-color, --color
+    stdout: { isTTY: false },
+    platform: 'linux',
+  },
+});
+
+console.log(color.level); // 1
 ```
 
 <details>
@@ -386,16 +400,13 @@ console.log(basicColor.hex('#FFAB40')`Orange`); // falls back to yellowBright
 import { Ansis } from 'ansis';
 
 /**
- * Ansis instance for CLI that can be initialized with no colors mode
- * needed for outputs where we don't want to have colors.
- *
- * @param  {boolean} noColors Disable colors
+ * @param  {boolean} noColors Disable colors for non-terminal output.
  * @return {Ansis} Default or custom instance
  */
 function safeAnsis(noColors) {
   return noColors
     ? new Ansis(0) // disable colors
-    : new Ansis(); // auto detect color support
+    : new Ansis(); // auto/detect color support
 }
 
 // handle a special CLI flag to disable colors
@@ -403,13 +414,37 @@ const ansis = safeAnsis(process.argv.includes('--save-to-log'))
 ```
 </details>
 
+
+<a name="auto-detection"></a>
 ### Auto-detection
 
-Ansis detects color support from the terminal environment automatically:
+Ansis detects color support from the runtime environment in this order:
 
-- Reads `TERM` and `COLORTERM` environment variables
-- In CI environments, checks `CI` and assumes at least 16 colors
-- `GitHub Actions` is explicitly detected as truecolor
+1. Chromium browser-like runtimes
+   - detected first -> truecolor
+
+2. `COLORTERM` (some terminals set it even when output is not TTY)
+   - `truecolor` or `24bit` -> truecolor
+   - `ansi256` -> 256 colors
+   - `ansi` -> 16 colors
+
+3. CI environment (not TTY)
+   - GitHub Actions -> truecolor
+   - other CI environments -> 16 colors
+
+4. Terminal
+   - no TTY -> no colors
+   - `TERM=dumb` -> no colors
+   - `PM2` and `Next.js` non-TTY runtimes -> color output
+
+5. Windows
+   - Windows terminals since Windows 10 build 14931 (released 2016) -> truecolor
+
+6. 256-color terminals
+   - known 256-color terminals -> 256 colors
+
+7. Fallback
+   - unknown terminals -> 16 colors
 
 <details>
 <summary>Supported terminals and CI environments</summary>
@@ -442,6 +477,7 @@ See also:
 
 </details>
 
+<a name="cli-vars-and-flags"></a>
 ## Environment & CLI options
 
 Ansis detects color support automatically, but you can override it with environment variables and CLI flags.
@@ -450,7 +486,7 @@ Ansis detects color support automatically, but you can override it with environm
 >
 > Priority order, from lowest to highest:
 >
-> 1. auto-detection
+> 1. [auto-detection](#auto-detection)
 > 2. `NO_COLOR`
 > 3. CLI color flags
 > 4. `FORCE_COLOR`
@@ -472,13 +508,13 @@ NO_COLOR=1 node app.js
 
 Force or override color support via environment variable (see [force-color.org](https://force-color.org/)).
 
-| Value                      | Behavior                                              |
-|----------------------------|-------------------------------------------------------|
-| `0` or `false`             | Disable colors (level 0)                              |
-| `1`                        | Force 16 colors (level 1)                             |
-| `2`                        | Force 256 colors (level 2)                            |
-| `3`                        | Force truecolor (level 3)                             |
-| `true` or any other string | Auto-detect, fallback to 16 colors if detection fails |
+| Value                      | Behavior                                                   |
+|----------------------------|------------------------------------------------------------|
+| `0` or `false`             | Disable colors (level 0)                                   |
+| `1`                        | Force 16 colors (level 1)                                  |
+| `2`                        | Force 256 colors (level 2)                                 |
+| `3`                        | Force truecolor (level 3)                                  |
+| `true` or any other string | Auto-detect, with fallback to 16 colors if detection fails |
 
 > [!IMPORTANT]
 >
@@ -486,7 +522,7 @@ Force or override color support via environment variable (see [force-color.org](
 >
 > - **`FORCE_COLOR=0` disables colors.**\
 >   This matches [Node.js](https://nodejs.org/docs/latest/api/tty.html#writestreamhascolorscount-env),
->   but the original [force-color.org](https://force-color.org/) rule enables colors when the value is non-empty string, regardless of its value.
+>   but the original [force-color.org](https://force-color.org/) rule enables colors when the value is a non-empty string, regardless of the actual value.
 >
 > - **`FORCE_COLOR=true` and an empty value enable colors.**\
 >   This matches [Node.js](https://nodejs.org/api/cli.html#force_color1-2-3),
@@ -495,7 +531,7 @@ Force or override color support via environment variable (see [force-color.org](
 <a name="using-env-colorterm"></a>
 #### `COLORTERM`
 
-Hint the color level for auto-detection using terminal emulator conventions:
+Hint the auto-detected color level using terminal emulator conventions:
 
 | Value                  |                  Level |
 |------------------------|-----------------------:|

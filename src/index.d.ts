@@ -217,9 +217,12 @@ type Ansis = {
 
 declare const
   /**
-   * @param {number?} n The color level: 0 - no colors, 1 - 16 colors, 2 - 256 colors, 3 - truecolor. Defaults is auto detected.
+   * @param {number|object} [o] Constructor overload:
+   * - number: color level: 0 - no colors, 1 - 16 colors, 2 - 256 colors, 3 - truecolor.
+   * - object: mock globalThis used for color auto-detection.
+   * Defaults to globalThis.
    */
-  Ansis: new (n?: N) => A,
+  Ansis: new (o?: N | object) => A,
   // declare all styles and colors of type Ansis
   a: A,
   fg: Q,

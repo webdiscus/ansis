@@ -1,11 +1,6 @@
 import { expect, describe, test } from 'vitest';
 
-//import ansis from '../src/index.mjs'; // for debugging only
-import ansis from 'ansis';
-import { hexToRgb, rgbToAnsi256, ansi256To16 } from '../src/utils.js';
-
-// output testing version
-import('./utils/version.js');
+import { hexToRgb, rgbToAnsi256, ansi256To16 } from '../../src/utils.js';
 
 let rgbToAnsi16 = (r, g, b) => ansi256To16(rgbToAnsi256(r, g, b));
 
@@ -200,29 +195,5 @@ describe('convert RGB to ANSI 16', () => {
     const received = rgbToAnsi16(...hexToRgb('#5ffa68'));
     const expected = 92;
     expect(expected).toEqual(received);
-  });
-});
-
-describe('strip ANSI codes', () => {
-  test(`red`, () => {
-    const received = ansis.strip('Hello \x1b[31mWorld\x1b[0m!');
-    const expected = 'Hello World!';
-    expect(received).toEqual(expected);
-  });
-
-  test(`red.bold.underline`, () => {
-    //const str = ansis.red.bold.underline('red.bold.underline');
-    const str = '[31m[1m[4mred.bold.underline[24m[22m[39m';
-    const received = ansis.strip(str);
-    const expected = 'red.bold.underline';
-    expect(received).toEqual(expected);
-  });
-
-  test(`foo red bar bold baz`, () => {
-    //const str = `foo ${ansis.red`red`} bar ${ansis.bold`bold`} baz`;
-    const str = 'foo [31mred[39m bar [1mbold[22m baz';
-    const received = ansis.strip(str);
-    const expected = 'foo red bar bold baz';
-    expect(received).toEqual(expected);
   });
 });

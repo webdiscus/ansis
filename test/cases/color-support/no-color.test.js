@@ -1,9 +1,9 @@
 import { expect, describe, test } from 'vitest';
 
 // import env variables to simulate no color (auto detecting)
-import './env/no-color.js';
+import '../../env/no-color.js';
 
-//import ansis, { red } from '../src/index.mjs'; // for debugging only
+//import ansis, { red } from '../../../src/index.mjs'; // for debugging only
 import ansis, { red } from 'ansis';
 
 describe('color level', () => {

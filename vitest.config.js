@@ -1,8 +1,8 @@
 export default {
   test: {
     include: [
-      'test/**/*.test.js',
-      'test/**/*.test.ts',
+      'test/cases/**/*.test.js',
+      'test/cases/**/*.test.ts',
     ],
     coverage: {
       include: [

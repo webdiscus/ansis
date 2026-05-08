@@ -1,7 +1,7 @@
 import path from 'path';
 import { expect, describe, test } from 'vitest';
 import { WriteStream } from 'node:tty';
-import { esc, execScriptSync } from './utils/helpers.js';
+import { esc, execScriptSync } from '../../utils/helpers.js';
 
 const TEST_PATH = path.resolve('./test/');
 const outputRed = path.join(TEST_PATH, './cli/output-red.js');

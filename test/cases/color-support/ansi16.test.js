@@ -1,12 +1,18 @@
 import { expect, describe, test } from 'vitest';
 
 // import env variables to simulate 16 colors (auto detecting)
-import './env/ansi16-colors.js';
+import '../../env/ansi16-colors.js';
 
-//import ansis from '../src/index.mjs'; // for debugging only
+//import ansis from '../../../src/index.mjs'; // for debugging only
 import ansis from 'ansis';
 
 describe('color level', () => {
+  test(`ansis.isSupported()`, () => {
+    const received = ansis.isSupported();
+    const expected = true;
+    expect(received).toEqual(expected);
+  });
+
   test(`ansis.level`, () => {
     const received = ansis.level;
     const expected = 1;

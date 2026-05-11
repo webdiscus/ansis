@@ -1,6 +1,6 @@
 # Changelog
 
-## 4.3.0 (2026-05-08)
+## 4.3.0 (2026-05-11)
 
 - feat: add support for OSC 8 hyperlink: `link(url, text)`
 - feat: add constructor overload to pass a mock `globalThis` object for controlled color auto-detection

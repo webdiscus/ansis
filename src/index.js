@@ -64,13 +64,13 @@ let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f:
         : EMPTY_STRING + arg; // stringify the argument
 
     // Detect nested styles
-    // Note: on Node.js >= 22, includes() is a tick faster than using ~indexOf()
+    // Note: on Node.js >= 22, includes() is a tick faster than ~indexOf()
     let pos;
     if (output.includes('')) {
       for (; props; props = props.p) {
         // This implementation runs ~30% faster than String.replaceAll()
         // output = output.replaceAll(props.close, props.open);
-        // -- begin replaceAll, inline the function here to reduce the bundle size
+        // -- begin replaceAll
         let { _o: replacement, _c: search } = props;
         let searchLength = search.length;
         let result = EMPTY_STRING;
@@ -106,15 +106,15 @@ let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f:
   setPrototypeOf(styleFn, stylePrototype);
 
   // Style function anatomy
-  // styleFn                   - style function (returned by the getter)
-  //   ├─ .open     public API - full cumulative open sequence
-  //   ├─ .close    public API - full cumulative close sequence
+  // styleFn        style function (returned by the getter)
+  //   ├─ .open     public API, full cumulative open sequence
+  //   ├─ .close    public API, full cumulative close sequence
   //   └─ .p        internal parent chain object
-  //        ├─ ._o  internal   - raw open of this level  <- mangled with terser
-  //        ├─ ._c  internal   - raw close of this level <- mangled with terser
-  //        ├─ .o   internal   - cumulative open stack
-  //        ├─ .c   internal   - cumulative close stack
-  //        └─ .p   internal   - parent reference
+  //        ├─ ._o  internal raw open of this level  <- mangled with terser
+  //        ├─ ._c  internal raw close of this level <- mangled with terser
+  //        ├─ .o   internal cumulative open stack
+  //        ├─ .c   internal cumulative close stack
+  //        └─ .p   internal parent reference
   styleFn.p = { _o: open, _c: close, o: (styleFn.open = openStack), c: (styleFn.close = closeStack), p: props };
 
   return styleFn;
@@ -192,17 +192,22 @@ function Ansis(option = globalThis) {
         let type = (typeof value)[0];
 
         if (type === 's') {
-          // user theme strings are always treated as hex colors,
+          // strings are always treated as hex colors,
           // from this hex color both `fg` and `bg` variants are created: `name` and `bgName`
-          createMethod(name, rgbFn(...hexToRgb(value)));
+
+          // create background color
           createMethod(getBgName(name), bgRgbFn(...hexToRgb(value)));
-        } else {
-          createMethod(name, value, type === 'f');
+          // prepare the value for forebgroung color
+          value = rgbFn(...hexToRgb(value));
         }
+
+        // create foregroung color or a function like hex() or bgHex()
+        createMethod(name, value, type === 'f');
       }
 
-      stylePrototype = create({}, styles);
-      setPrototypeOf(self, stylePrototype);
+      // Build a prototype from all registered style getters and attach it to the current instance.
+      // stylePrototype is also reused by created style functions, so chained styles can access the same getters.
+      setPrototypeOf(self, (stylePrototype = create({}, styles)));
 
       return self;
     },
@@ -220,12 +225,12 @@ function Ansis(option = globalThis) {
     // collect styles into global object
     styles[name] = {
       get() {
-        let value = isFunction ? (...args) => createStyle(this, extension(...args)) : createStyle(this, extension);
+        let style = isFunction ? (...args) => createStyle(this, extension(...args)) : createStyle(this, extension);
 
         // optimisation: up to 5x faster.
         // lazy getter: compute once, then memoize as an own data property for direct subsequent access
-        defineProperty(this, name, { value });
-        return value;
+        defineProperty(this, name, { value: style });
+        return style;
       },
     };
   };
@@ -234,19 +239,29 @@ function Ansis(option = globalThis) {
 
   let hasColors = level > LEVEL_BW;
   let esc = (open, close) => (hasColors ? { open: `[${open}m`, close: `[${close}m` } : visible);
+
   let createHexFn = (fn) => (hex) => fn(...hexToRgb(hex));
   let createRgbFn = (open, close) => (r, g, b) => esc(`${open}8;2;${r};${g};${b}`, close);
 
-  let createRgb16Fn = (offset, closeCode) => (r, g, b) => esc(/* rgbToAnsi16 */ ansi256To16(rgbToAnsi256(r, g, b)) + offset, closeCode);
   let createRgb256Fn = (fn) => (r, g, b) => fn(rgbToAnsi256(r, g, b));
+  let createRgb16Fn = (offset, closeCode) => (r, g, b) => esc(ansi256To16(rgbToAnsi256(r, g, b)) + offset, closeCode);
 
+  // Build background method name, e.g. "pink" -> "bgPink"
+  let getBgName = (name) => 'bg' + name[0].toUpperCase() + name.slice(1);
+
+  let bright = 'Bright';
+  let bgName;
+  let styleData;
+
+  // truecolor funcitons
   let rgbFn = createRgbFn(3, closeCode);
   let bgRgbFn = createRgbFn(4, bgCloseCode);
 
+  // ANSI 256 colors functions
   let ansi256Fn = (code) => esc('38;5;' + code, closeCode);
   let bgAnsi256Fn = (code) => esc('48;5;' + code, bgCloseCode);
 
-  // fallback
+  // fallback functions
   if (level === LEVEL_256COLORS) {
     rgbFn = createRgb256Fn(ansi256Fn);
     bgRgbFn = createRgb256Fn(bgAnsi256Fn);
@@ -257,7 +272,7 @@ function Ansis(option = globalThis) {
     bgAnsi256Fn = (code) => esc(ansi256To16(code) + bgOffset, bgCloseCode);
   }
 
-  let styleData = {
+  styleData = {
     fg: ansi256Fn,
     bg: bgAnsi256Fn,
     rgb: rgbFn,
@@ -265,7 +280,7 @@ function Ansis(option = globalThis) {
     hex: createHexFn(rgbFn),
     bgHex: createHexFn(bgRgbFn),
 
-    visible: visible,
+    visible,
     reset: esc(0, 0),
     bold: esc(1, 22),
     dim: esc(2, 22),
@@ -282,31 +297,27 @@ function Ansis(option = globalThis) {
     },
   };
 
-  // Build background method name, e.g. "pink" -> "bgPink"
-  let getBgName = (name) => 'bg' + name[0].toUpperCase() + name.slice(1);
+  // Optimisation: generate ANSI 16 color styles to reduce the code size.
 
-  // Generate ANSI 16 colors dynamically to reduce the code size
-
-  let bright = 'Bright';
-  let bgName;
-
-  // begin code 30 as `black`, each subsequent color in the list increments sequentially
-  'black,red,green,yellow,blue,magenta,cyan,white,gray'.split(separator).map((name, offset) => {
+  // `black` has code 30, and each subsequent base color increments sequentially.
+  // Optimisation: `gray` is placed first to handle its special bright-black codes with fewer operations.
+  'gray,black,red,green,yellow,blue,magenta,cyan,white'.split(separator).map((name, offset) => {
     bgName = getBgName(name);
 
-    // no bright for gray (bright black)
-    if (8 > offset) {
-      styleData[name + bright] = esc(90 + offset, closeCode);
-      styleData[bgName + bright] = esc(100 + offset, bgCloseCode);
+    if (offset) {
+      // Bright variants exist only for 8 base colors.
+      // Since the first item is `gray`, base colors start at offset 1, so 89/99 are used instead of 90/100 to compensate this shifted index.
+      styleData[name + bright] = esc(89 + offset, closeCode);
+      styleData[bgName + bright] = esc(99 + offset, bgCloseCode);
     } else {
-      // set code offset for gray
-      // code  90 - `gray` is common used color name for "bright black" foreground
-      // code 100 - `bgGray` is common used color name for "bright black" background
-      offset = 60;
+      // `gray` is the named alias for bright black.
+      // Offset 61 with base codes 29/39 produces bright codes 90/100 (foreground and background bright black).
+      offset = 61;
     }
 
-    styleData[name] = esc(30 + offset, closeCode);
-    styleData[bgName] = esc(40 + offset, bgCloseCode);
+    // Since the first item is `gray`, base colors start at offset 1, so 29/39 are used instead of 30/40 to compensate this shifted index.
+    styleData[name] = esc(29 + offset, closeCode);
+    styleData[bgName] = esc(39 + offset, bgCloseCode);
   });
 
   // define base functions, colors and styles

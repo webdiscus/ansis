@@ -1,5 +1,8 @@
 name: Test
 
+env:
+  COVERAGE_NODE_VERSION: &coverage-node-version '24'
+
 on:
   push:
     branches:
@@ -47,7 +50,11 @@ jobs:
       fail-fast: false # doesn't stop on first failure
       matrix:
         os: [ubuntu-latest, windows-latest]
-        node-version: [18, 20, 22]
+        node-version: [ 18, 20, 22, 24 ]
+        include:
+          - os: ubuntu-latest
+            node-version: *coverage-node-version
+            coverage: true
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -70,15 +77,23 @@ jobs:
         run: npm install --ignore-scripts
 
       - name: Run tests
+        if: matrix.coverage != true
         run: npx vitest
         env:
           NODE_OPTIONS: --unhandled-rejections=strict
 
-      - name: Submit coverage data to codecov
+      - name: Run tests with coverage
+        if: matrix.coverage == true
+        run: npx vitest --coverage
+        env:
+          NODE_OPTIONS: --unhandled-rejections=strict
+
+      - name: Upload coverage reports to Codecov
+        if: matrix.coverage == true
         uses: codecov/codecov-action@v5
         with:
-          flags: test
           token: ${{ secrets.CODECOV_TOKEN }}
+          slug: webdiscus/ansis
 
   legacy-node-compatibility:
     name: Test legacy

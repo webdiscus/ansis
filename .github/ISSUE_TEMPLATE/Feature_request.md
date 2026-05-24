@@ -1,22 +1,20 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest an improvement or new capability
 ---
 
-<!-- If you delete this template this issue is very likely to be closed. -->
+## Problem
 
-## Feature request
+<!-- What problem does this solve? -->
 
-**What is motivation or use case for adding/changing the behavior?**
-<!-- A clear and concise description of what the problem is. Ex. I'm always frustrated when [...] -->
+## Proposed Solution
 
-**Describe the solution you'd like**
-<!-- A clear and concise description of what you want to happen. -->
+<!-- What would you like to happen? -->
 
+## Alternatives
 
-**Describe alternatives you've considered**
-<!-- A clear and concise description of any alternative solutions or features you've considered. -->
+<!-- Which alternatives or workarounds have you considered? -->
 
-## Appreciation for the useful project
+## Additional Context
 
-- [ ] After the feature is implemented, do not forget to give a star ⭐
+<!-- Add examples, screenshots, links, or related issues. -->

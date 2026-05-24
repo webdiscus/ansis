@@ -3,8 +3,12 @@ name: Custom issue
 about: Something else
 ---
 
-<!-- Bug reports and Feature requests must use other templates, or will be closed -->
+<!-- Use the bug report or feature request template when possible. -->
 
-## Appreciation for the useful project
+## Topic
 
-- [ ] Do not forget to give a star ⭐
+<!-- What would you like to discuss or ask? -->
+
+## Details
+
+<!-- Add any relevant context, links, or examples. -->

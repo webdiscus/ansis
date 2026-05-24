@@ -103,8 +103,8 @@ Ansis is the fastest when using 2 or more styles, which is the common real-world
 <h1></h1>
 
 > 🎯 **You might also like**
+> - [`ansilight`](https://github.com/webdiscus/ansilight) - Truecolor syntax highlighter for the terminal with 256 `highlight.js` [themes](https://github.com/webdiscus/ansilight/blob/master/docs/theme-gallery.md)
 > - [`flaget`](https://github.com/webdiscus/flaget) - CLI argument parsing. A smaller (5 kB) and faster alternative to [`yargs-parser`](https://www.npmjs.com/package/yargs-parser) (85 kB)
-> - [`HTML bundler`](https://github.com/webdiscus/html-bundler-webpack-plugin) - Plugin for Webpack to generate static sites from templates (html, ejs, hbs, pug, ...)
 
 
 <a name="alternatives"></a>

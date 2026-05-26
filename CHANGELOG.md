@@ -1,5 +1,39 @@
 # Changelog
 
+## 4.3.1 (2026-05-26)
+
+- fix: fix edge cases in `reset` ANSI sequence generation.
+
+  `reset` is now treated as a single SGR command, not as a paired style.
+  This means `ansis.reset(value)` prepends `\x1b[0m` and does not append a closing reset sequence.
+
+  Before:
+
+  ```js
+  ansis.reset('foo');
+  // "\x1b[0mfoo\x1b[0m"
+  ```
+
+  Now:
+
+  ```js
+  ansis.reset('foo');
+  // "\x1b[0mfoo"
+  ```
+
+  If a trailing reset is needed, add it explicitly:
+
+  ```js
+  ansis.reset`foo ${ansis.red('bar')} baz` + ansis.reset();
+  // "\x1b[0mfoo \x1b[31mbar\x1b[39m baz\x1b[0m"
+  ```
+
+  This was an edge-case bug, not a general breakage. The fix removes extra reset sequences in chained,
+  nested, template literal, and multiline style compositions where treating `reset` as a paired style
+  produced misleading output.
+
+- refactor: code micro optimisation
+
 ## 4.3.0 (2026-05-11)
 
 - feat: add support for OSC 8 hyperlink: `link(url, text)`

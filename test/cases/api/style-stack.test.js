@@ -57,7 +57,7 @@ describe('style stack', () => {
 
   test(`reset inside a styled context is preserved without remapping`, () => {
     const received = ansis.red(`foo ${ansis.reset('bar')} baz`);
-    const expected = '\x1b[31mfoo \x1b[0mbar\x1b[0m baz\x1b[39m';
+    const expected = '\x1b[31mfoo \x1b[0mbar baz\x1b[39m';
     console.log(received);
     expect(received).toEqual(expected);
   });

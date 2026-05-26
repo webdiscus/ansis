@@ -47,11 +47,11 @@ let createStyle = (parent, { open = EMPTY_STRING, close = EMPTY_STRING, f: forma
   let styleFn = (arg, ...values) => {
     // if the argument is empty or null, return an empty string
     if (!arg) {
-      // style reset
-      if (open && open === close) return open;
+      // reset has no closing sequence, without argument it returns the reset code
+      if (!close) return open;
       // null == arg || '' === arg
       if ((arg ?? EMPTY_STRING) === EMPTY_STRING) return EMPTY_STRING;
-      // fall-through to stringify the args: `false`, `0` or `NaN`
+      // fall through to stringify `false`, `0`, or `NaN`
     }
 
     // Render string
@@ -229,7 +229,8 @@ function Ansis(option = globalThis) {
   // Generate ANSI escape sequences by color level
 
   let hasColors = level > LEVEL_BW;
-  let esc = (open, close) => (hasColors ? { open: `[${open}m`, close: `[${close}m` } : visible);
+  // Note: reset hasn't closing code
+  let esc = (open, close) => (hasColors ? { open: `[${open}m`, close: close ? `[${close}m` : EMPTY_STRING } : visible);
 
   let createHexFn = (fn) => (hex) => fn(...hexToRgb(hex));
   let createRgbFn = (open, close) => (r, g, b) => esc(`${open}8;2;${r};${g};${b}`, close);
@@ -271,7 +272,7 @@ function Ansis(option = globalThis) {
     bgHex: createHexFn(bgRgbFn),
 
     visible,
-    reset: esc(0, 0),
+    reset: esc(0, EMPTY_STRING),
     bold: esc(1, 22),
     dim: esc(2, 22),
     italic: esc(3, 23),

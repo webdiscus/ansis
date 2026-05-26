@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "4.3.0",
+  "version": "4.3.1",
   "description": "A small and fast ANSI color library",
   "keywords": [
     "ansi",
@@ -70,6 +70,7 @@
     "test-deno:debug": "deno ./test-deno/manual/deno-debug.js",
     "test-deno:truecolor": "deno test ./test-deno/cases/truecolor.test.js --allow-env",
     "test:coverage": "vitest run --coverage",
+    "pack:check": "npm pack ./dist/node14 --dry-run",
     "publish:public-node10": "(npm run build) && npm publish ./dist/node10 --tag node10",
     "publish:public": "(npm run build) && npm publish ./dist/node14 --access public",
     "publish:beta": "(npm run build) && npm publish ./dist/node14 --tag beta"

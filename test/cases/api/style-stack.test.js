@@ -4,7 +4,10 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import ansis from 'ansis';
+import { Ansis } from 'ansis';
+
+// use base colors
+const ansis = new Ansis(1);
 
 describe('style stack', () => {
   test(`different close codes in a chained style`, () => {

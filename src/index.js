@@ -11,7 +11,6 @@ let bgOffset = 10;
 
 let styles = {};
 let stylePrototype;
-// @preserve
 let LF = '\n';
 
 /**
@@ -30,12 +29,15 @@ let LF = '\n';
  */
 
 /**
- * Creates a style function that applies ANSI codes to a string.
- * @param {{p: AnsisProps}} self
+ * Creates a style function that applies ANSI escape sequences to a string.
+ * @param {AnsisProps} parent
  * @param {StyleFormatter} style
  * @return {Ansis}
  */
-let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f: formatter }) => {
+let createStyle = (parent, { open = EMPTY_STRING, close = EMPTY_STRING, f: formatter }) => {
+  let openStack = (parent.open || EMPTY_STRING) + open;
+  let closeStack = close + (parent.close || EMPTY_STRING);
+
   /**
    * Decorates a string with ANSI escape sequences.
    * @param {unknown} arg The input value, can be any or a template string.
@@ -52,26 +54,23 @@ let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f:
       // fall-through to stringify the args: `false`, `0` or `NaN`
     }
 
-    let props = styleFn.p;
-    let openStack = props.o;
-    let closeStack = props.c;
-
     // Render string
     let output = formatter
-      ? formatter(arg, ...values) // еxtension formatters are expected to return a string
+      ? formatter(arg, ...values) // extension formatter is expected to return a string
       : arg.raw // template strings
         ? String.raw({ raw: arg }, ...values) // concatenate the "cooked" (escaped string value) strings, see https://github.com/tc39/proposal-string-cooked
         : EMPTY_STRING + arg; // stringify the argument
 
-    // Detect nested styles
-    // Note: on Node.js >= 22, includes() is a tick faster than ~indexOf()
+    // Restore nested styles by walking the chain
+    let node = styleFn;
     let pos;
+    // Note: on Node.js >= 22, includes() is a tick faster than ~indexOf()
     if (output.includes('')) {
-      for (; props; props = props.p) {
+      while ((node = node.p)) {
         // This implementation runs ~30% faster than String.replaceAll()
-        // output = output.replaceAll(props.close, props.open);
+        // output = output.replaceAll(node.close, node.open);
         // -- begin replaceAll
-        let { _o: replacement, _c: search } = props;
+        let { _o: replacement, _c: search } = node;
         let searchLength = search.length;
         let result = EMPTY_STRING;
         let lastPos = 0;
@@ -89,33 +88,25 @@ let createStyle = ({ p: props }, { open = EMPTY_STRING, close = EMPTY_STRING, f:
 
     return (
       openStack +
-      // Wrap each line with the current open/close codes so multi-line output remains correctly styled
+      // Wraps line breaks with close/open ANSI escape sequences so multiline output keeps the current style correctly on each rendered line.
       (output.includes(LF) ? output.replace(/(\r?\n)/g, closeStack + '$1' + openStack) : output) +
       closeStack
     );
   };
 
-  let openStack = open;
-  let closeStack = close;
-
-  if (props) {
-    openStack = props.o + open;
-    closeStack = close + props.c;
-  }
-
   setPrototypeOf(styleFn, stylePrototype);
 
   // Style function anatomy
   // styleFn        style function (returned by the getter)
-  //   ├─ .open     public API, full cumulative open sequence
-  //   ├─ .close    public API, full cumulative close sequence
-  //   └─ .p        internal parent chain object
-  //        ├─ ._o  internal raw open of this level  <- mangled with terser
-  //        ├─ ._c  internal raw close of this level <- mangled with terser
-  //        ├─ .o   internal cumulative open stack
-  //        ├─ .c   internal cumulative close stack
-  //        └─ .p   internal parent reference
-  styleFn.p = { _o: open, _c: close, o: (styleFn.open = openStack), c: (styleFn.close = closeStack), p: props };
+  //   ├─ .open     public API: full cumulative open sequence
+  //   ├─ .close    public API: full cumulative close sequence
+  //   └─ .p        internal linked-list node
+  //        ├─ ._o  raw open code of the current style  <- mangled with terser
+  //        ├─ ._c  raw close code of the current style <- mangled with terser
+  //        └─ .p   parent node, or null at the root
+  styleFn.p = { _o: open, _c: close, p: parent.p };
+  styleFn.open = openStack;
+  styleFn.close = closeStack;
 
   return styleFn;
 };
@@ -151,11 +142,11 @@ function Ansis(option = globalThis) {
     isSupported: () => hasColors,
 
     /**
-     * Removes ANSI escape sequences  from a string.
+     * Removes ANSI escape sequences from a string.
      *
      * RegExp parts:
      *
-     * - [] - ensures that the string starts with ANSI codes
+     * - [] - ensures that the string starts with ANSI escape sequences
      * - [[()#;?]* - optional sequence used for device control
      * - (?:[0-9]{1,4}(?:;[0-9]{0,4})*)? - parameter bytes, list of numbers separated by semicolons, (e.g., 1;31;42)
      * - [0-9A-ORZcf-nqry=><] - final byte, determines the type of ANSI escape sequence
@@ -235,7 +226,7 @@ function Ansis(option = globalThis) {
     };
   };
 
-  // Generate ANSI codes by color level
+  // Generate ANSI escape sequences by color level
 
   let hasColors = level > LEVEL_BW;
   let esc = (open, close) => (hasColors ? { open: `[${open}m`, close: `[${close}m` } : visible);
@@ -250,7 +241,6 @@ function Ansis(option = globalThis) {
   let getBgName = (name) => 'bg' + name[0].toUpperCase() + name.slice(1);
 
   let bright = 'Bright';
-  let bgName;
   let styleData;
 
   // truecolor funcitons
@@ -302,13 +292,11 @@ function Ansis(option = globalThis) {
   // `black` has code 30, and each subsequent base color increments sequentially.
   // Optimisation: `gray` is placed first to handle its special bright-black codes with fewer operations.
   'gray,black,red,green,yellow,blue,magenta,cyan,white'.split(separator).map((name, offset) => {
-    bgName = getBgName(name);
-
     if (offset) {
       // Bright variants exist only for 8 base colors.
       // Since the first item is `gray`, base colors start at offset 1, so 89/99 are used instead of 90/100 to compensate this shifted index.
       styleData[name + bright] = esc(89 + offset, closeCode);
-      styleData[bgName + bright] = esc(99 + offset, bgCloseCode);
+      styleData[getBgName(name) + bright] = esc(99 + offset, bgCloseCode);
     } else {
       // `gray` is the named alias for bright black.
       // Offset 61 with base codes 29/39 produces bright codes 90/100 (foreground and background bright black).
@@ -317,7 +305,7 @@ function Ansis(option = globalThis) {
 
     // Since the first item is `gray`, base colors start at offset 1, so 29/39 are used instead of 30/40 to compensate this shifted index.
     styleData[name] = esc(29 + offset, closeCode);
-    styleData[bgName] = esc(39 + offset, bgCloseCode);
+    styleData[getBgName(name)] = esc(39 + offset, bgCloseCode);
   });
 
   // define base functions, colors and styles

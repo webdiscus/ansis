@@ -55,6 +55,31 @@ describe('reset', () => {
     expect(received).toEqual(expected);
   });
 
+  // TODO: recovery styles after reset in nested styles
+  test(`222`, () => {
+    //const received = ansis.green.underline.italic.bgMagenta`green ${ansis.reset.red('foo')} green`;
+    //const received = ansis.green.underline.reset.italic.bgBlue`green ${ansis.red('foo')} green`;
+
+    // reference
+    const received = ansis.green.underline.italic.bgBlue`green ${ansis.red('foo')} green`;
+
+    //const expected = '\x1b[32m\x1b[4mgreen \x1b[0m\x1b[31mfoo\x1b[32m green\x1b[24m\x1b[39m';
+    const expected = '\x1b[32m\x1b[4mgreen \x1b[0m\x1b[31mfoo\x1b[32m\x1b[0m green\x1b[24m\x1b[39m';
+
+    console.log(received);
+    console.log(expected);
+
+    console.log();
+    console.log(ansis.green.underline.bgBlue`green${ansis.red(' foo ')}${ansis.green.underline.bgBlue`green`}`);
+    console.log(ansis.green.underline.bgBlue`green${ansis.reset.red(' foo ')}${ansis.green.underline.bgBlue`green`}`);
+
+    console.log();
+    console.log(ansis.green.underline.bgBlue`green${ansis.red(' foo ')}green`);
+    console.log(ansis.green.underline.bgBlue`green${ansis.reset.red(' foo ')}green`);
+
+    expect(received).toEqual(expected);
+  });
+
   test(`nested reset inside foreground style is preserved without remapping`, () => {
     const received = ansis.red(`foo ${ansis.reset('bar')} baz`);
     const expected = '\x1b[31mfoo \x1b[0mbar baz\x1b[39m';
@@ -95,6 +120,36 @@ describe('reset', () => {
   test(`raw reset sequence inside foreground and background styles is preserved without remapping`, () => {
     const received = ansis.red.bgGreen('foo \x1b[0mbar baz');
     const expected = '\x1b[31m\x1b[42mfoo \x1b[0mbar baz\x1b[49m\x1b[39m';
+    expect(received).toEqual(expected);
+  });
+});
+
+describe('reset inside styled template composition', () => {
+  test(`without reset, explicit nested tail keeps full outer style`, () => {
+    const received = ansis.green.underline.bgBlue`green${ansis.red(' foo ')}${ansis.green.underline.bgBlue`green`}`;
+    const expected = '\x1b[32m\x1b[4m\x1b[44mgreen\x1b[31m foo \x1b[32m\x1b[32m\x1b[4m\x1b[44mgreen\x1b[44m\x1b[4m\x1b[32m\x1b[49m\x1b[24m\x1b[39m';
+    console.log(received);
+    expect(received).toEqual(expected);
+  });
+
+  test(`with reset, explicit nested tail keeps full outer style`, () => {
+    const received = ansis.green.underline.bgBlue`green${ansis.reset.red(' foo ')}${ansis.green.underline.bgBlue`green`}`;
+    const expected = '\x1b[32m\x1b[4m\x1b[44mgreen\x1b[0m\x1b[31m foo \x1b[32m\x1b[32m\x1b[4m\x1b[44mgreen\x1b[44m\x1b[4m\x1b[32m\x1b[49m\x1b[24m\x1b[39m';
+    console.log(received);
+    expect(received).toEqual(expected);
+  });
+
+  test(`without reset, nested foreground restores outer foreground for plain tail`, () => {
+    const received = ansis.green.underline.bgBlue`green${ansis.red(' foo ')}green`;
+    const expected = '\x1b[32m\x1b[4m\x1b[44mgreen\x1b[31m foo \x1b[32mgreen\x1b[49m\x1b[24m\x1b[39m';
+    console.log(received);
+    expect(received).toEqual(expected);
+  });
+
+  test(`with reset, nested foreground restores only outer foreground for plain tail`, () => {
+    const received = ansis.green.underline.bgBlue`green${ansis.reset.red(' foo ')}green`;
+    const expected = '\x1b[32m\x1b[4m\x1b[44mgreen\x1b[0m\x1b[31m foo \x1b[32mgreen\x1b[49m\x1b[24m\x1b[39m';
+    console.log(received);
     expect(received).toEqual(expected);
   });
 });

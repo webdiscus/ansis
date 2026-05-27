@@ -1,5 +1,5 @@
-let { defineProperty, setPrototypeOf, create, keys } = Object;
+let { defineProperty, getPrototypeOf, setPrototypeOf, create, keys } = Object;
 let EMPTY_STRING = '';
 let separator = ',';
 
-export { create, defineProperty, setPrototypeOf, keys, EMPTY_STRING, separator };
+export { create, defineProperty, getPrototypeOf, setPrototypeOf, keys, EMPTY_STRING, separator };

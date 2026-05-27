@@ -272,14 +272,14 @@ Truecolor → 256 colors → 16 colors → no colors (b&w)
 Register any hex color as a named style via `extend()`.
 Background methods `bg*` are generated automatically.
 ```js
-import ansis from 'ansis';
+import { Ansis } from 'ansis';
 
 const myTheme = {
   orange: '#ffa500',
   pink:   '#ffc0cb',
 };
 
-const color = ansis.extend(myTheme);
+const color = new Ansis().extend(myTheme);
 
 color.orange.bold`orange bold`;       // extended first in chain
 color.bgOrange`orange background`;    // auto-generated bg tag
@@ -289,7 +289,7 @@ color.red`built-in red still works`;  // built-in remains intact
 ```
 
 > [!WARNING]
-> Put extended colors **first** in the chain: `color.orange.bold` ✅ `color.bold.orange` ❌
+> For extended styles, create a new `Ansis` instance and call `extend()` on it.
 
 > [!TIP]
 > For all CSS named colors use [css-color-names](https://www.npmjs.com/package/css-color-names) package.
@@ -301,10 +301,10 @@ color.red`built-in red still works`;  // built-in remains intact
 **Example:** extend with [CSS color names](http://dev.w3.org/csswg/css-color/#named-colors)
 
 ```js
-import ansis from 'ansis';
+import { Ansis } from 'ansis';
 import colorNames from 'css-color-names'; // { pink: '#ffc0cb', orange: '#ffa500', ... }
 
-const color = ansis.extend(colorNames);
+const color = new Ansis().extend(colorNames);
 
 color.pink('Pink foreground');
 color.bgPink('Pink background'); // auto-generated bg

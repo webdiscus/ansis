@@ -48,6 +48,9 @@ describe('color functions', () => {
     expect(esc(received)).toEqual(esc(expected));
   });
 
+});
+
+describe('strip', () => {
   test(`ansis.strip() red`, () => {
     const received = ansis.strip('Hello \x1b[31mWorld\x1b[0m!');
     const expected = 'Hello World!';
@@ -67,6 +70,20 @@ describe('color functions', () => {
     const str = 'foo \x1b[31mred\x1b[39m bar \x1b[1mbold\x1b[22m baz';
     const received = ansis.strip(str);
     const expected = 'foo red bar bold baz';
+    expect(received).toEqual(expected);
+  });
+
+  test(`ansis.strip() OSC 8 hyperlink`, () => {
+    const str = ansis.link('https://example.com', 'Click here');
+    const received = ansis.strip(str);
+    const expected = 'Click here';
+    expect(received).toEqual(expected);
+  });
+
+  test(`ansis.strip() styled OSC 8 hyperlink`, () => {
+    const str = ansis.blue.link('https://example.com', 'Click here');
+    const received = ansis.strip(str);
+    const expected = 'Click here';
     expect(received).toEqual(expected);
   });
 });

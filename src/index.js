@@ -1,16 +1,12 @@
-import { create, defineProperty, setPrototypeOf, separator, EMPTY_STRING } from './misc.js';
+import { create, defineProperty, getPrototypeOf, setPrototypeOf, separator, EMPTY_STRING } from './misc.js';
 import { hexToRgb, rgbToAnsi256, ansi256To16 } from './utils.js';
 import { getLevel } from './color-support.js';
 import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS } from './color-levels.js';
 
 let visible = { open: EMPTY_STRING, close: EMPTY_STRING };
-
 let closeCode = 39;
 let bgCloseCode = 49;
 let bgOffset = 10;
-
-let styles = {};
-let stylePrototype;
 let LF = '\n';
 
 /**
@@ -70,7 +66,7 @@ let createStyle = (parent, { open = EMPTY_STRING, close = EMPTY_STRING, f: forma
         // This implementation runs ~30% faster than String.replaceAll()
         // output = output.replaceAll(node.close, node.open);
         // -- begin replaceAll
-        let { _o: replacement, _c: search } = node;
+        let { _open: replacement, _close: search } = node;
         let searchLength = search.length;
         let result = EMPTY_STRING;
         let lastPos = 0;
@@ -94,17 +90,17 @@ let createStyle = (parent, { open = EMPTY_STRING, close = EMPTY_STRING, f: forma
     );
   };
 
-  setPrototypeOf(styleFn, stylePrototype);
+  setPrototypeOf(styleFn, getPrototypeOf(parent));
 
   // Style function anatomy
   // styleFn        style function (returned by the getter)
   //   ├─ .open     public API: full cumulative open sequence
   //   ├─ .close    public API: full cumulative close sequence
   //   └─ .p        internal linked-list node
-  //        ├─ ._o  raw open code of the current style  <- mangled with terser
-  //        ├─ ._c  raw close code of the current style <- mangled with terser
+  //        ├─ ._open  raw open code of the current style  <- mangled with terser
+  //        ├─ ._close raw close code of the current style <- mangled with terser
   //        └─ .p   parent node, or null at the root
-  styleFn.p = { _o: open, _c: close, p: parent.p };
+  styleFn.p = { _open: open, _close: close, p: parent.p };
   styleFn.open = openStack;
   styleFn.close = closeStack;
 
@@ -114,6 +110,8 @@ let createStyle = (parent, { open = EMPTY_STRING, close = EMPTY_STRING, f: forma
 function Ansis(option = globalThis) {
   // Number option is a strict color level; object option is treated as mock globalThis.
   let level = typeof option == 'number' ? option : getLevel(option);
+
+  let styles = {};
 
   let self = {
     // Named export of the function to create new instance
@@ -146,15 +144,16 @@ function Ansis(option = globalThis) {
      *
      * RegExp parts:
      *
-     * - [] - ensures that the string starts with ANSI escape sequences
-     * - [[()#;?]* - optional sequence used for device control
-     * - (?:[0-9]{1,4}(?:;[0-9]{0,4})*)? - parameter bytes, list of numbers separated by semicolons, (e.g., 1;31;42)
-     * - [0-9A-ORZcf-nqry=><] - final byte, determines the type of ANSI escape sequence
+     * - ][^]* - OSC sequence terminated by BEL (e.g. OSC 8 hyperlink)
+     * - [] - ensures that CSI sequence starts with ANSI escape sequence
+     * - [[()#;?]* - optional CSI sequence used for device control
+     * - (?:[0-9]{1,4}(?:;[0-9]{0,4})*)? - CSI parameter bytes, list of numbers separated by semicolons, (e.g., 1;31;42)
+     * - [0-9A-ORZcf-nqry=><] - final byte, determines the type of CSI sequence
      *
      * @param {string} str
      * @return {string}
      */
-    strip: (str) => str.replace(/[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, EMPTY_STRING),
+    strip: (str) => str.replace(/][^]*|[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, EMPTY_STRING),
 
     /**
      * Extends the current instance with custom styles.
@@ -188,17 +187,17 @@ function Ansis(option = globalThis) {
 
           // create background color
           createMethod(getBgName(name), bgRgbFn(...hexToRgb(value)));
-          // prepare the value for forebgroung color
+          // prepare the value for foreground color
           value = rgbFn(...hexToRgb(value));
         }
 
-        // create foregroung color or a function like hex() or bgHex()
+        // create foreground color or a function like hex() or bgHex()
         createMethod(name, value, type === 'f');
       }
 
-      // Build a prototype from all registered style getters and attach it to the current instance.
-      // stylePrototype is also reused by created style functions, so chained styles can access the same getters.
-      setPrototypeOf(self, (stylePrototype = create({}, styles)));
+      // snapshot style getters into a prototype for this instance,
+      // chained styles inherit it via getPrototypeOf(parent) in createStyle
+      setPrototypeOf(self, create({}, styles));
 
       return self;
     },
@@ -218,8 +217,8 @@ function Ansis(option = globalThis) {
       get() {
         let style = isFunction ? (...args) => createStyle(this, extension(...args)) : createStyle(this, extension);
 
-        // optimisation: up to 5x faster.
-        // lazy getter: compute once, then memoize as an own data property for direct subsequent access
+        // lazy getter: compute once, then memoize as an own data property for direct subsequent access,
+        // memorisation speed up to 5x
         defineProperty(this, name, { value: style });
         return style;
       },
@@ -244,7 +243,7 @@ function Ansis(option = globalThis) {
   let bright = 'Bright';
   let styleData;
 
-  // truecolor funcitons
+  // truecolor functions
   let rgbFn = createRgbFn(3, closeCode);
   let bgRgbFn = createRgbFn(4, bgCloseCode);
 

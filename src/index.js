@@ -1,5 +1,5 @@
-import { create, defineProperty, getPrototypeOf, setPrototypeOf, separator, EMPTY_STRING } from './misc.js';
-import { hexToRgb, rgbToAnsi256, ansi256To16 } from './utils.js';
+import { create, defineProperty, getPrototypeOf, setPrototypeOf, SEPARATOR, EMPTY_STRING } from './constants.js';
+import { hexToRgb, rgbToAnsi256, ansi256To16 } from './color-math.js';
 import { getLevel } from './color-support.js';
 import { LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS } from './color-levels.js';
 
@@ -90,8 +90,6 @@ let createStyle = (parent, { open = EMPTY_STRING, close = EMPTY_STRING, f: forma
     );
   };
 
-  setPrototypeOf(styleFn, getPrototypeOf(parent));
-
   // Style function anatomy
   // styleFn        style function (returned by the getter)
   //   ├─ .open     public API: full cumulative open sequence
@@ -100,14 +98,18 @@ let createStyle = (parent, { open = EMPTY_STRING, close = EMPTY_STRING, f: forma
   //        ├─ ._open  raw open code of the current style  <- mangled with terser
   //        ├─ ._close raw close code of the current style <- mangled with terser
   //        └─ .p   parent node, or null at the root
-  styleFn.p = { _open: open, _close: close, p: parent.p };
+
+  // Set the prototype first, then add own properties.
+  // Changing it after props exist drops styleFn into V8 slow (dictionary) mode and breaks the shared shape, ~30% slower.
+  // Optimisation: setPrototypeOf returns styleFn, so `.p` is assigned right after the prototype is set.
+  setPrototypeOf(styleFn, getPrototypeOf(parent)).p = { _open: open, _close: close, p: parent.p };
   styleFn.open = openStack;
   styleFn.close = closeStack;
 
   return styleFn;
 };
 
-function Ansis(option = globalThis) {
+function Ansis (option = globalThis) {
   // Number option is a strict color level; object option is treated as mock globalThis.
   let level = typeof option == 'number' ? option : getLevel(option);
 
@@ -147,13 +149,13 @@ function Ansis(option = globalThis) {
      * - ][^]* - OSC sequence terminated by BEL (e.g. OSC 8 hyperlink)
      * - [] - ensures that CSI sequence starts with ANSI escape sequence
      * - [[()#;?]* - optional CSI sequence used for device control
-     * - (?:[0-9]{1,4}(?:;[0-9]{0,4})*)? - CSI parameter bytes, list of numbers separated by semicolons, (e.g., 1;31;42)
-     * - [0-9A-ORZcf-nqry=><] - final byte, determines the type of CSI sequence
+     * - (?:\d+(?:;\d*)*)?  - (optimized version from spec.: `(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?`) - CSI parameter bytes, list of numbers separated by semicolons, (e.g., 1;31;42)
+     * - [\dA-ORZcf-nqry=><] - final byte, determines the type of CSI sequence
      *
      * @param {string} str
      * @return {string}
      */
-    strip: (str) => str.replace(/][^]*|[][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, EMPTY_STRING),
+    strip: (str) => str.replace(/][^]*|[][[()#;?]*(?:\d+(?:;\d*)*)?[\dA-ORZcf-nqry=><]/g, EMPTY_STRING),
 
     /**
      * Extends the current instance with custom styles.
@@ -164,7 +166,7 @@ function Ansis(option = globalThis) {
      *   The value is treated as a hex color (`#RRGGBB` or `#RGB`).
      *   Creates both foreground and background variants: `name` and `bgName`.
      *
-     * - **ANSI open/close pair** (`{ open, close }`)
+     * - **ANSI open/close addColor** (`{ open, close }`)
      *   Plain { open, close } extensions create only the named style.
      *
      * - **Built-in dynamic style factory** (`function`, core extensions only)
@@ -186,20 +188,18 @@ function Ansis(option = globalThis) {
           // from this hex color both `fg` and `bg` variants are created: `name` and `bgName`
 
           // create background color
-          createMethod(getBgName(name), bgRgbFn(...hexToRgb(value)));
+          createMethod(getBgName(name), bgRgb(...hexToRgb(value)));
           // prepare the value for foreground color
-          value = rgbFn(...hexToRgb(value));
+          value = rgb(...hexToRgb(value));
         }
 
         // create foreground color or a function like hex() or bgHex()
-        createMethod(name, value, type === 'f');
+        createMethod(name, value);
       }
 
       // snapshot style getters into a prototype for this instance,
       // chained styles inherit it via getPrototypeOf(parent) in createStyle
-      setPrototypeOf(self, create({}, styles));
-
-      return self;
+      return setPrototypeOf(self, create({}, styles));
     },
   };
 
@@ -208,67 +208,57 @@ function Ansis(option = globalThis) {
    *
    * @param {string} name The style name.
    * @param { StyleFormatter | ?StyleFactory } extension
-   * @param {boolean} [isFunction] Whether `extension` is a function.
    * @return {{get(): Ansis}}
    */
-  let createMethod = (name, extension, isFunction) => {
-    // collect styles into global object
+  let createMethod = (name, extension) => {
     styles[name] = {
+      // Lazy getter: compute once, then memoize as an own data property for direct subsequent access (speed up to 5x).
+      // Optimisation: defineProperty returns the object `this`, so reading [name] returns memorized getter.
       get() {
-        let style = isFunction ? (...args) => createStyle(this, extension(...args)) : createStyle(this, extension);
-
-        // lazy getter: compute once, then memoize as an own data property for direct subsequent access,
-        // memorisation speed up to 5x
-        defineProperty(this, name, { value: style });
-        return style;
+        return defineProperty(this, name, {
+          value: extension.call ? (...args) => createStyle(this, extension(...args)) : createStyle(this, extension),
+        })[name];
       },
     };
   };
 
   // Generate ANSI escape sequences by color level
 
+  // true  - the native ANSI 256-color sequence can be used (BW too, because `esc` returns a plain value)
+  // false - only for the 16-color level, which falls back through `ansi256To16`
+  let has256Colors = level ^ LEVEL_16COLORS; // shorter and faster than `level !== LEVEL_16COLORS`
+  let hasTruecolor = level > LEVEL_256COLORS;
   let hasColors = level > LEVEL_BW;
+
   // Note: reset hasn't closing code
   let esc = (open, close) => (hasColors ? { open: `[${open}m`, close: close ? `[${close}m` : EMPTY_STRING } : visible);
-
-  let createHexFn = (fn) => (hex) => fn(...hexToRgb(hex));
-  let createRgbFn = (open, close) => (r, g, b) => esc(`${open}8;2;${r};${g};${b}`, close);
-
-  let createRgb256Fn = (fn) => (r, g, b) => fn(rgbToAnsi256(r, g, b));
-  let createRgb16Fn = (offset, closeCode) => (r, g, b) => esc(ansi256To16(rgbToAnsi256(r, g, b)) + offset, closeCode);
 
   // Build background method name, e.g. "pink" -> "bgPink"
   let getBgName = (name) => 'bg' + name[0].toUpperCase() + name.slice(1);
 
-  let bright = 'Bright';
-  let styleData;
+  let createHexFn = (fn) => (hex) => fn(...hexToRgb(hex));
+  let createRgbFn = (open, close) => (r, g, b) => esc(`${open}8;2;${r};${g};${b}`, close);
+  let createRgbFallbackFn = (fn) => (r, g, b) => fn(rgbToAnsi256(r, g, b));
 
-  // truecolor functions
-  let rgbFn = createRgbFn(3, closeCode);
-  let bgRgbFn = createRgbFn(4, bgCloseCode);
+  // native 256-color code, or fall back to 16 colors, for BW, `esc` drops the code and returns a plain value
+  let ansi256 = (code) => esc(has256Colors ? '38;5;' + code : ansi256To16(code), closeCode);
+  let bgAnsi256 = (code) => esc(has256Colors ? '48;5;' + code : ansi256To16(code) + bgOffset, bgCloseCode);
 
-  // ANSI 256 colors functions
-  let ansi256Fn = (code) => esc('38;5;' + code, closeCode);
-  let bgAnsi256Fn = (code) => esc('48;5;' + code, bgCloseCode);
+  let rgb = hasTruecolor
+    ? createRgbFn(3, closeCode) // native truecolor
+    : createRgbFallbackFn(ansi256); // fallback to 256 or 16
 
-  // fallback functions
-  if (level === LEVEL_256COLORS) {
-    rgbFn = createRgb256Fn(ansi256Fn);
-    bgRgbFn = createRgb256Fn(bgAnsi256Fn);
-  } else if (level === LEVEL_16COLORS) {
-    rgbFn = createRgb16Fn(0, closeCode);
-    bgRgbFn = createRgb16Fn(bgOffset, bgCloseCode);
-    ansi256Fn = (code) => esc(ansi256To16(code), closeCode);
-    bgAnsi256Fn = (code) => esc(ansi256To16(code) + bgOffset, bgCloseCode);
-  }
+  let bgRgb = hasTruecolor
+    ? createRgbFn(4, bgCloseCode) // native truecolor
+    : createRgbFallbackFn(bgAnsi256); // fallback to 256 or 16
 
-  styleData = {
-    fg: ansi256Fn,
-    bg: bgAnsi256Fn,
-    rgb: rgbFn,
-    bgRgb: bgRgbFn,
-    hex: createHexFn(rgbFn),
-    bgHex: createHexFn(bgRgbFn),
+  let styleData = {
+    fg: ansi256,
+    bg: bgAnsi256,
+    rgb,
+    bgRgb,
+    hex: createHexFn(rgb),
+    bgHex: createHexFn(bgRgb),
 
     visible,
     reset: esc(0, EMPTY_STRING),
@@ -283,29 +273,40 @@ function Ansis(option = globalThis) {
     // OSC 8 hyperlinks
     link: {
       // zero-width spaces to prevent auto-linking while keeping copy/paste intact
-      f: (url, text = url) => (hasColors ? `]8;;${url}${text}]8;;` : text != url ? `${text} (​${url}​)` : url),
+      f: (url, text = url) => (hasColors ? `]8;;${url}${text}]8;;` : text != url ? text + ` (​${url}​)` : url),
     },
   };
 
-  // Optimisation: generate ANSI 16 color styles to reduce the code size.
+  // Optimisation: generate base ANSI 16 color styles to reduce the code size.
+
+  /**
+   * Registers a foreground/background style pair in `styleData`.
+   *
+   * The background variant differs by `code + 10` and uses the `bg`-prefixed name (e.g. "red" -> "bgRed").
+   * Works for both base and bright colors.
+   *
+   * @param {string} name Foreground style name, e.g. "red" or "redBright".
+   * @param {number} code Foreground SGR code. Background uses `code + 10`.
+   * @return {void}
+   */
+  let addColor = (name, code) => {
+    styleData[name] = esc(code, closeCode);
+    styleData[getBgName(name)] = esc(code + bgOffset, bgCloseCode);
+  };
 
   // `black` has code 30, and each subsequent base color increments sequentially.
   // Optimisation: `gray` is placed first to handle its special bright-black codes with fewer operations.
-  'gray,black,red,green,yellow,blue,magenta,cyan,white'.split(separator).map((name, offset) => {
+  'gray,black,red,green,yellow,blue,magenta,cyan,white'.split(SEPARATOR).map((name, offset) => {
     if (offset) {
-      // Bright variants exist only for 8 base colors.
-      // Since the first item is `gray`, base colors start at offset 1, so 89/99 are used instead of 90/100 to compensate this shifted index.
-      styleData[name + bright] = esc(89 + offset, closeCode);
-      styleData[getBgName(name) + bright] = esc(99 + offset, bgCloseCode);
+      // Optimisation: `gray` is first, so base colors start at offset 1: 89 + 1 = 90 (foreground) and 99 + 1 = 100 (background).
+      addColor(name + 'Bright', 89 + offset);
     } else {
       // `gray` is the named alias for bright black.
-      // Offset 61 with base codes 29/39 produces bright codes 90/100 (foreground and background bright black).
+      // Optimisation: offset 61 gives gray codes, 61 + 29 = 90 (foreground) and 61 + 39 = 100 (background).
       offset = 61;
     }
-
     // Since the first item is `gray`, base colors start at offset 1, so 29/39 are used instead of 30/40 to compensate this shifted index.
-    styleData[name] = esc(29 + offset, closeCode);
-    styleData[getBgName(name)] = esc(39 + offset, bgCloseCode);
+    addColor(name, 29 + offset);
   });
 
   // define base functions, colors and styles

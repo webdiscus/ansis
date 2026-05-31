@@ -19,10 +19,9 @@ describe('color level', () => {
     expect(received).toEqual(expected);
   });
 
-  test(`convert truecolor to ANSI 16 colors`, () => {
+  test(`use 16 colors`, () => {
     const received = ansis.hex('#FFAB40')`foo`;
-    const expected = '[93mfoo[39m';
-    console.log('=> Should be bright yellow: ', received);
+    const expected = '\x1b[93mfoo\x1b[39m';
     expect(received).toEqual(expected);
   });
 });

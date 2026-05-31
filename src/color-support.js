@@ -1,5 +1,5 @@
 import { LEVEL_UNDEFINED, LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS, LEVEL_TRUECOLOR } from './color-levels.js';
-import { keys, separator } from './misc.js';
+import { keys, SEPARATOR } from './constants.js';
 
 // Optimisation: declare variables here for more compact code shape after compilation
 let term;
@@ -125,7 +125,7 @@ export const getLevel = (thisRef) => {
   try {
     // keys(env) triggers a Deno permission request; throws if access is denied
     // stringify environment variable keys to check for specific ones using a RegExp
-    let envKeys = separator + keys(env).join(separator);
+    let envKeys = SEPARATOR + keys(env).join(SEPARATOR);
     colorLevel = autoDetectLevel(proc, env, envKeys);
   } catch (error) {
     // if the permission is not granted, environment variables have no effect, even variables like FORCE_COLOR will be ignored

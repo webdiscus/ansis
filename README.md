@@ -85,7 +85,7 @@ Ansis is the fastest when using 2 or more styles, which is the common real-world
 
 **🛠️ Utilities**
 - [Strip ANSI codes](#strip): `ansis.strip(red('text'))` → plain `'text'`
-- [Hyperlinks](#hyperlink): `blue.link('https://...', 'Click here')`, `link('https://...')`
+- [Hyperlink](#hyperlink): `blue.link('https://...', 'Click here')`, `link('https://...')`
 - Raw escape codes: `open` / `close` - `` `${red.open}Error${red.close} file not found` ``
 
 **💻 Environment**
@@ -317,7 +317,9 @@ color.bgPink('Pink background'); // auto-generated bg
 <a name="hyperlink"></a>
 ## Hyperlink
 
-Create terminal hyperlinks via OSC 8 using `link(url, text?)`.
+OSC 8 hyperlinks are now supported by [many terminal emulators](https://github.com/Alhadis/OSC8-Adoption/).
+
+Use `link(url, text?)` to create a terminal hyperlink. If `text` is omitted, the URL itself is used as the visible label.
 
 - `link(url, text)` - link URL + optional link text
 - `link(url)` - URL as both target and text
@@ -338,7 +340,7 @@ blue.underline.link('https://example.com', 'Click here');
 
 > [!WARNING]
 >
-> OSC 8 hyperlinks are not widely supported. In unsupported terminals text is shown without a link.
+> In unsupported terminals text is shown without a link.
 
 ---
 

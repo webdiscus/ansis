@@ -1,6 +1,6 @@
 import { expect, describe, test } from 'vitest';
 
-import { hexToRgb, rgbToAnsi256, ansi256To16 } from '../../src/utils.js';
+import { hexToRgb, rgbToAnsi256, ansi256To16 } from '../../src/color-math.js';
 
 let rgbToAnsi16 = (r, g, b) => ansi256To16(rgbToAnsi256(r, g, b));
 
@@ -99,65 +99,26 @@ describe('convert RGB to ANSI 256', () => {
 });
 
 describe('convert ANSI 256 to ANSI 16', () => {
-  test(`black`, () => {
-    const received = ansi256To16(0);
-    const expected = 30;
-    expect(expected).toEqual(received);
+  // Reference table: index is the ANSI 256-color code (0..255),
+  // value is the expected ANSI 16-color SGR foreground code (30..37, 90..97).
+  const expected = [
+    30, 31, 32, 33, 34, 35, 36, 37, 90, 91, 92, 93, 94, 95, 96, 97, 30, 30, 30, 34, 34, 94, 30, 30, 30, 34, 34, 94, 30, 30, 30, 34, 34, 94, 32, 32, 32, 36, 36, 96, 32, 32, 32, 36,
+    36, 96, 92, 92, 92, 96, 96, 96, 30, 30, 30, 34, 34, 94, 30, 30, 30, 34, 34, 94, 30, 30, 30, 34, 34, 94, 32, 32, 32, 36, 36, 96, 32, 32, 32, 36, 36, 96, 92, 92, 92, 96, 96, 96,
+    30, 30, 30, 34, 34, 94, 30, 30, 30, 34, 34, 94, 30, 30, 30, 34, 34, 94, 32, 32, 32, 36, 36, 96, 32, 32, 32, 36, 36, 96, 92, 92, 92, 96, 96, 96, 31, 31, 31, 35, 35, 95, 31, 31,
+    31, 35, 35, 95, 31, 31, 31, 35, 35, 95, 33, 33, 33, 37, 37, 97, 33, 33, 33, 37, 37, 97, 93, 93, 93, 97, 97, 97, 31, 31, 31, 35, 35, 95, 31, 31, 31, 35, 35, 95, 31, 31, 31, 35,
+    35, 95, 33, 33, 33, 37, 37, 97, 33, 33, 33, 37, 37, 97, 93, 93, 93, 97, 97, 97, 91, 91, 91, 95, 95, 95, 91, 91, 91, 95, 95, 95, 91, 91, 91, 95, 95, 95, 93, 93, 93, 97, 97, 97,
+    93, 93, 93, 97, 97, 97, 93, 93, 93, 97, 97, 97, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37,
+  ];
+
+  test('reference table covers all 256 codes', () => {
+    expect(expected).toHaveLength(256);
   });
 
-  test(`white`, () => {
-    const received = ansi256To16(7);
-    const expected = 37;
-    expect(expected).toEqual(received);
-  });
-
-  test(`whiteBright`, () => {
-    const received = ansi256To16(15);
-    const expected = 97;
-    expect(expected).toEqual(received);
-  });
-
-  test(`ansi256To16(232) -> black`, () => {
-    const received = ansi256To16(233);
-    const expected = 30;
-    expect(expected).toEqual(received);
-  });
-
-  test(`redBright`, () => {
-    const received = ansi256To16(196);
-    const expected = 91;
-    expect(expected).toEqual(received);
-  });
-
-  test(`red`, () => {
-    const received = ansi256To16(124);
-    const expected = 31;
-    expect(expected).toEqual(received);
-  });
-
-  test(`blue`, () => {
-    const received = ansi256To16(20);
-    const expected = 34;
-    expect(expected).toEqual(received);
-  });
-
-  test(`blueBright`, () => {
-    const received = ansi256To16(27);
-    const expected = 94;
-    expect(expected).toEqual(received);
-  });
-
-  test(`green`, () => {
-    const received = ansi256To16(34);
-    const expected = 32;
-    expect(expected).toEqual(received);
-  });
-
-  test(`greenBright`, () => {
-    const received = ansi256To16(82);
-    const expected = 92;
-    expect(expected).toEqual(received);
-  });
+  for (let code = 0; code < 256; code++) {
+    test(`code ${code} -> ${expected[code]}`, () => {
+      expect(ansi256To16(code)).toBe(expected[code]);
+    });
+  }
 });
 
 describe('convert RGB to ANSI 16', () => {

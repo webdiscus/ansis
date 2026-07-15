@@ -145,6 +145,36 @@ import { red } from 'ansis';
 console.log(red('foo')); // foo
 ```
 
+## Disable colors for imported app code
+
+Ansis detects the color level once, when it is imported.
+To override the auto-detected color level in tests, import a setup file that defines the desired value in `process.env` before importing the app code that uses Ansis.
+
+```js
+// no-color.js
+process.env.NO_COLOR = '1';
+```
+
+```js
+// app.js
+import color from 'ansis';
+
+export function formatMessage(message) {
+  return color.red(message);
+}
+```
+
+```js
+import { expect, test } from 'vitest';
+
+import './no-color.js'; // import the setup file before any file that uses ansis
+import { formatMessage } from './app.js';
+
+test('disables colors for imported app code', () => {
+  expect(formatMessage('foo')).toBe('foo');
+});
+```
+
 ## Strip ANSI codes
 
 When the test does not care about color detection, strip ANSI escape sequences from the output:

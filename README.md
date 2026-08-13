@@ -800,7 +800,7 @@ Check the minimum version of your tool required for compatibility with the lates
 
 If you find this useful, please ⭐️ the repo.
 
-[![Star History Chart](https://api.star-history.com/svg?repos=webdiscus/ansis&type=date&legend=top-left)](https://www.star-history.com/#webdiscus/ansis&type=date&legend=top-left)
+[![Star History Chart](https://star-history.dera.page/svg?repos=webdiscus/ansis&type=date&legend=top-left)](https://star-history.dera.page/#webdiscus/ansis&type=date&legend=top-left)
 
 ---
 

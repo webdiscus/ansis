@@ -76,6 +76,9 @@ jobs:
       - name: Install dependencies (without rebuilding)
         run: npm install --ignore-scripts
 
+      - name: Run color support checker
+        run: npm run color-checker
+
       - name: Run tests
         if: matrix.coverage != true
         run: npx vitest
@@ -145,7 +148,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        deno-version: [ 2.0.x, 2.1.x, 2.2.x ]
+        deno-version: [ 2.3.x, 2.9.x ]
 
     steps:
       - name: Checkout repository

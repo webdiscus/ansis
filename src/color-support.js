@@ -1,7 +1,7 @@
 import { LEVEL_UNDEFINED, LEVEL_BW, LEVEL_16COLORS, LEVEL_256COLORS, LEVEL_TRUECOLOR } from './color-levels.js';
 import { keys, SEPARATOR } from './constants.js';
 
-// Optimisation: declare variables here for more compact code shape after compilation
+// Optimisation: declare variables here for more compact code shape after Terser compilation
 let term;
 
 /**
@@ -21,28 +21,40 @@ let term;
  * @return {number}
  */
 let autoDetectLevel = (proc, env,  envKeys) => {
-  // Optimisation: The Terser inlines a function at use place, so we can split the logic on small functions.
+  // Optimisation: The Terser inlines a function at use place, so in the source we can split the logic on small functions.
+
+  let isWin = () => proc.platform === 'win32';
+
+  // In Node.js, `process.stdout.isTTY` is `true` for TTY streams and `undefined` for non-TTY output.
+  // Other runtimes may not expose `isTTY`.
+  let isTTY = () => proc.stdout?.isTTY;
+
+  // Detect CI environments.
+  // Most CI tools set the `CI` ENV variable:
+  // Travis CI, CircleCI, Cirrus CI, Gitlab CI, Appveyor, CodeShip, dsari, etc.
+  // https://github.com/watson/ci-info/blob/master/vendors.json
+  let isCI = () => env.CI;
 
   // PM2 does not set process.stdout.isTTY, but color output may still be supported, depends on the actual terminal.
   // PM2 always sets PM2_HOME to a non-empty (truthy) value when running in either fork or cluster mode.
   let detectPM2 = () => env.PM2_HOME;
 
-  // In the Next.js `edge` runtime, process.stdout is undefined, but colored output is still supported.
+  // In the Next.js `edge` runtime, process.stdout is undefined, but the output destination may still support colors.
   // Runtime values that support colors: `nodejs`, `edge`, `experimental-edge`.
   let detectNextJs = () => /edge/.test(env.NEXT_RUNTIME);
 
-  // Size optimization: intentionally returns a falsy/truthy value instead of a boolean.
-  let isTTY = () => detectPM2() || detectNextJs() || proc.stdout?.isTTY;
-
-  let isWin = () => proc.platform === 'win32';
+  term = env.TERM;
 
   // Note: the order of checks is important!
 
-  // 1) Detect terminals supporting TrueColor by COLORTERM
-  // Most modern terminals use `TERM=xterm-256color` with `COLORTERM=truecolor`.
-  // COLORTERM values: `truecolor` or `24bit`, `ansi256`, `ansi`
-  // Terminals that set COLORTERM=truecolor: iTerm, VSCode, `xterm-kitty`, KDE Konsole.
+  // 1) A dumb terminal is not expected to render ANSI escape sequences (e.g. in Emacs M-x compile).
+  // TERM=dumb takes precedence over COLORTERM, CI detection, and platform-specific defaults.
+  if (term === 'dumb') return LEVEL_BW;
 
+  // 2) Detect color support using the COLORTERM hint.
+  // Most modern terminals use `TERM=xterm-256color` with `COLORTERM=truecolor`.
+  // COLORTERM values: `truecolor` or `24bit`, `ansi256`, `ansi`.
+  // Terminals that set COLORTERM=truecolor: iTerm, VSCode, `xterm-kitty`, KDE Konsole.
   let level = {
     '24bit': LEVEL_TRUECOLOR,
     truecolor: LEVEL_TRUECOLOR,
@@ -50,35 +62,28 @@ let autoDetectLevel = (proc, env,  envKeys) => {
     ansi: LEVEL_16COLORS,
   }[env.COLORTERM];
 
-  term = env.TERM;
-
   if (level) return level;
 
-  // 2) Detect color support in CI.
-  // Note: CI environments are not TTY and often advertise themselves as `dumb` terminals.
-
-  // CI tools
-  // https://github.com/watson/ci-info/blob/master/vendors.json
-  if (env.CI) {
+  // 3) Detect color support in CI.
+  // CI environments can render ANSI colors even when TTY is undefined.
+  if (isCI()) {
     // CI supports truecolor: GITHUB_ACTIONS
     if (/,GITHUB/.test(envKeys)) return LEVEL_TRUECOLOR;
 
-    // others CI supports only 16 colors, e.g. when env contains:
-    // - CI_NAME === codeship | sourcehut
+    // Default to 16 colors for other CI environments, including those identified by environment variables:
+    // - CI_NAME: codeship | sourcehut
     // - GITLAB_CI | CIRCLECI | TRAVIS | APPVEYOR | BUILDKITE | DRONE | BITBUCKET_BUILD_NUMBER | AZURE_HTTP_USER_AGENT
 
     return LEVEL_16COLORS;
   }
 
-  // 3) Detect unknown output or colors are not supported
-  if (!isTTY() || term === 'dumb') return LEVEL_BW;
+  // 4) Detect unknown output environments.
+  if (!(isTTY() || detectPM2() || detectNextJs())) return LEVEL_BW;
 
-  // 4) Truecolor support starts from Windows 10 build 14931 (2016-09-21), today we assume modern Windows is used
+  // 5) Truecolor support since Windows 10 build 14931 (2016-09-21), today we assume modern Windows is used.
   if (isWin()) return LEVEL_TRUECOLOR;
 
-  // 5) Detect terminals supporting 256 colors
-
-  // Note: check for 256 colors after ENV variables such as TERM, COLORTERM.
+  // 6) Detect 256-color support from TERM after COLORTERM and CI.
   // Terminals, that support 256 colors:
   // - screen-256color
   // - xterm-256color
@@ -90,16 +95,16 @@ let autoDetectLevel = (proc, env,  envKeys) => {
   // - ansi-256color
   if (/-256/.test(term)) return LEVEL_256COLORS;
 
-  // 6) Defaults, 16-color output for unknown terminals,
-  // as all known terminals supporting 256 colors or truecolor have already been detected above.
-  // To enable truecolor in unknown terminals, set the `COLORTERM=24bit` environment variable.
+  // 7) Default to 16-color for the other supported output environments.
+  // No previous check identified 256-color or truecolor support.
+  // To enable truecolor in unknown terminals, set COLORTERM=24bit.
 
   // Known terminals supporting 16 colors:
   // - xterm
   // - xterm-color
   // - screen-color
   // - ansi, ansi-x3.64, ansi.sysk
-  // - linux - Linux virtual console (tty1, tty2, SSH, etc.)
+  // - linux - Linux virtual console (tty1, tty2, etc.)
   // - tmux - Terminal emulator
   // - tmux - Terminal tmux installed on macOS has `tmux-256color` name
   // - cygwin - Cygwin terminal
@@ -123,13 +128,13 @@ export const getLevel = (thisRef) => {
   let colorLevel = LEVEL_BW;
 
   try {
-    // keys(env) triggers a Deno permission request; throws if access is denied
-    // stringify environment variable keys to check for specific ones using a RegExp
+    // keys(env) triggers a Deno permission request. Throws if access is denied.
+    // Stringify environment variable keys to check for specific ones using a RegExp.
     let envKeys = SEPARATOR + keys(env).join(SEPARATOR);
     colorLevel = autoDetectLevel(proc, env, envKeys);
   } catch (error) {
-    // if the permission is not granted, environment variables have no effect, even variables like FORCE_COLOR will be ignored
-    // env now points to a new empty object to avoid Deno requests for every env access in code below
+    // If the permission is not granted, environment variables have no effect, even variables like FORCE_COLOR will be ignored.
+    // `env` now points to a new empty object to avoid Deno requests for every env access in code below.
     env = {};
   }
 

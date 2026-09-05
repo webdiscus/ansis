@@ -1,0 +1,8 @@
+{
+  "name": "ansis-color-checker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "color-checker": "node ./index.js"
+  }
+}

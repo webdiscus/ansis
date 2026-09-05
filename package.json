@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "4.3.1",
+  "version": "4.4.0-beta.0",
   "description": "A small and fast ANSI color library",
   "keywords": [
     "ansi",
@@ -48,6 +48,7 @@
     "build": "rollup -c",
     "postinstall": "npm run build && npm i ansis -D",
     "demo": "node --experimental-modules ./examples/index.js",
+    "color-checker": "npm run color-checker --prefix ./test/manual/color-checker",
     "bench": "(cd ./bench/ && npm install); node ./bench/index.js",
     "bench:truecolor": "(cd ./bench/ && npm install); node bench/truecolor.bench.js",
     "compare": "(cd ./compare/ && npm install); node ./compare/index.js",
@@ -86,7 +87,7 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@types/node": "^22.15.17",
     "@vitest/coverage-v8": "^3.1.1",
-    "ansis": "file:dist/node14",
+    "ansis": "^4.3.1",
     "css-color-names": "1.0.1",
     "esbuild": "0.25.2",
     "prettier": "3.5.3",

@@ -1,5 +1,42 @@
 # Changelog
 
+## 4.4.0-beta.0 (2026-09-06)
+
+- fix(color-support): treat `TERM=dumb` as no color before applying `COLORTERM`, #49.
+
+  `COLORTERM` is a color level hint.
+  When `TERM=dumb`, Ansis now disables ANSI color output even if color environment variables such as `COLORTERM=truecolor` were inherited from a parent process (e.g. in Emacs M-x compile).
+
+  `FORCE_COLOR` keeps the highest priority and can still explicitly enable colors.
+
+  **Auto-detection behavior changes after the fix**
+
+  | Use case | 4.3.1 | 4.4.0-beta.0 | Notes |
+  |----------|-------|--------------|-------|
+  | `TERM=dumb` | ✅ may allow colors * | ❌ no color | `TERM=dumb` now has higher priority in `autoDetectLevel`. |
+  | `TERM=dumb` + `COLORTERM=truecolor` | ✅ allow colors | ❌ no color | `COLORTERM` no longer overrides `TERM=dumb`. |
+  | `TERM=dumb` + CI | ✅ allow colors | ❌ no color | CI detection runs after `TERM=dumb`. |
+  | `TERM=dumb` + PM2 | ✅ may allow colors * | ❌ no color | PM2 detection runs after `TERM=dumb`. |
+  | `TERM=dumb` + Next.js runtime | ✅ may allow colors * | ❌ no color | Next.js detection runs after `TERM=dumb`. |
+  | `COLORTERM=truecolor` without `TERM=dumb` | ✅ allow colors | ✅ allow colors | Unchanged. |
+  | CI without `TERM=dumb` | ✅ allow colors | ✅ allow colors | Unchanged. |
+
+  `*` - Depends on additional conditions.
+
+
+- test(color-support): add regression coverage for `TERM=dumb` with inherited `COLORTERM=truecolor`
+
+  The tests also cover PM2 and Next.js edge behavior where `stdout.isTTY` is not exposed.
+
+- test: add a manual color support checker
+
+  Run `npm run color-checker` to print the environment values used by color detection and visually inspect ANSI 16, ANSI 256, and Truecolor rendering.
+
+- test(deno): run CI against Deno 2.3+ and the current LTS
+
+  Deno 2.0-2.2 are no longer tested in the CI matrix because they cannot use the same `deno.lock` v5 format as Deno 2.3+.
+  Runtime compatibility with Deno 2.0-2.2 remains supported.
+
 ## 4.3.1 (2026-05-31)
 
 - fix: remove closing `reset` ANSI sequence

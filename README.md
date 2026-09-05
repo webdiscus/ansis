@@ -425,27 +425,30 @@ Ansis detects color support from the runtime environment in this order:
 1. Chromium browser-like runtimes
    - detected first -> truecolor
 
-2. `COLORTERM` (some terminals set it even when output is not TTY)
+2. Dumb terminal
+   - `TERM=dumb` -> no colors
+
+3. `COLORTERM` (some terminals set it even when output is not TTY)
+   - used as a hint, not as a replacement for `FORCE_COLOR`
    - `truecolor` or `24bit` -> truecolor
    - `ansi256` -> 256 colors
    - `ansi` -> 16 colors
 
-3. CI environment (not TTY)
+4. CI environment (not TTY)
    - GitHub Actions -> truecolor
    - other CI environments -> 16 colors
 
-4. Terminal
+5. Terminal
    - no TTY -> no colors
-   - `TERM=dumb` -> no colors
    - `PM2` and `Next.js` non-TTY runtimes -> color output
 
-5. Windows
+6. Windows
    - Windows terminals since Windows 10 build 14931 (released 2016) -> truecolor
 
-6. 256-color terminals
+7. 256-color terminals
    - known 256-color terminals -> 256 colors
 
-7. Fallback
+8. Fallback
    - unknown terminals -> 16 colors
 
 <details>
@@ -453,12 +456,13 @@ Ansis detects color support from the runtime environment in this order:
 
 | Terminal                         | ANSI 16<br>colors | ANSI 256<br>colors | True<br>Color |  env.<br>TERM   | env.<br>COLORTERM | Specifically ENV variables             |
 |:---------------------------------|-------------------|:-------------------|:--------------|:---------------:|:-----------------:|:---------------------------------------|
-| Azure CI                         | ✅                 | ❌                  | ❌             |      dumb       |                   | TF_BUILD<br>AGENT_NAME                 |
-| GitHub CI                        | ✅                 | ✅                  | ✅             |      dumb       |                   | CI, GITHUB_ACTIONS                     |
-| GitTea CI                        | ✅                 | ✅                  | ✅             |      dumb       |                   | CI, GITEA_ACTIONS                      |
-| GitLab CI                        | ✅                 | ❌                  | ❌             |      dumb       |                   | CI, GITLAB_CI                          |
-| Travis CI                        | ✅                 | ❌                  | ❌             |      dumb       |                   | TRAVIS                                 |
-| PM2<br>not isTTY                 | ✅[^1]             | ✅[^1]              | ✅[^1]         |      dumb       |                   | PM2_HOME<br>pm_id                      |
+| Azure CI                         | ✅                 | ❌                  | ❌             |                 |                   | TF_BUILD<br>AGENT_NAME                 |
+| GitHub CI                        | ✅                 | ✅                  | ✅             |                 |                   | CI, GITHUB_ACTIONS                     |
+| GitTea CI                        | ✅                 | ✅                  | ✅             |                 |                   | CI, GITEA_ACTIONS                      |
+| GitLab CI                        | ✅                 | ❌                  | ❌             |                 |                   | CI, GITLAB_CI                          |
+| Travis CI                        | ✅                 | ❌                  | ❌             |                 |                   | TRAVIS                                 |
+| PM2<br>not isTTY                 | ✅[^1]             | ✅[^1]              | ✅[^1]         |                 |                   | PM2_HOME<br>pm_id                      |
+| Next.js<br>edge runtime          | ✅[^1]             | ✅[^1]              | ✅[^1]         |                 |                   | NEXT_RUNTIME='edge'<br>NEXT_RUNTIME='experimental-edge' |
 | JetBrains TeamCity<br>>=2020.1.1 | ✅                 | ✅                  | ❌             |                 |                   | TEAMCITY_VERSION                       |
 | JetBrains IDEA                   | ✅                 | ✅                  | ✅             | xterm-256color  |                   | TERMINAL_EMULATOR='JetBrains-JediTerm' |
 | VS Code                          | ✅                 | ✅                  | ✅             | xterm-256color  |     truecolor     |                                        |
@@ -469,7 +473,7 @@ Ansis detects color support from the runtime environment in this order:
 | Kitty                            | ✅                 | ✅                  | ✅             |   xterm-kitty   |     truecolor     |                                        |
 | KDE Konsole                      | ✅                 | ✅                  | ✅             | xterm-256color  |     truecolor     |                                        |
 
-- ^1 Colors supported depends on actual terminal.
+- ^1 Colors supported depends on actual output destination. `TERM=dumb` disables colors before PM2 and Next.js detection.
 - ^2: The Windows terminal supports true color since Windows 10 revision 14931 (2016-09-21).
 
 See also:
@@ -533,7 +537,8 @@ Force or override color support via environment variable (see [force-color.org](
 <a name="using-env-colorterm"></a>
 #### `COLORTERM`
 
-Hint the auto-detected color level using terminal emulator conventions:
+`COLORTERM` provides a color capability hint for auto-detection, including in CI and non-TTY environments.
+It is not a replacement for `FORCE_COLOR`.
 
 | Value                  |                  Level |
 |------------------------|-----------------------:|

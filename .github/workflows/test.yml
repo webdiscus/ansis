@@ -50,7 +50,7 @@ jobs:
       fail-fast: false # doesn't stop on first failure
       matrix:
         os: [ubuntu-latest, windows-latest]
-        node-version: [ 18, 20, 22, 24 ]
+        node-version: [ 18, 20, 22, 24, 26 ]
         include:
           - os: ubuntu-latest
             node-version: *coverage-node-version
@@ -75,6 +75,9 @@ jobs:
 
       - name: Install dependencies (without rebuilding)
         run: npm install --ignore-scripts
+
+      - name: Run color support checker
+        run: npm run color-checker
 
       - name: Run tests
         if: matrix.coverage != true
@@ -145,7 +148,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        deno-version: [ 2.0.x, 2.1.x, 2.2.x ]
+        deno-version: [ 2.3.x, 2.9.x ]
 
     steps:
       - name: Checkout repository

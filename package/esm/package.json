@@ -1,6 +1,6 @@
 {
 "name":"ansis",
-"version":"4.4.0",
+"version":"5.0.0-beta.0",
 "description":"ANSI color lib",
 "keywords":["ansi","colors","cli"],
 "license":"ISC",
@@ -8,12 +8,9 @@
 "repository":"webdiscus/ansis",
 "type":"module",
 "exports":{
-	".":{
-		"types":"./index.d.ts",
-		"require":"./index.cjs",
-		"import":"./index.mjs"
-	}
+	"types":"./index.d.ts",
+	"default":"./index.js"
 },
 "sideEffects":false,
-"engines":{"node":">=14"}
+"engines":{"node":">=18"}
 }

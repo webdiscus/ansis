@@ -315,7 +315,4 @@ function Ansis (option = globalThis) {
 
 const ansis = new Ansis();
 
-// For distribution code, the export will be replaced (via @rollup/plugin-replace) with the following export:
-// module.exports = ansis.default = ansis; // `default` is required for tsc
-
 export { ansis as default, Ansis };

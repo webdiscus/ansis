@@ -1,6 +1,6 @@
 {
   "name": "ansis",
-  "version": "4.4.0",
+  "version": "5.0.0-beta.0",
   "description": "A small and fast ANSI color library",
   "keywords": [
     "ansi",
@@ -61,6 +61,8 @@
     "test:functional": "vitest run ./test/cases/api/*.test.js ./test/cases/extend/extend-colors.test.js",
     "test:flags": "vitest run ./test/cases/color-support/cli-flags-env-vars.test.js",
     "test:package": "vitest run ./test/cases/package-mode.test.js",
+    "test:esm-build-and-test": "(npm run build) && npm run test:esm-test",
+    "test:esm-test": "cd ./test/esm-only && npm install && npm test",
     "test:cjs": "node ./test/package/cjs/test.cjs",
     "test:esm": "node ./test/package/esm/test.mjs",
     "test:tsc": "vitest run ./test/cases/ts-compiler.test.js",
@@ -71,10 +73,14 @@
     "test-deno:debug": "deno ./test-deno/manual/deno-debug.js",
     "test-deno:truecolor": "deno test ./test-deno/cases/truecolor.test.js --allow-env",
     "test:coverage": "vitest run --coverage",
-    "pack:check": "npm pack ./dist/node14 --dry-run",
-    "publish:public-node10": "(npm run build) && npm publish ./dist/node10 --tag node10",
-    "publish:public": "(npm run build) && npm publish ./dist/node14 --access public",
-    "publish:beta": "(npm run build) && npm publish ./dist/node14 --tag beta"
+    "pack:check": "npm pack ./dist/esm --dry-run",
+    "pack:check-dual": "npm pack ./dist/dual-node14 --dry-run",
+    "pack:check-dual-node10": "npm pack ./dist/dual-node10 --dry-run",
+    "publish:public-dual-node10": "(npm run build) && npm publish ./dist/dual-node10 --tag node10",
+    "publish:public-dual": "(npm run build) && npm publish ./dist/dual-node14 --access public",
+    "publish:beta-dual": "(npm run build) && npm publish ./dist/dual-node14 --tag beta",
+    "publish:public": "(npm run build) && npm publish ./dist/esm --access public",
+    "publish:beta": "(npm run build) && npm publish ./dist/esm --tag beta"
   },
   "engines": {
     "node": ">=18"
@@ -87,7 +93,7 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@types/node": "^22.15.17",
     "@vitest/coverage-v8": "^3.1.1",
-    "ansis": "file:dist/node14",
+    "ansis": "file:dist/dual-node14",
     "css-color-names": "1.0.1",
     "esbuild": "0.25.2",
     "prettier": "3.5.3",

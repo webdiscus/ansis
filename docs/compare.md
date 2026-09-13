@@ -23,7 +23,7 @@
   <tr>
     <td style='text-align:left'>
       <a href="https://github.com/webdiscus/ansis"><code>ansis</code></a><br>
-      <code>ESM</code> <code>CJS</code><br>
+      <code>v5 ESM</code><br><code>v4 CJS/ESM</code><br>
       <nobr><code>✅ named import</code></nobr><br><code>✅ standard</code>
     </td>
     <td style='text-align:center'>✅ ✅ ✅ ✅</td>

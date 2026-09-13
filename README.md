@@ -19,6 +19,11 @@
 ANSI color library for use in terminals, CI environments, and Chromium-based browsers.\
 Ansis is focused on small size and [speed](#benchmark) while providing rich [functionality](./docs/compare.md) and handling [edge cases](#handling-input-arguments).
 
+> [!NOTE]
+> Ansis v5 is ESM-only for projects on Node.js 18+.
+> Use Ansis v4 for CommonJS or TypeScript Node16 dual-package interop.
+> Ansis v4 is still supported. Bug fixes and minor updates will be synchronized across v5.x and v4.x.
+
 ```js
 // Named imports - for cleaner, more readable code
 import { red, cyan, bold, hex, rgb } from 'ansis';
@@ -40,7 +45,7 @@ console.log(rgb(224, 17, 95).italic`Ruby`);
 
 #### 💻 [CLI Environment](#cli-vars-and-flags) 🧪 [CLI Testing](./docs/testing.md) ⚙️ [Compatibility](#compatibility) 🔧[Troubleshooting](./docs/troubleshooting.md)
 
-#### 🔔 [Upgrading to v4](https://github.com/webdiscus/ansis/discussions/36#migrating-to-v4) · [New features](https://github.com/webdiscus/ansis/discussions/36#v4-features) · [Breaking changes](https://github.com/webdiscus/ansis/discussions/36)
+#### 🔔 [Upgrade to v5](./docs/upgrade-to-v5.md) · [Upgrade to v4](./docs/upgrade-to-v4.md)
 
 #### ⭐️ [Star History](#star-history)
 
@@ -49,7 +54,7 @@ console.log(rgb(224, 17, 95).italic`Ruby`);
 ```
 🎨 Colors - 16 · 256 · Truecolor (hex/rgb) · Named colors (orange, pink ...)
 ✍️ Syntax - Chained · Template literals · Nested templates
-⚙️ Works  - ESM · CJS · TS · Node 10+ · Bun · Deno · CI · Chromium browsers
+⚙️ Works  - v5 ESM · v4 CJS/ESM · TS · Node 18+ · Bun · Deno · CI · Chromium browsers
 🧠 Smart  - Auto color detection · Fallback (truecolor → 256 → 16 → b&w) · NO_COLOR · FORCE_COLOR
 📦 Tiny   - 5.8 kB · Drop-in replacement for Chalk (44 kB)
 ```
@@ -96,7 +101,7 @@ Ansis is the fastest when using 2 or more styles, which is the common real-world
 
 
 **⚙️ Compatibility**
-- ESM · CJS · TypeScript · Bun · Deno · Next.js · CI (GitHub and others)
+- v5 ESM · v4 CJS/ESM · TypeScript · Bun · Deno · Next.js · CI (GitHub and others)
 - [Chromium browsers](#browsers-compatibility): Chrome · Edge · Opera · Brave · Vivaldi
 - [Drop-in replacement](./docs/migrating.md) for `chalk` `ansi-colors` `colorette` [and others](#alternatives)
 
@@ -133,7 +138,10 @@ npm install ansis
 import ansis, { red, bold, fg, hex, rgb } from 'ansis';
 ```
 
-**CJS**
+**CommonJS (v4 only)**
+
+Ansis v5 is ESM-only. Use Ansis v4 if your project requires CommonJS.
+
 ```js
 const ansis = require('ansis');
 const { red, bold, fg, hex, rgb } = require('ansis');
@@ -777,22 +785,24 @@ styleText('red', `Error: ${styleText(['cyan', 'bold'], 'file.js')} not found!`);
 
 ## Compatibility
 
-Check the minimum version of your tool required for compatibility with the latest Ansis.
+Check the minimum version of your tool required for compatibility with Ansis.
+
+Ansis v5 is ESM-only. CJS compatibility applies to Ansis v4.
 
 | Tool               | Version            | Compatibility | Supports |
 |--------------------|--------------------|---------------|----------|
-| **Node.js**        | **v14+**           | ✅ Full support | CJS, ESM |
-| **Deno**           | **v2.0+**          | ✅ Full support | CJS, ESM |
-| **TypeScript/tsc** | **v5.0+**          | ✅ Full support | CJS, ESM |
-| **esbuild**        | **v0.8+**          | ✅ Full support | CJS, ESM |
-| **swc**            | **v1.2+**          | ✅ Full support | CJS, ESM, FAUX |
-| **tsup**           | **v4.0+**          | ✅ Full support | CJS, ESM, FAUX |
-| **tsx**            | **v3.0+**          | ✅ Full support | CJS, ESM |
-| **Rollup**         | **v2.0+**          | ✅ Full support | CJS, ESM |
-| **Rolldown**       | **v1.0.0-beta.8+** | ✅ Full support | CJS, ESM |
+| **Node.js**        | **v18+**           | ✅ Full support | v5: ESM; v4: CJS, ESM |
+| **Deno**           | **v2.0+**          | ✅ Full support | ESM |
+| **TypeScript/tsc** | **v5.0+**          | ✅ Full support | v5: ESM; v4: CJS, ESM |
+| **esbuild**        | **v0.8+**          | ✅ Full support | v5: ESM; v4: CJS, ESM |
+| **swc**            | **v1.2+**          | ✅ Full support | v5: ESM; v4: CJS, ESM, FAUX |
+| **tsup**           | **v4.0+**          | ✅ Full support | v5: ESM; v4: CJS, ESM, FAUX |
+| **tsx**            | **v3.0+**          | ✅ Full support | v5: ESM; v4: CJS, ESM |
+| **Rollup**         | **v2.0+**          | ✅ Full support | v5: ESM; v4: CJS, ESM |
+| **Rolldown**       | **v1.0.0-beta.8+** | ✅ Full support | v5: ESM; v4: CJS, ESM |
 | **Vite**           | **v2.5+**          | ✅ Full support | ESM |
-| **Turbo**          | **v1.0+**          | ✅ Full support | CJS, ESM |
-| **Webpack**        | **v5.0+**          | ✅ Full support | CJS, ESM |
+| **Turbo**          | **v1.0+**          | ✅ Full support | v5: ESM; v4: CJS, ESM |
+| **Webpack**        | **v5.0+**          | ✅ Full support | v5: ESM; v4: CJS, ESM |
 
 **Supports:**
 - **CJS**: CommonJS module support.

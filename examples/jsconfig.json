@@ -3,7 +3,7 @@
     "checkJs": true,
     "baseUrl": ".",
     "paths": {
-      "ansis": ["../dist/node14"]
+      "ansis": ["../dist/dual-node14"]
     }
   },
   "exclude": ["node_modules", "dist"]

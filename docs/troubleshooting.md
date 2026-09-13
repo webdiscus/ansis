@@ -1,5 +1,10 @@
 # ⚙️ Troubleshooting
 
+> [!NOTE]
+> This page mostly applies to Ansis v4 dual-package compatibility.
+> Ansis v5 is ESM-only for native modern ESM projects on Node.js 18+.
+> Use Ansis v4 if your project requires CommonJS or TypeScript Node16 dual-package interop.
+
 1. [🔴 TS1479: The current file is a CommonJS module whose imports will produce require calls](#troubleshooting-ts1479)
 2. [🟡 ESLint: Caution: `ansis` also has a named export](#troubleshooting-eslint-named-export)
 

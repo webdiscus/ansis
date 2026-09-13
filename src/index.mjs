@@ -1,4 +1,4 @@
-// ESM wrapper
+// ESM exports
 
 import a from './index.js';
 

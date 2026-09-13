@@ -91,6 +91,9 @@ jobs:
         env:
           NODE_OPTIONS: --unhandled-rejections=strict
 
+      - name: Run ESM-only package test
+        run: npm run test:esm-test
+
       - name: Upload coverage reports to Codecov
         if: matrix.coverage == true
         uses: codecov/codecov-action@v5
@@ -132,7 +135,7 @@ jobs:
           path: ./dist/
 
       - name: Prepare package.json for Node.js v14 - v16
-        run: cp -f package.test-node14.json package.json
+        run: cp -f package/dual-node14/package-test.json package.json
 
       - name: Install dependencies (without rebuilding)
         run: npm install -f # --force option is required to install tsup dependencies

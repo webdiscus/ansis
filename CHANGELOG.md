@@ -1,5 +1,20 @@
 # Changelog
 
+## 5.0.0-beta.0 (2026-09-14)
+
+Ansis v5.0.0 is functionally identical to Ansis v4.4.0, but v5 is ESM-only.
+
+Ansis v4 is still supported. Bug fixes and minor updates will be synchronized across v5.x and v4.x.
+
+### Breaking changes
+
+- Ansis v5 is ESM-only.
+- Ansis v5 requires Node.js 18+.
+- Ansis v5 does not support TypeScript `module: "Node16"` dual-package interop.
+
+Use `module: "ESNext"` / `moduleResolution: "Bundler"` or another native ESM setup for Ansis v5.
+TypeScript `module: "Node16"` / `moduleResolution: "Node16"` dual-package interop remains supported by Ansis v4.
+
 ## 4.4.0 (2026-09-13)
 
 - fix(color-support): treat `TERM=dumb` as no color before applying `COLORTERM`, #49.

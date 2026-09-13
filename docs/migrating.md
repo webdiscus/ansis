@@ -1,6 +1,9 @@
 <a id="top" name="top"></a>
 ## How to switch to Ansis
 
+> [!NOTE]
+> Ansis v5+ is ESM-only. If you migrate to CommonJS, use Ansis v4.
+
 Ansis is a powerful, small, and fast replacement for many similar libraries.\
 Just replace your `import ... from ...` or `require(...)` to `ansis`.
 

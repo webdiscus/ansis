@@ -1,0 +1,9 @@
+{
+	"type":"module",
+	"scripts":{
+		"test":"node ./test.mjs"
+	},
+	"dependencies":{
+		"ansis":"file:../../dist/esm"
+	}
+}

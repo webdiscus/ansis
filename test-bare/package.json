@@ -5,6 +5,6 @@
     "test:esm": "FORCE_COLOR=1 bare test.mjs"
   },
   "dependencies": {
-    "ansis": "file:../dist/node14"
+    "ansis": "file:../dist/dual-node14"
   }
 }

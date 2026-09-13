@@ -90,7 +90,7 @@ Ansis is the fastest when using 2 or more styles, which is the common real-world
 
 **💻 Environment**
 - [Auto color detection](#color-support) + [Fallback](#fallback): Truecolor → 256 → 16 → b&w
-- [ENV variables](#cli-vars): `NO_COLOR` `FORCE_COLOR` `COLORTERM`
+- [ENV variables](#cli-vars): `NO_COLOR` `FORCE_COLOR` `TERM` `COLORTERM`
 - [CLI flags](#cli-flags): `--no-color` `--color`
 - [CLI testing](./docs/testing.md): force [color levels](#color-levels) in tests
 
@@ -534,11 +534,27 @@ Force or override color support via environment variable (see [force-color.org](
 >   This matches [Node.js](https://nodejs.org/api/cli.html#force_color1-2-3),
 >   but the original [force-color.org](https://force-color.org/) rule ignores an empty string.
 
+<a name="using-env-term"></a>
+#### `TERM`
+`TERM` identifies the current terminal type and is used during auto-detection.
+
+| Value  | Behavior |
+|--------|----------|
+| `dumb` | Disable colors during auto-detection |
+| `*-256color` | Enable 256 colors when no earlier auto-detection check matched |
+| other known terminal names | Enable 16 colors when the output environment is supported |
+
+Examples of `TERM` values with 256-color support: `screen-256color`, `xterm-256color`, `rxvt-256color`, `putty-256color`, `mintty-256color`, `linux-256color`, `tmux-256color`, `ansi-256color`.
+
+`TERM=dumb` has higher priority than `COLORTERM`, CI detection, PM2, Next.js edge runtime, and platform-specific defaults.
+To explicitly override auto-detection, use `FORCE_COLOR`.
+
 <a name="using-env-colorterm"></a>
 #### `COLORTERM`
 
 `COLORTERM` provides a color capability hint for auto-detection, including in CI and non-TTY environments.
-It is not a replacement for `FORCE_COLOR`.
+
+It is used only as an auto-detection hint, but `FORCE_COLOR` explicitly overrides the detected color level.
 
 | Value                  |                  Level |
 |------------------------|-----------------------:|
@@ -546,6 +562,7 @@ It is not a replacement for `FORCE_COLOR`.
 | `ansi256`              |   256 colors (level 2) |
 | `truecolor` or `24bit` |    Truecolor (level 3) |
 
+Some terminals (iTerm, VS Code, `xterm-kitty`, KDE Konsole, and others) set `COLORTERM=truecolor` in addition to a `TERM` value that only advertises 256-color support, for example `TERM=xterm-256color`.
 
 <a name="cli-flags"></a>
 

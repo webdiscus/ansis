@@ -738,15 +738,26 @@ describe('Next.JS support', () => {
     expect(received).toEqual(LEVEL_256COLORS);
   });
 
-  test(`runtime edge, truecolor terminal`, () => {
+  test(`runtime edge, unknown terminal, COLORTERM=truecolor`, () => {
     const received = getLevel({
       process: {
         platform: 'linux',
-        env: { NEXT_RUNTIME: 'edge', TERM: 'unknown', COLORTERM: '24bit' },
+        env: { NEXT_RUNTIME: 'edge', TERM: 'unknown', COLORTERM: 'truecolor' },
         argv: [],
       },
     });
     expect(received).toEqual(LEVEL_TRUECOLOR);
+  });
+
+  test(`runtime edge, TERM=dumb wins over COLORTERM=truecolor`, () => {
+    const received = getLevel({
+      process: {
+        platform: 'linux',
+        env: { NEXT_RUNTIME: 'edge', TERM: 'dumb', COLORTERM: 'truecolor' },
+        argv: [],
+      },
+    });
+    expect(received).toEqual(LEVEL_BW);
   });
 
   test(`runtime edge, 256 colors`, () => {
@@ -864,6 +875,23 @@ describe('PM2 support', () => {
     expect(received).toEqual(LEVEL_TRUECOLOR);
   });
 
+  test(`TERM=dumb wins over COLORTERM`, () => {
+    const received = getLevel({
+      process: {
+        env: {
+          PM2_HOME: '/var/www/',
+          pm_id: '1',
+          TERM: 'dumb',
+          COLORTERM: 'truecolor',
+        },
+        argv: [],
+        stdout: {},
+        stderr: {},
+      },
+    });
+    expect(received).toEqual(LEVEL_BW);
+  });
+
   test(`no isTTY and unsupported terminal`, () => {
     const received = getLevel({
       process: {
@@ -872,6 +900,34 @@ describe('PM2 support', () => {
           pm_id: '1',
           TERM: 'dumb',
         },
+        argv: [],
+        stdout: {},
+        stderr: {},
+      },
+    });
+    expect(received).toEqual(LEVEL_BW);
+  });
+});
+
+describe('TERM=dumb priority', () => {
+  test(`TERM=dumb on real TTY wins over COLORTERM=truecolor`, () => {
+    const received = getLevel({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'dumb', COLORTERM: 'truecolor' },
+        argv: [],
+        stdout: { isTTY: true },
+        stderr: { isTTY: true },
+      },
+    });
+    expect(received).toEqual(LEVEL_BW);
+  });
+
+  test(`TERM=dumb on not TTY wins over COLORTERM=truecolor`, () => {
+    const received = getLevel({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'dumb', COLORTERM: 'truecolor' },
         argv: [],
         stdout: {},
         stderr: {},

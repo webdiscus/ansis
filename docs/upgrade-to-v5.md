@@ -1,7 +1,7 @@
 <a id="top" name="top"></a>
 # Upgrade Ansis to v5
 
-Ansis v5 is ESM-only for native modern ESM projects on Node.js 18+.
+Ansis v5 is ESM-only for projects on Node.js 18+
 
 Use ESM imports:
 
@@ -13,7 +13,7 @@ If your project requires CommonJS or TypeScript Node16 dual-package interop, use
 
 ## TypeScript
 
-Ansis v5 is ESM-only for native modern ESM projects. TypeScript configs that depend on Node16 dual-package interop are not supported by v5.
+TypeScript configs that depend on Node16 dual-package interop are not supported by v5.
 
 The following setup belongs to the Ansis v4 compatibility line:
 

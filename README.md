@@ -11,6 +11,7 @@
 [![npm](https://img.shields.io/npm/v/ansis?logo=npm&color=brightgreen "npm package")](https://www.npmjs.com/package/ansis "download npm package")
 [![Test](https://github.com/webdiscus/ansis/actions/workflows/test.yml/badge.svg)](https://github.com/webdiscus/ansis/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/webdiscus/ansis/branch/master/graph/badge.svg?token=H7SFJONX1X)](https://codecov.io/gh/webdiscus/ansis)
+[![Socket Badge](https://badge.socket.dev/npm/package/ansis/5.0.0-beta.0)](https://badge.socket.dev/npm/package/ansis/5.0.0-beta.0)
 [![downloads](https://img.shields.io/npm/dm/ansis)](https://www.npmjs.com/package/ansis)
 [![install size](https://packagephobia.com/badge?p=ansis)](https://packagephobia.com/result?p=ansis)
 

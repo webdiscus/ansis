@@ -146,7 +146,7 @@ function Ansis (option = globalThis) {
      *
      * RegExp parts:
      *
-     * - ][^]* - OSC sequence terminated by BEL (e.g. OSC 8 hyperlink)
+     * - ][^]*(?:|\\) - OSC sequence terminated by BEL or ST (e.g. OSC 8 hyperlink)
      * - [] - ensures that CSI sequence starts with ANSI escape sequence
      * - [[()#;?]* - optional CSI sequence used for device control
      * - (?:\d+(?:;\d*)*)?  - (optimized version from spec.: `(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?`) - CSI parameter bytes, list of numbers separated by semicolons, (e.g., 1;31;42)
@@ -155,7 +155,7 @@ function Ansis (option = globalThis) {
      * @param {string} str
      * @return {string}
      */
-    strip: (str) => str.replace(/][^]*|[][[()#;?]*(?:\d+(?:;\d*)*)?[\dA-ORZcf-nqry=><]/g, EMPTY_STRING),
+    strip: (str) => str.replace(/][^]*(?:|\\)|[][[()#;?]*(?:\d+(?:;\d*)*)?[\dA-ORZcf-nqry=><]/g, EMPTY_STRING),
 
     /**
      * Extends the current instance with custom styles.

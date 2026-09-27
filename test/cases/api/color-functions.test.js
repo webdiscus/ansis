@@ -86,4 +86,29 @@ describe('strip', () => {
     const expected = 'Click here';
     expect(received).toEqual(expected);
   });
+
+  test.each([
+    ['BEL', '\x07', '\x07'],
+    ['ST', '\x1b\\', '\x1b\\'],
+    ['ST/BEL', '\x1b\\', '\x07'],
+    ['BEL/ST', '\x07', '\x1b\\'],
+  ])(`ansis.strip() OSC 8 hyperlink terminated with %s`, (_, openEnd, closeEnd) => {
+    const str = `\x1b[34mBefore \x1b]8;id=docs;https://example.com${openEnd}Click here\x1b]8;;${closeEnd} after\x1b[39m`;
+    expect(ansis.strip(str)).toEqual('Before Click here after');
+  });
+
+  test(`ansis.strip() adjacent OSC 8 hyperlinks`, () => {
+    const str = '\x1b]8;;https://example.com/one\x1b\\One\x1b]8;;\x1b\\ / \x1b]8;;https://example.com/two\x07Two\x1b]8;;\x07';
+    expect(ansis.strip(str)).toEqual('One / Two');
+  });
+
+  test(`ansis.strip() ST-terminated window title`, () => {
+    const str = 'Before \x1b]0;Window title\x1b\\after';
+    expect(ansis.strip(str)).toEqual('Before after');
+  });
+
+  test(`ansis.strip() incomplete OSC sequence`, () => {
+    const str = 'Before \x1b]8;;https://example.com';
+    expect(ansis.strip(str)).toEqual(str);
+  });
 });

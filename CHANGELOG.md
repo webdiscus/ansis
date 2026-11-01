@@ -1,5 +1,45 @@
 # Changelog
 
+## 4.5.0 (2026-11-01)
+
+- fix(color-support): prevent colors in piped or redirected output when `COLORTERM` is set, #54.
+
+  **Before:**
+  Ansis used to check `COLORTERM` before checking stdout.
+  Apps can inherit `COLORTERM` from the parent terminal even when stdout goes to a pipe or file.
+  This could add ANSI codes to that output.
+
+  **After:** Ansis now checks the output environment first.
+  `COLORTERM` only helps choose the color level when color output is enabled.
+
+  Color output in supported non-TTY environments such as CI, PM2, and Next.js edge still works.
+
+  **Auto-detection behavior changes after the fix**
+
+  | Environment | Before | After |
+  |-------------|--------|-------|
+  | stdout is a TTY, `COLORTERM=truecolor` | ✅ Level 3 | ✅ Level 3 |
+  | stdout to a pipe or file, `COLORTERM=truecolor` | ✅ Level 3 | ❌ Level 0 |
+  | PM2 or Next.js edge, `COLORTERM=truecolor` | ✅ Level 3 | ✅ Level 3 |
+
+  To explicitly enable colors in non-TTY environments, use `FORCE_COLOR`.
+
+- fix(color-support): detect the color level for `FORCE_COLOR=true` and `--color` in non-TTY output.
+
+  **Before:**
+  With `FORCE_COLOR=true` or `--color`, Ansis ignored Windows and `TERM` for a pipe or file.
+  Without `COLORTERM`, it used 16 colors, even on Windows or with `TERM=xterm-256color`.
+
+  **After:** Ansis uses Windows and `TERM` for any output when colors are enabled this way.
+
+  | Environment | Before | After |
+  |-------------|--------|-------|
+  | `FORCE_COLOR=true` or `--color`, pipe or file, Windows | ✅ Level 1 | ✅ Level 3 |
+  | `FORCE_COLOR=true` or `--color`, pipe or file, `TERM=xterm-256color` | ✅ Level 1 | ✅ Level 2 |
+  | `FORCE_COLOR=true` or `--color`, pipe or file, `COLORTERM=truecolor` | ✅ Level 3 | ✅ Level 3 |
+
+  `FORCE_COLOR=1`, `2` and `3` set the level directly. They work as before.
+
 ## 4.4.0 (2026-09-13)
 
 - fix(color-support): treat `TERM=dumb` as no color before applying `COLORTERM`, #49.

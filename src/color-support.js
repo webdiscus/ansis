@@ -5,7 +5,10 @@ import { keys, SEPARATOR } from './constants.js';
 let term;
 
 /**
- * Auto detect color level.
+ * Detect the color level of the environment.
+ *
+ * The result is the level the environment can show, not the decision to enable colors.
+ * For auto-detection, `getLevel()` uses this level only if the output supports colors.
  *
  * Truecolor is supported by:
  * - some CI (e.g. GitHub CI)
@@ -25,24 +28,6 @@ let autoDetectLevel = (proc, env,  envKeys) => {
 
   let isWin = () => proc.platform === 'win32';
 
-  // In Node.js, `process.stdout.isTTY` is `true` for TTY streams and `undefined` for non-TTY output.
-  // Other runtimes may not expose `isTTY`.
-  let isTTY = () => proc.stdout?.isTTY;
-
-  // Detect CI environments.
-  // Most CI tools set the `CI` ENV variable:
-  // Travis CI, CircleCI, Cirrus CI, Gitlab CI, Appveyor, CodeShip, dsari, etc.
-  // https://github.com/watson/ci-info/blob/master/vendors.json
-  let isCI = () => env.CI;
-
-  // PM2 does not set process.stdout.isTTY, but color output may still be supported, depends on the actual terminal.
-  // PM2 always sets PM2_HOME to a non-empty (truthy) value when running in either fork or cluster mode.
-  let detectPM2 = () => env.PM2_HOME;
-
-  // In the Next.js `edge` runtime, process.stdout is undefined, but the output destination may still support colors.
-  // Runtime values that support colors: `nodejs`, `edge`, `experimental-edge`.
-  let detectNextJs = () => /edge/.test(env.NEXT_RUNTIME);
-
   term = env.TERM;
 
   // Note: the order of checks is important!
@@ -51,10 +36,12 @@ let autoDetectLevel = (proc, env,  envKeys) => {
   // TERM=dumb takes precedence over COLORTERM, CI detection, and platform-specific defaults.
   if (term === 'dumb') return LEVEL_BW;
 
-  // 2) Detect color support using the COLORTERM hint.
+  // 2) Detect color level using the COLORTERM hint.
   // Most modern terminals use `TERM=xterm-256color` with `COLORTERM=truecolor`.
   // COLORTERM values: `truecolor` or `24bit`, `ansi256`, `ansi`.
   // Terminals that set COLORTERM=truecolor: iTerm, VSCode, `xterm-kitty`, KDE Konsole.
+  // Note: COLORTERM only sets the level. It does not enable colors for a pipe or a file,
+  // see `outputSupported` in `getLevel()`.
   let level = {
     '24bit': LEVEL_TRUECOLOR,
     truecolor: LEVEL_TRUECOLOR,
@@ -66,7 +53,7 @@ let autoDetectLevel = (proc, env,  envKeys) => {
 
   // 3) Detect color support in CI.
   // CI environments can render ANSI colors even when TTY is undefined.
-  if (isCI()) {
+  if (env.CI) {
     // CI supports truecolor: GITHUB_ACTIONS
     if (/,GITHUB/.test(envKeys)) return LEVEL_TRUECOLOR;
 
@@ -77,13 +64,10 @@ let autoDetectLevel = (proc, env,  envKeys) => {
     return LEVEL_16COLORS;
   }
 
-  // 4) Detect unknown output environments.
-  if (!(isTTY() || detectPM2() || detectNextJs())) return LEVEL_BW;
-
-  // 5) Truecolor support since Windows 10 build 14931 (2016-09-21), today we assume modern Windows is used.
+  // 4) Truecolor support since Windows 10 build 14931 (2016-09-21), today we assume modern Windows is used.
   if (isWin()) return LEVEL_TRUECOLOR;
 
-  // 6) Detect 256-color support from TERM after COLORTERM and CI.
+  // 5) Detect 256-color support from TERM after COLORTERM and CI.
   // Terminals, that support 256 colors:
   // - screen-256color
   // - xterm-256color
@@ -95,7 +79,7 @@ let autoDetectLevel = (proc, env,  envKeys) => {
   // - ansi-256color
   if (/-256/.test(term)) return LEVEL_256COLORS;
 
-  // 7) Default to 16-color for the other supported output environments.
+  // 6) Default to 16 colors for the other environments.
   // No previous check identified 256-color or truecolor support.
   // To enable truecolor in unknown terminals, set COLORTERM=24bit.
 
@@ -126,12 +110,34 @@ export const getLevel = (thisRef) => {
   let argv = proc.argv ?? [];
   let env = proc.env ?? {};
   let colorLevel = LEVEL_BW;
+  let outputSupported;
+
+  // In Node.js, `process.stdout.isTTY` is `true` for TTY streams and `undefined` for non-TTY output.
+  // Other runtimes may not expose `isTTY`.
+  let isTTY = () => proc.stdout?.isTTY;
+
+  // Detect CI environments.
+  // Most CI tools set the `CI` ENV variable:
+  // Travis CI, CircleCI, Cirrus CI, Gitlab CI, Appveyor, CodeShip, dsari, etc.
+  // https://github.com/watson/ci-info/blob/master/vendors.json
+  let isCI = () => env.CI;
+
+  // PM2 does not set process.stdout.isTTY, but color output may still be supported, depends on the actual terminal.
+  // PM2 always sets PM2_HOME to a non-empty (truthy) value when running in either fork or cluster mode.
+  let detectPM2 = () => env.PM2_HOME;
+
+  // In the Next.js `edge` runtime, process.stdout is undefined, but the output destination may still support colors.
+  // Runtime values that support colors: `nodejs`, `edge`, `experimental-edge`.
+  let detectNextJs = () => /edge/.test(env.NEXT_RUNTIME);
 
   try {
     // keys(env) triggers a Deno permission request. Throws if access is denied.
     // Stringify environment variable keys to check for specific ones using a RegExp.
     let envKeys = SEPARATOR + keys(env).join(SEPARATOR);
     colorLevel = autoDetectLevel(proc, env, envKeys);
+
+    // Detect whether the output can show ANSI colors.
+    outputSupported = isTTY() || isCI() || detectPM2() || detectNextJs();
   } catch (error) {
     // If the permission is not granted, environment variables have no effect, even variables like FORCE_COLOR will be ignored.
     // `env` now points to a new empty object to avoid Deno requests for every env access in code below.
@@ -146,9 +152,9 @@ export const getLevel = (thisRef) => {
   // FORCE_COLOR=1            // 16 colors
   // FORCE_COLOR=2            // 256 colors
   // FORCE_COLOR=3            // truecolor
-  // FORCE_COLOR=true         // auto-detect, fallback to 16 colors if detection fails
-  // FORCE_COLOR=''           // auto-detect, fallback to 16 colors if detection fails
-  // FORCE_COLOR=<any other string> // auto-detect, fallback to 16 colors if detection fails
+  // FORCE_COLOR=true         // detect the level, TTY is not required, fallback to 16 colors
+  // FORCE_COLOR=''           // detect the level, TTY is not required, fallback to 16 colors
+  // FORCE_COLOR=<any other string> // detect the level, TTY is not required, fallback to 16 colors
   // See also:
   //  - https://force-color.org
   //  - https://nodejs.org/api/tty.html#writestreamhascolorscount-env
@@ -189,5 +195,6 @@ export const getLevel = (thisRef) => {
   if (env.NO_COLOR) return LEVEL_BW;
 
   // 4) Auto-detected color.
-  return colorLevel;
+  // The level is used only if the output supports colors, e.g. not for a pipe or a file.
+  return outputSupported ? colorLevel : LEVEL_BW;
 };

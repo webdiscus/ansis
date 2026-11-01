@@ -55,6 +55,39 @@ describe('flags and options', () => {
     expect(received).toEqual(LEVEL_16COLORS);
   });
 
+  test(`--color, no isTTY, Windows`, () => {
+    const received = getLevel({
+      process: {
+        platform: 'win32',
+        env: {},
+        argv: ['--color'],
+      },
+    });
+    expect(received).toEqual(LEVEL_TRUECOLOR);
+  });
+
+  test(`--color, no isTTY, TERM=xterm-256color`, () => {
+    const received = getLevel({
+      process: {
+        platform: 'linux',
+        env: { TERM: 'xterm-256color' },
+        argv: ['--color'],
+      },
+    });
+    expect(received).toEqual(LEVEL_256COLORS);
+  });
+
+  test(`--color, COLORTERM: 'ansi256', no isTTY`, () => {
+    const received = getLevel({
+      process: {
+        platform: 'linux',
+        env: { COLORTERM: 'ansi256' },
+        argv: ['--color'],
+      },
+    });
+    expect(received).toEqual(LEVEL_256COLORS);
+  });
+
   test(`--color=true`, () => {
     const received = getLevel({
       process: {
@@ -157,6 +190,28 @@ describe('FORCE_COLOR', () => {
       },
     });
     expect(received).toEqual(LEVEL_16COLORS);
+  });
+
+  test(`FORCE_COLOR true, no isTTY, Windows`, () => {
+    const received = getLevel({
+      process: {
+        platform: 'win32',
+        env: { FORCE_COLOR: 'true' },
+        argv: [],
+      },
+    });
+    expect(received).toEqual(LEVEL_TRUECOLOR);
+  });
+
+  test(`FORCE_COLOR true, no isTTY, TERM=xterm-256color`, () => {
+    const received = getLevel({
+      process: {
+        platform: 'linux',
+        env: { FORCE_COLOR: 'true', TERM: 'xterm-256color' },
+        argv: [],
+      },
+    });
+    expect(received).toEqual(LEVEL_256COLORS);
   });
 
   test(`FORCE_COLOR=3, TERM=xterm-256color, no isTTY`, () => {
@@ -371,6 +426,19 @@ describe('COLORTERM', () => {
       },
     });
     expect(received).toEqual(LEVEL_16COLORS);
+  });
+
+  test(`COLORTERM: 'truecolor', no isTTY`, () => {
+    const received = getLevel({
+      process: {
+        platform: 'linux',
+        env: { COLORTERM: 'truecolor' },
+        argv: [],
+        stdout: {},
+        stderr: {},
+      },
+    });
+    expect(received).toEqual(LEVEL_BW);
   });
 });
 

@@ -428,8 +428,7 @@ Ansis detects color support from the runtime environment in this order:
 2. Dumb terminal
    - `TERM=dumb` -> no colors
 
-3. `COLORTERM` (some terminals set it even when output is not TTY)
-   - used as a hint, not as a replacement for `FORCE_COLOR`
+3. `COLORTERM`
    - `truecolor` or `24bit` -> truecolor
    - `ansi256` -> 256 colors
    - `ansi` -> 16 colors
@@ -438,18 +437,18 @@ Ansis detects color support from the runtime environment in this order:
    - GitHub Actions -> truecolor
    - other CI environments -> 16 colors
 
-5. Terminal
-   - no TTY -> no colors
-   - `PM2` and `Next.js` non-TTY runtimes -> color output
-
-6. Windows
+5. Windows
    - Windows terminals since Windows 10 build 14931 (released 2016) -> truecolor
 
-7. 256-color terminals
+6. 256-color terminals
    - known 256-color terminals -> 256 colors
 
-8. Fallback
+7. Fallback
    - unknown terminals -> 16 colors
+
+Colors are enabled only for a TTY, CI, and the `PM2` and `Next.js` runtimes.
+Output to a pipe or a file has no colors, even when `COLORTERM` is set.
+To explicitly enable colors in non-TTY environments, use `FORCE_COLOR`.
 
 <details>
 <summary>Supported terminals and CI environments</summary>
@@ -520,7 +519,7 @@ Force or override color support via environment variable (see [force-color.org](
 | `1`                        | Force 16 colors (level 1)                                  |
 | `2`                        | Force 256 colors (level 2)                                 |
 | `3`                        | Force truecolor (level 3)                                  |
-| `true` or any other string | Auto-detect, with fallback to 16 colors if detection fails |
+| `true` or any other string | Detect the level for any output, fallback to 16 colors     |
 
 > [!IMPORTANT]
 >
@@ -552,9 +551,7 @@ To explicitly override auto-detection, use `FORCE_COLOR`.
 <a name="using-env-colorterm"></a>
 #### `COLORTERM`
 
-`COLORTERM` provides a color capability hint for auto-detection, including in CI and non-TTY environments.
-
-It is used only as an auto-detection hint, but `FORCE_COLOR` explicitly overrides the detected color level.
+`COLORTERM` hints at how many colors a terminal can show. It does not turn colors on by itself. Ansis uses it to choose the color level when color output is supported.
 
 | Value                  |                  Level |
 |------------------------|-----------------------:|
@@ -594,10 +591,10 @@ FORCE_COLOR=0 node app.js               # force off
 FORCE_COLOR=1 node app.js > log.txt     # force 16 colors
 FORCE_COLOR=2 node app.js > log.txt     # force 256 colors
 FORCE_COLOR=3 node app.js > log.txt     # force truecolor
-FORCE_COLOR=true node app.js > log.txt  # auto-detect, fallback to 16 colors
+FORCE_COLOR=true node app.js > log.txt  # detect the level, fallback to 16 colors
 
 node app.js --no-color                  # disable via flag
-node app.js --color > log.txt           # auto-detect via flag, fallback to 16 colors
+node app.js --color > log.txt           # detect the level via flag, fallback to 16 colors
 ```
 
 ---

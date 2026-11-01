@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import ansis, { bgRgb, black, rgb, whiteBright } from '../../../src/index.mjs';
+import ansis, { bgRgb, black, rgb, whiteBright } from '../../src/index.mjs';
 
 const env = process.env;
 const write = (value) => process.stdout.write(value);

@@ -54,7 +54,7 @@ describe('constructor options', () => {
       },
     });
 
-    expect(ansis.level).toEqual(2);
+    expect(ansis.level).toEqual(0);
   });
 
   test(`mock globalThis applies env and CLI priority`, () => {

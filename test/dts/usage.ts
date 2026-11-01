@@ -1,3 +1,7 @@
+// Type check of the `ansis` public API usage.
+// Compiled with `strict: true` by `npm run test:dts`.
+// A line with `@ts-expect-error` must be a type error, otherwise the compilation fails.
+
 import ansis, { Ansis, AnsiColors, red, green, blue, yellow, magenta } from 'ansis';
 
 type AnsiColorsExtend<T extends string> = AnsiColors | (T & Record<never, never>);
@@ -17,12 +21,18 @@ ansis.extend({
 
 // `AnsiColorsExtend` is an extendable type for TS to add a custom color
 const write = (style: AnsiColorsExtend<'pink' | 'orange'>, message: string) => {
-  console.log(ansis[style](message));
+  // custom colors are not properties of the `ansis` type, so the style is cast to a known color
+  console.log(ansis[style as AnsiColors](message));
 };
 
 write('red', 'message'); // default style OK
 write('pink', 'message'); // extended style OK
-// write('unknown', 'message'); // TS Error
+
+// @ts-expect-error unknown style is a type error
+write('unknown', 'message');
+
+// @ts-expect-error unknown property is a type error
+ansis.unknownStyle('message');
 
 const boldText = ansis.bold.open + 'text bold' + ansis.bold.close;
 const styledText = magenta.underline.italic('underline italic magenta');

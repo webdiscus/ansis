@@ -15,6 +15,9 @@ const PINK_ANSI16 = '\x1b[95m_PINK_\x1b[39m';
 const PINK_ANSI256 = '\x1b[38;5;205m_PINK_\x1b[39m';
 const PINK_TRUECOLOR = '\x1b[38;2;255;46;135m_PINK_\x1b[39m';
 
+// without COLORTERM and TERM, the level comes from the platform: truecolor on Windows, 16 colors elsewhere
+const PINK_PLATFORM_DEFAULT = process.platform === 'win32' ? PINK_TRUECOLOR : PINK_ANSI16;
+
 describe('Node: hasColors()', () => {
   // Original force-color.org rule: any non-empty value should enable colors.
   // Node: disables colors.
@@ -221,9 +224,9 @@ describe('FORCE_COLOR auto detect', () => {
     expect(received).toEqual(PINK_TRUECOLOR);
   });
 
-  test(`isTTY=false, no color env, FORCE_COLOR=true -> fallback to 16 colors`, () => {
+  test(`isTTY=false, no color env, FORCE_COLOR=true -> platform default level`, () => {
     const received = execScriptSync(outputRgb, [], { FORCE_COLOR: 'true' }, { isTTY: false });
-    expect(received).toEqual(PINK_ANSI16);
+    expect(received).toEqual(PINK_PLATFORM_DEFAULT);
   });
 });
 
@@ -285,9 +288,9 @@ describe('CLI flags', () => {
     expect(received).toEqual(RED_PLAIN);
   });
 
-  test(`isTTY=false, no color env, --color -> fallback to 16 colors`, () => {
+  test(`isTTY=false, no color env, --color -> platform default level`, () => {
     const received = execScriptSync(outputRgb, ['--color'], {}, { isTTY: false });
-    expect(received).toEqual(PINK_ANSI16);
+    expect(received).toEqual(PINK_PLATFORM_DEFAULT);
   });
 });
 
@@ -307,9 +310,9 @@ describe('--color auto detect', () => {
     expect(received).toEqual(PINK_TRUECOLOR);
   });
 
-  test(`isTTY=false, no color env, --color -> fallback to 16 colors`, () => {
+  test(`isTTY=false, no color env, --color -> platform default level`, () => {
     const received = execScriptSync(outputRgb, ['--color'], {}, { isTTY: false });
-    expect(received).toEqual(PINK_ANSI16);
+    expect(received).toEqual(PINK_PLATFORM_DEFAULT);
   });
 });
 

@@ -175,6 +175,39 @@ test('disables colors for imported app code', () => {
 });
 ```
 
+## Enable colors for imported app code
+
+To enable colors and set the color level for the app code, define `FORCE_COLOR` in a setup file.
+Import the setup file before any file that uses Ansis.
+
+| `FORCE_COLOR` | Level      |
+|---------------|------------|
+| `1`           | 16 colors  |
+| `2`           | 256 colors |
+| `3`           | truecolor  |
+
+```js
+// truecolor.js
+process.env.FORCE_COLOR = '3';
+```
+
+```js
+import { expect, test } from 'vitest';
+
+import './truecolor.js'; // import the setup file before any file that uses ansis
+import { formatMessage } from './app.js';
+
+test('enables truecolor for imported app code', () => {
+  expect(formatMessage('foo')).toBe('\x1b[31mfoo\x1b[39m');
+});
+```
+
+To set the level for a whole test run, define the variable in the command:
+
+```sh
+FORCE_COLOR=3 npm test
+```
+
 ## Strip ANSI codes
 
 When the test does not care about color detection, strip ANSI escape sequences from the output:

@@ -91,6 +91,10 @@ jobs:
         env:
           NODE_OPTIONS: --unhandled-rejections=strict
 
+      - name: Check d.ts types
+        if: matrix.coverage == true
+        run: npm run test:dts
+
       - name: Upload coverage reports to Codecov
         if: matrix.coverage == true
         uses: codecov/codecov-action@v5
